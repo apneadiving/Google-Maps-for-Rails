@@ -1,0 +1,28 @@
+<% content_for :head do %>
+<%= stylesheet_link_tag 'gmaps4rails' %>
+<% end %>
+
+<% content_for :scripts do %>
+<script src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js'></script>
+<%=javascript_include_tag 'gmaps4rails' %>
+<script type="text/javascript" charset="utf-8">
+var styles = [{
+  url: 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/images/people35.png',
+  height: 35,
+  width: 35,
+  opt_anchor: [16, 0],
+  opt_textColor: '#ff00ff',
+  opt_textSize: 10
+}];
+<% options.each do |key, value| %>
+Gmaps4Rails.<%= key %> = <%=raw value.is_a?(String) ?  "'#{value}'" : value  %>;
+<% end %>	
+var builder = <%=raw options["processing"] == "json" ? builder : "'#{builder}'" %>;
+Gmaps4Rails.initialize(builder);
+</script>
+<% end %>
+
+<div id="map-container"> 
+  <div id="gmaps4rails_map"></div> 
+</div>

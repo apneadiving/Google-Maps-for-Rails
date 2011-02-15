@@ -1,0 +1,6 @@
+mysql:
+  adapter: mysql
+  host: localhost
+  database: gmaps4rails_plugin_test
+  username: 
+  password: 

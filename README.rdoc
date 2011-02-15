@@ -1,0 +1,123 @@
+== Gmaps4rails
+
+Gmaps4rails is developped to simply create a Google Map (Gmaps) from:
+
+- model instances (say Users),
+
+- your own json
+
+It's based on Ruby on Rails 3 Engines and uses Google Maps API V3 with Marker Clusterer in option.
+
+
+== Installation
+
+	gem install gmaps4rails
+
+== Requirements
+- <%= yield :head %> (in your header)
+- <%= yield :scripts %> (in your footer)
+- config.serve_static_assets = true  (in your production.rb)
+- jQuery (used for ajax json, not mandatory if you only use the 'json' option)
+
+== Basic configuration
+In your model, add:
+
+	acts_as_gmappable
+
+	def gmaps4rails_address
+	  self.address #describe how to retrieve the address from your model
+	end
+
+Create a migration and add the following fields to your table (here users):
+
+	add_column :users, :latitude, :float
+	add_column :users, :longitude, :float
+	add_column :users, :gmaps, :boolean
+
+== How to?
+=== QuickStart!
+Say you have a User model and you want to display all the users on a map.
+In your view:
+
+	<%= gmaps4rails_map("User") %>
+
+Done!
+
+=== Same Result, alternative solution
+With this version, you won't need jQuery.
+In your controller:
+ 
+  @json = User.all.to_gmaps4rails
+
+In your view:
+
+  <%= gmaps4rails_map(@json, { "processing" => 'json' }) %>
+
+Done again!
+
+== Options
+
+=== Add an info window
+To add an info window (visible when you click a marker), add this method in your model:
+
+	def gmaps4rails_infowindow
+	  # add here whatever html content you desire, it will be displayed when users clicks on the marker
+	end
+
+=== List of Options
+You can customize the following:
+
+	processing: 'rails_model', //or 'json'
+	marker_picture : 'http://www.mbs.edu/i/gmap_marker_default.gif,
+	model_scope : null,         
+	marker_width : 22,          
+	marker_length : 32,         
+	map_center_latitude : 0,    
+	map_center_longitude : 0,   
+	map_zoom : 1,               
+	do_clustering: true,        
+	clusterer_gridSize: 50,     
+	clusterer_maxZoom: 10       
+
+=== How to set your own options
+Change the call in your view this way and add an additional hash containing the options you want:
+	<%= gmaps4rails_map("User", {"map_center_longitude" => "90", "do_clustering" => false}) %>
+
+=== Scopes (displays a dropdown list enabling you to filter the map content)
+Note that you can pass a model_scope in the options to filter the data you want to be displayed.
+So as above, change the call in your view:
+
+	<%= gmaps4rails_map("User", {"model_scope" => "my_scope"}) %>
+
+In this case, you must add in your model:
+
+	def self.gmaps4rails_trusted_scopes
+	  ["my_scope", "another_trusted_scope"]
+	end
+
+Why? because you shall never trust the params, so it's a way to keep control.
+
+=== Create from your own json
+If you want to use your own json to initialize the map, create your json with the following attributes
+
+	@json = '[
+	         {"description": "", "longitude": "", "latitude": "", "picture": "", "width": "", "height": ""},
+	         {"longitude": "", "latitude": "" }
+	        ]'
+
+Only `latitude` and `longitude` are mandatory. But you can customize any single marker.
+
+Then in your view:
+
+	<%= gmaps4rails_map(@json, { "processing" => 'json' }) %>
+
+Or with options as well:
+  
+	<%= gmaps4rails_map(@json, {"processing" => 'json', "map_center_longitude" => "90"}) %>
+
+== Todo?
+
+Feel free ton contact me, you have your say. I hope I'll have time enough to improve it.
+
+== Copyright
+Copyright (c) 2011 apneadiving. See LICENSE for details.
