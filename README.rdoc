@@ -1,4 +1,4 @@
-== Gmaps4rails
+== Google Maps for Rails (gmaps4rails)
 
 Gmaps4rails is developped to simply create a Google Map (Gmaps) from:
 
@@ -120,4 +120,4 @@ Or with options as well:
 Feel free ton contact me, you have your say. I hope I'll have time enough to improve it.
 
 == Copyright
-Copyright (c) 2011 apneadiving. See LICENSE for details.
+MIT license. Authors: Benjamin Roth, David Ruyer
