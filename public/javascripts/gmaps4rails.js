@@ -3,7 +3,7 @@ google.load('maps', '3', { other_params: 'sensor=false' });
 var Gmaps4Rails = {
 	processing: 'rails_model',
 	map: null,
-  marker_picture : 'http://inmotionchiro.com/gmap_plugin/imgs/markers/marker.png',
+  marker_picture : "",
 	marker_width : 22,
 	marker_length : 32,
 	map_center_latitude : 0,
@@ -75,32 +75,28 @@ var Gmaps4Rails = {
 		}
 	  // Add markers to the map
 	  for (var i = 0; i < this.locations.length; ++i) {
-		   
-		   //test if value passed or use default 
-		   var marker_picture = this.locations[i].picture != "" && typeof this.locations[i].picture !== "undefined" ? this.locations[i].picture : this.marker_picture;
-		   var marker_width = this.locations[i].width != "" && typeof this.locations[i].width !== "undefined" ? this.locations[i].width : this.marker_width;
-		   var marker_height = this.locations[i].height != "" && typeof this.locations[i].height !== "undefined" ? this.locations[i].height : this.marker_length;
-	 		 // Marker sizes are expressed as a Size of X,Y
-			  var image = new google.maps.MarkerImage(marker_picture,
-			      																		new google.maps.Size(marker_width, marker_height)
-																								);
-			  var myLatLng = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude); 
-			  var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image}); //TODO Offer title customization title: "title"
-				//save object for later use, basically, to get back the text to display when clicking it
-				this.locations[i].marker_object = ThisMarker; 
-				//save the marker again in a list for the clusterer
-				markers.push(ThisMarker);		
-				//add click listener
-	  	  google.maps.event.addListener(Gmaps4Rails.locations[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});		
-  	}
-		if (this.do_clustering == true)
-			{
-				this.markerClusterer = new MarkerClusterer(this.map, markers, {
-				maxZoom: this.clusterer_maxZoom,
-				gridSize: this.clusterer_gridSize,
-				//styles: styles TODO: offer clusterer customization
-		  	});
-		  }
+			   //test if value passed or use default 
+			   var marker_picture = this.locations[i].picture != "" && typeof this.locations[i].picture !== "undefined" ? this.locations[i].picture : this.marker_picture;
+			   var marker_width = this.locations[i].width != "" && typeof this.locations[i].width !== "undefined" ? this.locations[i].width : this.marker_width;
+			   var marker_height = this.locations[i].height != "" && typeof this.locations[i].height !== "undefined" ? this.locations[i].height : this.marker_length;
+				 var myLatLng = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude); 
+			 
+				 // Marker sizes are expressed as a Size of X,Y
+		 		 if (marker_picture == "")
+					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map});	}
+					else 
+				  {
+						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
+						var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image}); //TODO Offer title customization title: "title"
+					}
+					//save object for later use, basically, to get back the text to display when clicking it
+					this.locations[i].marker_object = ThisMarker; 
+					//save the marker again in a list for the clusterer
+					markers.push(ThisMarker);		
+					//add click listener
+		  	  google.maps.event.addListener(Gmaps4Rails.locations[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});		
+		 }
+		this.setup_Clusterer(markers);
 	},
 	
 	//get info_window content when listener calls it
@@ -116,6 +112,15 @@ var Gmaps4Rails = {
 	        return;
 	    }
 	  }
+	},
+	setup_Clusterer: function(markers)
+	{
+		if (this.do_clustering == true)
+		{
+			this.markerClusterer = new MarkerClusterer(this.map, markers, {	maxZoom: this.clusterer_maxZoom,
+																																			gridSize: this.clusterer_gridSize,
+																																			//styles: styles TODO: offer clusterer customization
+																																	  	});
+	  }
 	}
-	
 };

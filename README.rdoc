@@ -68,10 +68,10 @@ To add an info window (visible when you click a marker), add this method in your
 You can customize the following:
 
 	processing: 'rails_model', //or 'json'
-	marker_picture : 'http://www.mbs.edu/i/gmap_marker_default.gif,
-	model_scope : null,         
-	marker_width : 22,          
-	marker_length : 32,         
+	model_scope : null,
+	marker_picture : "",
+	marker_width : 22,          //won't have any effect unless you use your own picture
+	marker_length : 32,         //won't have any effect unless you use your own picture
 	map_center_latitude : 0,    
 	map_center_longitude : 0,   
 	map_zoom : 1,               
