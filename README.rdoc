@@ -65,7 +65,9 @@ Done again!
 
 * Create from your own json
 
-{More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
+* Geocode directly your address and retrieve coordinates. 
+
+* {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
 == Todo?
 
