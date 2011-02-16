@@ -57,67 +57,19 @@ Done again!
 
 == Options
 
-=== Add an info window
-To add an info window (visible when you click a marker), add this method in your model:
+* Info window
 
-	def gmaps4rails_infowindow
-	  # add here whatever html content you desire, it will be displayed when users clicks on the marker
-	end
+* Custom Marker
 
-=== List of Options
-You can customize the following:
+* Scopes
 
-	processing: 'rails_model', //or 'json'
-	model_scope : null,
-	marker_picture : "",
-	marker_width : 22,          //won't have any effect unless you use your own picture
-	marker_length : 32,         //won't have any effect unless you use your own picture
-	map_center_latitude : 0,    
-	map_center_longitude : 0,   
-	map_zoom : 1,               
-	do_clustering: true,        
-	clusterer_gridSize: 50,     
-	clusterer_maxZoom: 10       
+* Create from your own json
 
-=== How to set your own options
-Change the call in your view this way and add an additional hash containing the options you want:
-	<%= gmaps4rails_map("User", {"map_center_longitude" => "90", "do_clustering" => false}) %>
-
-=== Scopes (displays a dropdown list enabling you to filter the map content)
-Note that you can pass a model_scope in the options to filter the data you want to be displayed.
-So as above, change the call in your view:
-
-	<%= gmaps4rails_map("User", {"model_scope" => "my_scope"}) %>
-
-In this case, you must add in your model:
-
-	def self.gmaps4rails_trusted_scopes
-	  ["my_scope", "another_trusted_scope"]
-	end
-
-Why? because you shall never trust the params, so it's a way to keep control.
-
-=== Create from your own json
-If you want to use your own json to initialize the map, create your json with the following attributes
-
-	@json = '[
-	         {"description": "", "longitude": "", "latitude": "", "picture": "", "width": "", "height": ""},
-	         {"longitude": "", "latitude": "" }
-	        ]'
-
-Only `latitude` and `longitude` are mandatory. But you can customize any single marker.
-
-Then in your view:
-
-	<%= gmaps4rails_map(@json, { "processing" => 'json' }) %>
-
-Or with options as well:
-  
-	<%= gmaps4rails_map(@json, {"processing" => 'json', "map_center_longitude" => "90"}) %>
+{More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
 == Todo?
 
-Feel free ton contact me, you have your say. I hope I'll have time enough to improve it.
+Feel free ton contact us, you have your say. I hope I'll have time enough to improve it.
 
 == Copyright
 MIT license. Authors: Benjamin Roth, David Ruyer
