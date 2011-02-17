@@ -30,9 +30,9 @@ In your model, add:
 
 Create a migration and add the following fields to your table (here users):
 
-	add_column :users, :latitude, :float
-	add_column :users, :longitude, :float
-	add_column :users, :gmaps, :boolean
+	add_column :users, :latitude, :float #you can change the name if necessary, see wiki
+	add_column :users, :longitude, :float #you can change the name if necessary, see wiki
+	add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
 == How to?
 === QuickStart!
@@ -71,7 +71,7 @@ Done again!
 
 == Todo?
 
-Feel free ton contact us, you have your say. I hope I'll have time enough to improve it.
+Feel free ton contact us, you have your say.
 
 == Copyright
 MIT license. Authors: Benjamin Roth, David Ruyer
