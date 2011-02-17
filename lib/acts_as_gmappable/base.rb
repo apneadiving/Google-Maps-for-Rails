@@ -9,10 +9,10 @@ module Gmaps4rails
   class GeocodeNetStatus < StandardError; end
   
   def Gmaps4rails.create_json(object)
-    unless object.gmaps4rails_latitude.nil? && object.gmaps4rails_longitude.nil?
+    unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
 "{\"description\": \"#{object.gmaps4rails_infowindow}\",
-\"longitude\": \"#{object.gmaps4rails_longitude}\",
-\"latitude\": \"#{object.gmaps4rails_latitude}\",
+\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\",
+\"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\",
 \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\",
 \"width\": \"#{object.gmaps4rails_marker_picture['width']}\",
 \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
@@ -54,7 +54,7 @@ module Gmaps4rails
      end #end resp test
      
    end # end address valid
-  end #end process_geocoding
+  end #end geocode
   
   module ActsAsGmappable
 
@@ -73,8 +73,8 @@ module Gmaps4rails
           
           define_method "gmaps4rails_options" do
             {
-              :lat_column => args[:lat] || "gmaps4rails_latitude",
-              :lng_column => args[:lng] || "gmaps4rails_longitude",
+              :lat_column => args[:lat] || "latitude",
+              :lng_column => args[:lng] || "longitude",
               :check_process => args[:check_process] || true,
               :checker => args[:checker] || "gmaps",
               :msg => args[:msg] || "Address invalid",
@@ -123,9 +123,7 @@ module Gmaps4rails
         
         def to_gmaps4rails
           json = "["
-          if (!(self.gmaps4rails_latitude == "" || self.gmaps4rails_longitude == ""))
-           	json += Gmaps4rails.create_json(self).to_s
-          end
+          json += Gmaps4rails.create_json(self).to_s
           json.chop! #removes the extra comma
           json += "]"
         end

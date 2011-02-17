@@ -30,8 +30,8 @@ In your model, add:
 
 Create a migration and add the following fields to your table (here users):
 
-	add_column :users, :gmaps4rails_latitude, :float #you can change the name if necessary, see wiki
-	add_column :users, :gmaps4rails_longitude, :float #you can change the name if necessary, see wiki
+	add_column :users, :latitude, :float #you can change the name, see wiki
+	add_column :users, :longitude, :float #you can change the name, see wiki
 	add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
 == How to?
