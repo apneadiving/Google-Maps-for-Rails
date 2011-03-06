@@ -1,0 +1,19 @@
+source 'http://rubygems.org'
+
+gem "rails"
+gem 'sqlite3'
+gem "nifty-generators"
+gem "gmaps4rails", :path => "../../"
+gem 'ruby-debug'
+
+group :test do
+	gem 'rspec-rails'
+	gem 'cucumber-rails'
+	gem 'capybara'
+	gem 'capybara-envjs', :require => 'capybara/envjs'
+	#gem 'database_cleaner'
+	gem 'launchy'
+	gem 'factory_girl_rails' 
+	gem 'pickle'
+end
+gem "mocha", :group => :test

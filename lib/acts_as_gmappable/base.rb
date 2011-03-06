@@ -44,7 +44,7 @@ module Gmaps4rails
          end
          return array
        else #status != OK
-         raise Gmaps4rails::GeocodeStatus, "The adress you passed seems invalid, status was: #{parse["status"]}.
+         raise Gmaps4rails::GeocodeStatus, "The address you passed seems invalid, status was: #{parse["status"]}.
          Request was: #{request}"
        end #end parse status
        
@@ -73,12 +73,12 @@ module Gmaps4rails
           
           define_method "gmaps4rails_options" do
             {
-              :lat_column => args[:lat] || "latitude",
-              :lng_column => args[:lng] || "longitude",
-              :check_process => args[:check_process] || true,
-              :checker => args[:checker] || "gmaps",
-              :msg => args[:msg] || "Address invalid",
-              :validation => args[:validation] || true
+              :lat_column     => args[:lat]           || "latitude",
+              :lng_column     => args[:lng]           || "longitude",
+              :check_process  => args[:check_process] || true,
+              :checker        => args[:checker]       || "gmaps",
+              :msg            => args[:msg]           || "Address invalid",
+              :validation     => args[:validation]    || true
               #TODO: address as a proc?
             }
           end
@@ -103,7 +103,7 @@ module Gmaps4rails
           else #if no exception
             self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
             self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
-            if gmaps4rails_options[:check_process] = true
+            if gmaps4rails_options[:check_process] == true
               self[gmaps4rails_options[:checker]] = true
             end
           end
@@ -123,8 +123,7 @@ module Gmaps4rails
         
         def to_gmaps4rails
           json = "["
-          json += Gmaps4rails.create_json(self).to_s
-          json.chop! #removes the extra comma
+          json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
           json += "]"
         end
         

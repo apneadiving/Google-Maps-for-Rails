@@ -9,6 +9,7 @@ var Gmaps4Rails = {
 	map_center_latitude : 0,
 	map_center_longitude : 0, 
 	map_zoom : 1,
+	auto_adjust : false,
 	base_url : '/gmaps',
 	rails_model : null,
 	model_scope : null,
@@ -20,6 +21,7 @@ var Gmaps4Rails = {
   do_clustering: true,
   clusterer_gridSize: 50,
 	clusterer_maxZoom: 10,
+	bounds: null,
 	//Triggers the creation of the map.
 	//Two options:
 	// 1- processing == "rails_model"  && builder = model_name
@@ -39,6 +41,9 @@ var Gmaps4Rails = {
 		{
 			this.locations = builder;
 			this.setup_Markers();
+		}
+		if (this.auto_adjust) {
+			this.map.fitBounds(this.bounds);
 		}
 	},
 	
@@ -68,7 +73,9 @@ var Gmaps4Rails = {
   setup_Markers: function () {		
 		//variable used for Marker Clusterer
 		var markers = [];
-	
+		//variable used for Auto-adjust
+		this.bounds = new google.maps.LatLngBounds(); 
+		
 		//resests Clusterer if needed
 		if (this.markerClusterer) {
 			this.markerClusterer.clearMarkers();
@@ -94,7 +101,13 @@ var Gmaps4Rails = {
 					//save the marker again in a list for the clusterer
 					markers.push(ThisMarker);		
 					//add click listener
-		  	  google.maps.event.addListener(Gmaps4Rails.locations[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});		
+		  	  google.maps.event.addListener(Gmaps4Rails.locations[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});
+		
+					//extending bounds, ref: http://unicornless.com/code/google-maps-v3-auto-zoom-and-auto-center
+					if (this.auto_adjust) {
+					    var ll = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude);
+					    this.bounds.extend(ll);
+					}		
 		 }
 		this.setup_Clusterer(markers);
 	},
