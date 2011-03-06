@@ -51,7 +51,7 @@ In your controller:
 
 In your view:
 
-  <%= gmaps4rails_map(@json, { "processing" => 'json' }) %>
+  <%= gmaps4rails(@json) %>
 
 Done again!
 
@@ -66,6 +66,8 @@ Done again!
 * Create from your own json
 
 * Geocode directly your address and retrieve coordinates. 
+
+* Auto-adjust the map to your markers
 
 * {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
