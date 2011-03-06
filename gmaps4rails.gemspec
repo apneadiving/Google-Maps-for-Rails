@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-02-17}
+  s.date = %q{2011-03-07}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Map. Uses Javascript API V3. Provides a helper and much configuration.}
   s.email = %q{benjamin.roth@peachyweb.com}
   s.extra_rdoc_files = [
@@ -37,14 +37,39 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.0}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Map. Uses Javascript API V3.}
   s.test_files = [
-    "test/test_helper.rb",
-    "test/unit/gmaps4rails_widget_test.rb"
+    "test/dummy/app/controllers/application_controller.rb",
+    "test/dummy/app/controllers/users_controller.rb",
+    "test/dummy/app/helpers/application_helper.rb",
+    "test/dummy/app/helpers/users_helper.rb",
+    "test/dummy/app/models/user.rb",
+    "test/dummy/config/application.rb",
+    "test/dummy/config/boot.rb",
+    "test/dummy/config/environment.rb",
+    "test/dummy/config/environments/development.rb",
+    "test/dummy/config/environments/production.rb",
+    "test/dummy/config/environments/test.rb",
+    "test/dummy/config/initializers/backtrace_silencers.rb",
+    "test/dummy/config/initializers/inflections.rb",
+    "test/dummy/config/initializers/mime_types.rb",
+    "test/dummy/config/initializers/secret_token.rb",
+    "test/dummy/config/initializers/session_store.rb",
+    "test/dummy/config/routes.rb",
+    "test/dummy/db/migrate/20110306182914_create_users.rb",
+    "test/dummy/db/schema.rb",
+    "test/dummy/db/seeds.rb",
+    "test/dummy/spec/base/base_spec.rb",
+    "test/dummy/spec/controllers/users_controller_spec.rb",
+    "test/dummy/spec/models/user_spec.rb",
+    "test/dummy/spec/spec_helper.rb",
+    "test/dummy/test/performance/browsing_test.rb",
+    "test/dummy/test/test_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
