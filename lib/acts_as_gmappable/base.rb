@@ -123,8 +123,7 @@ module Gmaps4rails
         
         def to_gmaps4rails
           json = "["
-          json += Gmaps4rails.create_json(self).to_s
-          json.chop! #removes the extra comma
+          json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
           json += "]"
         end
         
