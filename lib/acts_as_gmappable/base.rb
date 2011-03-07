@@ -93,6 +93,9 @@ module Gmaps4rails
         end
         
         def process_geocoding
+          #to prevent geocoding each time a save is made
+          return true if gmaps4rails_options[:check_process] == true && self[gmaps4rails_options[:checker]] == true
+          
           begin
             coordinates = Gmaps4rails.geocode(self.gmaps4rails_address)
           rescue GeocodeStatus #adress was invalid, add error to base.

@@ -25,6 +25,20 @@ describe "Acts as gmappable" do
       @user.to_gmaps4rails.should == "[{\"description\": \"\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ]"
     end
     
+    it "should not geocode again after address changes if checker is true" do
+      @user.address = "paris, France"
+      @user.save
+      @user.latitude.should  == 43.1251606
+      @user.longitude.should == 5.9311119
+    end
+    
+    it "should geocode after address changes if checker is false" do
+      @user.address = "paris, France"
+      @user.gmaps = false
+      @user.save
+      @user.latitude.should  == 48.8566667
+      @user.longitude.should == 2.3509871
+    end
   end
   
 
