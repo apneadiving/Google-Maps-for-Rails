@@ -77,7 +77,7 @@ var Gmaps4Rails = {
 		//variable used for Auto-adjust
 		this.bounds = new google.maps.LatLngBounds(); 
 		
-		//resests Clusterer if needed
+		//resets Clusterer if needed
 		if (this.markerClusterer) {
 			this.markerClusterer.clearMarkers();
 		}
@@ -88,14 +88,15 @@ var Gmaps4Rails = {
 			   var marker_width = this.locations[i].width != "" && typeof this.locations[i].width !== "undefined" ? this.locations[i].width : this.marker_width;
 			   var marker_height = this.locations[i].height != "" && typeof this.locations[i].height !== "undefined" ? this.locations[i].height : this.marker_length;
 				 var myLatLng = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude); 
+         var marker_title = this.locations[i].title != "" && typeof this.locations[i].title !== "undefined" ? this.locations[i].title : null;
 			 
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture == "")
-					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map});	}
+					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker.title});	}
 					else 
 				  {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
-						var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image}); //TODO Offer title customization title: "title"
+						var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
 					}
 					//save object for later use, basically, to get back the text to display when clicking it
 					this.locations[i].marker_object = ThisMarker; 
