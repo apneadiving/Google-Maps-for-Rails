@@ -4,6 +4,7 @@ var Gmaps4Rails = {
 	processing: 'rails_model',
 	map: null,
   map_id: 'gmaps4rails',
+  markers: null,
   marker_picture : "",
 	marker_width : 22,
 	marker_length : 32,
@@ -47,6 +48,23 @@ var Gmaps4Rails = {
 			this.map.fitBounds(this.bounds);
 		}
 	},
+
+  // clear markers
+  clear_markers: function(){
+    if (this.markers) {
+      for (i in this.markers) {
+        this.markers[i].setMap(null);
+      }
+      this.markers = null;
+    }
+  },
+
+  // replace old markers with new markers on an existing map
+  replace_markers: function(new_markers){
+    this.clear_markers();
+    this.locations = new_markers;
+                this.setup_Markers();
+  },
 	
 	//resets the map, removes all markers
 	reset_map: function(){

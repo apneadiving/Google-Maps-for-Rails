@@ -1,0 +1,5 @@
+  new_markers: function(markers){
+    this.clear_markers();
+    this.locations = markers;
+                this.setup_Markers();
+  },
