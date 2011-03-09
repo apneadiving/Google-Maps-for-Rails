@@ -3,6 +3,7 @@ google.load('maps', '3', { other_params: 'sensor=false' });
 var Gmaps4Rails = {
 	processing: 'rails_model',
 	map: null,
+  map_id: 'gmaps4rails',
   marker_picture : "",
 	marker_width : 22,
 	marker_length : 32,
@@ -49,7 +50,7 @@ var Gmaps4Rails = {
 	
 	//resets the map, removes all markers
 	reset_map: function(){
-			this.map = new google.maps.Map(document.getElementById('gmaps4rails_map'), {
+			this.map = new google.maps.Map(document.getElementById(this.map_id), {
 					zoom: this.map_zoom,
 					center: new google.maps.LatLng(this.map_center_latitude, this.map_center_longitude),
 					mapTypeId: google.maps.MapTypeId.ROADMAP
