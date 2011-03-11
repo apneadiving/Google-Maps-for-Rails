@@ -1,3 +1,21 @@
+<script type="text/javascript" charset="utf-8">
+var builder2 = [{"description": "",
+"title": "",
+"longitude": "5.9311119",
+"latitude": "42.1251606",
+"picture": "",
+"width": "",
+"height": ""
+} ,{"description": "",
+"title": "",
+"longitude": "32.3509871",
+"latitude": "47.8566667",
+"picture": "",
+"width": "",
+"height": ""
+} ];	
+</script>
+
 <table>
   <tr>
     <th>Name</th>
@@ -20,5 +38,8 @@
 
 <p><%= link_to "New User", new_user_path %></p>
 
-<%= gmaps4rails(@json, {"auto_adjust" => true }) %>
+<%= gmaps4rails(@json, {"auto_adjust" => true, "map_container_id" => "map_container", "map_id" => "gmaps4rails_map"}) %>
 <%#= gmaps4rails(@json) %>
+
+<button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
+<button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>

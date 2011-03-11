@@ -1,9 +1,19 @@
 google.load('maps', '3', { other_params: 'sensor=false' });
 
+//marker_clusterer styles
+var styles = [{
+  url: 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/images/people35.png',
+  height: 35,
+  width: 35,
+  opt_anchor: [16, 0],
+  opt_textColor: '#ff00ff',
+  opt_textSize: 10
+}];
+
 var Gmaps4Rails = {
 	processing: 'rails_model',
 	map: null,
-  map_id: 'gmaps4rails',
+  map_id: 'gmaps4rails_map',
   markers: null,
   marker_picture : "",
 	marker_width : 22,
@@ -61,18 +71,27 @@ var Gmaps4Rails = {
 
   // replace old markers with new markers on an existing map
   replace_markers: function(new_markers){
-    this.clear_markers();
-    this.locations = new_markers;
-                this.setup_Markers();
+	  this.clear_markers();
+		this.locations = [];
+		this.add_markers(new_markers);
+  },
+
+	//add new markers to on an existing map (beware, it doesn't check duplicates)
+  add_markers: function(new_markers){
+    this.locations = this.locations.concat(new_markers);
+    this.setup_Markers();
+		if (this.auto_adjust) {
+			this.map.fitBounds(this.bounds);
+		}
   },
 	
 	//resets the map, removes all markers
 	reset_map: function(){
-			this.map = new google.maps.Map(document.getElementById(this.map_id), {
-					zoom: this.map_zoom,
-					center: new google.maps.LatLng(this.map_center_latitude, this.map_center_longitude),
-					mapTypeId: google.maps.MapTypeId.ROADMAP
-			});
+		this.map = new google.maps.Map(document.getElementById(this.map_id), {
+				zoom: this.map_zoom,
+				center: new google.maps.LatLng(this.map_center_latitude, this.map_center_longitude),
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+		});
 	},
 	
 	//creates the necessary query to get the model + scope, and sends json to setup_Markers
@@ -103,14 +122,19 @@ var Gmaps4Rails = {
 	  for (var i = 0; i < this.locations.length; ++i) {
 			   //test if value passed or use default 
 			   var marker_picture = this.locations[i].picture != "" && typeof this.locations[i].picture !== "undefined" ? this.locations[i].picture : this.marker_picture;
-			   var marker_width = this.locations[i].width != "" && typeof this.locations[i].width !== "undefined" ? this.locations[i].width : this.marker_width;
-			   var marker_height = this.locations[i].height != "" && typeof this.locations[i].height !== "undefined" ? this.locations[i].height : this.marker_length;
+			   var marker_width 	= this.locations[i].width 	!= "" && typeof this.locations[i].width		!== "undefined" ? this.locations[i].width 	: this.marker_width;
+			   var marker_height 	= this.locations[i].height 	!= "" && typeof this.locations[i].height 	!== "undefined" ? this.locations[i].height 	: this.marker_length;
+			   var marker_title 	= this.locations[i].title 	!= "" && typeof this.locations[i].title 	!== "undefined" ? this.locations[i].title 	: null;
+      
 				 var myLatLng = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude); 
-         var marker_title = this.locations[i].title != "" && typeof this.locations[i].title !== "undefined" ? this.locations[i].title : null;
-			 
+			 	 //extending bounds, ref: http://unicornless.com/code/google-maps-v3-auto-zoom-and-auto-center
+				 if (this.auto_adjust) {
+				    this.bounds.extend(myLatLng);
+				 }
+				
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture == "")
-					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker.title});	}
+					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	}
 					else 
 				  {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
@@ -122,12 +146,6 @@ var Gmaps4Rails = {
 					markers.push(ThisMarker);		
 					//add click listener
 		  	  google.maps.event.addListener(Gmaps4Rails.locations[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});
-		
-					//extending bounds, ref: http://unicornless.com/code/google-maps-v3-auto-zoom-and-auto-center
-					if (this.auto_adjust) {
-					    var ll = new google.maps.LatLng(this.locations[i].latitude, this.locations[i].longitude);
-					    this.bounds.extend(ll);
-					}		
 		 }
 		this.setup_Clusterer(markers);
 	},

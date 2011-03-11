@@ -18,11 +18,11 @@ describe "Acts as gmappable" do
 
     it "should render a valid json from an array of ojects" do
       @user2 = User.create!(:name => "me", :address => "Paris, France" )
-      User.all.to_gmaps4rails.should == "[{\"description\": \"\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ,{\"description\": \"\",\n\"longitude\": \"2.3509871\",\n\"latitude\": \"48.8566667\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ]"
+      User.all.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ,{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
 
     it "should render a valid json from a single object" do
-      @user.to_gmaps4rails.should == "[{\"description\": \"\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
     
     it "should not geocode again after address changes if checker is true" do
@@ -52,7 +52,7 @@ describe "Acts as gmappable" do
     end
     
     it "should not set boolean to true when address update fails" do
-      @user["gmaps"].should_not == true
+      @user.gmaps.should_not == true
     end
   end
 
@@ -114,7 +114,7 @@ describe "Acts as gmappable" do
       @user.long_test.should == 5.9311119
       @user.longitude.should == nil
       @user.latitude.should  == nil
-      @user.to_gmaps4rails.should == "[{\"description\": \"\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
     
     it "should not save the boolean if check_process is false" do
@@ -159,7 +159,7 @@ describe "Acts as gmappable" do
         end
       end
       @user = User.create!(:name => "me", :address => "Toulon, France", :picture => "http://www.blankdots.com/img/github-32x32.png")
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"\",\n\"width\": \"\",\n\"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\n\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
     
     it "should take into account the picture provided in the model" do 
@@ -176,7 +176,17 @@ describe "Acts as gmappable" do
         end
       end
       @user = User.create!(:name => "me", :address => "Toulon, France")
-      @user.to_gmaps4rails.should == "[{\"description\": \"\",\n\"longitude\": \"5.9311119\",\n\"latitude\": \"43.1251606\",\n\"picture\": \"http://www.blankdots.com/img/github-32x32.png\",\n\"width\": \"32\",\n\"height\": \"32\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
+    end
+    
+    it "should take into account the title provided in the model" do
+      User.class_eval do
+        def gmaps4rails_title
+          "Sweet Title"
+        end
+      end
+      @user = User.create!(:name => "me", :address => "Toulon, France")
+      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"Sweet Title\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
     end
   end
 end

@@ -10,12 +10,9 @@ module Gmaps4rails
   
   def Gmaps4rails.create_json(object)
     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
-"{\"description\": \"#{object.gmaps4rails_infowindow}\",
-\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\",
-\"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\",
-\"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\",
-\"width\": \"#{object.gmaps4rails_marker_picture['width']}\",
-\"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
+"{
+\"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\",
+\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
 } ,"
     end
   end
@@ -90,6 +87,9 @@ module Gmaps4rails
       module InstanceMethods
         
         def gmaps4rails_infowindow
+        end
+        
+        def gmaps4rails_title
         end
         
         def process_geocoding

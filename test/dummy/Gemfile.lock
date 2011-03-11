@@ -1,7 +1,7 @@
 PATH
   remote: ../../
   specs:
-    gmaps4rails (0.4.0)
+    gmaps4rails (0.4.1)
       crack
 
 GEM
@@ -91,7 +91,6 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
-    mocha (0.9.12)
     nifty-generators (0.4.5)
     nokogiri (1.4.4)
     pickle (0.4.4)
@@ -164,7 +163,6 @@ DEPENDENCIES
   factory_girl_rails
   gmaps4rails!
   launchy
-  mocha
   nifty-generators
   pickle
   rails
