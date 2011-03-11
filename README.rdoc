@@ -69,6 +69,8 @@ Done again!
 
 * Auto-adjust the map to your markers
 
+* Refresh your map on the fly with Javascript and Ajax
+
 * {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
 == Todo?
