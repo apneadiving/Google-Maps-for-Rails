@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.4.1"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-03-07}
+  s.date = %q{2011-03-11}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Map. Uses Javascript API V3. Provides a helper and much configuration.}
   s.email = %q{benjamin.roth@peachyweb.com}
   s.extra_rdoc_files = [
@@ -32,7 +32,6 @@ Gem::Specification.new do |s|
     "lib/tasks/install.rake",
     "public/images/marker.png",
     "public/javascripts/gmaps4rails.js",
-    "public/javascripts/old.js",
     "public/stylesheets/gmaps4rails.css"
   ]
   s.homepage = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
