@@ -9,16 +9,6 @@ Gmaps4rails is developped to simply create a Google Map (Gmaps) from:
 
 It's based on Ruby on Rails 3 Engines and uses Google Maps API V3 with Marker Clusterer in option.
 
-NOTE: this is a forked code tree with several enhancements:
-- Made map initialization conditional on window.load to work around the IE "unspecified error", apparently caused by trying to initialize the map before the window and all the elements are loaded into the browser
-- Added options to provide map id and map container id:
-  <%= gmaps4rails_map(@json, { "processing" => 'json', "map_container_id" => "connections_map_container", "map_id" => "connections_map"}) %> 
-- Added option to provide "title" attribute to markers
-- Added JS function "clear markers" to clear the map, needed by "replace markers"
-function
-- Added JS function "replace_markers" to add new markers to the map.  This is particularly useful for when you use AJAX to update your map without needing to re-initialize the map:
-  Gmaps4Rails.replace_markers(your_markers_json_string)
-
 == Installation
 
 	gem install gmaps4rails
