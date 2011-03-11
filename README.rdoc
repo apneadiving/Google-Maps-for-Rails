@@ -79,5 +79,7 @@ Feel free ton contact us, you have your say.
 
 == Copyright
 MIT license. 
+
 Authors: Benjamin Roth, David Ruyer
+
 Contributor: Alex Vorobiev
