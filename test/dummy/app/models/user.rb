@@ -4,5 +4,5 @@ class User < ActiveRecord::Base
   def gmaps4rails_address
     address
   end
-
+ 
 end

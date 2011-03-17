@@ -11,16 +11,16 @@ describe "Acts as gmappable" do
       @user.latitude.should  == 43.1251606
       @user.longitude.should == 5.9311119
     end
-
+  
     it "should set boolean to true once user is created" do
       @user.gmaps.should == true
     end
-
+  
     it "should render a valid json from an array of ojects" do
       @user2 = User.create!(:name => "me", :address => "Paris, France" )
       User.all.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ,{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
-
+  
     it "should render a valid json from a single object" do
       @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
@@ -41,7 +41,7 @@ describe "Acts as gmappable" do
     end
   end
   
-
+  
   describe "standard configuration, invalid address" do
     before(:each) do
       @user = User.new(:name => "me", :address => "home" )
@@ -55,8 +55,8 @@ describe "Acts as gmappable" do
       @user.gmaps.should_not == true
     end
   end
-
-
+  
+  
   describe "model customization" do  
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
@@ -189,4 +189,5 @@ describe "Acts as gmappable" do
       @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"Sweet Title\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
     end
   end
+
 end

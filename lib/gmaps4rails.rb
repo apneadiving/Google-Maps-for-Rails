@@ -3,6 +3,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     require "rails"
     require "action_controller"
     require 'array'
+    require 'hash'  
     require 'application_helper'
     require 'acts_as_gmappable/base'
   

@@ -1,7 +1,7 @@
 PATH
   remote: ../../
   specs:
-    gmaps4rails (0.4.1)
+    gmaps4rails (0.5.0)
       crack
 
 GEM

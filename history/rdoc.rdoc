@@ -1,13 +1,13 @@
 == Google Maps for Rails (gmaps4rails)
 
 
-Gmaps4rails is developped to simply create a Google Map (Gmaps):
+Gmaps4rails is developped to simply create a Google Map (Gmaps) from:
 
-- directly from your model,
+- model instances (say Users),
 
-- from your own json
+- your own json
 
-It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
+It's based on Ruby on Rails 3 Engines and uses Google Maps API V3 with Marker Clusterer in option.
 
 == Installation
 
@@ -16,7 +16,8 @@ It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 == Requirements
 - <%= yield :head %> (in your header)
 - <%= yield :scripts %> (in your footer)
-- config.serve_static_assets = true  (in your production.rb), or copy/paste gmaps4rails.css & gmaps4rail.js files in your app.
+- config.serve_static_assets = true  (in your production.rb)
+- jQuery (used for ajax json, not mandatory if you only use the 'json' option)
 
 == Basic configuration
 In your model, add:
@@ -35,6 +36,15 @@ Create a migration and add the following fields to your table (here users):
 
 == How to?
 === QuickStart!
+Say you have a User model and you want to display all the users on a map.
+In your view:
+
+	<%= gmaps4rails_map("User") %>
+
+Done!
+
+=== Same Result, alternative solution
+With this version, you won't need jQuery.
 In your controller:
  
   @json = User.all.to_gmaps4rails
@@ -43,21 +53,23 @@ In your view:
 
   <%= gmaps4rails(@json) %>
 
-Done!
+Done again!
 
 == Options
 
-* Markers with Info window, Custom Picture
+* Info window
 
-* Circles, Polylines, Polygons
+* Custom Marker
+
+* Scopes
+
+* Create from your own json
 
 * Geocode directly your address and retrieve coordinates. 
 
-* Wrapper for 'Direction', giving instructions to go from point A to point B
-
 * Auto-adjust the map to your markers
 
-* Refresh your map on the fly with Javascript (and Ajax)
+* Refresh your map on the fly with Javascript and Ajax
 
 * {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 

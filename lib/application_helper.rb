@@ -1,12 +1,15 @@
 module ApplicationHelper
   
-  def gmaps4rails_map(builder, options = {})
-    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :builder => builder, :options => options }
+  def gmaps4rails(builder, enable_css = true )
+    options = {
+      "map_options" => { "auto_adjust" => true},
+      "markers"     => { "data" => builder }
+    }
+    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options, :enable_css => enable_css }
   end
   
-  def gmaps4rails(builder, options = {})
-    options.merge!({ "processing" => 'json' })
-    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :builder => builder, :options => options }
+  def gmaps(options, enable_css = true )
+    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options, :enable_css => enable_css }
   end
-  
+
 end
