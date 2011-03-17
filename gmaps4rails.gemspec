@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.5.0"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-03-11}
+  s.date = %q{2011-03-17}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Map. Uses Javascript API V3. Provides a helper and much configuration.}
   s.email = %q{benjamin.roth@peachyweb.com}
   s.extra_rdoc_files = [
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "lib/application_helper.rb",
     "lib/array.rb",
     "lib/gmaps4rails.rb",
+    "lib/hash.rb",
     "lib/rails/generators/gmaps4rails/gmaps4rails_generator.rb",
     "lib/rails/generators/gmaps4rails/templates/initializer.rb",
     "lib/rails/generators/gmaps4rails/templates/migration.rb",
@@ -44,6 +45,7 @@ Gem::Specification.new do |s|
     "test/dummy/app/helpers/application_helper.rb",
     "test/dummy/app/helpers/users_helper.rb",
     "test/dummy/app/models/user.rb",
+    "test/dummy/app/views/users/test.rb",
     "test/dummy/config/application.rb",
     "test/dummy/config/boot.rb",
     "test/dummy/config/environment.rb",
@@ -62,9 +64,7 @@ Gem::Specification.new do |s|
     "test/dummy/spec/base/base_spec.rb",
     "test/dummy/spec/controllers/users_controller_spec.rb",
     "test/dummy/spec/models/user_spec.rb",
-    "test/dummy/spec/spec_helper.rb",
-    "test/dummy/test/performance/browsing_test.rb",
-    "test/dummy/test/test_helper.rb"
+    "test/dummy/spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
