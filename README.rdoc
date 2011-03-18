@@ -1,7 +1,7 @@
 == Google Maps for Rails (gmaps4rails)
 
 
-Gmaps4rails is developped to simply create a Google Map (Gmaps):
+Gmaps4rails is developped to simply create a Google Map:
 
 - directly from your model,
 
@@ -16,7 +16,7 @@ It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 == Requirements
 - <%= yield :head %> (in your header)
 - <%= yield :scripts %> (in your footer)
-- config.serve_static_assets = true  (in your production.rb), or copy/paste gmaps4rails.css & gmaps4rail.js files in your app.
+- config.serve_static_assets = true  (in your production.rb), or copy/paste gmaps4rails.css & gmaps4rails.js files in your app.
 
 == Basic configuration
 In your model, add:
@@ -62,6 +62,12 @@ Done!
 * {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
 == Todo?
+
+* Maker clusterer customization
+
+* Integrate Markers with Label: http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/
+
+* Other options from here? http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries
 
 Feel free ton contact us, you have your say.
 

@@ -17,7 +17,9 @@ var builder2 = [{"description": "",
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3},
-        "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]' },
+        "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]',
+  												 "options" => { "auto_adjust" => true  }
+                         },
         "polylines"   => { "data" => '[[
 {"longitude": -122.214897, "latitude": 37.772323},
 {"longitude": -157.821856, "latitude": 21.291982},
@@ -38,12 +40,20 @@ var builder2 = [{"description": "",
 {"longitude": 122.214897, "latitude": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
 ]',
          									},
-         "direction"   => { 
-         	                  "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
-         										"options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
-         									}
+         # "direction"   => { 
+         # 	                  "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
+         # 										"options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
+         # 									}
+    }
+@options2 = {
+  "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]', "options" => { "auto_adjust" => true } }
     }
 %>
+<script type="text/javascript" charset="utf-8">
+	function add_all(locations) {
+	<%=raw @options.to_gmaps4rails(true) %>
+	}
+</script>
 <table>
   <tr>
     <th>Name</th>
@@ -66,10 +76,12 @@ var builder2 = [{"description": "",
 
 <p><%= link_to "New User", new_user_path %></p>
 
-<%= gmaps(@options) %>
-<%#= gmaps4rails(@json)
+<%#= gmaps(@options) %>
+<%= gmaps4rails(@json)
 %>
 
 <button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
+<button type="button" onclick="add_all()">Add all</button>
+
 <div id="instructions"></div>

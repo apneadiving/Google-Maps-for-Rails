@@ -15,4 +15,5 @@ group :test do
 	gem 'launchy'
 	gem 'factory_girl_rails' 
 	gem 'pickle'
+	gem 'mocha'
 end

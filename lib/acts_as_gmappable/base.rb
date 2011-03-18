@@ -110,7 +110,7 @@ module Gmaps4rails
   
   
   def Gmaps4rails.filter(data)
-    return data if data.is_a?(Numeric)
+    return data if data.is_a?(Numeric) || data.is_a?(TrueClass) || data.is_a?(FalseClass)
     "'#{data}'"
   end
   

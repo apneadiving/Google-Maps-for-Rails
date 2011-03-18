@@ -1,5 +1,5 @@
-Rails.application.routes.draw do 
-
-  resources :gmaps, :only => [ :index ], :controller => "gmaps4rails/gmaps"
-
-end
+# Rails.application.routes.draw do 
+# 
+#   resources :gmaps, :only => [ :index ], :controller => "gmaps4rails/gmaps"
+# 
+# end

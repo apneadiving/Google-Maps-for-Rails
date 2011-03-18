@@ -1,6 +1,6 @@
 class Hash
   def to_gmaps4rails(init = false)
-    #the variable 'options' has the following structure
+    #the variable 'options' must have the following structure
     #{  
     #   "map_options" => hash,
     #   "markers"     => { "data" => json, "options" => hash },
@@ -9,7 +9,7 @@ class Hash
     #   "circles"     => { "data" => json, "options" => hash },
     #   "direction"   => { "data" => hash, "options" => hash }
     #}
-    # "map_options" and "direction" must be treated separately because there content is slightly different from the other
+    # "map_options" and "direction" must be treated separately because there content is slightly different from the others:
     # - "map_options" has no data
     # - "direction" has a hash as a data and waypoints options must be processed properly
     # 
@@ -44,10 +44,10 @@ class Hash
     				  waypoints << { "location" => waypoint, "stopover" => true }.to_json
     				end
     	      result << "Gmaps4Rails.direction_conf.waypoints = [#{waypoints * (",")}];"
-          else #option_k != "waypoint" %>
+          else #option_k != "waypoint"
     	      result << "Gmaps4Rails.direction_conf.#{option_k} = #{Gmaps4rails.filter option_v};"	
           end
-        end #end .each %>
+        end #end .each
     	  result << "Gmaps4Rails.create_direction();"
     	else #default behaviour in case condition
     	  result << "Gmaps4Rails.#{category} = #{content["data"]};"
