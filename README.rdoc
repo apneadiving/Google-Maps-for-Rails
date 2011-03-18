@@ -1,6 +1,5 @@
 == Google Maps for Rails (gmaps4rails)
 
-
 Gmaps4rails is developped to simply create a Google Map:
 
 - directly from your model,
@@ -63,11 +62,11 @@ Done!
 
 == Todo?
 
-* Maker clusterer customization
+* Marker clusterer customization
 
-* Integrate Markers with Label: http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/
+* {Integrate Markers with Label} [http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/]
 
-* Other options from here? http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries
+* {Other options from here} [http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries] ?
 
 Feel free ton contact us, you have your say.
 
