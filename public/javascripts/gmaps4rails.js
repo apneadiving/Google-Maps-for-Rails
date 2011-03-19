@@ -11,6 +11,8 @@ var Gmaps4Rails = {
 		center_latitude : 0,
 		center_longitude : 0, 
 		zoom : 1,
+		maxZoom: null,
+		minZoom: null,
 		auto_adjust : false         //adjust the map to the markers if set to true
 		},				
 	
@@ -22,7 +24,9 @@ var Gmaps4Rails = {
 		//clustering config
 	  do_clustering: true,			//do clustering if set to true
 	  clusterer_gridSize: 50,		//the more the quicker but the less precise
-		clusterer_maxZoom:  10		//removes clusterer  at this zoom level
+		clusterer_maxZoom:  5,		//removes clusterer  at this zoom level
+		randomize: true,         //Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation to happen.
+		max_random_distance: 100  //in meters. Each marker coordinate could be altered by this distance in a random direction
 		},
 	
 	//Stored variables
@@ -80,6 +84,8 @@ var Gmaps4Rails = {
 	//initializes the map
 	initialize: function(){
 		this.map = new google.maps.Map(document.getElementById(this.map_options.id), {
+			  maxZoom: this.map_options.maxZoom,
+			  minZoom: this.map_options.minZoom,
 				zoom: this.map_options.zoom,
 				center: new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude),
 				mapTypeId: google.maps.MapTypeId[this.map_options.type]
@@ -340,8 +346,18 @@ var Gmaps4Rails = {
 			   var marker_width 	= this.exists(this.markers[i].width)   ? this.markers[i].width 	 : this.markers_conf.width;
 			   var marker_height 	= this.exists(this.markers[i].height)  ? this.markers[i].height  : this.markers_conf.length;
 			   var marker_title 	= this.exists(this.markers[i].title)   ? this.markers[i].title 	 : null;
-      
-				 var myLatLng = new google.maps.LatLng(this.markers[i].latitude, this.markers[i].longitude); 
+      	 var Lat = this.markers[i].latitude;
+				 var Lng = this.markers[i].longitude;
+				 
+				 //alter coordinates if randomize is true
+				 if ( this.markers_conf.randomize)
+				 {
+					var LatLng = this.randomize(Lat, Lng);
+				  //retrieve coordinates from the array
+				  Lat = LatLng[0]; Lng = LatLng[1];
+				 }
+				
+				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
 				 this.extend_bounds(myLatLng);
 				
 				 // Marker sizes are expressed as a Size of X,Y
@@ -354,7 +370,7 @@ var Gmaps4Rails = {
 					}
 					//save object for later use, basically, to get back the text to display when clicking it
 					this.markers[i].marker_object = ThisMarker; 
-					//save the marker again in a list for the clusterer
+					//save the marker in a list
 					marker_objects.push(ThisMarker);		
 					//add click listener
 		  	  google.maps.event.addListener(Gmaps4Rails.markers[i].marker_object, 'click', function() { if (Gmaps4Rails.info_window!=null) {Gmaps4Rails.info_window.close();}; Gmaps4Rails.getInfoWindow(this);});
@@ -399,7 +415,21 @@ var Gmaps4Rails = {
 	//basic function to check existence of a variable
 	exists: function(var_name) {
 		return var_name	!= "" && typeof var_name !== "undefined"
-	}
+	},
+
+	//randomize
+	randomize: function(Lat0, Lng0) {
+		//distance in meters between 0 and max_random_distance (positive or negative)
+		var dx = this.markers_conf.max_random_distance * this.random();
+		var dy = this.markers_conf.max_random_distance * this.random();
+		var Lat = parseFloat(Lat0) + (180/Math.PI)*(dy/6378137);
+		var Lng = parseFloat(Lng0) + ( 90/Math.PI)*(dx/6378137)/Math.cos(Lat0);
+		return [Lat, Lng];
+	},
+	
+	//retrives a value between -1 and 1
+	random: function() { return ( Math.random() * 2 -1); }
+	
 };
 
 //marker_clusterer styles
