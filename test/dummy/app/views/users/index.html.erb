@@ -75,7 +75,7 @@ var builder2 = [{"description": "",
 
 <p><%= link_to "New User", new_user_path %></p>
 <%= gmaps({ 
-	"map_options" => {"minZoom" => 3, "auto_adjust" => true},
+	"map_options" => {"zoom" =>3, "auto_adjust" => true},
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>

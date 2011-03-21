@@ -13,7 +13,8 @@ var Gmaps4Rails = {
 		zoom : 1,
 		maxZoom: null,
 		minZoom: null,
-		auto_adjust : false         //adjust the map to the markers if set to true
+		auto_adjust : false,        //adjust the map to the markers if set to true
+		auto_zoom: true            //zoom given by auto-adjust
 		},				
 	
 	//markers + info styling
@@ -298,10 +299,7 @@ var Gmaps4Rails = {
 	// 2- processing == "json"    && builder = json in format: [{"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": ""}]
 	create_markers: function() {
 		this.setup_Markers();
-
-		if (this.map_options.auto_adjust) {
-			this.map.fitBounds(this.bounds);
-		}
+		this.adjust();
 	},
 
   // clear markers
@@ -327,9 +325,7 @@ var Gmaps4Rails = {
   add_markers: function(new_markers){
     this.markers = this.markers.concat(new_markers);
     this.setup_Markers();
-		if (this.map_options.auto_adjust) {
-			this.map.fitBounds(this.bounds);
-		}
+		this.adjust();
   },
 	
   //Creates Marker from the markers passed + markerClusterer
@@ -427,6 +423,21 @@ var Gmaps4Rails = {
 		var Lat = parseFloat(Lat0) + (180/Math.PI)*(dy/6378137);
 		var Lng = parseFloat(Lng0) + ( 90/Math.PI)*(dx/6378137)/Math.cos(Lat0);
 		return [Lat, Lng];
+	},
+	
+	//adjust or not center of the map. Takes into account auto_adjust & auto_adjust
+	adjust: function(){
+		if (this.map_options.auto_adjust) {
+			if(this.map_options.auto_zoom) {
+				this.map.fitBounds(this.bounds); 
+				}
+			else {
+				var map_center = this.bounds.getCenter();
+				this.map_options.center_longitude = map_center.Da;
+				this.map_options.center_latitude  = map_center.Ba;
+				this.map.setCenter(map_center);
+			}
+		}
 	},
 	
 	//retrives a value between -1 and 1
