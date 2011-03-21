@@ -8,12 +8,9 @@ Gmaps4rails is developped to simply create a Google Map:
 
 It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 
-== Installation
-
-	gem install gmaps4rails
-
 == Requirements
-- <%= yield :head %> (in your header)
+- gem 'gmaps4rails'     (in your gemfile, then bundle)
+- <%= yield :head %>    (in your header)
 - <%= yield :scripts %> (in your footer)
 - config.serve_static_assets = true  (in your production.rb), or copy/paste gmaps4rails.css & gmaps4rails.js files in your app.
 
@@ -66,7 +63,7 @@ Done!
 
 * Integrate Markers with Label: http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/
 
-* Other options from here: http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries ?
+* Other options from here: http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries
 
 Feel free ton contact us, you have your say.
 

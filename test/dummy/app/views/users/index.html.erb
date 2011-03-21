@@ -74,9 +74,12 @@ var builder2 = [{"description": "",
 </table>
 
 <p><%= link_to "New User", new_user_path %></p>
-
+<%= gmaps({ 
+	"map_options" => {"minZoom" => 3, "auto_adjust" => true},
+	"markers"     => {"data" => @json}
+}) %>
 <%#= gmaps(@options) %>
-<%= gmaps4rails(@json)
+<%#= gmaps4rails(@json)
 %>
 
 <button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>

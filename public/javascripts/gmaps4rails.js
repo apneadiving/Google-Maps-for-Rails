@@ -25,7 +25,7 @@ var Gmaps4Rails = {
 	  do_clustering: true,			//do clustering if set to true
 	  clusterer_gridSize: 50,		//the more the quicker but the less precise
 		clusterer_maxZoom:  5,		//removes clusterer  at this zoom level
-		randomize: false,         //Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation to happen.
+		randomize: false,         //Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
 		max_random_distance: 100  //in meters. Each marker coordinate could be altered by this distance in a random direction
 		},
 	
@@ -318,6 +318,8 @@ var Gmaps4Rails = {
   replace_markers: function(new_markers){
 	  this.clear_markers();
 		this.markers = [];
+		//variable used for Auto-adjust
+		this.bounds = new google.maps.LatLngBounds(); 
 		this.add_markers(new_markers);
   },
 
