@@ -1,0 +1,8 @@
+*~
+*.cache
+*.log
+*.pid
+.DS_Store
+test/dummy/tmp/**/*
+test/dummy/log/**/*
+pkg
