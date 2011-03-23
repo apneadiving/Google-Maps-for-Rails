@@ -197,3 +197,6 @@ module Gmaps4rails
 end
 
 ::ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable::Base
+# Mongoid::Document::ClassMethods.class_eval do
+#   include Gmaps4rails::ActsAsGmappable::Base
+# end
