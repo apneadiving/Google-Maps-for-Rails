@@ -129,14 +129,15 @@ module Gmaps4rails
             validate :process_geocoding
          end
           
+          #instance method
           define_method "gmaps4rails_options" do
             {
               :lat_column     => args[:lat]           || "latitude",
               :lng_column     => args[:lng]           || "longitude",
-              :check_process  => args[:check_process] || true,
+              :check_process  => args[:check_process] && true,
               :checker        => args[:checker]       || "gmaps",
               :msg            => args[:msg]           || "Address invalid",
-              :validation     => args[:validation]    || true
+              :validation     => args[:validation]    && true
               #TODO: address as a proc?
             }
           end
