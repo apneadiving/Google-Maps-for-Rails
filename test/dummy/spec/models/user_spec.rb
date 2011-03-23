@@ -134,6 +134,26 @@ describe "Acts as gmappable" do
       @user.gmaps.should == nil
     end
     
+    it "should geocode after each save if 'check_process' is false" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => false,
+            :checker        => "gmaps",
+            :msg            => "Address invalid",
+            :validation     => true
+          }
+        end
+      end
+      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user.address = "paris, France"
+      @user.save
+      @user.latitude.should  == 48.8566667
+      @user.longitude.should == 2.3509871
+    end
+    
     it "should save to the proper boolean checker set in checker" do
       User.class_eval do
         def gmaps4rails_options
