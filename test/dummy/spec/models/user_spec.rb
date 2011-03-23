@@ -4,7 +4,7 @@ describe "Acts as gmappable" do
   
   describe "standard configuration, valid user" do
     before(:each) do
-      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user = Factory(:user)
     end
     
     it "should have a geocoded position" do
@@ -17,7 +17,7 @@ describe "Acts as gmappable" do
     end
   
     it "should render a valid json from an array of ojects" do
-      @user2 = User.create!(:name => "me", :address => "Paris, France" )
+      @user2 = Factory(:user_paris)
       User.all.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ,{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
   
@@ -44,7 +44,7 @@ describe "Acts as gmappable" do
   
   describe "standard configuration, invalid address" do
     before(:each) do
-      @user = User.new(:name => "me", :address => "home" )
+      @user = Factory.build(:invalid_user)
     end
     
     it "should raise an error if validation option is turned on and address incorrect" do
@@ -75,7 +75,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.new(:name => "me", :address => "home" )
+      @user = Factory.build(:invalid_user)
       @user.should_not be_valid, "Custom Address invalid"
     end
   
@@ -92,7 +92,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.new(:name => "me", :address => "home" )
+      @user = Factory.build(:invalid_user)
       @user.should be_valid
     end
     
@@ -109,7 +109,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user = Factory(:user)
       @user.lat_test.should  == 43.1251606
       @user.long_test.should == 5.9311119
       @user.longitude.should == nil
@@ -130,7 +130,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user = Factory(:user)
       @user.gmaps.should == nil
     end
     
@@ -147,7 +147,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user = Factory(:user)
       @user.address = "paris, France"
       @user.save
       @user.latitude.should  == 48.8566667
@@ -167,7 +167,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France" )
+      @user = Factory(:user)
       @user.gmaps.should == nil
       @user.bool_test.should == true
     end
@@ -178,7 +178,7 @@ describe "Acts as gmappable" do
           "My Beautiful Picture: #{picture}"
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France", :picture => "http://www.blankdots.com/img/github-32x32.png")
+      @user = Factory(:user_with_pic)
       @user.to_gmaps4rails.should == "[{\n\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
     
@@ -195,7 +195,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France")
+      @user = Factory(:user)
       @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
     end
     
@@ -205,7 +205,7 @@ describe "Acts as gmappable" do
           "Sweet Title"
         end
       end
-      @user = User.create!(:name => "me", :address => "Toulon, France")
+      @user = Factory(:user)
       @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"Sweet Title\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
     end
   end

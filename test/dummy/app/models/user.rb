@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  acts_as_gmappable :check_process => false
+  acts_as_gmappable
 
   def gmaps4rails_address
     address

@@ -132,12 +132,12 @@ module Gmaps4rails
           #instance method
           define_method "gmaps4rails_options" do
             {
-              :lat_column     => args[:lat]           || "latitude",
-              :lng_column     => args[:lng]           || "longitude",
-              :check_process  => args[:check_process] && true,
-              :checker        => args[:checker]       || "gmaps",
-              :msg            => args[:msg]           || "Address invalid",
-              :validation     => args[:validation]    && true
+              :lat_column     => args[:lat]                 || "latitude",
+              :lng_column     => args[:lng]                 || "longitude",
+              :check_process  => args[:check_process].nil?  ?   true : args[:check_process],
+              :checker        => args[:checker]             || "gmaps",
+              :msg            => args[:msg]                 || "Address invalid",
+              :validation     => args[:validation].nil?     ?   true : args[:validation]
               #TODO: address as a proc?
             }
           end
