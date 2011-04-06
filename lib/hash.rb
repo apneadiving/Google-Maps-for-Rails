@@ -26,11 +26,18 @@ class Hash
         end
       end
 
+      unless self["markers_conf"].nil?
+        self["markers_conf"].each do |option_k, option_v|
+          result << "Gmaps4Rails.markers_conf.#{option_k} = #{Gmaps4rails.filter option_v};"
+        end
+      end
+
       result << "Gmaps4Rails.initialize();"
     end #if init
     each do |category, content| #loop through options hash
       case category
       when "map_options"
+      when "markers_conf"
     	#already taken into account above => nothing to do here
     	when "direction"
     	  result <<  "Gmaps4Rails.direction_conf.origin = '#{content["data"]["from"]}';"
