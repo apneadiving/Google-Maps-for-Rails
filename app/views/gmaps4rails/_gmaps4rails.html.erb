@@ -8,7 +8,7 @@
 <% content_for :scripts do %>
 <script src="http://www.google.com/jsapi"></script>
 <script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js'></script>
-<%=javascript_include_tag 'gmaps4rails' %>
+<%= javascript_include_tag 'gmaps4rails' if enable_js == true %>
 <script type="text/javascript" charset="utf-8">
 
 window.onload = function() {
