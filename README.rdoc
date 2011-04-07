@@ -45,6 +45,8 @@ Done!
 
 * Markers with Info window, Custom Picture
 
+* Automatic sidebar with list of markers
+
 * Circles, Polylines, Polygons
 
 * Geocode directly your address and retrieve coordinates. 
