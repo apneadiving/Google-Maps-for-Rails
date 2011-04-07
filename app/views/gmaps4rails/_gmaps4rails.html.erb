@@ -9,9 +9,8 @@
 <% if enable_js == true %>
 	<script src="http://www.google.com/jsapi"></script>
 	<%=javascript_include_tag 'gmaps4rails' %>
-	<% debugger %>
 	<% unless options["markers"].nil? or (!options["markers"]["options"].nil? and options["markers"]["options"]["do_clustering"] == false) %>
-		<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js'></script>
+		<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script>
 	<% end %>
 <% end  %>
 <script type="text/javascript" charset="utf-8">

@@ -79,7 +79,7 @@ var builder2 = [{"description": "",
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => false } }) %>
+<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list" } }) %>
 
 <button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
