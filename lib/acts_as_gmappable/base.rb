@@ -15,7 +15,7 @@ module Gmaps4rails
   def Gmaps4rails.create_json(object)
     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
 "{
-\"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\",
+\"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\", \"sidebar\": \"#{object.gmaps4rails_sidebar}\",
 \"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
 } ,"
     end
@@ -116,88 +116,95 @@ module Gmaps4rails
   
   module ActsAsGmappable
 
-    module Base
-      def self.included(klass)
-        klass.class_eval do
-          extend Config
-        end
+    extend ActiveSupport::Concern
+    
+    module InstanceMethods
+      def gmaps4rails_infowindow
+      end
+        
+      def gmaps4rails_title
       end
       
-      module Config
-        def acts_as_gmappable args = {}          
-         unless args[:process_geocoding] == false
-            validate :process_geocoding
-         end
-          
-          #instance method
-          define_method "gmaps4rails_options" do
-            {
-              :lat_column     => args[:lat]                 || "latitude",
-              :lng_column     => args[:lng]                 || "longitude",
-              :check_process  => args[:check_process].nil?  ?   true : args[:check_process],
-              :checker        => args[:checker]             || "gmaps",
-              :msg            => args[:msg]                 || "Address invalid",
-              :validation     => args[:validation].nil?     ?   true : args[:validation]
-              #TODO: address as a proc?
-            }
+      def gmaps4rails_sidebar
+      end
+        
+      def process_geocoding
+        #to prevent geocoding each time a save is made
+        return true if gmaps4rails_options[:check_process] == true && self[gmaps4rails_options[:checker]] == true
+        
+        begin
+          coordinates = Gmaps4rails.geocode(self.gmaps4rails_address)
+        rescue GeocodeStatus #adress was invalid, add error to base.
+          errors[:base] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
+        rescue GeocodeNetStatus => e #connection error, No need to prevent save.
+          logger.warn(e)
+          #TODO add customization here?
+        else #if no exception
+          self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
+          self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
+          if gmaps4rails_options[:check_process] == true
+            self[gmaps4rails_options[:checker]] = true
           end
-                 
-          include Gmaps4rails::ActsAsGmappable::Base::InstanceMethods
         end
       end
+        
+      def gmaps4rails_marker_picture
+        {
+          "picture" => "",
+          "width" => "",
+          "height" => ""
+        }
+      end
+        
+      def self.gmaps4rails_trusted_scopes
+        []
+      end
+        
+      def to_gmaps4rails
+        json = "["
+        json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
+        json += "]"
+      end
+        
+    end
+    
+    module ClassMethods
+      mattr_accessor :gmaps4rails_options
       
-      module InstanceMethods
-        
-        def gmaps4rails_infowindow
+      def acts_as_gmappable args = {}          
+        unless args[:process_geocoding] == false
+          validate :process_geocoding
         end
+
+        # [:lat, :lng, :check_process, :checker, :msg, :validation].each do |sym|
+        #   Gmaps4rails::ActsAsGmappable.gmaps4rails_options[sym] = args[sym] unless args[sym].nil?
+        # end
         
-        def gmaps4rails_title
-        end
+        Gmaps4rails::ActsAsGmappable::ClassMethods.gmaps4rails_options = args        
         
-        def process_geocoding
-          #to prevent geocoding each time a save is made
-          return true if gmaps4rails_options[:check_process] == true && self[gmaps4rails_options[:checker]] == true
-          
-          begin
-            coordinates = Gmaps4rails.geocode(self.gmaps4rails_address)
-          rescue GeocodeStatus #adress was invalid, add error to base.
-            errors[:base] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
-          rescue GeocodeNetStatus => e #connection error, No need to prevent save.
-            logger.warn(e)
-            #TODO add customization here?
-          else #if no exception
-            self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
-            self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
-            if gmaps4rails_options[:check_process] == true
-              self[gmaps4rails_options[:checker]] = true
-            end
-          end
-        end
-        
-        def gmaps4rails_marker_picture
+        #instance method
+        define_method "gmaps4rails_options" do
           {
-            "picture" => "",
-            "width" => "",
-            "height" => ""
+            :lat_column     => args[:lat]                 || "latitude",
+            :lng_column     => args[:lng]                 || "longitude",
+            :check_process  => args[:check_process].nil?  ?   true : args[:check_process],
+            :checker        => args[:checker]             || "gmaps",
+            :msg            => args[:msg]                 || "Address invalid",
+            :validation     => args[:validation].nil?     ?   true : args[:validation]
+            #TODO: address as a proc?
           }
         end
-        
-        def self.gmaps4rails_trusted_scopes
-          []
-        end
-        
-        def to_gmaps4rails
-          json = "["
-          json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
-          json += "]"
-        end
-        
-      end # InstanceMethods      
+      end
+      include InstanceMethods
     end
-  end
+    
+  end #ActsAsGmappable
 end
 
-::ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable::Base
+ActiveSupport.on_load(:active_record) do
+  ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
+end
+#::ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable
 # Mongoid::Document::ClassMethods.class_eval do
 #   include Gmaps4rails::ActsAsGmappable::Base
 # end

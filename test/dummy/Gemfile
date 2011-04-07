@@ -8,12 +8,8 @@ gem 'ruby-debug'
 
 group :test do
 	gem 'rspec-rails'
-	gem 'cucumber-rails'
-	gem 'capybara'
-	gem 'capybara-envjs', :require => 'capybara/envjs'
-	#gem 'database_cleaner'
+  gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
+	gem 'database_cleaner'
 	gem 'launchy'
 	gem 'factory_girl_rails' 
-	gem 'pickle'
-	gem 'mocha'
 end

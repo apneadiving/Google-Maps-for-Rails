@@ -6,9 +6,14 @@
 <% end %>
 
 <% content_for :scripts do %>
-<script src="http://www.google.com/jsapi"></script>
-<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js'></script>
-<%=javascript_include_tag 'gmaps4rails' %>
+<% if enable_js == true %>
+	<script src="http://www.google.com/jsapi"></script>
+	<%=javascript_include_tag 'gmaps4rails' %>
+	<% debugger %>
+	<% unless options["markers"].nil? or (!options["markers"]["options"].nil? and options["markers"]["options"]["do_clustering"] == false) %>
+		<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js'></script>
+	<% end %>
+<% end  %>
 <script type="text/javascript" charset="utf-8">
 
 window.onload = function() {
@@ -19,5 +24,5 @@ window.onload = function() {
 <% end %>
 
 <div id="<%= options["map_options"].nil? || options['map_options']['container_id'].nil? ? "map_container" : options['map_options']['container_id'] %>"> 
-  <div id="<%= options["map_options"].nil? || options['map_options']['id'].nil? ? "gmaps4rails_map" : options['map_options']['id'] %>"></div> 
+  <div id="<%= options["map_options"].nil? || options['map_options']['id'].nil? ? "gmaps4rails_map" : options['map_options']['id'] %>"></div>
 </div>

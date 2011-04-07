@@ -4,5 +4,12 @@ class User < ActiveRecord::Base
   def gmaps4rails_address
     address
   end
- 
+  
+  # def gmaps4rails_sidebar
+  #   "<b>#{name}</b>"
+  # end
+  #  
+  def gmaps4rails_infowindow
+    "je suis l'infowindow"
+  end
 end

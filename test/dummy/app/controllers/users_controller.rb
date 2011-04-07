@@ -39,4 +39,8 @@ class UsersController < ApplicationController
     @user.destroy
     redirect_to users_url, :notice => "Successfully destroyed user."
   end
+  
+  def test_list
+    @json  = User.all.to_gmaps4rails
+  end
 end
