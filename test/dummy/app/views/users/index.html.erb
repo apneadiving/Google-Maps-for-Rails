@@ -79,13 +79,13 @@ var builder2 = [{"description": "",
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list" } }) %>
+<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => false } }) %>
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
 
-	// function gmaps4rails_callback() {
-	// 	google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ alert('I am from the callback!');});
-	//   }
+	function gmaps4rails_callback() {
+	 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
+	}
 
 </script>
 <% end %>

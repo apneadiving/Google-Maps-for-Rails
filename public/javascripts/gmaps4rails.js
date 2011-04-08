@@ -310,12 +310,10 @@ var Gmaps4Rails = {
 
   // clear markers
   clear_markers: function(){
-    if (this.marker_objects.size() > 0) {
-      for (i in this.marker_objects) {
-        this.marker_objects[i].setMap(null);
-      }
-      this.marker_objects = new Array;
-    }
+	  for (var i = 0; i <  this.marker_objects.length; ++i) {
+       this.marker_objects[i].setMap(null);
+     }
+     this.marker_objects = new Array;
   },
 
   // replace old markers with new markers on an existing map
