@@ -33,8 +33,7 @@ var Gmaps4Rails = {
 		},
 	
 	//Stored variables
-	marker_objects: [],				  //contains markers LatLng
-	markers : [],							  //contains raw markers
+	markers : [],							  //contains all markers, each marker contain a google Marker object in google_object
 	bounds: null,								//contains current bounds
 	polygons: null, 						//contains raw data, array of arrays (first element cold be a hash containing options)
 	polygon_objects: [],				//contains processed google.maps.Polygon
@@ -310,36 +309,47 @@ var Gmaps4Rails = {
 
   // clear markers
   clear_markers: function(){
-	  for (var i = 0; i <  this.marker_objects.length; ++i) {
-       this.marker_objects[i].setMap(null);
-     }
-     this.marker_objects = new Array;
+    if (this.markerClusterer != null){
+			this.markerClusterer.clearMarkers();
+		}
+		for (var i = 0; i <  this.markers.length; ++i) {
+      this.markers[i].google_object.setMap(null);
+    }
   },
 
   // replace old markers with new markers on an existing map
   replace_markers: function(new_markers){
-	  this.clear_markers();
-		this.markers = [];
-		//variable used for Auto-adjust
-		this.bounds = new google.maps.LatLngBounds(); 
+	  //reset previous markers
+		this.markers = new Array;
+		//reset Auto-adjust
+		this.bounds = new google.maps.LatLngBounds();
+		//reset sidebar content if exists
+		if (this.markers_conf.list_container != null ){
+			var ul = document.getElementById(this.markers_conf.list_container);
+			ul.innerHTML = "";
+		}
+		//add new markers
 		this.add_markers(new_markers);
   },
 
 	//add new markers to on an existing map (beware, it doesn't check duplicates)
   add_markers: function(new_markers){
+	  //clear the whole map
+	  this.clear_markers();
+	  //update the list of markers to take into account
     this.markers = this.markers.concat(new_markers);
+    //put markers on the map
     this.setup_Markers();
+		//adjust map
 		this.adjust();
   },
 	
   //Creates Marker from the markers passed + markerClusterer
   setup_Markers: function () {		    
-		//resets Clusterer if needed
-		if (this.markerClusterer) {
-			this.markerClusterer.clearMarkers();
-		}
 	  // Add markers to the map
 	  for (var i = 0; i < this.markers.length; ++i) {
+		  //check if the marker has not already been created
+			if (!this.exists(this.markers[i].google_object)) {
 			   //test if value passed or use default 
 			   var marker_picture = this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture;
 			   var marker_width 	= this.exists(this.markers[i].width)   ? this.markers[i].width 	 : this.markers_conf.width;
@@ -367,12 +377,11 @@ var Gmaps4Rails = {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
 						var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
 					}
-					//save object for later use, basically, to get back the text to display when clicking it
-					this.markers[i].marker_object = ThisMarker; 
+					//save object
+					this.markers[i].google_object = ThisMarker; 
 					//add infowindowstuff + list creation if enabled
 					this.handle_info_window(this.markers[i]);
-					//save the marker in a list
-					this.marker_objects.push(ThisMarker);
+			 }
 		}
 		this.setup_Clusterer();
 	},
@@ -381,7 +390,7 @@ var Gmaps4Rails = {
 		//create the infowindow
 		var info_window = new google.maps.InfoWindow({content: marker_container.description });
 		//add the listener associated
-		google.maps.event.addListener(marker_container.marker_object, 'click', this.openInfoWindow(info_window, marker_container.marker_object));
+		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
 		if (this.markers_conf.list_container)
 		{
 			var ul = document.getElementById(this.markers_conf.list_container);
@@ -390,7 +399,7 @@ var Gmaps4Rails = {
 	    aSel.href = 'javascript:void(0);';
 	    var html = this.exists(marker_container.sidebar) ? marker_container.sidebar : "Marker";
 	    aSel.innerHTML = html;
-	    aSel.onclick = this.generateTriggerCallback(marker_container.marker_object, 'click');
+	    aSel.onclick = this.generateTriggerCallback(marker_container.google_object, 'click');
 	    li.appendChild(aSel);
 	    ul.appendChild(li);
 		}
@@ -419,7 +428,13 @@ var Gmaps4Rails = {
 	{
 		if (this.markers_conf.do_clustering == true)
 		{
-			this.markerClusterer = new MarkerClusterer(this.map, this.marker_objects, {	maxZoom: this.markers_conf.clusterer_maxZoom,
+			var gmarkers_array = new Array;
+			for (var i = 0; i <  this.markers.length; ++i) {
+       gmarkers_array.push(this.markers[i].google_object);
+      }
+			
+			
+			this.markerClusterer = new MarkerClusterer(this.map, gmarkers_array, {	maxZoom: this.markers_conf.clusterer_maxZoom,
 																																			   gridSize: this.markers_conf.clusterer_gridSize,
 																																			   //styles: styles TODO: offer clusterer customization
 																																	  	   });

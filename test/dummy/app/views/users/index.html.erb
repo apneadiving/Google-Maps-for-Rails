@@ -13,7 +13,22 @@ var builder2 = [{"description": "",
 "picture": "",
 "width": "",
 "height": ""
-} ];	
+} ];
+var builder3 = [{"description": "",
+"title": "",
+"longitude": "6.9311119",
+"latitude": "49.1251606",
+"picture": "",
+"width": "",
+"height": ""
+} ,{"description": "",
+"title": "",
+"longitude": "39.3509871",
+"latitude": "40.8566667",
+"picture": "",
+"width": "",
+"height": ""
+} ];
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
@@ -79,7 +94,7 @@ var builder2 = [{"description": "",
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => false } }) %>
+<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => true } }) %>
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
 
@@ -91,6 +106,7 @@ var builder2 = [{"description": "",
 <% end %>
 <button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
+<button type="button" onclick="Gmaps4Rails.add_markers(builder3)">Add Markers bis</button>
 <button type="button" onclick="add_all()">Add all</button>
 <div>
 	<ul id="markers_list"></ul>
