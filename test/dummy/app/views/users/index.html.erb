@@ -80,7 +80,15 @@ var builder2 = [{"description": "",
 }) %>
 <%#= gmaps(@options) %>
 <%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list" } }) %>
+<% content_for :scripts do %>
+<script type="text/javascript" charset="utf-8">
 
+	// function gmaps4rails_callback() {
+	// 	google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ alert('I am from the callback!');});
+	//   }
+
+</script>
+<% end %>
 <button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
 <button type="button" onclick="add_all()">Add all</button>

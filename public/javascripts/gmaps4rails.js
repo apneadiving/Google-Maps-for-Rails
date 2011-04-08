@@ -98,7 +98,11 @@ var Gmaps4Rails = {
 			{ if (this.info_window != null) {this.info_window.close();} 
 		});
 		//variable used for Auto-adjust
-		this.bounds = new google.maps.LatLngBounds(); 
+		this.bounds = new google.maps.LatLngBounds();
+		
+		if(typeof gmaps4rails_callback == 'function') { 
+		gmaps4rails_callback(); 
+		}
 	},
 	
 	create_direction: function(){
