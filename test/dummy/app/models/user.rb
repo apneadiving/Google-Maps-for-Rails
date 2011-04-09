@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   acts_as_gmappable
-
+  
   def gmaps4rails_address
     address
   end
@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   # end
   #  
   def gmaps4rails_infowindow
-    "je suis l'infowindow"
+    "je suis l'infowindow de #{name}"
   end
+
 end

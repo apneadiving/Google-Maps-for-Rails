@@ -21,7 +21,7 @@ module Gmaps4rails
     end
   end  
   
-  def Gmaps4rails.geocode(address)
+  def Gmaps4rails.geocode(address, raw = false)
    if address.nil? || address.empty?
      raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address"
    else #coordinates are valid
@@ -38,12 +38,14 @@ module Gmaps4rails
        #logger.debug "Google geocoding. Address: #{address}. Result: #{resp.body}"
        #check if google went well
        if parse["status"] == "OK"
+         return parse if raw == true
          array = []
          parse["results"].each do |result|
            array << { 
                       :lat => result["geometry"]["location"]["lat"], 
                       :lng => result["geometry"]["location"]["lng"],
-                      :matched_address => result["formatted_address"] 
+                      :matched_address => result["formatted_address"],
+                      :bounds => result["geometry"]["bounds"]
                      }
          end
          return array

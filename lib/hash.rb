@@ -22,7 +22,11 @@ class Hash
       #because map should be initialized first, we must extract possible map_options
       unless self["map_options"].nil?
         self["map_options"].each do |option_k, option_v|
+          if option_k == "bounds" #particular case
+            result << "Gmaps4Rails.map_options.#{option_k} = #{option_v};"
+          else
           result << "Gmaps4Rails.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
+          end
         end
       end
 

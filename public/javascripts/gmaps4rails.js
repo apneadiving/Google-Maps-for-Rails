@@ -14,8 +14,9 @@ var Gmaps4Rails = {
 		zoom : 1,
 		maxZoom: null,
 		minZoom: null,
-		auto_adjust : false,        //adjust the map to the markers if set to true
-		auto_zoom: true            //zoom given by auto-adjust
+		auto_adjust : false,    //adjust the map to the markers if set to true
+		auto_zoom: true,        //zoom given by auto-adjust
+		bounds: []            //adjust map to these limits only (not taken into account if auto_adjust == true). Should be filled with SW and NE
 		},				
 	
 	//markers + info styling
@@ -33,15 +34,11 @@ var Gmaps4Rails = {
 		},
 	
 	//Stored variables
-	markers : [],							  //contains all markers, each marker contain a google Marker object in google_object
-	bounds: null,								//contains current bounds
-	polygons: null, 						//contains raw data, array of arrays (first element cold be a hash containing options)
-	polygon_objects: [],				//contains processed google.maps.Polygon
-	polylines: null, 						//contains raw data, array of arrays (first element cold be a hash containing options)
-	polyline_objects: [],				//contains processed google.maps.Polyline
-	circles: null,              //contains raw data, array of hash
-	circle_objects: [],			    //contains processed google.maps.Circle
-	info_window : null,
+	markers : [],							  //contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "google_object": google_marker}
+	bounds_object: null,				//contains current bounds from markers, polylines etc...
+	polygons: [], 						  //contains raw data, array of arrays (first element could be a hash containing options)
+	polylines: [], 						  //contains raw data, array of arrays (first element could be a hash containing options)
+	circles: [],                //contains raw data, array of hash
   markerClusterer: null,			//contains all marker clusterers
   
 	//Polygon Styling
@@ -92,15 +89,11 @@ var Gmaps4Rails = {
 				center: new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude),
 				mapTypeId: google.maps.MapTypeId[this.map_options.type]
 		});
-		//infowindow closes when user clicks on the map
-		google.maps.event.addListener(this.map, 'click', function() 
-			{ if (this.info_window != null) {this.info_window.close();} 
-		});
-		//variable used for Auto-adjust
-		this.bounds = new google.maps.LatLngBounds();
-		
+		//resets sidebar if needed
+		this.reset_sidebar_content();
+		//launch callbacks if any
 		if(typeof gmaps4rails_callback == 'function') { 
-		gmaps4rails_callback(); 
+			gmaps4rails_callback(); 
 		}
 	},
 	
@@ -150,7 +143,6 @@ var Gmaps4Rails = {
 			if (this.exists(this.circles[i].latitude) && this.exists(this.circles[i].longitude))
 			{
 				 center = new google.maps.LatLng(this.circles[i].latitude, this.circles[i].longitude);
-				 this.extend_bounds(center);
 				 //always check if a config is given, if not, use defaults
 				 var circle = new google.maps.Circle({
 			   center:        center,
@@ -162,7 +154,7 @@ var Gmaps4Rails = {
 				 radius: 				this.circles[i].radius,
 				 clickable:     false
 			 	});
-				this.circle_objects.push(circle);
+				this.circles[i].google_object = circle;
 				circle.setMap(this.map);
 			}
 		}
@@ -171,23 +163,7 @@ var Gmaps4Rails = {
 	//polygons is an array of arrays. It loops.
 	create_polygons: function(){
 		for (var i = 0; i < this.polygons.length; ++i) {
-			//Polygons could be customized. By convention, customization options should be contained in the first
-	  	if (i==0)
-			{
-				//Array contain polygon elements
-				if (this.polygons[i] instanceof Array) {
-					this.create_polygon(i);
-				}
-				//hashes contain configuration which would be set as default
-				else{
-					if (this.exists(this.polygons[i].strokeColor)  ) { this.polygons_conf.strokeColor 	= this.polygons[i].strokeColor; 	}
-					if (this.exists(this.polygons[i].strokeOpacity)) { this.polygons_conf.strokeOpacity = this.polygons[i].strokeOpacity; }
-				  if (this.exists(this.polygons[i].strokeWeight )) { this.polygons_conf.strokeWeight 	= this.polygons[i].strokeWeight; 	}
-				  if (this.exists(this.polygons[i].fillColor 		)) { this.polygons_conf.fillColor 		= this.polygons[i].fillColor; 		}
-				  if (this.exists(this.polygons[i].fillOpacity 	)) { this.polygons_conf.fillOpacity 	= this.polygons[i].fillOpacity; 	}
-				}
-			}
-			else { this.create_polygon(i); }
+			this.create_polygon(i)
 		}
 	},
 	
@@ -203,7 +179,6 @@ var Gmaps4Rails = {
 		for (var j = 0; j < this.polygons[i].length; ++j) {
 			var latlng = new google.maps.LatLng(this.polygons[i][j].latitude, this.polygons[i][j].longitude);
 	  	polygon_coordinates.push(latlng);
-			this.extend_bounds(latlng);
 			//first element of an Array could contain specific configuration for this particular polygon. If no config given, use default
 			if (j==0) {
 				strokeColor   = this.polygons[i][j].strokeColor  	|| this.polygons_conf.strokeColor;
@@ -225,28 +200,14 @@ var Gmaps4Rails = {
 			 clickable:     false
 		 });
 		//save polygon in list
-		this.polygon_objects.push(new_poly);
+		this.polygons[i].google_object = new_poly;
 		new_poly.setMap(this.map);
 	},
 	
 	//polylines is an array of arrays. It loops.
 	create_polylines: function(){
 		for (var i = 0; i < this.polylines.length; ++i) {
-			//Polylines could be customized. By convention, customization options should be contained in the first
-	  	if (i==0)
-			{
-				//Array contain polyline elements
-				if (this.polylines[i] instanceof Array) {
-					this.create_polyline(i);
-				}
-				//hashes contain configuration which would be set as default
-				else{
-					if (this.exists(this.polylines[i].strokeColor)   ) { this.polylines_conf.line_strokeColor 	 = this.polygons[i].strokeColor; 	}
-					if (this.exists(this.polylines[i].strokeOpacity) ) { this.polylines_conf.line_strokeOpacity = this.polygons[i].strokeOpacity;}
-				  if (this.exists(this.polylines[i].strokeWeight)  ) { this.polylines_conf.line_strokeWeight  = this.polygons[i].strokeWeight; }
-				}
-			}
-			else { this.create_polyline(i); }
+		  this.create_polyline(i);
 		}
 	},
 	
@@ -265,7 +226,6 @@ var Gmaps4Rails = {
 				//loop through every point in the array
 				for (var k = 0; k < decoded_array.length; ++k) {		
 					polyline_coordinates.push(decoded_array[k]);
-					this.extend_bounds(decoded_array[k]);
 					polyline_coordinates.push(decoded_array[k]);				
 				}
 			}
@@ -282,7 +242,6 @@ var Gmaps4Rails = {
 				{	
 					var latlng = new google.maps.LatLng(this.polylines[i][j].latitude, this.polylines[i][j].longitude);
 			  	polyline_coordinates.push(latlng);
-					this.extend_bounds(latlng);
 				}
 			}
 		}
@@ -295,16 +254,8 @@ var Gmaps4Rails = {
 			 clickable:     false
 		 });
 		//save polyline
-		this.polyline_objects.push(new_poly);
+		this.polylines[i].google_object = new_poly;
 		new_poly.setMap(this.map);
-	},
-	
-	//Two options:
-	// 1- processing == "rails_model"  && builder = model_name
-	// 2- processing == "json"    && builder = json in format: [{"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": ""}]
-	create_markers: function() {
-		this.setup_Markers();
-		this.adjust();
 	},
 
   // clear markers
@@ -321,16 +272,20 @@ var Gmaps4Rails = {
   replace_markers: function(new_markers){
 	  //reset previous markers
 		this.markers = new Array;
-		//reset Auto-adjust
-		this.bounds = new google.maps.LatLngBounds();
+		//reset current bounds
+		this.google_bounds = new google.maps.LatLngBounds();
 		//reset sidebar content if exists
+		this.reset_sidebar_content();
+		//add new markers
+		this.add_markers(new_markers);
+  },
+
+	reset_sidebar_content: function(){
 		if (this.markers_conf.list_container != null ){
 			var ul = document.getElementById(this.markers_conf.list_container);
 			ul.innerHTML = "";
 		}
-		//add new markers
-		this.add_markers(new_markers);
-  },
+	},
 
 	//add new markers to on an existing map (beware, it doesn't check duplicates)
   add_markers: function(new_markers){
@@ -339,15 +294,19 @@ var Gmaps4Rails = {
 	  //update the list of markers to take into account
     this.markers = this.markers.concat(new_markers);
     //put markers on the map
-    this.setup_Markers();
-		//adjust map
-		this.adjust();
+    this.create_markers();
   },
 	
-  //Creates Marker from the markers passed + markerClusterer
-  setup_Markers: function () {		    
-	  // Add markers to the map
-	  for (var i = 0; i < this.markers.length; ++i) {
+	//creates, clusterizes and adjusts map 
+	create_markers: function() {
+		this.create_google_markers_from_markers();
+		this.clusterize();
+		this.adjust_map_to_bounds();
+	},
+	
+	//create google.maps Markers from data provided by user
+	create_google_markers_from_markers: function(){
+		for (var i = 0; i < this.markers.length; ++i) {
 		  //check if the marker has not already been created
 			if (!this.exists(this.markers[i].google_object)) {
 			   //test if value passed or use default 
@@ -367,7 +326,6 @@ var Gmaps4Rails = {
 				 }
 				
 				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
-				 this.extend_bounds(myLatLng);
 				
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture == "")
@@ -379,18 +337,26 @@ var Gmaps4Rails = {
 					}
 					//save object
 					this.markers[i].google_object = ThisMarker; 
-					//add infowindowstuff + list creation if enabled
-					this.handle_info_window(this.markers[i]);
+					//add infowindowstuff if enabled
+					this.create_info_window(this.markers[i]);
+					//create sidebar if enabled
+					this.create_sidebar(this.markers[i]);
 			 }
 		}
-		this.setup_Clusterer();
+		
 	},
 	
-	handle_info_window: function(marker_container){
+	// creates infowindows
+	create_info_window: function(marker_container){
 		//create the infowindow
 		var info_window = new google.maps.InfoWindow({content: marker_container.description });
 		//add the listener associated
 		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
+
+	},
+	
+	//creates sidebar
+	create_sidebar: function(marker_container){
 		if (this.markers_conf.list_container)
 		{
 			var ul = document.getElementById(this.markers_conf.list_container);
@@ -399,11 +365,19 @@ var Gmaps4Rails = {
 	    aSel.href = 'javascript:void(0);';
 	    var html = this.exists(marker_container.sidebar) ? marker_container.sidebar : "Marker";
 	    aSel.innerHTML = html;
-	    aSel.onclick = this.generateTriggerCallback(marker_container.google_object, 'click');
+	    aSel.onclick = this.sidebar_element_handler(marker_container.google_object, 'click');
 	    li.appendChild(aSel);
 	    ul.appendChild(li);
 		}
 	},
+
+	//moves map to marker clicked + open infowindow
+  sidebar_element_handler: function(marker, eventType) {
+    return function() {
+			Gmaps4Rails.map.panTo(marker.position);
+      google.maps.event.trigger(marker, eventType);
+    };
+  },
 	
 	openInfoWindow: function(infoWindow, marker) {
     return function() {
@@ -417,14 +391,8 @@ var Gmaps4Rails = {
     };
   },
 
-  generateTriggerCallback: function(marker, eventType) {
-    return function() {
-			Gmaps4Rails.map.panTo(marker.position);
-      google.maps.event.trigger(marker, eventType);
-    };
-  },
-	
-	setup_Clusterer: function()
+	//creates clusters
+	clusterize: function()
 	{
 		if (this.markers_conf.do_clustering == true)
 		{
@@ -442,11 +410,55 @@ var Gmaps4Rails = {
 	},
 
 	//to make the map fit the different LatLng points
-	extend_bounds: function(latlng) {
-		 //extending bounds, ref: http://unicornless.com/code/google-maps-v3-auto-zoom-and-auto-center
-		 if (this.map_options.auto_adjust) {
-		    this.bounds.extend(latlng);
-		 }
+	adjust_map_to_bounds: function(latlng) {
+		
+		//FIRST_STEP: retrieve all bounds
+		//create the bounds object only if necessary
+		if (this.map_options.auto_adjust || this.map_options.bounds != null) {
+			this.google_bounds = new google.maps.LatLngBounds();
+		}
+		
+		//if autodjust is true, must get bounds from markers polylines etc...
+		if (this.map_options.auto_adjust) {
+			//from markers
+			for (var i = 0; i <  this.markers.length; ++i) {
+	     	this.google_bounds.extend(this.markers[i].google_object.position);
+	    }
+ 		  //from polygons:
+			for (var i = 0; i <  this.polylines.length; ++i) {
+				this.polylines[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );})
+			}
+			//from polylines:
+			for (var i = 0; i <  this.polygons.length; ++i) {
+				this.polygons[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );})
+			}
+			//from circles
+			for (var i = 0; i <  this.circles.length; ++i) {
+				this.google_bounds.extend(this.circles[i].google_object.getBounds().getNorthEast());
+				this.google_bounds.extend(this.circles[i].google_object.getBounds().getSouthWest());
+			}		
+		}
+		//in every case, I've to take into account the bounds set up by the user	
+		for (var i = 0; i < this.map_options.bounds.length; ++i) {
+			//create points from bounds provided
+			var bound = new google.maps.LatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
+			this.google_bounds.extend(bound);
+		}
+		
+		//SECOND_STEP: ajust the map to the bounds
+		if (this.map_options.auto_adjust || this.map_options.bounds.length > 0) {
+	
+			//if autozoom is false, take user info into account
+			if(!this.map_options.auto_zoom) {
+				var map_center = this.google_bounds.getCenter();
+				this.map_options.center_longitude = map_center.lat();
+				this.map_options.center_latitude  = map_center.lng();
+				this.map.setCenter(map_center);
+			}
+			else {
+			  this.map.fitBounds(this.google_bounds); 
+			}
+		}
 	},
 
 	//basic function to check existence of a variable
@@ -464,32 +476,7 @@ var Gmaps4Rails = {
 		return [Lat, Lng];
 	},
 	
-	//adjust or not center of the map. Takes into account auto_adjust & auto_adjust
-	adjust: function(){
-		if (this.map_options.auto_adjust) {
-			if(this.map_options.auto_zoom) {
-				this.map.fitBounds(this.bounds); 
-				}
-			else {
-				var map_center = this.bounds.getCenter();
-				this.map_options.center_longitude = map_center.Da;
-				this.map_options.center_latitude  = map_center.Ba;
-				this.map.setCenter(map_center);
-			}
-		}
-	},
-	
-	//retrives a value between -1 and 1
+	//gives a value between -1 and 1
 	random: function() { return ( Math.random() * 2 -1); }
 	
 };
-
-//marker_clusterer styles
-// var styles = [{
-//   url: 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/images/people35.png',
-//   height: 35,
-//   width: 35,
-//   opt_anchor: [16, 0],
-//   opt_textColor: '#ff00ff',
-//   opt_textSize: 10
-// }];
