@@ -8,6 +8,9 @@ Gmaps4rails is developped to simply create a Google Map:
 
 It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 
+See screencasts here: http://www.youtube.com/user/TheApneadiving
+
+
 == Requirements
 - gem 'gmaps4rails'     (in your gemfile, then bundle)
 - <%= yield :head %>    (in your header)

@@ -16,7 +16,7 @@ var Gmaps4Rails = {
 		minZoom: null,
 		auto_adjust : false,    //adjust the map to the markers if set to true
 		auto_zoom: true,        //zoom given by auto-adjust
-		bounds: []            //adjust map to these limits only (not taken into account if auto_adjust == true). Should be filled with SW and NE
+		bounds: []              //adjust map to these limits. Should be [{"lat": , "lng": }]
 		},				
 	
 	//markers + info styling
@@ -132,7 +132,7 @@ var Gmaps4Rails = {
 	create_circles: function(){
 		for (var i = 0; i < this.circles.length; ++i) {
 			//by convention, default style configuration could be integrated in the first element
-			if ( i == 0 )
+			if ( i === 0 )
 			{
 				if (this.exists(this.circles[i].strokeColor  )) { this.circles_conf.strokeColor 	= this.circles[i].strokeColor; 	 }
 				if (this.exists(this.circles[i].strokeOpacity)) { this.circles_conf.strokeOpacity = this.circles[i].strokeOpacity; }
@@ -163,7 +163,7 @@ var Gmaps4Rails = {
 	//polygons is an array of arrays. It loops.
 	create_polygons: function(){
 		for (var i = 0; i < this.polygons.length; ++i) {
-			this.create_polygon(i)
+			this.create_polygon(i);
 		}
 	},
 	
@@ -180,7 +180,7 @@ var Gmaps4Rails = {
 			var latlng = new google.maps.LatLng(this.polygons[i][j].latitude, this.polygons[i][j].longitude);
 	  	polygon_coordinates.push(latlng);
 			//first element of an Array could contain specific configuration for this particular polygon. If no config given, use default
-			if (j==0) {
+			if (j===0) {
 				strokeColor   = this.polygons[i][j].strokeColor  	|| this.polygons_conf.strokeColor;
 			  strokeOpacity = this.polygons[i][j].strokeOpacity || this.polygons_conf.strokeOpacity;
 			  strokeWeight  = this.polygons[i][j].strokeWeight 	|| this.polygons_conf.strokeWeight;
@@ -232,7 +232,7 @@ var Gmaps4Rails = {
 			//or we have an array of latlng
 			else{
 				//by convention, a single polyline could be customized in the first array or it uses default values
-				if (j==0){
+				if (j===0){
 					strokeColor   = this.polylines[i][0].strokeColor   || this.polylines_conf.strokeColor;
 				  strokeOpacity = this.polylines[i][0].strokeOpacity || this.polylines_conf.strokeOpacity;
 			  	strokeWeight  = this.polylines[i][0].strokeWeight  || this.polylines_conf.strokeWeight;
@@ -258,45 +258,6 @@ var Gmaps4Rails = {
 		new_poly.setMap(this.map);
 	},
 
-  // clear markers
-  clear_markers: function(){
-    if (this.markerClusterer != null){
-			this.markerClusterer.clearMarkers();
-		}
-		for (var i = 0; i <  this.markers.length; ++i) {
-      this.markers[i].google_object.setMap(null);
-    }
-  },
-
-  // replace old markers with new markers on an existing map
-  replace_markers: function(new_markers){
-	  //reset previous markers
-		this.markers = new Array;
-		//reset current bounds
-		this.google_bounds = new google.maps.LatLngBounds();
-		//reset sidebar content if exists
-		this.reset_sidebar_content();
-		//add new markers
-		this.add_markers(new_markers);
-  },
-
-	reset_sidebar_content: function(){
-		if (this.markers_conf.list_container != null ){
-			var ul = document.getElementById(this.markers_conf.list_container);
-			ul.innerHTML = "";
-		}
-	},
-
-	//add new markers to on an existing map (beware, it doesn't check duplicates)
-  add_markers: function(new_markers){
-	  //clear the whole map
-	  this.clear_markers();
-	  //update the list of markers to take into account
-    this.markers = this.markers.concat(new_markers);
-    //put markers on the map
-    this.create_markers();
-  },
-	
 	//creates, clusterizes and adjusts map 
 	create_markers: function() {
 		this.create_google_markers_from_markers();
@@ -328,7 +289,7 @@ var Gmaps4Rails = {
 				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
 				
 				 // Marker sizes are expressed as a Size of X,Y
-		 		 if (marker_picture == "")
+		 		 if (marker_picture === "")
 					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	}
 					else 
 				  {
@@ -345,6 +306,53 @@ var Gmaps4Rails = {
 		}
 		
 	},
+
+  // clear markers
+  clear_markers: function(){
+    if (this.markerClusterer !== null){
+			this.markerClusterer.clearMarkers();
+		}
+		for (var i = 0; i <  this.markers.length; ++i) {
+      this.markers[i].google_object.setMap(null);
+    }
+  },
+
+  // replace old markers with new markers on an existing map
+  replace_markers: function(new_markers){
+	  //reset previous markers
+		this.markers = new Array;
+		//reset current bounds
+		this.google_bounds = new google.maps.LatLngBounds();
+		//reset sidebar content if exists
+		this.reset_sidebar_content();
+		//add new markers
+		this.add_markers(new_markers);
+  },
+
+	//add new markers to on an existing map
+  add_markers: function(new_markers){
+	  //clear the whole map
+	  this.clear_markers();
+	  //update the list of markers to take into account
+    this.markers = this.markers.concat(new_markers);
+    //put markers on the map
+    this.create_markers();
+  },
+	
+	//creates clusters
+	clusterize: function()
+	{
+		if (this.markers_conf.do_clustering === true)
+		{
+			var gmarkers_array = new Array;
+			for (var i = 0; i <  this.markers.length; ++i) {
+       gmarkers_array.push(this.markers[i].google_object);
+      }
+			
+			
+			this.markerClusterer = new MarkerClusterer(this.map, gmarkers_array, {	maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize });
+	  }
+	},
 	
 	// creates infowindows
 	create_info_window: function(marker_container){
@@ -354,7 +362,19 @@ var Gmaps4Rails = {
 		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
 
 	},
-	
+
+	openInfoWindow: function(infoWindow, marker) {
+    return function() {
+      // Close the latest selected marker before opening the current one.
+      if (Gmaps4Rails.visibleInfoWindow) {
+        Gmaps4Rails.visibleInfoWindow.close();
+      }
+   
+      infoWindow.open(Gmaps4Rails.map, marker);
+      Gmaps4Rails.visibleInfoWindow = infoWindow;
+    };
+  },
+
 	//creates sidebar
 	create_sidebar: function(marker_container){
 		if (this.markers_conf.list_container)
@@ -377,36 +397,13 @@ var Gmaps4Rails = {
 			Gmaps4Rails.map.panTo(marker.position);
       google.maps.event.trigger(marker, eventType);
     };
-  },
-	
-	openInfoWindow: function(infoWindow, marker) {
-    return function() {
-      // Close the latest selected marker before opening the current one.
-      if (Gmaps4Rails.visibleInfoWindow) {
-        Gmaps4Rails.visibleInfoWindow.close();
-      }
-   
-      infoWindow.open(Gmaps4Rails.map, marker);
-      Gmaps4Rails.visibleInfoWindow = infoWindow;
-    };
-  },
+  },	
 
-	//creates clusters
-	clusterize: function()
-	{
-		if (this.markers_conf.do_clustering == true)
-		{
-			var gmarkers_array = new Array;
-			for (var i = 0; i <  this.markers.length; ++i) {
-       gmarkers_array.push(this.markers[i].google_object);
-      }
-			
-			
-			this.markerClusterer = new MarkerClusterer(this.map, gmarkers_array, {	maxZoom: this.markers_conf.clusterer_maxZoom,
-																																			   gridSize: this.markers_conf.clusterer_gridSize,
-																																			   //styles: styles TODO: offer clusterer customization
-																																	  	   });
-	  }
+	reset_sidebar_content: function(){
+		if (this.markers_conf.list_container !== null ){
+			var ul = document.getElementById(this.markers_conf.list_container);
+			ul.innerHTML = "";
+		}
 	},
 
 	//to make the map fit the different LatLng points
@@ -414,7 +411,7 @@ var Gmaps4Rails = {
 		
 		//FIRST_STEP: retrieve all bounds
 		//create the bounds object only if necessary
-		if (this.map_options.auto_adjust || this.map_options.bounds != null) {
+		if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
 			this.google_bounds = new google.maps.LatLngBounds();
 		}
 		
@@ -463,7 +460,7 @@ var Gmaps4Rails = {
 
 	//basic function to check existence of a variable
 	exists: function(var_name) {
-		return var_name	!= "" && typeof var_name !== "undefined"
+		return var_name	!== "" && typeof var_name !== "undefined"
 	},
 
 	//randomize
