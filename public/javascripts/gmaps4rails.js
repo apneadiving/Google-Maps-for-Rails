@@ -43,10 +43,10 @@ var Gmaps4Rails = {
   
 	//Polygon Styling
 	polygons_conf: {						//default style for polygons
-		strokeColor: "#000",
+		strokeColor: "#FFAA00",
   	strokeOpacity: 0.8,
   	strokeWeight: 2,
-  	fillColor: "#000",
+    fillColor: "#000000",
   	fillOpacity: 0.35
 		},
 
@@ -59,9 +59,9 @@ var Gmaps4Rails = {
 		
 	//Circle Styling	
 	circles_conf: {							//default style for circles
-	  fillColor: "#000",
+	  fillColor: "#00AAFF",
 	  fillOpacity: 0.35,
-		strokeColor: "#0000",
+		strokeColor: "#FFAA00",
 	  strokeOpacity: 0.8,
 	  strokeWeight: 2
 		},
