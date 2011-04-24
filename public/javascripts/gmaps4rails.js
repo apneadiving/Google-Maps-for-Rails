@@ -287,14 +287,14 @@ var Gmaps4Rails = {
 				 }
 				
 				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
-				
+				 var ThisMarker;
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture === "")
-					{ var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	}
+					{ ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	}
 					else 
 				  {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
-						var ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
+					  ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
 					}
 					//save object
 					this.markers[i].google_object = ThisMarker; 
