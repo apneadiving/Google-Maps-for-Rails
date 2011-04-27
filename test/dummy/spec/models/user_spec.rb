@@ -223,7 +223,7 @@ describe "Acts as gmappable" do
           "Sweet Title"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"Sweet Title\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
     end
     
     it "should take into account the sidebar content provided in the model" do
@@ -233,7 +233,7 @@ describe "Acts as gmappable" do
           "sidebar content"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
     end
     
     it "should take into account all additional data provided in the model" do
@@ -260,7 +260,7 @@ describe "Acts as gmappable" do
           "sidebar content"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"description\": \"Sweet Title\", \"description\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
     end
   end
 

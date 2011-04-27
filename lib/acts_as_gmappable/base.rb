@@ -32,11 +32,11 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.title(object)
-    return "\"description\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
+    return "\"title\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
   end
   
   def Gmaps4rails.sidebar(object)
-    return "\"description\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
+    return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
   end
   
   def Gmaps4rails.picture(object)
