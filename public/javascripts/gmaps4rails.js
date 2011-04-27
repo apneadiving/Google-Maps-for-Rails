@@ -91,10 +91,6 @@ var Gmaps4Rails = {
 		});
 		//resets sidebar if needed
 		this.reset_sidebar_content();
-		//launch callbacks if any
-		if(typeof gmaps4rails_callback == 'function') { 
-			gmaps4rails_callback(); 
-		}
 	},
 	
 	create_direction: function(){

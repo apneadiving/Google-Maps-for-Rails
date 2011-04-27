@@ -157,11 +157,7 @@ module Gmaps4rails
           "height" => ""
         }
       end
-        
-      def self.gmaps4rails_trusted_scopes
-        []
-      end
-        
+         
       def to_gmaps4rails
         json = "["
         json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
@@ -196,8 +192,10 @@ module Gmaps4rails
             #TODO: address as a proc?
           }
         end
+        
+        include InstanceMethods
+        
       end
-      include InstanceMethods
     end
     
   end #ActsAsGmappable
