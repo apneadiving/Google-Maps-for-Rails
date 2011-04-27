@@ -12,14 +12,36 @@ module Gmaps4rails
   class DirectionNetStatus < StandardError; end
   class DirectionInvalidQuery < StandardError; end
   
+#   def Gmaps4rails.create_json(object)
+#     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
+# "{
+# \"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\", \"sidebar\": \"#{object.gmaps4rails_sidebar}\",
+# \"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
+# } ,"
+#     end
+#   end  
+  
   def Gmaps4rails.create_json(object)
     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
-"{
-\"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\", \"sidebar\": \"#{object.gmaps4rails_sidebar}\",
-\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
-} ,"
+"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\"#{Gmaps4rails.picture(object)}},\n"
     end
   end  
+  
+  def Gmaps4rails.description(object)
+    return "\"description\": \"#{object.gmaps4rails_infowindow}\", " if object.respond_to?("gmaps4rails_infowindow")
+  end
+  
+  def Gmaps4rails.title(object)
+    return "\"description\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
+  end
+  
+  def Gmaps4rails.sidebar(object)
+    return "\"description\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
+  end
+  
+  def Gmaps4rails.picture(object)
+    return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
+  end
   
   def Gmaps4rails.geocode(address, raw = false)
    if address.nil? || address.empty?
@@ -121,14 +143,6 @@ module Gmaps4rails
     extend ActiveSupport::Concern
     
     module InstanceMethods
-      def gmaps4rails_infowindow
-      end
-        
-      def gmaps4rails_title
-      end
-      
-      def gmaps4rails_sidebar
-      end
         
       def process_geocoding
         #to prevent geocoding each time a save is made
@@ -149,18 +163,10 @@ module Gmaps4rails
           end
         end
       end
-        
-      def gmaps4rails_marker_picture
-        {
-          "picture" => "",
-          "width" => "",
-          "height" => ""
-        }
-      end
          
       def to_gmaps4rails
         json = "["
-        json += Gmaps4rails.create_json(self).to_s.chop #removes the extra comma
+        json += Gmaps4rails.create_json(self).to_s.chop.chop #removes the extra comma
         json += "]"
       end
         

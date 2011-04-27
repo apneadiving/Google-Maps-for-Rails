@@ -18,23 +18,6 @@ describe "Acts as gmappable" do
       
       def gmaps4rails_address
         address
-      end     
-      
-      def gmaps4rails_sidebar
-      end
-       
-      def gmaps4rails_infowindow
-      end
-      
-      def gmaps4rails_title
-      end
-      
-      def gmaps4rails_marker_picture
-        {
-          "picture" => "",
-          "width" => "",
-          "height" => ""
-        }
       end
     end
   end
@@ -55,11 +38,11 @@ describe "Acts as gmappable" do
   
     it "should render a valid json from an array of ojects" do
       @user2 = Factory(:user_paris)
-      User.all.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ,{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
+      User.all.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"},\n{\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\"}]"
     end
   
     it "should render a valid json from a single object" do
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
     end
     
     it "should not geocode again after address changes if checker is true" do
@@ -152,7 +135,6 @@ describe "Acts as gmappable" do
       @user.long_test.should == 5.9311119
       @user.longitude.should == nil
       @user.latitude.should  == nil
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
     end
     
     it "should not save the boolean if check_process is false" do
@@ -210,18 +192,19 @@ describe "Acts as gmappable" do
       @user.bool_test.should == true
     end
     
-    it "should take into account the description provided in the model" do 
-      User.class_eval do
+    it "should take into account the description provided in the model" do
+      @user = Factory(:user_with_pic)
+      @user.class_eval do
         def gmaps4rails_infowindow
           "My Beautiful Picture: #{picture}"
         end
       end
-      @user = Factory(:user_with_pic)
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
     end
     
-    it "should take into account the picture provided in the model" do 
-      User.class_eval do
+    it "should take into account the picture provided in the model" do
+      @user = Factory(:user)
+      @user.class_eval do
         def gmaps4rails_marker_picture
           {
           "picture" => "http://www.blankdots.com/img/github-32x32.png",
@@ -230,28 +213,54 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user = Factory(:user)
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
     end
     
     it "should take into account the title provided in the model" do
-      User.class_eval do
+      @user = Factory(:user)
+      @user.class_eval do
         def gmaps4rails_title
           "Sweet Title"
         end
       end
-      @user = Factory(:user)
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"Sweet Title\", \"sidebar\": \"\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
+      @user.to_gmaps4rails.should == "[{\"description\": \"Sweet Title\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
     end
     
     it "should take into account the sidebar content provided in the model" do
-      User.class_eval do
+      @user = Factory(:user)
+      @user.class_eval do
         def gmaps4rails_sidebar
           "sidebar content"
         end
       end
+      @user.to_gmaps4rails.should == "[{\"description\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+    end
+    
+    it "should take into account all additional data provided in the model" do
       @user = Factory(:user)
-      @user.to_gmaps4rails.should == "[{\n\"description\": \"\", \"title\": \"\", \"sidebar\": \"sidebar content\",\n\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"\", \"width\": \"\", \"height\": \"\"\n} ]"
+      
+      @user.instance_eval do
+        def gmaps4rails_infowindow
+          "My Beautiful Picture: #{picture}"
+        end
+        
+        def gmaps4rails_marker_picture
+          {
+          "picture" => "http://www.blankdots.com/img/github-32x32.png",
+          "width" => "32",
+          "height" => "32"
+          }
+        end
+        
+        def gmaps4rails_title
+          "Sweet Title"
+        end
+        
+        def gmaps4rails_sidebar
+          "sidebar content"
+        end
+      end
+      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"description\": \"Sweet Title\", \"description\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
     end
   end
 
