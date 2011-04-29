@@ -146,18 +146,20 @@ module Gmaps4rails
         
       def process_geocoding
         #to prevent geocoding each time a save is made
-        return true if gmaps4rails_options[:check_process] == true && self[gmaps4rails_options[:checker]] == true
-        
+        return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
         begin
-          coordinates = Gmaps4rails.geocode(self.gmaps4rails_address)
-        rescue GeocodeStatus #adress was invalid, add error to base.
-          errors[:base] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
+          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address_column]))
+        rescue GeocodeStatus #address was invalid, add error to base.
+          errors[gmaps4rails_options[:address_column]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           logger.warn(e)
           #TODO add customization here?
         else #if no exception
           self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
           self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
+          if gmaps4rails_options[:normalize_address] == true
+            self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
+          end
           if gmaps4rails_options[:check_process] == true
             self[gmaps4rails_options[:checker]] = true
           end
@@ -189,12 +191,15 @@ module Gmaps4rails
         #instance method
         define_method "gmaps4rails_options" do
           {
-            :lat_column     => args[:lat]                 || "latitude",
-            :lng_column     => args[:lng]                 || "longitude",
-            :check_process  => args[:check_process].nil?  ?   true : args[:check_process],
-            :checker        => args[:checker]             || "gmaps",
-            :msg            => args[:msg]                 || "Address invalid",
-            :validation     => args[:validation].nil?     ?   true : args[:validation]
+            :lat_column        => args[:lat]                    || "latitude",
+            :lng_column        => args[:lng]                    || "longitude",
+            :check_process     => args[:check_process].nil?     ?   true : args[:check_process],
+            :checker           => args[:checker]                || "gmaps",
+            :msg               => args[:msg]                    || "Address invalid",
+            :validation        => args[:validation].nil?        ?   true : args[:validation],
+            :normalize_address => args[:normalize_address].nil? ? false : args[:normalize_address],
+            :normalized_address=> args[:normalized_address]     || (args[:address_column] || "address"),
+            :address_column    => args[:address_column]         || "address"
             #TODO: address as a proc?
           }
         end
