@@ -12,7 +12,9 @@ describe "Acts as gmappable" do
           :check_process  => true,
           :checker        => "gmaps",
           :msg            => "Address invalid",
-          :validation     => true
+          :validation     => true,
+          :normalize_address => false,
+          :address_column    => "address"
         }
       end
       
@@ -92,7 +94,9 @@ describe "Acts as gmappable" do
             :check_process  => true,
             :checker        => "gmaps",
             :msg            => "Custom Address invalid",
-            :validation     => true
+            :validation     => true,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
@@ -109,7 +113,9 @@ describe "Acts as gmappable" do
             :check_process  => true,
             :checker        => "gmaps",
             :msg            => "Address invalid",
-            :validation     => false
+            :validation     => false,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
@@ -126,7 +132,9 @@ describe "Acts as gmappable" do
             :check_process  => true,
             :checker        => "gmaps",
             :msg            => "Address invalid",
-            :validation     => true
+            :validation     => true,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
@@ -146,7 +154,9 @@ describe "Acts as gmappable" do
             :check_process  => false,
             :checker        => "gmaps",
             :msg            => "Address invalid",
-            :validation     => true
+            :validation     => true,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
@@ -163,7 +173,9 @@ describe "Acts as gmappable" do
             :check_process  => false,
             :checker        => "gmaps",
             :msg            => "Address invalid",
-            :validation     => true
+            :validation     => true,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
@@ -183,7 +195,9 @@ describe "Acts as gmappable" do
             :check_process  => true,
             :checker        => "bool_test",
             :msg            => "Address invalid",
-            :validation     => true
+            :validation     => true,
+            :normalize_address => false,
+            :address_column    => "address"
           }
         end
       end
