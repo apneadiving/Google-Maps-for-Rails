@@ -10,11 +10,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110306182914) do
+ActiveRecord::Schema.define(:version => 20110430083824) do
 
   create_table "users", :force => true do |t|
     t.string   "name"
-    t.string   "address"
     t.text     "description"
     t.string   "picture"
     t.float    "lat_test"
@@ -25,6 +24,8 @@ ActiveRecord::Schema.define(:version => 20110306182914) do
     t.boolean  "bool_test"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "norm_address"
+    t.string   "sec_address"
   end
 
 end

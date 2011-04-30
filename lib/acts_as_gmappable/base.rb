@@ -11,16 +11,7 @@ module Gmaps4rails
   class DirectionStatus < StandardError; end
   class DirectionNetStatus < StandardError; end
   class DirectionInvalidQuery < StandardError; end
-  
-#   def Gmaps4rails.create_json(object)
-#     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
-# "{
-# \"description\": \"#{object.gmaps4rails_infowindow}\", \"title\": \"#{object.gmaps4rails_title}\", \"sidebar\": \"#{object.gmaps4rails_sidebar}\",
-# \"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"
-# } ,"
-#     end
-#   end  
-  
+
   def Gmaps4rails.create_json(object)
     unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
 "{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\"#{Gmaps4rails.picture(object)}},\n"
@@ -114,7 +105,7 @@ module Gmaps4rails
           if output == "pretty"
             #polylines contain levels data, which are not that useful.
             polylines.map{|poly| poly.delete("levels")}
-            #creat valid json from all polylines, this could be directly passed to javascript for display
+            #create valid json from all polylines, this could be directly passed to javascript for display
             json = polylines.map { |poly| {"coded_array" => poly["points"]} }.to_json
             #merge results in legs
             legs.last.merge!({ "polylines" => json })
@@ -148,16 +139,16 @@ module Gmaps4rails
         #to prevent geocoding each time a save is made
         return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
         begin
-          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address_column]))
+          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]))
         rescue GeocodeStatus #address was invalid, add error to base.
-          errors[gmaps4rails_options[:address_column]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
+          errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           logger.warn(e)
           #TODO add customization here?
         else #if no exception
           self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
           self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
-          if gmaps4rails_options[:normalize_address] == true
+          unless gmaps4rails_options[:normalized_address].nil?
             self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
           end
           if gmaps4rails_options[:check_process] == true
@@ -175,31 +166,23 @@ module Gmaps4rails
     end
     
     module ClassMethods
-      mattr_accessor :gmaps4rails_options
       
       def acts_as_gmappable args = {}          
         unless args[:process_geocoding] == false
           validate :process_geocoding
         end
-
-        # [:lat, :lng, :check_process, :checker, :msg, :validation].each do |sym|
-        #   Gmaps4rails::ActsAsGmappable.gmaps4rails_options[sym] = args[sym] unless args[sym].nil?
-        # end
-        
-        Gmaps4rails::ActsAsGmappable::ClassMethods.gmaps4rails_options = args        
         
         #instance method
         define_method "gmaps4rails_options" do
           {
-            :lat_column        => args[:lat]                    || "latitude",
-            :lng_column        => args[:lng]                    || "longitude",
-            :check_process     => args[:check_process].nil?     ?   true : args[:check_process],
-            :checker           => args[:checker]                || "gmaps",
-            :msg               => args[:msg]                    || "Address invalid",
-            :validation        => args[:validation].nil?        ?   true : args[:validation],
-            :normalize_address => args[:normalize_address].nil? ? false : args[:normalize_address],
-            :normalized_address=> args[:normalized_address]     || (args[:address_column] || "address"),
-            :address_column    => args[:address_column]         || "address"
+            :lat_column         => args[:lat]                    || "latitude",
+            :lng_column         => args[:lng]                    || "longitude",
+            :check_process      => args[:check_process].nil?     ?   true : args[:check_process],
+            :checker            => args[:checker]                || "gmaps",
+            :msg                => args[:msg]                    || "Address invalid",
+            :validation         => args[:validation].nil?        ?   true  : args[:validation],
+            :normalized_address => args[:normalized_address],
+            :address            => args[:address]                || "gmaps4rails_address"
             #TODO: address as a proc?
           }
         end

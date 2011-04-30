@@ -13,13 +13,8 @@ describe "Acts as gmappable" do
           :checker        => "gmaps",
           :msg            => "Address invalid",
           :validation     => true,
-          :normalize_address => false,
-          :address_column    => "address"
+          :address    => "gmaps4rails_address"
         }
-      end
-      
-      def gmaps4rails_address
-        address
       end
     end
   end
@@ -48,14 +43,14 @@ describe "Acts as gmappable" do
     end
     
     it "should not geocode again after address changes if checker is true" do
-      @user.address = "paris, France"
+      @user.sec_address = "paris, France"
       @user.save
       @user.latitude.should  == 43.1251606
       @user.longitude.should == 5.9311119
     end
     
     it "should geocode after address changes if checker is false" do
-      @user.address = "paris, France"
+      @user.sec_address = "paris, France"
       @user.gmaps = false
       @user.save
       @user.latitude.should  == 48.8566667
@@ -79,10 +74,67 @@ describe "Acts as gmappable" do
   end
   
   
-  describe "model customization" do 
+  describe "model customization" do
     
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
+    end
+    
+    it "should use indifferently a db column for address if passed in config" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => true,
+            :checker        => "gmaps",
+            :msg            => "Address invalid",
+            :validation     => true,
+            :address    => "sec_address"
+          }
+        end
+      end
+      @user = Factory(:user)
+      @user.latitude.should  == 43.1251606
+      @user.longitude.should == 5.9311119
+    end
+    
+    it "should save the normalized address if requested" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => true,
+            :checker        => "gmaps",
+            :msg            => "Address invalid",
+            :validation     => true,
+            :normalized_address => "norm_address",
+            :address    => "gmaps4rails_address"
+          }
+        end
+      end
+      @user = Factory(:user)
+      @user.norm_address.should == "Toulon, France"
+    end
+    
+    it "should override user's address with normalized address if requested" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => true,
+            :checker        => "gmaps",
+            :msg            => "Custom Address invalid",
+            :validation     => true,
+            :normalized_address => "sec_address",
+            :address    => "gmaps4rails_address"
+          }
+        end
+      end
+      @user = Factory.build(:user)
+      @user.sec_address.should == "Toulon, France"
     end
     
     it "should display the proper error message when address is invalid" do
@@ -95,8 +147,7 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Custom Address invalid",
             :validation     => true,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end
@@ -114,8 +165,7 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => false,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end
@@ -133,8 +183,7 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end
@@ -155,8 +204,7 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end
@@ -174,13 +222,12 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end
       @user = Factory(:user)
-      @user.address = "paris, France"
+      @user.sec_address = "paris, France"
       @user.save
       @user.latitude.should  == 48.8566667
       @user.longitude.should == 2.3509871
@@ -196,8 +243,7 @@ describe "Acts as gmappable" do
             :checker        => "bool_test",
             :msg            => "Address invalid",
             :validation     => true,
-            :normalize_address => false,
-            :address_column    => "address"
+            :address    => "gmaps4rails_address"
           }
         end
       end

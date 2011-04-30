@@ -21,12 +21,16 @@ See screencasts here: http://www.youtube.com/user/TheApneadiving
 In your model, add:
 
 	acts_as_gmappable
+	
+		def gmaps4rails_address
+		  #describe how to retrieve the address from your model, if you use directly a db column, you can dry your code, see wiki
+		  "#{self.street}, #{self.city}, #{self.country}" 
+		end
 
 Create a migration and add the following fields to your table (here users):
 
 	add_column :users, :latitude, :float #you can change the name, see wiki
 	add_column :users, :longitude, :float #you can change the name, see wiki
-	add_column :users, :address, :string #you can change the name, see wiki
 	add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
 == How to?
@@ -74,4 +78,4 @@ MIT license.
 
 Authors: Benjamin Roth, David Ruyer
 
-Contributor: Alex Vorobiev
+Contributors: Mircea Pricop, Alex Vorobiev

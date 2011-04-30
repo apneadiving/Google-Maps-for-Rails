@@ -13,7 +13,7 @@ GIT
 PATH
   remote: ../../
   specs:
-    gmaps4rails (0.7.8)
+    gmaps4rails (0.7.9)
       crack
 
 GEM

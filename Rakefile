@@ -7,7 +7,7 @@ begin
     gem.homepage = "http://github.com/apneadiving/Google-Maps-for-Rails"
     gem.email = "benjamin.roth@peachyweb.com"
     gem.authors = ["Benjamin Roth", "David Ruyer"]
-    gem.files = Dir["{lib}/**/*", "{app}/**/*", "{public}/**/*", "{config}/**/*"]
+    gem.files = Dir["{lib}/**/*", "{app}/**/*", "{public}/**/*"]
     gem.add_dependency "crack", ">= 0"
   end
   Jeweler::GemcutterTasks.new
