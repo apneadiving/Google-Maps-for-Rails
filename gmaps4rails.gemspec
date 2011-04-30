@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.7.9"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-04-27}
+  s.date = %q{2011-04-30}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Map. Uses Javascript API V3. Provides a helper and much configuration.}
   s.email = %q{benjamin.roth@peachyweb.com}
   s.extra_rdoc_files = [
@@ -17,10 +17,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    "app/controllers/gmaps4rails/gmaps_controller.rb",
-    "app/helpers/gmaps4rails/gmaps_helper.rb",
     "app/views/gmaps4rails/_gmaps4rails.html.erb",
-    "config/routes.rb",
     "lib/acts_as_gmappable/base.rb",
     "lib/application_helper.rb",
     "lib/array.rb",
@@ -59,6 +56,8 @@ Gem::Specification.new do |s|
     "test/dummy/config/initializers/session_store.rb",
     "test/dummy/config/routes.rb",
     "test/dummy/db/migrate/20110306182914_create_users.rb",
+    "test/dummy/db/migrate/20110430081624_add_addresses_to_users.rb",
+    "test/dummy/db/migrate/20110430083824_remove_address_from_users.rb",
     "test/dummy/db/schema.rb",
     "test/dummy/db/seeds.rb",
     "test/dummy/spec/base/base_spec.rb",
