@@ -1,5 +1,3 @@
-google.load('maps', '3', { other_params: 'libraries=geometry&sensor=false' });
-
 var Gmaps4Rails = {
 	//map config
 	map: null,									//contains the map we're working on
