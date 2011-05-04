@@ -13,16 +13,3 @@
   width: 800px;
   height: 400px;
 }
-
-#actions {
-  list-style: none;
-  padding: 0;
-}
-
-#inline-actions {
-  padding-top: 10px;
-}
-
-.item {
-  margin-left: 20px;
-}
