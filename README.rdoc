@@ -15,7 +15,7 @@ See screencasts here: http://www.youtube.com/user/TheApneadiving
 - gem 'gmaps4rails'     (in your gemfile, then bundle)
 - <%= yield :head %>    (in your header)
 - <%= yield :scripts %> (in your footer)
-- config.serve_static_assets = true  (in your production.rb), or copy/paste gmaps4rails.css & gmaps4rails.js files in your app.
+- config.serve_static_assets = true  (in your production.rb), or run 'rails generate gmaps4rails:install' to copy the JS and CSS assets to your /public folder.
 
 == Basic configuration
 In your model, add:
