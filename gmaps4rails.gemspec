@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.8.3"
+  s.version = "0.8.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-05-05}
+  s.date = %q{2011-05-11}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3). Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
   s.email = ["apnea.diving.deep@gmail.com", "david.ruyer@gmail.com"]
   s.extra_rdoc_files = [
@@ -19,9 +19,11 @@ Gem::Specification.new do |s|
   s.files = [
     "app/views/gmaps4rails/_gmaps4rails.html.erb",
     "lib/acts_as_gmappable/base.rb",
-    "lib/application_helper.rb",
     "lib/array.rb",
+    "lib/generators/gmaps4rails/install_generator.rb",
+    "lib/generators/templates/README",
     "lib/gmaps4rails.rb",
+    "lib/gmaps4rails_helper.rb",
     "lib/hash.rb",
     "lib/rails/generators/gmaps4rails/gmaps4rails_generator.rb",
     "lib/rails/generators/gmaps4rails/templates/initializer.rb",
