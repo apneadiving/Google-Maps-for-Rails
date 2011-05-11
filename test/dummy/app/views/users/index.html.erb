@@ -96,17 +96,18 @@ var builder3 = [{"description": "",
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%#= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => true } },
+<%= gmaps("markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => true } },
           "map_options" => { "auto_adjust" => true }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
-<%= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
+<%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 					 %>
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
 
-	// function gmaps4rails_callback() {
-	//  	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
-	// }
+	function gmaps4rails_callback() {
+	 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
+    $("#markers_list").children().first().click(function(){alert('clicked');});
+	}
 
 </script>
 <% end %>

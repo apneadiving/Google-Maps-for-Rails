@@ -1,4 +1,4 @@
-module ApplicationHelper
+module Gmaps4railsHelper
   
   def gmaps4rails(builder, enable_css = true, enable_js = true )
     options = {
