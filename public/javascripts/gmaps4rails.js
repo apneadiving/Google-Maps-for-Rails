@@ -135,7 +135,7 @@ var Gmaps4Rails = {
 			  maxZoom: this.map_options.maxZoom,
 			  minZoom: this.map_options.minZoom,
 				zoom: this.map_options.zoom,
-		 		center: myLocation,
+		 		center: defaultLocation,
 				mapTypeId: google.maps.MapTypeId[this.map_options.type],
 				mapTypeControl: this.map_options.mapTypeControl,
 				panControl: this.map_options.panControl,
@@ -406,7 +406,7 @@ var Gmaps4Rails = {
 				 
 				 // calculate MarkerImage anchor location
 				 if (this.exists(this.markers[i].width) && this.exists(this.markers[i].height) && this.exists(this.markers[i].anchor)) {
-				 		var imageAnchorPosition = getImageAnchorPosition(marker_width, marker_length, marker_anchor);
+				 		var imageAnchorPosition = getImageAnchorPosition(marker_width, marker_height, marker_anchor);
 				 }
 				
 				 //alter coordinates if randomize is true
