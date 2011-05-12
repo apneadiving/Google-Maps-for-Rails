@@ -129,15 +129,7 @@ var Gmaps4Rails = {
 	
 	//initializes the map
 	initialize: function() {
-		// Attempt to use browser geolocation to detect users location and set the center of the map based on that. If it doesn't work 
-		// or isn't enabled then fall back on the default location 
-		var myLocation;
 		var defaultLocation = new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude);
-		if (this.map_options.detect_location == true) { 
-			myLocation = this.findMyLocation(defaultLocation); 
-		} else {
-			myLocation = defaultLocation;
-		}
 		
 		this.map = new google.maps.Map(document.getElementById(this.map_options.id), {
 			  maxZoom: this.map_options.maxZoom,
@@ -151,27 +143,29 @@ var Gmaps4Rails = {
 				scaleControl: this.map_options.scaleControl,
 				streetViewControl: this.map_options.streetViewControl,
 		});
+		
+		// Attempt to use browser geolocation to detect users location and set the center of the map based on that. If it doesn't work 
+		// or isn't enabled then fall back on the default location 
+		if (this.map_options.detect_location == true) { 
+			this.findMyLocation(); 
+		}
+		
 		//resets sidebar if needed
 		this.reset_sidebar_content();
 	},
 	
-	findMyLocation: function(defaultLocation) {
-		var initialLocation;
-
+	findMyLocation: function() {
 		if(navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition(function(position) {
-	      initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	    }, function() {
-	      initialLocation = defaultLocation;
+	      var myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				Gmaps4Rails.map.setCenter(myLocation)
+	    }, function(error) {
 		    contentString = "Error: The Geolocation service failed.";
 	    });
 	  } else {
 	    // Browser doesn't support Geolocation
-	    initialLocation = defaultLocation;
 	    contentString = "Error: Your browser doesn't support geolocation.";
 	  }
-
-		return initialLocation;
 	},
 
 	////////////////////////////////////////////////////
