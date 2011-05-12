@@ -15,7 +15,7 @@ var Gmaps4Rails = {
 		draggingCursor: null,  // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
 		keyboardShortcuts: true,
 	  type: "ROADMAP",        // HYBRID, ROADMAP, SATELLITE, TERRAIN
-		detect_location: true,  // should the browser attempt to use geolation detection features of HTML5?
+		detect_location: true,  // should the browser attempt to use geolocation detection features of HTML5?
 		center_latitude: 0,
 		center_longitude: 0, 
 		zoom: 1,
