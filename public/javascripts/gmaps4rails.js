@@ -1,59 +1,94 @@
 var Gmaps4Rails = {
 	//map config
-	map: null,									//contains the map we're working on
+	map: null,									// contains the map we're working on
 	visibleInfoWindow: null,
   
 	//Map settings
 	map_options: {
 	  id: 'gmaps4rails_map',
+		backgroundColor: null,
+		disableDefaultUI: false,
+		disableDoubleClickZoom: true,
+		scrollwheel: true,
+		draggable: true,
+		draggableCursor: null, // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
+		draggingCursor: null,  // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
+		keyboardShortcuts: true,
 	  type: "ROADMAP",        // HYBRID, ROADMAP, SATELLITE, TERRAIN
-		center_latitude : 0,
-		center_longitude : 0, 
-		zoom : 1,
+		detect_location: true,  // should the browser attempt to use geolocation detection features of HTML5?
+		center_latitude: 0,
+		center_longitude: 0, 
+		zoom: 1,
 		maxZoom: null,
 		minZoom: null,
-		auto_adjust : false,    //adjust the map to the markers if set to true
-		auto_zoom: true,        //zoom given by auto-adjust
-		bounds: []              //adjust map to these limits. Should be [{"lat": , "lng": }]
-		},				
+		auto_adjust : false,    // adjust the map to the markers if set to true
+		auto_zoom: true,        // zoom given by auto-adjust
+		mapTypeControl: true,
+		panControl: true,
+	  zoomControl: true,
+	  scaleControl: true,
+	  streetViewControl: true,
+	  overviewMapControl: true,
+		bounds: []              // adjust map to these limits. Should be [{"lat": , "lng": }]
+	},				
 	
 	//markers + info styling
 	markers_conf: {
+		// Marker config
+		clickable: true,
+		cursor: null, // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
+		draggable: false,
+		flat: false,
+		optimized: true,
+		raiseOnDrag: true,
+		title: "",
+		visible: true,
+		zIndex: null,
+		// MarkerImage config
 	  picture : "",
-		width : 22,
-		length : 32,
+		width: 22,
+		length: 32,
+		anchor: "bottom_center",  //anchor position of the marker image. options: top_left, top_center, top_right, center_left, center, center_right, bottom_right, bottom_center, bottom_left
+		scaledWidth: 22,
+		scaledLength: 32,
+		origin_x: 0,
+		origin_y: 0,
 		//clustering config
-	  do_clustering: true,			//do clustering if set to true
-	  clusterer_gridSize: 50,		//the more the quicker but the less precise
-		clusterer_maxZoom:  5,		//removes clusterer  at this zoom level
-		randomize: false,         //Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
-		max_random_distance: 100, //in meters. Each marker coordinate could be altered by this distance in a random direction
-		list_container : null     //id of the ul that will host links to all markers
-		},
+	  do_clustering: true,			// do clustering if set to true
+	  clusterer_gridSize: 50,		// the more the quicker but the less precise
+		clusterer_maxZoom:  5,		// removes clusterer  at this zoom level
+		randomize: false,         // Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
+		max_random_distance: 100, // in meters. Each marker coordinate could be altered by this distance in a random direction
+		list_container: null      // id of the ul that will host links to all markers
+	},
 	
 	//Stored variables
-	markers : [],							  //contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "google_object": google_marker}
-	bounds_object: null,				//contains current bounds from markers, polylines etc...
-	polygons: [], 						  //contains raw data, array of arrays (first element could be a hash containing options)
-	polylines: [], 						  //contains raw data, array of arrays (first element could be a hash containing options)
-	circles: [],                //contains raw data, array of hash
-  markerClusterer: null,			//contains all marker clusterers
+	markers: [],							  // contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "google_object": google_marker}
+	bounds_object: null,				// contains current bounds from markers, polylines etc...
+	polygons: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
+	polylines: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
+	circles: [],                // contains raw data, array of hash
+	rectangles: [],							// contains raw data
+  markerClusterer: null,			// contains all marker clusterers
   
 	//Polygon Styling
-	polygons_conf: {						//default style for polygons
+	polygons_conf: {						// default style for polygons
 		strokeColor: "#FFAA00",
   	strokeOpacity: 0.8,
   	strokeWeight: 2,
     fillColor: "#000000",
-  	fillOpacity: 0.35
-		},
+  	fillOpacity: 0.35,
+		clickable: true,
+		geodesic: false,
+		zIndex: null
+	},
 
 	//Polyline Styling		
 	polylines_conf: {						//default style for polylines
 		strokeColor: "#FF0000",
   	strokeOpacity: 1,
   	strokeWeight: 2
-		},
+	},
 		
 	//Circle Styling	
 	circles_conf: {							//default style for circles
@@ -61,8 +96,21 @@ var Gmaps4Rails = {
 	  fillOpacity: 0.35,
 		strokeColor: "#FFAA00",
 	  strokeOpacity: 0.8,
-	  strokeWeight: 2
-		},
+	  strokeWeight: 2,
+		clickable: false,
+		zIndex: null
+	},
+		
+	//Rectangle Styling
+	rectangle_conf: {
+		 fillColor: "#00AAFF",
+     fillOpacity: 0.35,
+		 strokeColor: "#FFAA00",
+		 strokeOpacity: 0.8,
+		 strokeWeight: 2,
+		 clickable: true,
+		 zIndex: null
+	},
 	
 	//Direction Settings
 	direction_conf: {
@@ -78,18 +126,51 @@ var Gmaps4Rails = {
 		region: 						null, 
 		travelMode: 				"DRIVING" //WALKING, BICYCLING
 	},
+	
 	//initializes the map
-	initialize: function(){
+	initialize: function() {
+		var defaultLocation = new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude);
+		
 		this.map = new google.maps.Map(document.getElementById(this.map_options.id), {
 			  maxZoom: this.map_options.maxZoom,
 			  minZoom: this.map_options.minZoom,
 				zoom: this.map_options.zoom,
-				center: new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude),
-				mapTypeId: google.maps.MapTypeId[this.map_options.type]
+		 		center: defaultLocation,
+				mapTypeId: google.maps.MapTypeId[this.map_options.type],
+				mapTypeControl: this.map_options.mapTypeControl,
+				panControl: this.map_options.panControl,
+				zoomControl: this.map_options.zoomControl,
+				scaleControl: this.map_options.scaleControl,
+				streetViewControl: this.map_options.streetViewControl,
 		});
+		
+		// Attempt to use browser geolocation to detect users location and set the center of the map based on that. If it doesn't work 
+		// or isn't enabled then fall back on the default location 
+		if (this.map_options.detect_location == true) { 
+			this.findMyLocation(); 
+		}
+		
 		//resets sidebar if needed
 		this.reset_sidebar_content();
 	},
+	
+	findMyLocation: function() {
+		if(navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	      var myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				Gmaps4Rails.map.setCenter(myLocation)
+	    }, function(error) {
+		    contentString = "Error: The Geolocation service failed.";
+	    });
+	  } else {
+	    // Browser doesn't support Geolocation
+	    contentString = "Error: Your browser doesn't support geolocation.";
+	  }
+	},
+
+	////////////////////////////////////////////////////
+	//////////////////// DIRECTIONS ////////////////////
+	////////////////////////////////////////////////////
 	
 	create_direction: function(){
 		var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -122,37 +203,80 @@ var Gmaps4Rails = {
 	    });
 	},
 	
+	////////////////////////////////////////////////////
+	///////////////////// CIRCLES //////////////////////
+	////////////////////////////////////////////////////
+	
 	//Loops through all circles
-	create_circles: function(){
+	//Loops through all circles and draws them
+	create_circles: function() {
 		for (var i = 0; i < this.circles.length; ++i) {
 			//by convention, default style configuration could be integrated in the first element
-			if ( i === 0 )
-			{
-				if (this.exists(this.circles[i].strokeColor  )) { this.circles_conf.strokeColor 	= this.circles[i].strokeColor; 	 }
-				if (this.exists(this.circles[i].strokeOpacity)) { this.circles_conf.strokeOpacity = this.circles[i].strokeOpacity; }
-			  if (this.exists(this.circles[i].strokeWeight )) { this.circles_conf.strokeWeight 	= this.circles[i].strokeWeight;  }
-			  if (this.exists(this.circles[i].fillColor 	 )) { this.circles_conf.fillColor 		= this.circles[i].fillColor; 		 }
-			  if (this.exists(this.circles[i].fillOpacity  )) { this.circles_conf.fillOpacity 	= this.circles[i].fillOpacity; 	 }
-			}
-			if (this.exists(this.circles[i].latitude) && this.exists(this.circles[i].longitude))
-			{
-				 center = new google.maps.LatLng(this.circles[i].latitude, this.circles[i].longitude);
-				 //always check if a config is given, if not, use defaults
-				 var circle = new google.maps.Circle({
-			   center:        center,
-			   strokeColor:   this.circles[i].strokeColor   || this.circles_conf.strokeColor,
-			   strokeOpacity: this.circles[i].strokeOpacity || this.circles_conf.strokeOpacity,
-			   strokeWeight: 	this.circles[i].strokeWeight  || this.circles_conf.strokeWeight,
-				 fillOpacity: 	this.circles[i].fillOpacity   || this.circles_conf.fillOpacity,
-				 fillColor: 		this.circles[i].fillColor     || this.circles_conf.fillColor,
-				 radius: 				this.circles[i].radius,
-				 clickable:     false
-			 	});
-				this.circles[i].google_object = circle;
-				circle.setMap(this.map);
-			}
+			this.create_circle(this.circles[i]);
 		}
 	},
+	
+	create_circle: function(circle) {
+		if ( i === 0 ) {
+			if (this.exists(circle.strokeColor  )) { this.circles_conf.strokeColor 	 = circle.strokeColor; 	 }
+			if (this.exists(circle.strokeOpacity)) { this.circles_conf.strokeOpacity = circle.strokeOpacity; }
+		  if (this.exists(circle.strokeWeight )) { this.circles_conf.strokeWeight  = circle.strokeWeight;  }
+		  if (this.exists(circle.fillColor    )) { this.circles_conf.fillColor 		 = circle.fillColor; 		 }
+		  if (this.exists(circle.fillOpacity  )) { this.circles_conf.fillOpacity 	 = circle.fillOpacity; 	 }
+		}
+		if (this.exists(circle.latitude) && this.exists(circle.longitude)) {
+			// always check if a config is given, if not, use defaults
+			// NOTE: is there a cleaner way to do this? Maybe a hash merge of some sort?
+			var newCircle = new google.maps.Circle({
+			   center:        new google.maps.LatLng(circle.latitude, circle.longitude),
+			   strokeColor:   circle.strokeColor   || this.circles_conf.strokeColor,
+			   strokeOpacity: circle.strokeOpacity || this.circles_conf.strokeOpacity,
+			   strokeWeight: 	circle.strokeWeight  || this.circles_conf.strokeWeight,
+				 fillOpacity: 	circle.fillOpacity   || this.circles_conf.fillOpacity,
+				 fillColor: 		circle.fillColor     || this.circles_conf.fillColor,
+				 clickable:     circle.clickable     || this.circles_conf.clickable,
+				 zIndex: 				circle.zIndex				 || this.circles_conf.zIndex,
+				 radius: 				circle.radius
+		 	});
+			circle.google_object = newCircle;
+			newCircle.setMap(this.map);
+		}
+	},
+	
+	// clear circles
+  clear_circles: function() {
+		for (var i = 0; i <  this.circles.length; ++i) {
+			this.clear_circle(this.circles[i]);
+    }
+  },
+
+	clear_circle: function(circle) {
+		circle.google_object.setMap(null);
+	},
+	
+	hide_circles: function() {
+		for (var i = 0; i <  this.circles.length; ++i) {
+			this.hide_circle(this.circles[i]);
+    }
+	},
+	
+	hide_circle: function(circle) {
+		circle.google_object.setMap(null);
+	},
+	
+	show_circles: function() {
+		for (var i = 0; i <  this.circles.length; ++i) {
+			this.show_circle(this.circles[i]);
+    }
+	},
+	
+	show_circle: function(circle) {
+		circle.google_object.setMap(this.map);
+	},
+
+	////////////////////////////////////////////////////
+	///////////////////// POLYGONS /////////////////////
+	////////////////////////////////////////////////////
 	
 	//polygons is an array of arrays. It loops.
 	create_polygons: function(){
@@ -197,6 +321,10 @@ var Gmaps4Rails = {
 		this.polygons[i].google_object = new_poly;
 		new_poly.setMap(this.map);
 	},
+
+	////////////////////////////////////////////////////
+	/////////////////// POLYLINES //////////////////////
+	////////////////////////////////////////////////////
 	
 	//polylines is an array of arrays. It loops.
 	create_polylines: function(){
@@ -206,7 +334,7 @@ var Gmaps4Rails = {
 	},
 	
 	//creates a single polyline, triggered by create_polylines
-	create_polyline: function(i){
+	create_polyline: function(i) {
 		var polyline_coordinates = [];
 		var strokeColor;
 	  var strokeOpacity;
@@ -215,7 +343,7 @@ var Gmaps4Rails = {
 		//2 cases here, either we have a coded array of LatLng or we have an Array of LatLng
 		for (var j = 0; j < this.polylines[i].length; ++j) {
 			//if we have a coded array
-			if (this.exists(this.polylines[i][j].coded_array)){
+			if (this.exists(this.polylines[i][j].coded_array)) {
 				var decoded_array = new google.maps.geometry.encoding.decodePath(this.polylines[i][j].coded_array);
 				//loop through every point in the array
 				for (var k = 0; k < decoded_array.length; ++k) {		
@@ -226,14 +354,13 @@ var Gmaps4Rails = {
 			//or we have an array of latlng
 			else{
 				//by convention, a single polyline could be customized in the first array or it uses default values
-				if (j===0){
+				if (j===0) {
 					strokeColor   = this.polylines[i][0].strokeColor   || this.polylines_conf.strokeColor;
 				  strokeOpacity = this.polylines[i][0].strokeOpacity || this.polylines_conf.strokeOpacity;
 			  	strokeWeight  = this.polylines[i][0].strokeWeight  || this.polylines_conf.strokeWeight;
 				}
 				//add latlng if positions provided
-				if (this.exists(this.polylines[i][j].latitude) && this.exists(this.polylines[i][j].longitude)) 
-				{	
+				if (this.exists(this.polylines[i][j].latitude) && this.exists(this.polylines[i][j].longitude)) {	
 					var latlng = new google.maps.LatLng(this.polylines[i][j].latitude, this.polylines[i][j].longitude);
 			  	polyline_coordinates.push(latlng);
 				}
@@ -252,6 +379,10 @@ var Gmaps4Rails = {
 		new_poly.setMap(this.map);
 	},
 
+	////////////////////////////////////////////////////
+	///////////////////// MARKERS //////////////////////
+	////////////////////////////////////////////////////
+
 	//creates, clusterizes and adjusts map 
 	create_markers: function() {
 		this.create_google_markers_from_markers();
@@ -260,7 +391,7 @@ var Gmaps4Rails = {
 	},
 	
 	//create google.maps Markers from data provided by user
-	create_google_markers_from_markers: function(){
+	create_google_markers_from_markers: function() {
 		for (var i = 0; i < this.markers.length; ++i) {
 		  //check if the marker has not already been created
 			if (!this.exists(this.markers[i].google_object)) {
@@ -268,49 +399,122 @@ var Gmaps4Rails = {
 			   var marker_picture = this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture;
 			   var marker_width 	= this.exists(this.markers[i].width)   ? this.markers[i].width 	 : this.markers_conf.width;
 			   var marker_height 	= this.exists(this.markers[i].height)  ? this.markers[i].height  : this.markers_conf.length;
+				 var marker_anchor	= this.exists(this.markers[i].anchor)	 ? this.markers[i].anchor  : this.markers_conf.anchor;
 			   var marker_title 	= this.exists(this.markers[i].title)   ? this.markers[i].title 	 : null;
       	 var Lat = this.markers[i].latitude;
 				 var Lng = this.markers[i].longitude;
 				 
+				 // calculate MarkerImage anchor location
+				 if (this.exists(this.markers[i].width) && this.exists(this.markers[i].height) && this.exists(this.markers[i].anchor)) {
+				 		var imageAnchorPosition = getImageAnchorPosition(marker_width, marker_height, marker_anchor);
+				 }
+				
 				 //alter coordinates if randomize is true
-				 if ( this.markers_conf.randomize)
-				 {
-					var LatLng = this.randomize(Lat, Lng);
-				  //retrieve coordinates from the array
-				  Lat = LatLng[0]; Lng = LatLng[1];
+				 if ( this.markers_conf.randomize) {
+						var LatLng = this.randomize(Lat, Lng);
+				  	//retrieve coordinates from the array
+				  	Lat = LatLng[0]; Lng = LatLng[1];
 				 }
 				
 				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
-				 var ThisMarker;
+				 var thisMarker;
 				 // Marker sizes are expressed as a Size of X,Y
-		 		 if (marker_picture === "")
-					{ ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	}
-					else 
-				  {
-						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height) );
-					  ThisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
-					}
-					//save object
-					this.markers[i].google_object = ThisMarker; 
-					//add infowindowstuff if enabled
-					this.create_info_window(this.markers[i]);
-					//create sidebar if enabled
-					this.create_sidebar(this.markers[i]);
+		 		 if (marker_picture === "") { 
+						thisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	
+				 } else {
+						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height), null, imageAnchorPosition, null );
+					  thisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
+				 }
+				 //save object
+				 this.markers[i].google_object = thisMarker; 
+				 //add infowindowstuff if enabled
+				 this.create_info_window(this.markers[i]);
+				 //create sidebar if enabled
+				 this.create_sidebar(this.markers[i]);
 			 }
 		}
 		
+		// calculate anchor point for MarkerImage	
+		function getImageAnchorPosition(markerWidth, markerHeight, anchorLocation) {
+			var x;
+			var y;
+			switch (anchorLocation) {
+				case "top_left":
+					x = 0;
+					y = 0;
+					break;
+				case "top_center":
+					x = markerWidth / 2;
+					y = 0;
+					break;		
+				case "top_right":
+					x = markerWidth;
+					y = 0;
+					break;		
+				case "center_left":
+					x = 0;
+					y = markerHeight / 2;
+					break;		
+				case "center":
+					x = markerWidth / 2;
+					y = markerHeight / 2;
+					break;
+				case "center_right":
+					x = markerWidth;
+					y = markerHeight / 2;
+					break;		
+				case "bottom_left":
+					x = 0;
+					y = markerHeight;
+					break;		
+				case "bottom_center":
+					x = markerWidth / 2;
+					y = markerHeight;
+					break;		
+				case "bottom_right":
+					x = markerWidth;
+					y = markerHeight;
+					break;		
+			}
+			return new google.maps.Point(x,y);
+		}
 	},
 
   // clear markers
-  clear_markers: function(){
+  clear_markers: function() {
     if (this.markerClusterer !== null){
 			this.markerClusterer.clearMarkers();
 		}
 		for (var i = 0; i <  this.markers.length; ++i) {
-      this.markers[i].google_object.setMap(null);
+      this.clear_marker(this.markers[i]);
     }
   },
 
+	clear_marker: function(marker) {
+		marker.google_object.setMap(null);
+	},
+
+	// show and hide markers
+	show_markers: function() {
+		for (var i = 0; i <  this.markers.length; ++i) {
+      this.show_marker(this.markers[i]);
+    }
+	},
+	
+	show_marker: function(marker) {
+		marker.google_object.setVisible(true);
+	},
+	
+	hide_markers: function() {
+		for (var i = 0; i <  this.markers.length; ++i) {
+      this.hide_marker(this.markers[i]);
+    }
+	},
+	
+	hide_marker: function(marker) {
+		marker.google_object.setVisible(false);
+	},
+	
   // replace old markers with new markers on an existing map
   replace_markers: function(new_markers){
 	  //reset previous markers
@@ -347,7 +551,11 @@ var Gmaps4Rails = {
 			this.markerClusterer = new MarkerClusterer(this.map, gmarkers_array, {	maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize });
 	  }
 	},
-	
+
+	////////////////////////////////////////////////////
+	/////////////////// INFO WINDOW ////////////////////
+	////////////////////////////////////////////////////
+
 	// creates infowindows
 	create_info_window: function(marker_container){
 		//create the infowindow
@@ -368,6 +576,10 @@ var Gmaps4Rails = {
       Gmaps4Rails.visibleInfoWindow = infoWindow;
     };
   },
+
+	////////////////////////////////////////////////////
+	///////////////////// SIDEBAR //////////////////////
+	////////////////////////////////////////////////////
 
 	//creates sidebar
 	create_sidebar: function(marker_container){
@@ -399,6 +611,10 @@ var Gmaps4Rails = {
 			ul.innerHTML = "";
 		}
 	},
+
+	////////////////////////////////////////////////////
+	////////////////// MISCELLANEOUS ///////////////////
+	////////////////////////////////////////////////////
 
 	//to make the map fit the different LatLng points
 	adjust_map_to_bounds: function(latlng) {
