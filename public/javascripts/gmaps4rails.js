@@ -1,21 +1,18 @@
 var Gmaps4Rails = {
 	//map config
 	map: null,									// contains the map we're working on
-	visibleInfoWindow: null,
-  
+	visibleInfoWindow: null,    //contains the current opened infowindow
+  userLocation: null,         //contains user's location if geolocalization was performed and successful
+
 	//Map settings
 	map_options: {
 	  id: 'gmaps4rails_map',
-		backgroundColor: null,
 		disableDefaultUI: false,
-		disableDoubleClickZoom: true,
-		scrollwheel: true,
+		disableDoubleClickZoom: false,
 		draggable: true,
-		draggableCursor: null, // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
-		draggingCursor: null,  // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
-		keyboardShortcuts: true,
-	  type: "ROADMAP",        // HYBRID, ROADMAP, SATELLITE, TERRAIN
-		detect_location: true,  // should the browser attempt to use geolocation detection features of HTML5?
+	  type: "ROADMAP",         // HYBRID, ROADMAP, SATELLITE, TERRAIN
+		detect_location: false,  // should the browser attempt to use geolocation detection features of HTML5?
+	  center_on_user: false,
 		center_latitude: 0,
 		center_longitude: 0, 
 		zoom: 1,
@@ -23,36 +20,18 @@ var Gmaps4Rails = {
 		minZoom: null,
 		auto_adjust : false,    // adjust the map to the markers if set to true
 		auto_zoom: true,        // zoom given by auto-adjust
-		mapTypeControl: true,
-		panControl: true,
-	  zoomControl: true,
-	  scaleControl: true,
-	  streetViewControl: true,
-	  overviewMapControl: true,
 		bounds: []              // adjust map to these limits. Should be [{"lat": , "lng": }]
 	},				
 	
 	//markers + info styling
 	markers_conf: {
 		// Marker config
-		clickable: true,
-		cursor: null, // HTML cursors: auto, default, text, help, crosshair, move, wait, pointer, progress, e-resize, ne-resize, nw-resize, n-resize, se-resize, sw-resize, s-resize, w-resize, or any URL
-		draggable: false,
-		flat: false,
-		optimized: true,
-		raiseOnDrag: true,
 		title: "",
-		visible: true,
-		zIndex: null,
 		// MarkerImage config
 	  picture : "",
 		width: 22,
 		length: 32,
-		anchor: "bottom_center",  //anchor position of the marker image. options: top_left, top_center, top_right, center_left, center, center_right, bottom_right, bottom_center, bottom_left
-		scaledWidth: 22,
-		scaledLength: 32,
-		origin_x: 0,
-		origin_y: 0,
+		anchor: null,             // centeranchor position of the marker image. Default is null <=> center, you can set options: top_left, top_center, top_right, center_left, center, center_right, bottom_right, bottom_center, bottom_left
 		//clustering config
 	  do_clustering: true,			// do clustering if set to true
 	  clusterer_gridSize: 50,		// the more the quicker but the less precise
@@ -68,7 +47,6 @@ var Gmaps4Rails = {
 	polygons: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
 	polylines: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
 	circles: [],                // contains raw data, array of hash
-	rectangles: [],							// contains raw data
   markerClusterer: null,			// contains all marker clusterers
   
 	//Polygon Styling
@@ -77,10 +55,7 @@ var Gmaps4Rails = {
   	strokeOpacity: 0.8,
   	strokeWeight: 2,
     fillColor: "#000000",
-  	fillOpacity: 0.35,
-		clickable: true,
-		geodesic: false,
-		zIndex: null
+  	fillOpacity: 0.35
 	},
 
 	//Polyline Styling		
@@ -100,17 +75,6 @@ var Gmaps4Rails = {
 		clickable: false,
 		zIndex: null
 	},
-		
-	//Rectangle Styling
-	rectangle_conf: {
-		 fillColor: "#00AAFF",
-     fillOpacity: 0.35,
-		 strokeColor: "#FFAA00",
-		 strokeOpacity: 0.8,
-		 strokeWeight: 2,
-		 clickable: true,
-		 zIndex: null
-	},
 	
 	//Direction Settings
 	direction_conf: {
@@ -118,7 +82,7 @@ var Gmaps4Rails = {
 		display_panel: 			false,
 		origin: 						null, 
     destination: 				null,
-		waypoints: 					[], //[{location: "toulouse,fr", stopover: true}, {location: "Clermont-Ferrand, fr", stopover: true}]
+		waypoints: 					[],       //[{location: "toulouse,fr", stopover: true}, {location: "Clermont-Ferrand, fr", stopover: true}]
     optimizeWaypoints: 	false,
 		unitSystem: 				"METRIC", //IMPERIAL
 		avoidHighways: 			false,
@@ -129,42 +93,40 @@ var Gmaps4Rails = {
 	
 	//initializes the map
 	initialize: function() {
-		var defaultLocation = new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude);
 		
 		this.map = new google.maps.Map(document.getElementById(this.map_options.id), {
 			  maxZoom: this.map_options.maxZoom,
 			  minZoom: this.map_options.minZoom,
 				zoom: this.map_options.zoom,
-		 		center: defaultLocation,
+		 		center: new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude),
 				mapTypeId: google.maps.MapTypeId[this.map_options.type],
 				mapTypeControl: this.map_options.mapTypeControl,
-				panControl: this.map_options.panControl,
-				zoomControl: this.map_options.zoomControl,
-				scaleControl: this.map_options.scaleControl,
-				streetViewControl: this.map_options.streetViewControl,
+				disableDefaultUI: this.map_options.disableDefaultUI,
+				disableDoubleClickZoom: this.map_options.disableDoubleClickZoom,
+				draggable: this.map_options.draggable
 		});
 		
-		// Attempt to use browser geolocation to detect users location and set the center of the map based on that. If it doesn't work 
-		// or isn't enabled then fall back on the default location 
-		if (this.map_options.detect_location == true) { 
-			this.findMyLocation(); 
-		}
-		
+		if (this.map_options.detect_location === true || this.map_options.center_on_user === true) { 
+			this.findUserLocation();
+		}    
 		//resets sidebar if needed
 		this.reset_sidebar_content();
 	},
 	
-	findMyLocation: function() {
+	findUserLocation: function() {
 		if(navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition(function(position) {
-	      var myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-				Gmaps4Rails.map.setCenter(myLocation)
-	    }, function(error) {
-		    contentString = "Error: The Geolocation service failed.";
-	    });
+	      Gmaps4Rails.userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	    	//change map's center to focus on user's geoloc
+				if(Gmaps4Rails.map_options.center_on_user === true) {
+					Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
+				}
+	    },
+	    function() {
+			  if(typeof gmaps4rails_geolocation_failure == 'function') { gmaps4rails_geolocation_failure(true); }
+		});
 	  } else {
-	    // Browser doesn't support Geolocation
-	    contentString = "Error: Your browser doesn't support geolocation.";
+		  if(typeof gmaps4rails_geolocation_failure == 'function') { gmaps4rails_geolocation_failure(false); }
 	  }
 	},
 
@@ -180,9 +142,9 @@ var Gmaps4Rails = {
 		//display panel only if required
 		if (this.direction_conf.display_panel) {	directionsDisplay.setPanel(document.getElementById(this.direction_conf.panel_id)); }
 		directionsDisplay.setOptions({
-			suppressMarkers: true,
+			suppressMarkers:     false,
 			suppressInfoWindows: false,
-			suppressPolylines: false
+			suppressPolylines:   false
 		});
 	  var request = {
 	        origin: 						this.direction_conf.origin, 
@@ -194,7 +156,7 @@ var Gmaps4Rails = {
 					avoidTolls: 				this.direction_conf.avoidTolls,
 					region: 						this.direction_conf.region, 
 					travelMode: 				google.maps.DirectionsTravelMode[this.direction_conf.travelMode],
-					language: 					"fr"
+					language: 					"en"
 	    };
 	   directionsService.route(request, function(response, status) {
 	      if (status == google.maps.DirectionsStatus.OK) {
@@ -403,10 +365,10 @@ var Gmaps4Rails = {
 			   var marker_title 	= this.exists(this.markers[i].title)   ? this.markers[i].title 	 : null;
       	 var Lat = this.markers[i].latitude;
 				 var Lng = this.markers[i].longitude;
-				 
+				 var imageAnchorPosition = null;
 				 // calculate MarkerImage anchor location
-				 if (this.exists(this.markers[i].width) && this.exists(this.markers[i].height) && this.exists(this.markers[i].anchor)) {
-				 		var imageAnchorPosition = getImageAnchorPosition(marker_width, marker_height, marker_anchor);
+				 if (this.exists(this.markers[i].width) && this.exists(this.markers[i].height) && marker_anchor !== null) {
+				 		imageAnchorPosition = getImageAnchorPosition(marker_width, marker_height, marker_anchor);
 				 }
 				
 				 //alter coordinates if randomize is true
@@ -416,14 +378,14 @@ var Gmaps4Rails = {
 				  	Lat = LatLng[0]; Lng = LatLng[1];
 				 }
 				
-				 var myLatLng = new google.maps.LatLng(Lat, Lng); 
+				 var markerLatLng = new google.maps.LatLng(Lat, Lng); 
 				 var thisMarker;
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture === "") { 
-						thisMarker = new google.maps.Marker({position: myLatLng, map: this.map, title: marker_title});	
+						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title});	
 				 } else {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height), null, imageAnchorPosition, null );
-					  thisMarker = new google.maps.Marker({position: myLatLng, map: this.map, icon: image, title: marker_title});
+					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: image, title: marker_title});
 				 }
 				 //save object
 				 this.markers[i].google_object = thisMarker; 
@@ -633,11 +595,11 @@ var Gmaps4Rails = {
 	    }
  		  //from polygons:
 			for (var i = 0; i <  this.polylines.length; ++i) {
-				this.polylines[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );})
+				this.polylines[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
 			}
 			//from polylines:
 			for (var i = 0; i <  this.polygons.length; ++i) {
-				this.polygons[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );})
+				this.polygons[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
 			}
 			//from circles
 			for (var i = 0; i <  this.circles.length; ++i) {
@@ -670,7 +632,7 @@ var Gmaps4Rails = {
 
 	//basic function to check existence of a variable
 	exists: function(var_name) {
-		return var_name	!== "" && typeof var_name !== "undefined"
+		return (var_name	!== "" && typeof var_name !== "undefined");
 	},
 
 	//randomize
