@@ -103,7 +103,7 @@ function gmaps4rails_geolocation_failure(browser_support) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"anchor" => "bottom_right", "data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => true } },
+<%= gmaps("markers" => {"data" => @json, "options" => {"anchor" => "bottom_right", "list_container" => "markers_list", "do_clustering" => true } },
           "map_options" => { "auto_adjust" => false, "center_on_user" => true, "zoom" => 25 }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
 <%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
