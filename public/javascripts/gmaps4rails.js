@@ -12,7 +12,7 @@ var Gmaps4Rails = {
 		draggable: true,
 	  type: "ROADMAP",         // HYBRID, ROADMAP, SATELLITE, TERRAIN
 		detect_location: false,  // should the browser attempt to use geolocation detection features of HTML5?
-	  center_on_user: false,
+	  center_on_user: false,   // centers map on the location detected through the browser
 		center_latitude: 0,
 		center_longitude: 0, 
 		zoom: 1,
@@ -38,7 +38,8 @@ var Gmaps4Rails = {
 		clusterer_maxZoom:  5,		// removes clusterer  at this zoom level
 		randomize: false,         // Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
 		max_random_distance: 100, // in meters. Each marker coordinate could be altered by this distance in a random direction
-		list_container: null      // id of the ul that will host links to all markers
+		list_container: null,     // id of the ul that will host links to all markers
+		custom_cluster_pictures: null
 	},
 	
 	//Stored variables
@@ -123,10 +124,10 @@ var Gmaps4Rails = {
 				}
 	    },
 	    function() {
-			  if(typeof gmaps4rails_geolocation_failure == 'function') { gmaps4rails_geolocation_failure(true); }
+			  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(true); }
 		});
 	  } else {
-		  if(typeof gmaps4rails_geolocation_failure == 'function') { gmaps4rails_geolocation_failure(false); }
+		  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(false); }
 	  }
 	},
 
@@ -447,7 +448,7 @@ var Gmaps4Rails = {
     if (this.markerClusterer !== null){
 			this.markerClusterer.clearMarkers();
 		}
-		for (var i = 0; i <  this.markers.length; ++i) {
+		for (var i = 0; i < this.markers.length; ++i) {
       this.clear_marker(this.markers[i]);
     }
   },
@@ -458,7 +459,7 @@ var Gmaps4Rails = {
 
 	// show and hide markers
 	show_markers: function() {
-		for (var i = 0; i <  this.markers.length; ++i) {
+		for (var i = 0; i < this.markers.length; ++i) {
       this.show_marker(this.markers[i]);
     }
 	},
@@ -468,7 +469,7 @@ var Gmaps4Rails = {
 	},
 	
 	hide_markers: function() {
-		for (var i = 0; i <  this.markers.length; ++i) {
+		for (var i = 0; i < this.markers.length; ++i) {
       this.hide_marker(this.markers[i]);
     }
 	},
@@ -508,9 +509,14 @@ var Gmaps4Rails = {
 			for (var i = 0; i <  this.markers.length; ++i) {
        gmarkers_array.push(this.markers[i].google_object);
       }
-			
-			
-			this.markerClusterer = new MarkerClusterer(this.map, gmarkers_array, {	maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize });
+			var clustererStyle = null;
+			if(this.fnSet("gmaps_custom_clusterer_pic")) {
+				clustererStyle = gmaps_custom_clusterer_pic();
+			}
+			this.markerClusterer = new MarkerClusterer( this.map,
+																									gmarkers_array, 
+																									{	maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize, styles: clustererStyle }
+																								);
 	  }
 	},
 
@@ -524,7 +530,6 @@ var Gmaps4Rails = {
 		var info_window = new google.maps.InfoWindow({content: marker_container.description });
 		//add the listener associated
 		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
-
 	},
 
 	openInfoWindow: function(infoWindow, marker) {
@@ -633,6 +638,10 @@ var Gmaps4Rails = {
 	//basic function to check existence of a variable
 	exists: function(var_name) {
 		return (var_name	!== "" && typeof var_name !== "undefined");
+	},
+	//check existence of function
+	fnSet: function(fn_name){
+		return(typeof fn_name == 'function');
 	},
 
 	//randomize

@@ -1,6 +1,47 @@
 <% content_for :scripts do -%>
-	
+<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/data.json" type="text/javascript"></script>   
 <script type="text/javascript" charset="utf-8">
+var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
+var styles = [{
+        url: url + '/images/conv30.png',
+        height: 27,
+        width: 30,
+        anchor: [3, 0],
+        textColor: '#FF00FF',
+        opt_textSize: 10
+      }, {
+        url: url + '/images/conv40.png',
+        height: 36,
+        width: 40,
+        opt_anchor: [6, 0],
+        opt_textColor: '#FF0000',
+        opt_textSize: 11
+      }, {
+        url: url + '/images/conv50.png',
+        width: 50,
+        height: 45,
+        opt_anchor: [8, 0],
+        opt_textSize: 12
+      }];
+function gmaps_custom_clusterer_pic() {
+	var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
+	return [
+      {
+        url: url + '/images/heart30.png',
+        height: 26,
+        width: 30,
+      },
+      {
+        url: url + '/images/heart40.png', 
+        height: 35,
+        width: 40,
+      },
+      {
+        url: url + '/images/heart50.png',
+        width: 50,
+        height: 44,
+      }];
+  }
 var builder2 = [{"description": "",
 "title": "",
 "longitude": "5.9311119",
@@ -103,8 +144,11 @@ function gmaps4rails_geolocation_failure(browser_support) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"anchor" => "bottom_right", "data" => @json, "options" => {"list_container" => "markers_list", "do_clustering" => true } },
-          "map_options" => { "auto_adjust" => false, "center_on_user" => true, "zoom" => 25 }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
+<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true,  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => false, "zoom" => 5 }) %> 
+
+
+<%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
 <%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 					 %>
@@ -113,12 +157,12 @@ function gmaps4rails_geolocation_failure(browser_support) {
 
 	function gmaps4rails_callback() {
 	 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
-    $("#markers_list").children().first().click(function(){alert('clicked');});
+    //$("#markers_list").children().first().click(function(){alert('clicked');});
 	}
 
 </script>
 <% end %>
-<button type="button" onclick="Gmaps4Rails.replace_markers(builder2)">Replace Markers</button>
+<button type="button" onclick="Gmaps4Rails.replace_markers(data.photos)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder3)">Add Markers bis</button>
 <button type="button" onclick="add_all()">Add all</button>
@@ -126,4 +170,3 @@ function gmaps4rails_geolocation_failure(browser_support) {
 	<ul id="markers_list"></ul>
 </div>
 <div id="instructions"></div>
-<div id="val">value</div>
