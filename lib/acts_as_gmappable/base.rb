@@ -13,8 +13,8 @@ module Gmaps4rails
   class DirectionInvalidQuery < StandardError; end
 
   def Gmaps4rails.create_json(object)
-    unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
-"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\"#{Gmaps4rails.picture(object)}},\n"
+    unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
+"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
     end
   end  
   
@@ -157,7 +157,7 @@ module Gmaps4rails
         end
       end
          
-      def to_gmaps4rails
+      def to_gmaps4rails  
         json = "["
         json += Gmaps4rails.create_json(self).to_s.chop.chop #removes the extra comma
         json += "]"
