@@ -146,8 +146,8 @@ module Gmaps4rails
           logger.warn(e)
           #TODO add customization here?
         else #if no exception
-          self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
-          self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
+          self.send(gmaps4rails_options[:lng_column]+"=", coordinates.first[:lng]) if self.respond_to?(gmaps4rails_options[:lng_column]+"=")
+          self.send(gmaps4rails_options[:lat_column]+"=", coordinates.first[:lat]) if self.respond_to?(gmaps4rails_options[:lat_column]+"=")
           unless gmaps4rails_options[:normalized_address].nil?
             self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
           end
@@ -157,7 +157,7 @@ module Gmaps4rails
         end
       end
          
-      def to_gmaps4rails  
+      def to_gmaps4rails
         json = "["
         json += Gmaps4rails.create_json(self).to_s.chop.chop #removes the extra comma
         json += "]"
