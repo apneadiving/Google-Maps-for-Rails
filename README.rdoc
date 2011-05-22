@@ -65,8 +65,6 @@ Done!
 
 == Todo?
 
-* Marker clusterer customization
-
 * Integrate Markers with Label: http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/
 
 * Other options from here: http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries

@@ -156,7 +156,11 @@ function gmaps4rails_geolocation_failure(browser_support) {
 <script type="text/javascript" charset="utf-8">
 
 	function gmaps4rails_callback() {
-	 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
+    function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
+    for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
+          google.maps.event.addListener(Gmaps4Rails.markers[i].google_object, 'click', say_yo(i));
+    }
+ 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
     //$("#markers_list").children().first().click(function(){alert('clicked');});
 	}
 

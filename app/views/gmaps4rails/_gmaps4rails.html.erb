@@ -27,7 +27,6 @@ window.onload = gmaps4rails_loadScript;
 
 </script>
 <% end %>
-
-<div id="<%= options["map_options"].nil? || options['map_options']['container_id'].nil? ? "map_container" : options['map_options']['container_id'] %>"> 
-  <div id="<%= options["map_options"].nil? || options['map_options']['id'].nil? ? "gmaps4rails_map" : options['map_options']['id'] %>"></div>
+<div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>"> 
+  <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>"></div>
 </div>
