@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
   end
   
     # 
-  # def gmaps4rails_infowindow
-  #   "My Beautiful Name: #{name}"
-  # end
-  # 
+  def gmaps4rails_infowindow
+    "My Beautiful Name: #{name}"
+  end
+  
   # def gmaps4rails_marker_picture
   #   {
   #   "picture" => "http://www.blankdots.com/img/github-32x32.png",

@@ -7,22 +7,23 @@ if enable_css == true %>
 
 <% content_for :scripts do %>
 <% if enable_js == true %>
-  <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&libraries=geometry'></script>
-	<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js'></script>
 	<%=javascript_include_tag 'gmaps4rails' %>
 	<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script>
 <% end  %>
 <script type="text/javascript" charset="utf-8">
 function gmaps4rails_init() {
-	var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js";
-  document.body.appendChild(script);
 	<% #true is passed here to trigger map initialization %>
 	<%=raw options.to_gmaps4rails(true) %>
 }
-
-window.onload = gmaps4rails_init;
+  
+function gmaps4rails_loadScript() {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&callback=gmaps4rails_init";
+  document.body.appendChild(script);
+}
+  
+window.onload = gmaps4rails_loadScript;
 
 </script>
 <% end %>

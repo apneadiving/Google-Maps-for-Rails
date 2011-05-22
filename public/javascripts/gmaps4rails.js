@@ -39,7 +39,9 @@ var Gmaps4Rails = {
 		randomize: false,         // Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
 		max_random_distance: 100, // in meters. Each marker coordinate could be altered by this distance in a random direction
 		list_container: null,     // id of the ul that will host links to all markers
-		custom_cluster_pictures: null
+		custom_cluster_pictures: null,
+		custom_infowindow_class: null,
+		custom_infowindow_status: null
 	},
 	
 	//Stored variables
@@ -526,10 +528,28 @@ var Gmaps4Rails = {
 
 	// creates infowindows
 	create_info_window: function(marker_container){
+		if (this.markers_conf.custom_infowindow_class === null) {
 		//create the infowindow
 		var info_window = new google.maps.InfoWindow({content: marker_container.description });
 		//add the listener associated
 		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
+		}
+		else {
+			if (this.exists(marker_container.description)) {
+				var boxText = document.createElement("div");
+				boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
+				boxText.innerHTML = marker_container.description;	
+
+				google.maps.event.addListener(marker_container.google_object, "click", function (e) {
+					ib.open(Gmaps4Rails.map, this);
+				});
+
+				var ib = new InfoBox(gmaps4rails_infobox(boxText));
+				if (this.markers_conf.custom_infowindow_status === "opened") {
+				  ib.open(Gmaps4Rails.map, marker_container.google_object);
+				}
+			}
+		}
 	},
 
 	openInfoWindow: function(infoWindow, marker) {

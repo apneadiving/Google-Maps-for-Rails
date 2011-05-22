@@ -79,6 +79,28 @@ function gmaps4rails_geolocation_failure(browser_support) {
 		alert('geolocation not supported by your browser');
 	}
 }
+
+function gmaps4rails_infobox(boxText) {
+	return {
+				 content: boxText
+				,disableAutoPan: false
+				,maxWidth: 0
+				,pixelOffset: new google.maps.Size(-140, 0)
+				,zIndex: null
+				,boxStyle: { 
+				  background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
+				  ,opacity: 0.75
+				  ,width: "280px"
+				 }
+				,closeBoxMargin: "10px 2px 2px 2px"
+				,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+				,infoBoxClearance: new google.maps.Size(1, 1)
+				,isHidden: false
+				,pane: "floatPane"
+				,enableEventPropagation: false
+	};
+}
+
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
@@ -144,8 +166,8 @@ function gmaps4rails_geolocation_failure(browser_support) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true,  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => false, "zoom" => 5 }) %> 
+<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "custom_infowindow_class" => "yellow", "custom_infowindow_status" => "opened"  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
