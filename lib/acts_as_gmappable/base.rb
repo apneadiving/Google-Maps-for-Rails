@@ -13,8 +13,8 @@ module Gmaps4rails
   class DirectionInvalidQuery < StandardError; end
 
   def Gmaps4rails.create_json(object)
-    unless object[object.gmaps4rails_options[:lat_column]].blank? && object[object.gmaps4rails_options[:lng_column]].blank?
-"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object[object.gmaps4rails_options[:lng_column]]}\", \"latitude\": \"#{object[object.gmaps4rails_options[:lat_column]]}\"#{Gmaps4rails.picture(object)}},\n"
+    unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
+"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
     end
   end  
   
@@ -146,8 +146,8 @@ module Gmaps4rails
           logger.warn(e)
           #TODO add customization here?
         else #if no exception
-          self[gmaps4rails_options[:lng_column]] = coordinates.first[:lng]
-          self[gmaps4rails_options[:lat_column]] = coordinates.first[:lat]
+          self.send(gmaps4rails_options[:lng_column]+"=", coordinates.first[:lng]) if self.respond_to?(gmaps4rails_options[:lng_column]+"=")
+          self.send(gmaps4rails_options[:lat_column]+"=", coordinates.first[:lat]) if self.respond_to?(gmaps4rails_options[:lat_column]+"=")
           unless gmaps4rails_options[:normalized_address].nil?
             self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
           end
