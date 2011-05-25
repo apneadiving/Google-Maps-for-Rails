@@ -118,17 +118,22 @@ var Gmaps4Rails = {
 	
 	findUserLocation: function() {
 		if(navigator.geolocation) {
+			//try to retrieve user's position
 	    navigator.geolocation.getCurrentPosition(function(position) {
+				//saves the position in the userLocation variable
 	      Gmaps4Rails.userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	    	//change map's center to focus on user's geoloc
+	    	//change map's center to focus on user's geoloc if asked
 				if(Gmaps4Rails.map_options.center_on_user === true) {
 					Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
 				}
 	    },
 	    function() {
+		    //if failure, triggers the function if defined
 			  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(true); }
-		});
-	  } else {
+			});
+	  }
+	  else {
+		  //if failure, triggers the function if defined
 		  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(false); }
 	  }
 	},
@@ -371,7 +376,7 @@ var Gmaps4Rails = {
 				 var imageAnchorPosition = null;
 				 // calculate MarkerImage anchor location
 				 if (this.exists(this.markers[i].width) && this.exists(this.markers[i].height) && marker_anchor !== null) {
-				 		imageAnchorPosition = getImageAnchorPosition(marker_width, marker_height, marker_anchor);
+				 		imageAnchorPosition = this.getImageAnchorPosition(marker_width, marker_height, marker_anchor);
 				 }
 				
 				 //alter coordinates if randomize is true
@@ -397,10 +402,11 @@ var Gmaps4Rails = {
 				 //create sidebar if enabled
 				 this.create_sidebar(this.markers[i]);
 			 }
-		}
+		  }
+		},
 		
 		// calculate anchor point for MarkerImage	
-		function getImageAnchorPosition(markerWidth, markerHeight, anchorLocation) {
+	getImageAnchorPosition: function(markerWidth, markerHeight, anchorLocation) {
 			var x;
 			var y;
 			switch (anchorLocation) {
@@ -441,8 +447,7 @@ var Gmaps4Rails = {
 					y = markerHeight;
 					break;		
 			}
-			return new google.maps.Point(x,y);
-		}
+		return new google.maps.Point(x,y);
 	},
 
   // clear markers

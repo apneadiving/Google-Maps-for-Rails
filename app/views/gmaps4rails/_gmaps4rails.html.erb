@@ -14,10 +14,6 @@ if enable_css == true %>
 <% end  %>
 <script type="text/javascript" charset="utf-8">
 function gmaps4rails_init() {
-	var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js";
-  document.body.appendChild(script);
 	<% #true is passed here to trigger map initialization %>
 	<%=raw options.to_gmaps4rails(true) %>
 }
