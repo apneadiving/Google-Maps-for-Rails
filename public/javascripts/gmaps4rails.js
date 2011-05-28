@@ -31,6 +31,7 @@ var Gmaps4Rails = {
 	  picture : "",
 		width: 22,
 		length: 32,
+    draggable: false,         // how to modify: <%= gmaps( "markers" => { "data" => @object.to_gmaps4rails, "options" => { "draggable" => true }}) %>
 		anchor: null,             // centeranchor position of the marker image. Default is null <=> center, you can set options: top_left, top_center, top_right, center_left, center, center_right, bottom_right, bottom_center, bottom_left
 		//clustering config
 	  do_clustering: true,			// do clustering if set to true
@@ -370,6 +371,7 @@ var Gmaps4Rails = {
 			   var marker_height 	= this.exists(this.markers[i].height)  ? this.markers[i].height  : this.markers_conf.length;
 				 var marker_anchor	= this.exists(this.markers[i].anchor)	 ? this.markers[i].anchor  : this.markers_conf.anchor;
 			   var marker_title 	= this.exists(this.markers[i].title)   ? this.markers[i].title 	 : null;
+			   var marker_draggable 	= this.exists(this.markers[i].draggable)   ? this.markers[i].draggable 	 : this.markers_conf.draggable;
       	 var Lat = this.markers[i].latitude;
 				 var Lng = this.markers[i].longitude;
 				 var imageAnchorPosition = null;
@@ -389,10 +391,10 @@ var Gmaps4Rails = {
 				 var thisMarker;
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture === "") { 
-						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title});	
+						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
 				 } else {
 						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height), null, imageAnchorPosition, null );
-					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: image, title: marker_title});
+					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: image, title: marker_title, draggable: marker_draggable});
 				 }
 				 //save object
 				 this.markers[i].google_object = thisMarker; 
