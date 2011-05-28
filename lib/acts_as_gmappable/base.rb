@@ -140,7 +140,7 @@ module Gmaps4rails
         return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
         begin
           coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]))
-        rescue GeocodeStatus #address was invalid, add error to base.
+        rescue GeocodeStatus, GeocodeInvalidQuery  #address was invalid, add error to base.
           errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           logger.warn(e)
