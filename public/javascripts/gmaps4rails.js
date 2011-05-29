@@ -42,6 +42,7 @@ var Gmaps4Rails = {
 		list_container: null,     // id of the ul that will host links to all markers
 		custom_cluster_pictures: null,
 		custom_infowindow_class: null,
+		offset: 0                //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to avoid the existing are re-created.
 	},
 	
 	//Stored variables
@@ -362,7 +363,7 @@ var Gmaps4Rails = {
 	
 	//create google.maps Markers from data provided by user
 	create_google_markers_from_markers: function() {
-		for (var i = 0; i < this.markers.length; ++i) {
+		for (var i = this.markers_conf.offset; i < this.markers.length; ++i) {
 		  //check if the marker has not already been created
 			if (!this.exists(this.markers[i].google_object)) {
 			   //test if value passed or use default 
@@ -404,6 +405,7 @@ var Gmaps4Rails = {
 				 this.create_sidebar(this.markers[i]);
 			 }
 		  }
+		this.markers_conf.offset = this.markers.length;
 		},
 		
 		// calculate anchor point for MarkerImage	
@@ -453,9 +455,10 @@ var Gmaps4Rails = {
 
   // clear markers
   clear_markers: function() {
-    if (this.markerClusterer !== null){
-			this.markerClusterer.clearMarkers();
-		}
+		// 	  //clear clusterer first
+		//     if (this.markerClusterer !== null){
+		// 	this.markerClusterer.clearMarkers();
+		// }
 		for (var i = 0; i < this.markers.length; ++i) {
       this.clear_marker(this.markers[i]);
     }
@@ -488,6 +491,8 @@ var Gmaps4Rails = {
 	
   // replace old markers with new markers on an existing map
   replace_markers: function(new_markers){
+	  //reset the offset
+	  this.markers_conf.offset = 0;
 	  //reset previous markers
 		this.markers = new Array;
 		//reset current bounds
@@ -501,7 +506,7 @@ var Gmaps4Rails = {
 	//add new markers to on an existing map
   add_markers: function(new_markers){
 	  //clear the whole map
-	  this.clear_markers();
+	  //this.clear_markers();
 	  //update the list of markers to take into account
     this.markers = this.markers.concat(new_markers);
     //put markers on the map
@@ -513,6 +518,11 @@ var Gmaps4Rails = {
 	{
 		if (this.markers_conf.do_clustering === true)
 		{
+			//first clear the existing clusterer if any
+			if (this.markerClusterer !== null) {
+				this.markerClusterer.clearMarkers();
+			}
+			
 			var gmarkers_array = new Array;
 			for (var i = 0; i <  this.markers.length; ++i) {
        gmarkers_array.push(this.markers[i].google_object);

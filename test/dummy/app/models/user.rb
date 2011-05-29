@@ -1,15 +1,15 @@
 class User < ActiveRecord::Base
    
-  acts_as_gmappable
+  acts_as_gmappable :msg => "damn you!"
   
   def gmaps4rails_address
     sec_address
   end
   
     # 
-  def gmaps4rails_infowindow
-    "My Beautiful Name: #{name}"
-  end
+  # def gmaps4rails_infowindow
+  #   "My Beautiful Name: #{name}"
+  # end
   
   # def gmaps4rails_marker_picture
   #   {
