@@ -17,6 +17,8 @@ describe "Acts as gmappable" do
         }
       end
     end
+    @toulon = { :latitude => 43.124228, :longitude => 5.928}
+    @paris = { :latitude => 48.856614, :longitude => 2.3522219}
   end
   
   describe "standard configuration, valid user" do
@@ -25,8 +27,8 @@ describe "Acts as gmappable" do
     end
     
     it "should have a geocoded position" do
-      @user.latitude.should  == 43.1251606
-      @user.longitude.should == 5.9311119
+      @user.latitude.should  == @toulon[:latitude]
+      @user.longitude.should == @toulon[:longitude]
     end
   
     it "should set boolean to true once user is created" do
@@ -35,26 +37,26 @@ describe "Acts as gmappable" do
   
     it "should render a valid json from an array of ojects" do
       @user2 = Factory(:user_paris)
-      User.all.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"},\n{\"longitude\": \"2.3509871\", \"latitude\": \"48.8566667\"}]"
+      User.all.to_gmaps4rails.should == "[{\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\"},\n{\"longitude\": \"" + @paris[:longitude].to_s + "\", \"latitude\": \"" + @paris[:latitude].to_s + "\"}]"
     end
   
     it "should render a valid json from a single object" do
-      @user.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\"}]"
     end
     
     it "should not geocode again after address changes if checker is true" do
       @user.sec_address = "paris, France"
       @user.save
-      @user.latitude.should  == 43.1251606
-      @user.longitude.should == 5.9311119
+      @user.latitude.should  == @toulon[:latitude]
+      @user.longitude.should == @toulon[:longitude]
     end
     
     it "should geocode after address changes if checker is false" do
       @user.sec_address = "paris, France"
       @user.gmaps = false
       @user.save
-      @user.latitude.should  == 48.8566667
-      @user.longitude.should == 2.3509871
+      @user.latitude.should  == @paris[:latitude]
+      @user.longitude.should == @paris[:longitude]
     end
   end
   
@@ -95,8 +97,8 @@ describe "Acts as gmappable" do
         end
       end
       @user = Factory(:user)
-      @user.latitude.should  == 43.1251606
-      @user.longitude.should == 5.9311119
+      @user.latitude.should  == @toulon[:latitude]
+      @user.longitude.should == @toulon[:longitude]
     end
     
     it "should save the normalized address if requested" do
@@ -188,8 +190,8 @@ describe "Acts as gmappable" do
         end
       end
       @user = Factory(:user)
-      @user.lat_test.should  == 43.1251606
-      @user.long_test.should == 5.9311119
+      @user.lat_test.should  == @toulon[:latitude]
+      @user.long_test.should == @toulon[:longitude]
       @user.longitude.should == nil
       @user.latitude.should  == nil
     end
@@ -229,8 +231,8 @@ describe "Acts as gmappable" do
       @user = Factory(:user)
       @user.sec_address = "paris, France"
       @user.save
-      @user.latitude.should  == 48.8566667
-      @user.longitude.should == 2.3509871
+      @user.latitude.should  == @paris[:latitude]
+      @user.longitude.should == @paris[:longitude]
     end
     
     it "should save to the proper boolean checker set in checker" do
@@ -259,7 +261,7 @@ describe "Acts as gmappable" do
           "My Beautiful Picture: #{picture}"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\"}]"
     end
     
     it "should take into account the picture provided in the model" do
@@ -273,7 +275,7 @@ describe "Acts as gmappable" do
           }
         end
       end
-      @user.to_gmaps4rails.should == "[{\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+      @user.to_gmaps4rails.should == "[{\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
     end
     
     it "should take into account the title provided in the model" do
@@ -283,7 +285,7 @@ describe "Acts as gmappable" do
           "Sweet Title"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\"}]"
     end
     
     it "should take into account the sidebar content provided in the model" do
@@ -293,7 +295,7 @@ describe "Acts as gmappable" do
           "sidebar content"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\"}]"
+      @user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\"}]"
     end
     
     it "should take into account all additional data provided in the model" do
@@ -320,7 +322,7 @@ describe "Acts as gmappable" do
           "sidebar content"
         end
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"5.9311119\", \"latitude\": \"43.1251606\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
     end
   end
 

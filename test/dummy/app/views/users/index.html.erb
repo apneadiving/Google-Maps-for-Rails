@@ -166,7 +166,7 @@ function gmaps4rails_infobox(boxText) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "custom_infowindow_class" => "yellow", "custom_infowindow_status" => "opened"  } },
+<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 
 
