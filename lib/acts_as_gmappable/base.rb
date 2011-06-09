@@ -58,7 +58,8 @@ module Gmaps4rails
                       :lat => result["geometry"]["location"]["lat"], 
                       :lng => result["geometry"]["location"]["lng"],
                       :matched_address => result["formatted_address"],
-                      :bounds => result["geometry"]["bounds"]
+                      :bounds => result["geometry"]["bounds"],
+                      :full_data => result
                      }
          end
          return array
@@ -151,6 +152,8 @@ module Gmaps4rails
           unless gmaps4rails_options[:normalized_address].nil?
             self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
           end
+          # Call the callback method to let the user do what he wants with the data
+          self.send(gmaps4rails_options[:callback], coordinates.first[:full_data]) unless gmaps4rails_options[:callback].nil?
           if gmaps4rails_options[:check_process] == true
             self[gmaps4rails_options[:checker]] = true
           end
@@ -182,7 +185,8 @@ module Gmaps4rails
             :msg                => args[:msg]                    || "Address invalid",
             :validation         => args[:validation].nil?        ?   true  : args[:validation],
             :normalized_address => args[:normalized_address],
-            :address            => args[:address]                || "gmaps4rails_address"
+            :address            => args[:address]                || "gmaps4rails_address",
+            :callback           => args[:callback]
             #TODO: address as a proc?
           }
         end
