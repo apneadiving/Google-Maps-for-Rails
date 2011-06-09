@@ -34,11 +34,11 @@ module Gmaps4rails
     return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
   end
   
-  def Gmaps4rails.geocode(address, raw = false)
+  def Gmaps4rails.geocode(address, lang, raw = false)
    if address.nil? || address.empty?
      raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address"
    else #coordinates are valid
-     geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address="
+     geocoder = "http://maps.googleapis.com/maps/api/geocode/json?language=#{lang}&address="
      output = "&sensor=false"
      #send request to the google api to get the lat/lng
      request = geocoder + address + output
@@ -140,7 +140,7 @@ module Gmaps4rails
         #to prevent geocoding each time a save is made
         return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
         begin
-          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]))
+          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language])
         rescue GeocodeStatus, GeocodeInvalidQuery  #address was invalid, add error to base.
           errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
@@ -186,7 +186,8 @@ module Gmaps4rails
             :validation         => args[:validation].nil?        ?   true  : args[:validation],
             :normalized_address => args[:normalized_address],
             :address            => args[:address]                || "gmaps4rails_address",
-            :callback           => args[:callback]
+            :callback           => args[:callback],
+            :language           => args[:language]               || "en"
             #TODO: address as a proc?
           }
         end
