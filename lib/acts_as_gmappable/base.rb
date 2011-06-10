@@ -34,7 +34,7 @@ module Gmaps4rails
     return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
   end
   
-  def Gmaps4rails.geocode(address, lang, raw = false)
+  def Gmaps4rails.geocode(address, lang="en", raw = false)
    if address.nil? || address.empty?
      raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address"
    else #coordinates are valid
