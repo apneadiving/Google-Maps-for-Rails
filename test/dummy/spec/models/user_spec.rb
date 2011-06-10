@@ -13,7 +13,8 @@ describe "Acts as gmappable" do
           :checker        => "gmaps",
           :msg            => "Address invalid",
           :validation     => true,
-          :address    => "gmaps4rails_address"
+          :address    => "gmaps4rails_address",
+          :language   => "en"
         }
       end
     end
@@ -92,7 +93,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :address    => "sec_address"
+            :address    => "sec_address",
+            :language   => "en"
           }
         end
       end
@@ -112,7 +114,8 @@ describe "Acts as gmappable" do
             :msg            => "Address invalid",
             :validation     => true,
             :normalized_address => "norm_address",
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -131,7 +134,8 @@ describe "Acts as gmappable" do
             :msg            => "Custom Address invalid",
             :validation     => true,
             :normalized_address => "sec_address",
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -149,7 +153,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Custom Address invalid",
             :validation     => true,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -167,7 +172,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => false,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -185,7 +191,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -206,7 +213,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -224,7 +232,8 @@ describe "Acts as gmappable" do
             :checker        => "gmaps",
             :msg            => "Address invalid",
             :validation     => true,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -245,7 +254,8 @@ describe "Acts as gmappable" do
             :checker        => "bool_test",
             :msg            => "Address invalid",
             :validation     => true,
-            :address    => "gmaps4rails_address"
+            :address    => "gmaps4rails_address",
+            :language   => "en"
           }
         end
       end
@@ -323,6 +333,52 @@ describe "Acts as gmappable" do
         end
       end
       @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + @toulon[:longitude].to_s + "\", \"latitude\": \"" + @toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+    end
+    
+    it "should call a callback in the model if asked to" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => true,
+            :checker        => "gmaps",
+            :msg            => "Address invalid",
+            :validation     => true,
+            :address    => "gmaps4rails_address",
+            :language   => "en",
+            :callback   => "save_callback"
+          }
+        end
+        
+        def save_callback(data)
+          self.called_back = true
+        end
+        
+        attr_accessor :called_back
+      end
+      @user = Factory(:user)
+      @user.called_back.should == true
+    end
+    
+    it "should return results in the specified language" do
+      User.class_eval do
+        def gmaps4rails_options
+          {
+            :lat_column     => "latitude",
+            :lng_column     => "longitude",
+            :check_process  => true,
+            :checker        => "gmaps",
+            :msg            => "Address invalid",
+            :validation     => true,
+            :address    => "gmaps4rails_address",
+            :language   => "de",
+            :normalized_address => "norm_address"
+          }
+        end
+      end
+      @user = Factory(:user)
+      @user.norm_address.should == "Toulon, Frankreich"
     end
   end
 
