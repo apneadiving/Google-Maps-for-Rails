@@ -4,10 +4,13 @@ module Gmaps4rails
     extend ActiveSupport::Concern
 
     module InstanceMethods
+      
+      # This is a before_filter to trigger the geocoding and save its results
 
       def process_geocoding
         #to prevent geocoding each time a save is made
         return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
+        #try to geocode
         begin
           coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language])
         rescue GeocodeStatus, GeocodeInvalidQuery  #address was invalid, add error to base.
@@ -39,12 +42,16 @@ module Gmaps4rails
 
     module ClassMethods
 
-      def acts_as_gmappable args = {}          
+      def acts_as_gmappable args = {}    
+        
+        # disable before_filter if explicitly set
+              
         unless args[:process_geocoding] == false
           validate :process_geocoding
         end
 
-        #instance method
+        #instance method containing all the options to configure the behaviour of the gem regarding the current Model
+        
         define_method "gmaps4rails_options" do
           {
             :lat_column         => args[:lat]                    || "latitude",
@@ -72,6 +79,7 @@ end
 ActiveSupport.on_load(:active_record) do
   ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
 end
+
 #::ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable
 # Mongoid::Document::ClassMethods.class_eval do
 #   include Gmaps4rails::ActsAsGmappable::Base

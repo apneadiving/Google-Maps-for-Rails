@@ -1,4 +1,7 @@
 class Array
+  #Scopes on models generate Arrays
+  #this method enables short call to the json creation for all elements in the array
+  
   def to_gmaps4rails
     json = "["
     each do |object|

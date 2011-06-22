@@ -1,4 +1,8 @@
 class Hash
+  
+  # this method extracts all info from the hash to create javascript
+  # this javascript is then rendered raw to the view so it can be interpreted and executed
+  
   def to_gmaps4rails(init = false)
     #the variable 'options' must have the following structure
     #{  

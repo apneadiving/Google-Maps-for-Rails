@@ -11,27 +11,44 @@ module Gmaps4rails
   class DirectionNetStatus < StandardError; end
   class DirectionInvalidQuery < StandardError; end
 
+  # Creates the json related to one Object (only tried ActiveRecord objects)
+  # This json will contian the marker's attributes of the object 
+  
   def Gmaps4rails.create_json(object)
     unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
 "{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
     end
   end  
+
+  # Returns description if gmaps4rails_infowindow is defined in the model
   
   def Gmaps4rails.description(object)
     return "\"description\": \"#{object.gmaps4rails_infowindow}\", " if object.respond_to?("gmaps4rails_infowindow")
   end
   
+  # Returns title if gmaps4rails_title is defined in the model
+  
   def Gmaps4rails.title(object)
     return "\"title\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
   end
+  
+  # Returns sidebar content if gmaps4rails_sidebar is defined in the model
   
   def Gmaps4rails.sidebar(object)
     return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
   end
   
+  # Returns picture if gmaps4rails_marker_picture is defined in the model
+  
   def Gmaps4rails.picture(object)
     return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
   end
+  
+  # This method geocodes an address using the GoogleMaps webservice
+  # options are:
+  # * address: string, mandatory
+  # * lang: to set the language one wants the result to be translated (default is english)
+  # * raw: to get the raw response from google, default is false
   
   def Gmaps4rails.geocode(address, lang="en", raw = false)
    if address.nil? || address.empty?
@@ -45,6 +62,34 @@ module Gmaps4rails
      Gmaps4rails.handle_geocoding_response(request, Net::HTTP.get_response(URI.parse(url)), raw)
    end # end address valid
   end
+  
+  # This method retrieves destination results provided by GoogleMaps webservice
+  # options are:
+  # * start_end: Hash { "from" => string, "to" => string}, mandatory
+  # * options: details given in the github's wiki
+  # * output: could be "pretty", "raw" or "clean"; filters the output from google
+   
+  #output could be raw, pretty or clean
+  def Gmaps4rails.destination(start_end, options={}, output="pretty")
+   if start_end["from"].nil? || start_end["to"].empty?
+     raise Gmaps4rails::DirectionInvalidQuery, "Origin and destination must be provided in a hash as first argument"
+   else #great, we have stuff to work with
+     geocoder = "http://maps.googleapis.com/maps/api/directions/json?origin=#{start_end["from"]}&destination=#{start_end["to"]}"
+     #if value is an Array, it means it contains the waypoints, otherwise it's chained normally
+     dest_options = options.empty? ? "" : "&" + options.map {|k,v| v.is_a?(Array) ? k + "=" + v * ("|") : k + "=" + v }*("&") 
+     #send request to the google api to get the directions
+     request = geocoder + dest_options + "&sensor=false"
+     url = URI.escape(request)
+     Gmaps4rails.handle_destination_response(request, Net::HTTP.get_response(URI.parse(url)), output)
+   end # end origin + destination exist
+  end #end destination
+  
+  def Gmaps4rails.filter(data)
+    return data if data.is_a?(Numeric) || data.is_a?(TrueClass) || data.is_a?(FalseClass)
+    "'#{data}'"
+  end
+  
+  private
   
   def Gmaps4rails.handle_geocoding_response(request, response, raw)
     #parse result if result received properly
@@ -75,23 +120,7 @@ module Gmaps4rails
       Response was: #{response}"           
     end #end resp test
   end
-   
-  #output could be raw, pretty or clean
-  def Gmaps4rails.destination(start_end, options={}, output="pretty")
-   if start_end["from"].nil? || start_end["to"].empty?
-     raise Gmaps4rails::DirectionInvalidQuery, "Origin and destination must be provided in a hash as first argument"
-   else #great, we have stuff to work with
-     geocoder = "http://maps.googleapis.com/maps/api/directions/json?origin=#{start_end["from"]}&destination=#{start_end["to"]}"
-     #if value is an Array, it means it contains the waypoints, otherwise it's chained normally
-     dest_options = options.empty? ? "" : "&" + options.map {|k,v| v.is_a?(Array) ? k + "=" + v * ("|") : k + "=" + v }*("&") 
-     #send request to the google api to get the directions
-     request = geocoder + dest_options + "&sensor=false"
-     url = URI.escape(request)
-     Gmaps4rails.handle_destination_response(request, Net::HTTP.get_response(URI.parse(url)), output)
-   end # end origin + destination exist
-  end #end destination
   
-  #parse result if result received properly
   def Gmaps4rails.handle_destination_response(request, response, output)
     if response.is_a?(Net::HTTPSuccess)             
       #parse the json
@@ -126,12 +155,6 @@ module Gmaps4rails
       raise Gmaps4rails::DirectionNetStatus, "The request sent to google was invalid (not http success): #{request}.
       Response was: #{response}"           
     end #end resp test
-  end
-  
-  
-  def Gmaps4rails.filter(data)
-    return data if data.is_a?(Numeric) || data.is_a?(TrueClass) || data.is_a?(FalseClass)
-    "'#{data}'"
   end
 
 end
