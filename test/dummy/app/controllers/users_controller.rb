@@ -44,4 +44,8 @@ class UsersController < ApplicationController
   def test_list
     @json  = User.all.to_gmaps4rails
   end
+  
+  def ajax_map
+  end
+  
 end

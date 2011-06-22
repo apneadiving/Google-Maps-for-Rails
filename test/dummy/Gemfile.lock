@@ -13,7 +13,7 @@ GIT
 PATH
   remote: ../../
   specs:
-    gmaps4rails (0.8.7)
+    gmaps4rails (0.8.8)
       crack
 
 GEM
@@ -63,6 +63,9 @@ GEM
       railties (>= 3.0.0)
     ffi (1.0.9)
     i18n (0.5.0)
+    jquery-rails (1.0.2)
+      railties (~> 3.0)
+      thor (~> 0.14)
     json_pure (1.5.1)
     launchy (0.4.0)
       configuration (>= 0.0.5)
@@ -136,6 +139,7 @@ DEPENDENCIES
   database_cleaner
   factory_girl_rails
   gmaps4rails!
+  jquery-rails
   launchy
   nifty-generators
   rails (= 3.0.7)

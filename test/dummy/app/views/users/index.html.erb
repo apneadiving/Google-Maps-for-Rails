@@ -1,6 +1,9 @@
+<%= stylesheet_link_tag 'test' %>
+
 <% content_for :scripts do -%>
 <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/data.json" type="text/javascript"></script>   
 <script type="text/javascript" charset="utf-8">
+
 var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
 var styles = [{
         url: url + '/images/conv30.png',
@@ -169,11 +172,11 @@ function gmaps4rails_infobox(boxText) {
 <%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 
-
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
 <%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 					 %>
+
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
 
@@ -188,10 +191,13 @@ function gmaps4rails_infobox(boxText) {
 
 </script>
 <% end %>
+
 <button type="button" onclick="Gmaps4Rails.replace_markers(data.photos)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder2)">Add Markers</button>
 <button type="button" onclick="Gmaps4Rails.add_markers(builder3)">Add Markers bis</button>
 <button type="button" onclick="add_all()">Add all</button>
+<button type="button" id="ajax_map">Ajax Map</button>
+
 <div>
 	<ul id="markers_list"></ul>
 </div>

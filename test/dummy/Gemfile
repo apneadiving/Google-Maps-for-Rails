@@ -5,6 +5,7 @@ gem 'sqlite3'
 gem "nifty-generators"
 gem "gmaps4rails", :path => "../../"
 gem 'ruby-debug'
+gem "jquery-rails"
 
 group :test do
 	gem 'rspec-rails'
