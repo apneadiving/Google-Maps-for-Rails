@@ -84,6 +84,8 @@ module Gmaps4rails
    end # end origin + destination exist
   end #end destination
   
+  # To create valid js, this method escapes everything but Numeric, true or false
+  
   def Gmaps4rails.filter(data)
     return data if data.is_a?(Numeric) || data.is_a?(TrueClass) || data.is_a?(FalseClass)
     "'#{data}'"
