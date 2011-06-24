@@ -26,10 +26,10 @@ describe Gmaps4rails::ActsAsGmappable do
   
   let(:paris) { { :latitude => 48.856614, :longitude => 2.3522219 } }
   let(:toulon) { { :latitude => 43.124228, :longitude => 5.928} }
+  let(:user) { Factory(:user) }
+  let(:invalid_user) { Factory.build(:invalid_user) }
   
-  context "standard configuration, valid user" do
-    
-    let(:user) { Factory(:user) }
+  context "standard configuration, valid user" do  
     
     it "should have a geocoded position" do
       user.should have_same_position_as toulon
@@ -66,14 +66,13 @@ describe Gmaps4rails::ActsAsGmappable do
   
   context "standard configuration, invalid address" do
 
-    let(:user) { Factory.build(:invalid_user) }
     
     it "should raise an error if validation option is turned on and address incorrect" do
-      user.should_not be_valid, "Address invalid"
+      invalid_user.should_not be_valid, "Address invalid"
     end
     
     it "should not set boolean to true when address update fails" do
-      user.gmaps.should_not be_true
+      invalid_user.gmaps.should_not be_true
     end
   end
   
@@ -84,10 +83,9 @@ describe Gmaps4rails::ActsAsGmappable do
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
     end
-   
     
     context "acts_as_gmappable options" do
-      
+     
       after(:all) do 
         #reset all configuration to default
         reset_gmaps_config
@@ -99,8 +97,7 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({:address => "sec_address"})
           end
         end
-        @user = Factory(:user)
-        @user.should have_same_position_as toulon
+        user.should have_same_position_as toulon
       end
 
       it "should save the normalized address if requested" do
@@ -109,8 +106,7 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :normalized_address => "norm_address" })
           end
         end
-        @user = Factory(:user)
-        @user.norm_address.should == "Toulon, France"
+        user.norm_address.should == "Toulon, France"
       end
 
       it "should override user's address with normalized address if requested" do
@@ -119,8 +115,8 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :normalized_address => "sec_address" })
           end
         end
-        @user = Factory(:user, :sec_address => "ToUlOn, FrAnCe")
-        @user.sec_address.should == "Toulon, France"
+        user = Factory(:user, :sec_address => "ToUlOn, FrAnCe")
+        user.sec_address.should == "Toulon, France"
       end
 
       it "should display the proper error message when address is invalid" do
@@ -129,9 +125,9 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :msg => "Custom Address invalid"})
           end
         end
-        @user = Factory.build(:invalid_user)
-        @user.should_not be_valid
-        @user.errors[:gmaps4rails_address].should include("Custom Address invalid")
+        invalid_user = Factory.build(:invalid_user)
+        invalid_user.should_not be_valid
+        invalid_user.errors[:gmaps4rails_address].should include("Custom Address invalid")
       end
 
       it "should not raise an error if validation option is turned off" do
@@ -140,8 +136,7 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :validation => false })
           end
         end
-        @user = Factory.build(:invalid_user)
-        @user.should be_valid
+        invalid_user.should be_valid
       end
 
       it "should save longitude and latitude to the customized columns" do
@@ -153,10 +148,9 @@ describe Gmaps4rails::ActsAsGmappable do
                                       })
           end
         end
-        @user = Factory(:user)
-        @user.lat_test.should  == toulon[:latitude]
-        @user.long_test.should == toulon[:longitude]
-        @user.should have_same_position_as({ :latitude => nil, :longitude => nil })
+        user.lat_test.should  == toulon[:latitude]
+        user.long_test.should == toulon[:longitude]
+        user.should have_same_position_as({ :latitude => nil, :longitude => nil })
       end
 
       it "should not save the boolean if check_process is false" do
@@ -165,8 +159,7 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
           end
         end
-        @user = Factory(:user)
-        @user.gmaps.should be_nil
+        user.gmaps.should be_nil
       end
 
       it "should geocode after each save if 'check_process' is false" do
@@ -175,10 +168,8 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
           end
         end
-        @user = Factory(:user)
-        @user.sec_address = "paris, France"
-        @user.save
-        @user.should have_same_position_as paris
+        user = Factory(:user, :sec_address => "paris, France")
+        user.should have_same_position_as paris
       end
 
       it "should save to the proper boolean checker set in checker" do
@@ -187,9 +178,8 @@ describe Gmaps4rails::ActsAsGmappable do
             DEFAULT_CONFIG_HASH.merge({ :checker => "bool_test" })
           end
         end
-        @user = Factory(:user)
-        @user.gmaps.should be_nil
-        @user.bool_test.should be_true
+        user.gmaps.should be_nil
+        user.bool_test.should be_true
       end     
       
       it "should call a callback in the model if asked to" do
@@ -204,8 +194,7 @@ describe Gmaps4rails::ActsAsGmappable do
 
           attr_accessor :called_back
         end
-        @user = Factory(:user)
-        @user.called_back.should be_true
+        user.called_back.should be_true
       end
 
       it "should return results in the specified language" do
@@ -217,82 +206,78 @@ describe Gmaps4rails::ActsAsGmappable do
                                       })
           end
         end
-        @user = Factory(:user)
-        @user.norm_address.should == "Toulon, Frankreich"
+        user.norm_address.should == "Toulon, Frankreich"
       end
       
     end
 
-    
-    it "should take into account the description provided in the model" do
-      @user = Factory(:user_with_pic)
-      @user.instance_eval do
-        def gmaps4rails_infowindow
-          "My Beautiful Picture: #{picture}"
-        end
-      end
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
-    end
-    
-    it "should take into account the picture provided in the model" do
-      @user = Factory(:user)
-      @user.instance_eval do
-        def gmaps4rails_marker_picture
-          {
-          "picture" => "http://www.blankdots.com/img/github-32x32.png",
-          "width" => "32",
-          "height" => "32"
-          }
-        end
-      end
-      @user.to_gmaps4rails.should == "[{\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
-    end
-    
-    it "should take into account the title provided in the model" do
-      @user = Factory(:user)
-      @user.instance_eval do
-        def gmaps4rails_title
-          "Sweet Title"
-        end
-      end
-      @user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
-    end
-    
-    it "should take into account the sidebar content provided in the model" do
-      @user = Factory(:user)
-      @user.instance_eval do
-        def gmaps4rails_sidebar
-          "sidebar content"
-        end
-      end
-      @user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
-    end
-    
-    it "should take into account all additional data provided in the model" do
-      @user = Factory(:user)
+    context "instance methods" do
+      let(:user) { Factory(:user_with_pic) }
       
-      @user.instance_eval do
-        def gmaps4rails_infowindow
-          "My Beautiful Picture: #{picture}"
+      it "should take into account the description provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_infowindow
+            "My Beautiful Picture: #{picture}"
+          end
         end
-        
-        def gmaps4rails_marker_picture
-          {
-          "picture" => "http://www.blankdots.com/img/github-32x32.png",
-          "width" => "32",
-          "height" => "32"
-          }
-        end
-        
-        def gmaps4rails_title
-          "Sweet Title"
-        end
-        
-        def gmaps4rails_sidebar
-          "sidebar content"
-        end
+        user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
       end
-      @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+    
+      it "should take into account the picture provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_marker_picture
+            {
+            "picture" => "http://www.blankdots.com/img/github-32x32.png",
+            "width" => "32",
+            "height" => "32"
+            }
+          end
+        end
+        user.to_gmaps4rails.should == "[{\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+      end
+    
+      it "should take into account the title provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_title
+            "Sweet Title"
+          end
+        end
+        user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
+      end
+    
+      it "should take into account the sidebar content provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_sidebar
+            "sidebar content"
+          end
+        end
+        user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
+      end
+    
+      it "should take into account all additional data provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_infowindow
+            "My Beautiful Picture: "
+          end
+        
+          def gmaps4rails_marker_picture
+            {
+            "picture" => "http://www.blankdots.com/img/github-32x32.png",
+            "width" => "32",
+            "height" => "32"
+            }
+          end
+        
+          def gmaps4rails_title
+            "Sweet Title"
+          end
+        
+          def gmaps4rails_sidebar
+            "sidebar content"
+          end
+        end
+        user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+      end
     end
   end
 
