@@ -18,7 +18,7 @@ module Gmaps4rails
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           logger.warn(e)
           #TODO add customization here?
-        else #if no exception
+        else #if no exception, save the values
           self.send(gmaps4rails_options[:lng_column]+"=", coordinates.first[:lng]) if self.respond_to?(gmaps4rails_options[:lng_column]+"=")
           self.send(gmaps4rails_options[:lat_column]+"=", coordinates.first[:lat]) if self.respond_to?(gmaps4rails_options[:lat_column]+"=")
           unless gmaps4rails_options[:normalized_address].nil?
@@ -64,7 +64,6 @@ module Gmaps4rails
             :address            => args[:address]                || "gmaps4rails_address",
             :callback           => args[:callback],
             :language           => args[:language]               || "en"
-            #TODO: address as a proc?
           }
         end
 
