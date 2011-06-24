@@ -212,15 +212,15 @@ describe Gmaps4rails::ActsAsGmappable do
     end
 
     context "instance methods" do
-      let(:user) { Factory(:user_with_pic) }
+      let(:user_with_pic) { Factory(:user_with_pic) }
       
       it "should take into account the description provided in the model" do
-        user.instance_eval do
+        user_with_pic.instance_eval do
           def gmaps4rails_infowindow
             "My Beautiful Picture: #{picture}"
           end
         end
-        user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
+        user_with_pic.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\"}]"
       end
     
       it "should take into account the picture provided in the model" do
@@ -257,7 +257,7 @@ describe Gmaps4rails::ActsAsGmappable do
       it "should take into account all additional data provided in the model" do
         user.instance_eval do
           def gmaps4rails_infowindow
-            "My Beautiful Picture: "
+            "My Beautiful Picture: #{picture}"
           end
         
           def gmaps4rails_marker_picture
