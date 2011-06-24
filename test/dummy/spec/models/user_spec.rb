@@ -14,7 +14,7 @@ DEFAULT_CONFIG_HASH = {
 PARIS  = { :latitude => 48.856614, :longitude => 2.3522219 }
 TOULON = { :latitude => 43.124228, :longitude => 5.928 }
 
-#reset all configuration to default
+#set model configuration
 def set_gmaps4rails_options(change_conf = {})
   User.class_eval do
     define_method "gmaps4rails_options" do
