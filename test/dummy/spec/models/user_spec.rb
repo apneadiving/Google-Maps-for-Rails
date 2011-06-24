@@ -180,7 +180,7 @@ describe Gmaps4rails::ActsAsGmappable do
     
     it "should take into account the description provided in the model" do
       @user = Factory(:user_with_pic)
-      @user.class_eval do
+      @user.instance_eval do
         def gmaps4rails_infowindow
           "My Beautiful Picture: #{picture}"
         end
@@ -190,7 +190,7 @@ describe Gmaps4rails::ActsAsGmappable do
     
     it "should take into account the picture provided in the model" do
       @user = Factory(:user)
-      @user.class_eval do
+      @user.instance_eval do
         def gmaps4rails_marker_picture
           {
           "picture" => "http://www.blankdots.com/img/github-32x32.png",
@@ -204,7 +204,7 @@ describe Gmaps4rails::ActsAsGmappable do
     
     it "should take into account the title provided in the model" do
       @user = Factory(:user)
-      @user.class_eval do
+      @user.instance_eval do
         def gmaps4rails_title
           "Sweet Title"
         end
@@ -214,7 +214,7 @@ describe Gmaps4rails::ActsAsGmappable do
     
     it "should take into account the sidebar content provided in the model" do
       @user = Factory(:user)
-      @user.class_eval do
+      @user.instance_eval do
         def gmaps4rails_sidebar
           "sidebar content"
         end

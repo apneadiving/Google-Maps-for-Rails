@@ -18,8 +18,3 @@ Factory.define :invalid_user, :parent => :user do |f|
   f.name    "me"
   f.sec_address "home"
 end
-
-Factory.define :user_incomplete_address, :parent => :user do |f|
-  f.name    "me"
-  f.sec_address "Toulon, PACA, France"
-end
