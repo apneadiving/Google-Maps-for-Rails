@@ -18,12 +18,12 @@ User.class_eval do
   end
 end
 
-describe "Acts as gmappable" do
+describe Gmaps4rails::ActsAsGmappable do
   
   let(:paris) { { :latitude => 48.856614, :longitude => 2.3522219 } }
   let(:toulon) { { :latitude => 43.124228, :longitude => 5.928} }
   
-  describe "standard configuration, valid user" do
+  context "standard configuration, valid user" do
     
     let(:user) { Factory(:user) }
     
@@ -60,7 +60,7 @@ describe "Acts as gmappable" do
   end
   
   
-  describe "standard configuration, invalid address" do
+  context "standard configuration, invalid address" do
 
     let(:user) { Factory.build(:invalid_user) }
     
@@ -74,7 +74,7 @@ describe "Acts as gmappable" do
   end
   
   
-  describe "model customization" do
+  context "model customization" do
     
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
