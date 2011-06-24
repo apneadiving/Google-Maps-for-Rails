@@ -12,11 +12,15 @@ DEFAULT_CONFIG_HASH = {
 }
 
 #reset all configuration to default
-User.class_eval do
-  def gmaps4rails_options
-    DEFAULT_CONFIG_HASH
+def reset_gmaps_config
+  User.class_eval do
+    def gmaps4rails_options
+      DEFAULT_CONFIG_HASH
+    end
   end
 end
+
+reset_gmaps_config
 
 describe Gmaps4rails::ActsAsGmappable do
   
@@ -76,107 +80,149 @@ describe Gmaps4rails::ActsAsGmappable do
   
   context "model customization" do
     
+
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
     end
+   
     
-    it "should use indifferently a db column for address if passed in config" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({:address => "sec_address"})
-        end
+    context "acts_as_gmappable options" do
+      
+      after(:all) do 
+        #reset all configuration to default
+        reset_gmaps_config
       end
-      @user = Factory(:user)
-      @user.should have_same_position_as toulon
-    end
-    
-    it "should save the normalized address if requested" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :normalized_address => "norm_address" })
+      
+      it "should use indifferently a db column for address if passed in config" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({:address => "sec_address"})
+          end
         end
+        @user = Factory(:user)
+        @user.should have_same_position_as toulon
       end
-      @user = Factory(:user)
-      @user.norm_address.should == "Toulon, France"
-    end
-    
-    it "should override user's address with normalized address if requested" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :normalized_address => "sec_address" })
+
+      it "should save the normalized address if requested" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :normalized_address => "norm_address" })
+          end
         end
+        @user = Factory(:user)
+        @user.norm_address.should == "Toulon, France"
       end
-      @user = Factory(:user, :sec_address => "ToUlOn, FrAnCe")
-      @user.sec_address.should == "Toulon, France"
-    end
-    
-    it "should display the proper error message when address is invalid" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :msg => "Custom Address invalid"})
+
+      it "should override user's address with normalized address if requested" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :normalized_address => "sec_address" })
+          end
         end
+        @user = Factory(:user, :sec_address => "ToUlOn, FrAnCe")
+        @user.sec_address.should == "Toulon, France"
       end
-      @user = Factory.build(:invalid_user)
-      @user.should_not be_valid, "Custom Address invalid"
-    end
-  
-    it "should not raise an error if validation option is turned off" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :validation => false })
+
+      it "should display the proper error message when address is invalid" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :msg => "Custom Address invalid"})
+          end
         end
+        @user = Factory.build(:invalid_user)
+        @user.should_not be_valid
+        @user.errors[:gmaps4rails_address].should include("Custom Address invalid")
       end
-      @user = Factory.build(:invalid_user)
-      @user.should be_valid
-    end
-    
-    it "should save longitude and latitude to the customized columns" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({
-                                      :lat_column     => "lat_test",
-                                      :lng_column     => "long_test"
-                                    })
+
+      it "should not raise an error if validation option is turned off" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :validation => false })
+          end
         end
+        @user = Factory.build(:invalid_user)
+        @user.should be_valid
       end
-      @user = Factory(:user)
-      @user.lat_test.should  == toulon[:latitude]
-      @user.long_test.should == toulon[:longitude]
-      @user.should have_same_position_as({ :latitude => nil, :longitude => nil })
-    end
-    
-    it "should not save the boolean if check_process is false" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
+
+      it "should save longitude and latitude to the customized columns" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({
+                                        :lat_column     => "lat_test",
+                                        :lng_column     => "long_test"
+                                      })
+          end
         end
+        @user = Factory(:user)
+        @user.lat_test.should  == toulon[:latitude]
+        @user.long_test.should == toulon[:longitude]
+        @user.should have_same_position_as({ :latitude => nil, :longitude => nil })
       end
-      @user = Factory(:user)
-      @user.gmaps.should be_nil
-    end
-    
-    it "should geocode after each save if 'check_process' is false" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
+
+      it "should not save the boolean if check_process is false" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
+          end
         end
+        @user = Factory(:user)
+        @user.gmaps.should be_nil
       end
-      @user = Factory(:user)
-      @user.sec_address = "paris, France"
-      @user.save
-      @user.should have_same_position_as paris
-    end
-    
-    it "should save to the proper boolean checker set in checker" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :checker => "bool_test" })
+
+      it "should geocode after each save if 'check_process' is false" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :check_process  => false })
+          end
         end
+        @user = Factory(:user)
+        @user.sec_address = "paris, France"
+        @user.save
+        @user.should have_same_position_as paris
       end
-      @user = Factory(:user)
-      @user.gmaps.should be_nil
-      @user.bool_test.should be_true
+
+      it "should save to the proper boolean checker set in checker" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :checker => "bool_test" })
+          end
+        end
+        @user = Factory(:user)
+        @user.gmaps.should be_nil
+        @user.bool_test.should be_true
+      end     
+      
+      it "should call a callback in the model if asked to" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ :callback   => "save_callback" })
+          end
+
+          def save_callback(data)
+            self.called_back = true
+          end
+
+          attr_accessor :called_back
+        end
+        @user = Factory(:user)
+        @user.called_back.should be_true
+      end
+
+      it "should return results in the specified language" do
+        User.class_eval do
+          def gmaps4rails_options
+            DEFAULT_CONFIG_HASH.merge({ 
+                                        :language   => "de",
+                                        :normalized_address => "norm_address"
+                                      })
+          end
+        end
+        @user = Factory(:user)
+        @user.norm_address.should == "Toulon, Frankreich"
+      end
+      
     end
+
     
     it "should take into account the description provided in the model" do
       @user = Factory(:user_with_pic)
@@ -247,35 +293,6 @@ describe Gmaps4rails::ActsAsGmappable do
         end
       end
       @user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + toulon[:longitude].to_s + "\", \"latitude\": \"" + toulon[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
-    end
-    
-    it "should call a callback in the model if asked to" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ :callback   => "save_callback" })
-        end
-        
-        def save_callback(data)
-          self.called_back = true
-        end
-        
-        attr_accessor :called_back
-      end
-      @user = Factory(:user)
-      @user.called_back.should be_true
-    end
-    
-    it "should return results in the specified language" do
-      User.class_eval do
-        def gmaps4rails_options
-          DEFAULT_CONFIG_HASH.merge({ 
-                                      :language   => "de",
-                                      :normalized_address => "norm_address"
-                                    })
-        end
-      end
-      @user = Factory(:user)
-      @user.norm_address.should == "Toulon, Frankreich"
     end
   end
 
