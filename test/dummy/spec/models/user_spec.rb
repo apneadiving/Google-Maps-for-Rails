@@ -120,9 +120,8 @@ describe Gmaps4rails::ActsAsGmappable do
                                 :lat_column     => "lat_test",
                                 :lng_column     => "long_test"
                                 })
-        user.lat_test.should  == TOULON[:latitude]
-        user.long_test.should == TOULON[:longitude]
-        user.should have_same_position_as({ :latitude => nil, :longitude => nil })
+        user.latitude.should be_nil
+        user.should have_same_position_as TOULON
       end
 
       it "should not save the boolean if check_process is false" do
