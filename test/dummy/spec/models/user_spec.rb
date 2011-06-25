@@ -15,7 +15,7 @@ PARIS  = { :latitude => 48.856614, :longitude => 2.3522219 }
 TOULON = { :latitude => 43.124228, :longitude => 5.928 }
 
 #set model configuration
-def set_gmaps4rails_options(change_conf = {})
+def set_gmaps4rails_options!(change_conf = {})
   User.class_eval do
     define_method "gmaps4rails_options" do
       DEFAULT_CONFIG_HASH.merge(change_conf)
@@ -23,7 +23,7 @@ def set_gmaps4rails_options(change_conf = {})
   end
 end
 
-set_gmaps4rails_options
+set_gmaps4rails_options!
 
 describe Gmaps4rails::ActsAsGmappable do
 
@@ -51,22 +51,19 @@ describe Gmaps4rails::ActsAsGmappable do
     end
     
     it "should not geocode again after address changes if checker is true" do
-      user.sec_address = "PARIS, France"
-      user.save
+      user.update_attributes({ :sec_address => "PARIS, France" })
       user.should have_same_position_as TOULON
     end
     
     it "should geocode after address changes if checker is false" do
-      user.sec_address = "PARIS, France"
-      user.gmaps = false
-      user.save
+      user.update_attributes({ :sec_address => "PARIS, France", 
+                               :gmaps        => false})
       user.should have_same_position_as PARIS
     end
   end
   
   
   context "standard configuration, invalid address" do
-
     
     it "should raise an error if validation option is turned on and address incorrect" do
       invalid_user.should_not be_valid, "Address invalid"
@@ -79,7 +76,6 @@ describe Gmaps4rails::ActsAsGmappable do
   
   
   context "model customization" do
-    
 
     it "should render a valid json even if there is no instance in the db" do
       User.all.to_gmaps4rails.should == "[]"
@@ -89,38 +85,38 @@ describe Gmaps4rails::ActsAsGmappable do
      
       after(:all) do 
         #reset all configuration to default
-        set_gmaps4rails_options
+        set_gmaps4rails_options!
       end
       
       it "should use indifferently a db column for address if passed in config" do
-        set_gmaps4rails_options({:address => "sec_address"})
+        set_gmaps4rails_options!({:address => "sec_address"})
         user.should have_same_position_as TOULON
       end
 
       it "should save the normalized address if requested" do
-        set_gmaps4rails_options({ :normalized_address => "norm_address" })
+        set_gmaps4rails_options!({ :normalized_address => "norm_address" })
         user.norm_address.should == "Toulon, France"
       end
 
       it "should override user's address with normalized address if requested" do
-        set_gmaps4rails_options({ :normalized_address => "sec_address" })
+        set_gmaps4rails_options!({ :normalized_address => "sec_address" })
         user = Factory(:user, :sec_address => "ToUlOn, FrAnCe")
         user.sec_address.should == "Toulon, France"
       end
 
       it "should display the proper error message when address is invalid" do
-        set_gmaps4rails_options({ :msg => "Custom Address invalid"})
+        set_gmaps4rails_options!({ :msg => "Custom Address invalid"})
         invalid_user.should_not be_valid
         invalid_user.errors[:gmaps4rails_address].should include("Custom Address invalid")
       end
 
       it "should not raise an error if validation option is turned off" do
-        set_gmaps4rails_options({ :validation => false })
+        set_gmaps4rails_options!({ :validation => false })
         invalid_user.should be_valid
       end
 
       it "should save longitude and latitude to the customized columns" do
-        set_gmaps4rails_options({
+        set_gmaps4rails_options!({
                                 :lat_column     => "lat_test",
                                 :lng_column     => "long_test"
                                 })
@@ -130,18 +126,18 @@ describe Gmaps4rails::ActsAsGmappable do
       end
 
       it "should not save the boolean if check_process is false" do
-        set_gmaps4rails_options({ :check_process  => false })
+        set_gmaps4rails_options!({ :check_process  => false })
         user.gmaps.should be_nil
       end
 
       it "should geocode after each save if 'check_process' is false" do
-        set_gmaps4rails_options({ :check_process  => false })
+        set_gmaps4rails_options!({ :check_process  => false })
         user = Factory(:user, :sec_address => "PARIS, France")
         user.should have_same_position_as PARIS
       end
 
       it "should save to the proper boolean checker set in checker" do
-        set_gmaps4rails_options({ :checker => "bool_test" })
+        set_gmaps4rails_options!({ :checker => "bool_test" })
         user.gmaps.should be_nil
         user.bool_test.should be_true
       end     
@@ -162,7 +158,7 @@ describe Gmaps4rails::ActsAsGmappable do
       end
 
       it "should return results in the specified language" do
-        set_gmaps4rails_options({ 
+        set_gmaps4rails_options!({ 
                                 :language   => "de",
                                 :normalized_address => "norm_address"
                                 })
