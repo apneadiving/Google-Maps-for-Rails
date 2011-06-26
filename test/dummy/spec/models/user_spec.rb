@@ -175,7 +175,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "My Beautiful Picture: #{picture}"
           end
         end
-        user_with_pic.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\", \"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"}]"
+        user_with_pic.to_gmaps4rails.should include "\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\""
       end
     
       it "should take into account the picture provided in the model" do
@@ -188,7 +188,29 @@ describe Gmaps4rails::ActsAsGmappable do
             }
           end
         end
-        user.to_gmaps4rails.should == "[{\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+        result = user.to_gmaps4rails
+        result.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
+        result.should include "\"width\": \"32\"" 
+        result.should include "\"height\": \"32\""
+      end
+      
+      it "should take into account the picture and shadow provided in the model" do
+        user.instance_eval do
+          def gmaps4rails_marker_picture
+            {
+            "picture" => "http://www.blankdots.com/img/github-32x32.png",
+            "width" => "32",
+            "height" => "32",
+            "shadow_picture" => "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png" ,
+            "shadow_width" => "40",
+            "shadow_height" => "40"
+            }
+          end
+        end
+        result = user.to_gmaps4rails
+        result.should include "\"shadow_width\": \"40\""
+        result.should include "\"shadow_height\": \"40\""
+        result.should include "\"shadow_picture\": \"http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png\""
       end
     
       it "should take into account the title provided in the model" do
@@ -206,7 +228,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "sidebar content"
           end
         end
-        user.to_gmaps4rails.should == "[{\"sidebar\": \"sidebar content\",\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"}]"
+        user.to_gmaps4rails.should include "\"sidebar\": \"sidebar content\""
       end
     
       it "should take into account all additional data provided in the model" do
@@ -231,7 +253,11 @@ describe Gmaps4rails::ActsAsGmappable do
             "sidebar content"
           end
         end
-        user.to_gmaps4rails.should == "[{\"description\": \"My Beautiful Picture: \", \"title\": \"Sweet Title\", \"sidebar\": \"sidebar content\",\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\", \"picture\": \"http://www.blankdots.com/img/github-32x32.png\", \"width\": \"32\", \"height\": \"32\"}]"
+        result = user.to_gmaps4rails
+        result.should include "\"description\": \"My Beautiful Picture: \""
+        result.should include "\"title\": \"Sweet Title\""
+        result.should include "\"sidebar\": \"sidebar content\""
+        result.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
       end
     end
   end

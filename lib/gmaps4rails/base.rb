@@ -41,7 +41,13 @@ module Gmaps4rails
   # Returns picture if gmaps4rails_marker_picture is defined in the model
   
   def Gmaps4rails.picture(object)
-    return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
+    if object.respond_to?("gmaps4rails_marker_picture")
+      ", " + object.gmaps4rails_marker_picture.map do |k,v|
+        "\"#{k}\": \"#{v}\""
+      end.join(", ")
+    end
+    #return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" 
+    #return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
   end
   
   # This method geocodes an address using the GoogleMaps webservice

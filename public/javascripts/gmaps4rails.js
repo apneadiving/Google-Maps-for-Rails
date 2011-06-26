@@ -371,6 +371,9 @@ var Gmaps4Rails = {
 			   var marker_picture = this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture;
 			   var marker_width 	= this.exists(this.markers[i].width)   ? this.markers[i].width 	 : this.markers_conf.width;
 			   var marker_height 	= this.exists(this.markers[i].height)  ? this.markers[i].height  : this.markers_conf.length;
+			   var shadow_picture = this.exists(this.markers[i].shadow_picture) ? this.markers[i].shadow_picture : null;
+			   var shadow_width 	= this.exists(this.markers[i].shadow_width)   ? this.markers[i].shadow_width 	 : null;
+			   var shadow_height 	= this.exists(this.markers[i].shadow_height)  ? this.markers[i].shadow_height  : null;
 				 var marker_anchor	= this.exists(this.markers[i].anchor)	 ? this.markers[i].anchor  : this.markers_conf.anchor;
 			   var marker_title 	= this.exists(this.markers[i].title)   ? this.markers[i].title 	 : null;
 			   var marker_draggable 	= this.exists(this.markers[i].draggable)   ? this.markers[i].draggable 	 : this.markers_conf.draggable;
@@ -392,12 +395,13 @@ var Gmaps4Rails = {
 				 var markerLatLng = new google.maps.LatLng(Lat, Lng); 
 				 var thisMarker;
 				 var markerImage = this.createOrRetrieveImage(marker_picture, marker_width, marker_height, imageAnchorPosition);
-				 
-				// Marker sizes are expressed as a Size of X,Y
-		 		 if (marker_picture === "" ||  markerImage == false ) { 
+				 //todo create anchoring option for shadows
+				 var shadowImage = this.createOrRetrieveImage(shadow_picture, shadow_width, shadow_height, null);
+				 // Marker sizes are expressed as a Size of X,Y
+		 		 if (marker_picture === "" ||  markerImage === null ) { 
 						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
 				 } else {
-					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable});
+					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable, shadow: shadowImage});
 				 }
 				 //save object
 				 this.markers[i].google_object = thisMarker; 
@@ -413,6 +417,9 @@ var Gmaps4Rails = {
 	// checks if MarkerImage exists before creating a new one
 	// returns a MarkerImage or false if ever something wrong is passed as argument
 	createOrRetrieveImage: function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition){
+	  if (currentMarkerPicture === "" || currentMarkerPicture == null )
+	  { return null;}
+	  
 	  var test_image_index = this.includeMarkerImage(this.markerImages, currentMarkerPicture);		
 		switch (test_image_index)
 		{ 
@@ -422,10 +429,7 @@ var Gmaps4Rails = {
 		  return markerImage;  	
 		break; 
 		default:
-		  if (typeof test_image_index == 'number')
-		  {
-			  return this.markerImages[test_image_index];
-		  }
+		  if (typeof test_image_index == 'number') { return this.markerImages[test_image_index]; }
 		  else { return false; }
 		break; 
 		}		
