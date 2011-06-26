@@ -42,7 +42,7 @@ describe Gmaps4rails::ActsAsGmappable do
   
     it "should render a valid json from an array of ojects" do
       user #needed trigger the object from the let statement
-      @user2 = Factory(:user_paris)
+      Factory(:user_paris)
       User.all.to_gmaps4rails.should == "[{\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"},\n{\"longitude\": \"" + PARIS[:longitude].to_s + "\", \"latitude\": \"" + PARIS[:latitude].to_s + "\"}]"
     end
   

@@ -52,7 +52,8 @@ var Gmaps4Rails = {
 	polylines: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
 	circles: [],                // contains raw data, array of hash
   markerClusterer: null,			// contains all marker clusterers
-  
+  markerImages: [],
+
 	//Polygon Styling
 	polygons_conf: {						// default style for polygons
 		strokeColor: "#FFAA00",
@@ -390,12 +391,13 @@ var Gmaps4Rails = {
 				
 				 var markerLatLng = new google.maps.LatLng(Lat, Lng); 
 				 var thisMarker;
-				 // Marker sizes are expressed as a Size of X,Y
-		 		 if (marker_picture === "") { 
+				 var markerImage = this.createOrRetrieveImage(marker_picture, marker_width, marker_height, imageAnchorPosition);
+				 
+				// Marker sizes are expressed as a Size of X,Y
+		 		 if (marker_picture === "" ||  markerImage == false ) { 
 						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
 				 } else {
-						var image = new google.maps.MarkerImage(marker_picture, new google.maps.Size(marker_width, marker_height), null, imageAnchorPosition, null );
-					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: image, title: marker_title, draggable: marker_draggable});
+					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable});
 				 }
 				 //save object
 				 this.markers[i].google_object = thisMarker; 
@@ -407,6 +409,27 @@ var Gmaps4Rails = {
 		  }
 		this.markers_conf.offset = this.markers.length;
 		},
+	
+	// checks if MarkerImage exists before creating a new one
+	// returns a MarkerImage or false if ever something wrong is passed as argument
+	createOrRetrieveImage: function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition){
+	  var test_image_index = this.includeMarkerImage(this.markerImages, currentMarkerPicture);		
+		switch (test_image_index)
+		{ 
+		case false:
+		  var markerImage = new google.maps.MarkerImage(currentMarkerPicture, new google.maps.Size(markerWidth, markerHeight), null, imageAnchorPosition, null );
+		  this.markerImages.push(markerImage);
+		  return markerImage;  	
+		break; 
+		default:
+		  if (typeof test_image_index == 'number')
+		  {
+			  return this.markerImages[test_image_index];
+		  }
+		  else { return false; }
+		break; 
+		}		
+	},
 		
 		// calculate anchor point for MarkerImage	
 	getImageAnchorPosition: function(markerWidth, markerHeight, anchorLocation) {
@@ -685,6 +708,14 @@ var Gmaps4Rails = {
 	},
 	
 	//gives a value between -1 and 1
-	random: function() { return ( Math.random() * 2 -1); }
+	random: function() { return ( Math.random() * 2 -1); },
+	
+	//checks if obj is included in arr Array and returns the position or false
+	includeMarkerImage: function(arr, obj) {
+	  for(var i=0; i<arr.length; i++) {
+	    if (arr[i].url == obj) return i;
+	  }
+	return false;
+	}
 	
 };
