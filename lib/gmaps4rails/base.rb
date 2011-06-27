@@ -38,11 +38,11 @@ module Gmaps4rails
     return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
   end
   
-  # Returns picture if gmaps4rails_marker_picture is defined in the model
-  
+  # Returns picture options if gmaps4rails_marker_picture is defined in the model
   def Gmaps4rails.picture(object)
     if object.respond_to?("gmaps4rails_marker_picture")
       ", " + object.gmaps4rails_marker_picture.map do |k,v|
+        #specific case, anchors are array and should be interpreted this way
         if k.include? "_anchor"
           "\"#{k}\": [#{v[0]}, #{v[1]}]"
         else
@@ -50,8 +50,6 @@ module Gmaps4rails
         end
       end.join(", ")
     end
-    #return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" 
-    #return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" if object.respond_to?("gmaps4rails_marker_picture")
   end
   
   # This method geocodes an address using the GoogleMaps webservice

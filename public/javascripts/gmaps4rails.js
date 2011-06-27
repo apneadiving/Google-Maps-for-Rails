@@ -32,7 +32,6 @@ var Gmaps4Rails = {
 		width: 22,
 		length: 32,
     draggable: false,         // how to modify: <%= gmaps( "markers" => { "data" => @object.to_gmaps4rails, "options" => { "draggable" => true }}) %>
-		anchor: null,             // centeranchor position of the marker image. Default is null <=> center, you can set options: top_left, top_center, top_right, center_left, center, center_right, bottom_right, bottom_center, bottom_left
 		//clustering config
 	  do_clustering: true,			// do clustering if set to true
 	  clusterer_gridSize: 50,		// the more the quicker but the less precise
@@ -395,7 +394,7 @@ var Gmaps4Rails = {
 				 var imageAnchorPosition  = this.createImageAnchorPosition(marker_anchor);
 				 var shadowAnchorPosition = this.createImageAnchorPosition(shadow_anchor);
 
-				 //create or retrieve existing images
+				 //create or retrieve existing MarkerImages
 				 var markerImage = this.createOrRetrieveImage(marker_picture, marker_width, marker_height, imageAnchorPosition);
 				 var shadowImage = this.createOrRetrieveImage(shadow_picture, shadow_width, shadow_height, shadowAnchorPosition);
 				
@@ -419,7 +418,7 @@ var Gmaps4Rails = {
 	// checks if MarkerImage exists before creating a new one
 	// returns a MarkerImage or false if ever something wrong is passed as argument
 	createOrRetrieveImage: function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition){
-	  if (currentMarkerPicture === "" || currentMarkerPicture == null )
+	  if (currentMarkerPicture === "" || currentMarkerPicture === null )
 	  { return null;}
 	  
 	  var test_image_index = this.includeMarkerImage(this.markerImages, currentMarkerPicture);		
@@ -439,7 +438,7 @@ var Gmaps4Rails = {
 		
 	// creates Image Anchor Position or return null if nothing passed	
 	createImageAnchorPosition: function(anchorLocation) {
-		if (anchorLocation == null)
+		if (anchorLocation === null)
 		{ return null; }
 		else
 		{ return new google.maps.Point(anchorLocation[0], anchorLocation[1]); }
@@ -682,7 +681,7 @@ var Gmaps4Rails = {
 	//checks if obj is included in arr Array and returns the position or false
 	includeMarkerImage: function(arr, obj) {
 	  for(var i=0; i<arr.length; i++) {
-	    if (arr[i].url == obj) return i;
+	    if (arr[i].url == obj) {return i;}
 	  }
 	return false;
 	}
