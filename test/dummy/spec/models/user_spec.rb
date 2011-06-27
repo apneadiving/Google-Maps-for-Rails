@@ -201,9 +201,11 @@ describe Gmaps4rails::ActsAsGmappable do
             "picture" => "http://www.blankdots.com/img/github-32x32.png",
             "width" => "32",
             "height" => "32",
+            "marker_anchor" => [10, 20],
             "shadow_picture" => "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png" ,
             "shadow_width" => "40",
-            "shadow_height" => "40"
+            "shadow_height" => "40",
+            "shadow_anchor" => [5, 10]
             }
           end
         end
@@ -211,6 +213,8 @@ describe Gmaps4rails::ActsAsGmappable do
         result.should include "\"shadow_width\": \"40\""
         result.should include "\"shadow_height\": \"40\""
         result.should include "\"shadow_picture\": \"http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png\""
+        result.should include "\"shadow_anchor\": [5, 10]"
+        result.should include "\"marker_anchor\": [10, 20]"
       end
     
       it "should take into account the title provided in the model" do
