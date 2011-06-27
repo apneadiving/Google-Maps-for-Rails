@@ -43,7 +43,11 @@ module Gmaps4rails
   def Gmaps4rails.picture(object)
     if object.respond_to?("gmaps4rails_marker_picture")
       ", " + object.gmaps4rails_marker_picture.map do |k,v|
-        "\"#{k}\": \"#{v}\""
+        if k.include? "_anchor"
+          "\"#{k}\": [#{v[0]}, #{v[1]}]"
+        else
+          "\"#{k}\": \"#{v}\""
+        end
       end.join(", ")
     end
     #return ", \"picture\": \"#{object.gmaps4rails_marker_picture['picture']}\", \"width\": \"#{object.gmaps4rails_marker_picture['width']}\", \"height\": \"#{object.gmaps4rails_marker_picture['height']}\"" 

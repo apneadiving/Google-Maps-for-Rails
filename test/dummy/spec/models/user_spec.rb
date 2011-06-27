@@ -259,6 +259,7 @@ describe Gmaps4rails::ActsAsGmappable do
         result.should include "\"sidebar\": \"sidebar content\""
         result.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
       end
+      
     end
   end
 
