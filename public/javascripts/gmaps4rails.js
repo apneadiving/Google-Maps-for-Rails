@@ -98,17 +98,7 @@ var Gmaps4Rails = {
 	//initializes the map
 	initialize: function() {
 		
-		this.map = new google.maps.Map(document.getElementById(this.map_options.id), {
-			  maxZoom: this.map_options.maxZoom,
-			  minZoom: this.map_options.minZoom,
-				zoom: this.map_options.zoom,
-		 		center: new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude),
-				mapTypeId: google.maps.MapTypeId[this.map_options.type],
-				mapTypeControl: this.map_options.mapTypeControl,
-				disableDefaultUI: this.map_options.disableDefaultUI,
-				disableDoubleClickZoom: this.map_options.disableDoubleClickZoom,
-				draggable: this.map_options.draggable
-		});
+		this.map = Gmaps4Rails.createMap();
 		
 		if (this.map_options.detect_location === true || this.map_options.center_on_user === true) { 
 			this.findUserLocation();
@@ -122,7 +112,7 @@ var Gmaps4Rails = {
 			//try to retrieve user's position
 	    navigator.geolocation.getCurrentPosition(function(position) {
 				//saves the position in the userLocation variable
-	      Gmaps4Rails.userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	      Gmaps4Rails.userLocation = Gmaps4Rails.createLatLng(position.coords.latitude, position.coords.longitude);
 	    	//change map's center to focus on user's geoloc if asked
 				if(Gmaps4Rails.map_options.center_on_user === true) {
 					Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
@@ -199,7 +189,7 @@ var Gmaps4Rails = {
 			// always check if a config is given, if not, use defaults
 			// NOTE: is there a cleaner way to do this? Maybe a hash merge of some sort?
 			var newCircle = new google.maps.Circle({
-			   center:        new google.maps.LatLng(circle.latitude, circle.longitude),
+			   center:        Gmaps4Rails.createLatLng(circle.latitude, circle.longitude),
 			   strokeColor:   circle.strokeColor   || this.circles_conf.strokeColor,
 			   strokeOpacity: circle.strokeOpacity || this.circles_conf.strokeOpacity,
 			   strokeWeight: 	circle.strokeWeight  || this.circles_conf.strokeWeight,
@@ -266,7 +256,7 @@ var Gmaps4Rails = {
 		var fillOpacity;
 		//Polygon points are in an Array, that's why looping is necessary
 		for (var j = 0; j < this.polygons[i].length; ++j) {
-			var latlng = new google.maps.LatLng(this.polygons[i][j].latitude, this.polygons[i][j].longitude);
+			var latlng = Gmaps4Rails.createLatLng(this.polygons[i][j].latitude, this.polygons[i][j].longitude);
 	  	polygon_coordinates.push(latlng);
 			//first element of an Array could contain specific configuration for this particular polygon. If no config given, use default
 			if (j===0) {
@@ -332,7 +322,7 @@ var Gmaps4Rails = {
 				}
 				//add latlng if positions provided
 				if (this.exists(this.polylines[i][j].latitude) && this.exists(this.polylines[i][j].longitude)) {	
-					var latlng = new google.maps.LatLng(this.polylines[i][j].latitude, this.polylines[i][j].longitude);
+					var latlng = Gmaps4Rails.createLatLng(this.polylines[i][j].latitude, this.polylines[i][j].longitude);
 			  	polyline_coordinates.push(latlng);
 				}
 			}
@@ -387,7 +377,7 @@ var Gmaps4Rails = {
 				  	Lat = LatLng[0]; Lng = LatLng[1];
 				 }
 				
-				 var markerLatLng = new google.maps.LatLng(Lat, Lng); 
+				 var markerLatLng = Gmaps4Rails.createLatLng(Lat, Lng); 
 				 var thisMarker;
 				
 				 // calculate MarkerImage anchor location
@@ -400,9 +390,9 @@ var Gmaps4Rails = {
 				
 				 // Marker sizes are expressed as a Size of X,Y
 		 		 if (marker_picture === "" ||  markerImage === null ) { 
-						thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
+						thisMarker = Gmaps4Rails.createMarker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
 				 } else {
-					  thisMarker = new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable, shadow: shadowImage});
+					  thisMarker = Gmaps4Rails.createMarker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable, shadow: shadowImage});
 				 }
 				 //save object
 				 this.markers[i].google_object = thisMarker; 
@@ -425,7 +415,7 @@ var Gmaps4Rails = {
 		switch (test_image_index)
 		{ 
 		case false:
-		  var markerImage = new google.maps.MarkerImage(currentMarkerPicture, new google.maps.Size(markerWidth, markerHeight), null, imageAnchorPosition, null );
+		  var markerImage = Gmaps4Rails.createMarkerImage(currentMarkerPicture, Gmaps4Rails.createSize(markerWidth, markerHeight), null, imageAnchorPosition, null );
 		  this.markerImages.push(markerImage);
 		  return markerImage;  	
 		break; 
@@ -446,10 +436,6 @@ var Gmaps4Rails = {
 
   // clear markers
   clear_markers: function() {
-		// 	  //clear clusterer first
-		//     if (this.markerClusterer !== null){
-		// 	this.markerClusterer.clearMarkers();
-		// }
 		for (var i = 0; i < this.markers.length; ++i) {
       this.clear_marker(this.markers[i]);
     }
@@ -487,7 +473,7 @@ var Gmaps4Rails = {
 	  //reset previous markers
 		this.markers = new Array;
 		//reset current bounds
-		this.google_bounds = new google.maps.LatLngBounds();
+		this.google_bounds = Gmaps4Rails.createLatLngBounds();
 		//reset sidebar content if exists
 		this.reset_sidebar_content();
 		//add new markers
@@ -610,7 +596,7 @@ var Gmaps4Rails = {
 		//FIRST_STEP: retrieve all bounds
 		//create the bounds object only if necessary
 		if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
-			this.google_bounds = new google.maps.LatLngBounds();
+			this.google_bounds = Gmaps4Rails.createLatLngBounds();
 		}
 		
 		//if autodjust is true, must get bounds from markers polylines etc...
@@ -636,7 +622,7 @@ var Gmaps4Rails = {
 		//in every case, I've to take into account the bounds set up by the user	
 		for (var i = 0; i < this.map_options.bounds.length; ++i) {
 			//create points from bounds provided
-			var bound = new google.maps.LatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
+			var bound = Gmaps4Rails.createLatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
 			this.google_bounds.extend(bound);
 		}
 		
@@ -655,6 +641,40 @@ var Gmaps4Rails = {
 			}
 		}
 	},
+	
+  createLatLng: function(lat, lng){
+	  return new google.maps.LatLng(lat, lng);
+  },
+
+  createLatLngBounds: function(){
+	  return new google.maps.LatLngBounds();
+  },
+
+  createMap: function(){
+		return new google.maps.Map(document.getElementById(Gmaps4Rails.map_options.id), {
+			  maxZoom: 								Gmaps4Rails.map_options.maxZoom,
+			  minZoom: 								Gmaps4Rails.map_options.minZoom,
+				zoom:    								Gmaps4Rails.map_options.zoom,
+		 		center:    							Gmaps4Rails.createLatLng(this.map_options.center_latitude, this.map_options.center_longitude),
+				mapTypeId:     				  google.maps.MapTypeId[this.map_options.type],
+				mapTypeControl:   			Gmaps4Rails.map_options.mapTypeControl,
+				disableDefaultUI:       Gmaps4Rails.map_options.disableDefaultUI,
+				disableDoubleClickZoom: Gmaps4Rails.map_options.disableDoubleClickZoom,
+				draggable:              Gmaps4Rails.map_options.draggable
+		});
+  },
+
+  createMarkerImage: function(markerPicture, markerSize, origin, anchor, scaledSize) {
+	  return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize);
+  },
+
+  createMarker: function(args){
+  	return new google.maps.Marker(args);
+  },
+
+  createSize: function(width, height){
+	  return new google.maps.Size(width, height);
+  },
 
 	//basic function to check existence of a variable
 	exists: function(var_name) {
