@@ -4,6 +4,11 @@ var Gmaps4Rails = {
 	visibleInfoWindow: null,    //contains the current opened infowindow
   userLocation: null,         //contains user's location if geolocalization was performed and successful
 
+  //empty slots
+	geolocationFailure: null,   //triggered when geolocation fails. If customized, must be like: function(navigator_handles_geolocation){} where 'navigator_handles_geolocation' is a boolean
+  customClusterer: null,      //to let user set custom clusterer pictures
+  callback: null,             //to let user set a custom callback function
+
 	//Map settings
 	map_options: {
 	  id: 'gmaps4rails_map',
@@ -45,7 +50,7 @@ var Gmaps4Rails = {
 	},
 	
 	//Stored variables
-	markers: [],							  // contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "google_object": google_marker}
+	markers: [],							  // contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "serviceObject": google_marker}
 	bounds_object: null,				// contains current bounds from markers, polylines etc...
 	polygons: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
 	polylines: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
@@ -119,13 +124,13 @@ var Gmaps4Rails = {
 				}
 	    },
 	    function() {
-		    //if failure, triggers the function if defined
-			  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(true); }
+		    //failure, but the navigator handles geolocation
+			  this.geolocationFailure(true);
 			});
 	  }
 	  else {
-		  //if failure, triggers the function if defined
-		  if(this.fnSet("gmaps4rails_geolocation_failure")) { gmaps4rails_geolocation_failure(false); }
+		  //failure but the navigator doesn't handle geolocation
+		  this.geolocationFailure(false);
 	  }
 	},
 
@@ -199,7 +204,7 @@ var Gmaps4Rails = {
 				 zIndex: 				circle.zIndex				 || this.circles_conf.zIndex,
 				 radius: 				circle.radius
 		 	});
-			circle.google_object = newCircle;
+			circle.serviceObject = newCircle;
 			newCircle.setMap(this.map);
 		}
 	},
@@ -212,7 +217,7 @@ var Gmaps4Rails = {
   },
 
 	clear_circle: function(circle) {
-		circle.google_object.setMap(null);
+		circle.serviceObject.setMap(null);
 	},
 	
 	hide_circles: function() {
@@ -222,7 +227,7 @@ var Gmaps4Rails = {
 	},
 	
 	hide_circle: function(circle) {
-		circle.google_object.setMap(null);
+		circle.serviceObject.setMap(null);
 	},
 	
 	show_circles: function() {
@@ -232,7 +237,7 @@ var Gmaps4Rails = {
 	},
 	
 	show_circle: function(circle) {
-		circle.google_object.setMap(this.map);
+		circle.serviceObject.setMap(this.map);
 	},
 
 	////////////////////////////////////////////////////
@@ -279,7 +284,7 @@ var Gmaps4Rails = {
 			 clickable:     false
 		 });
 		//save polygon in list
-		this.polygons[i].google_object = new_poly;
+		this.polygons[i].serviceObject = new_poly;
 		new_poly.setMap(this.map);
 	},
 
@@ -336,7 +341,7 @@ var Gmaps4Rails = {
 			 clickable:     false
 		 });
 		//save polyline
-		this.polylines[i].google_object = new_poly;
+		this.polylines[i].serviceObject = new_poly;
 		new_poly.setMap(this.map);
 	},
 
@@ -346,17 +351,18 @@ var Gmaps4Rails = {
 
 	//creates, clusterizes and adjusts map 
 	create_markers: function() {
-		this.create_google_markers_from_markers();
+		this.markers_conf.offset = 0;
+		this.createServiceMarkersFromMarkers();
 		this.clusterize();
 		this.adjust_map_to_bounds();
 	},
 	
 	//create google.maps Markers from data provided by user
-	create_google_markers_from_markers: function() {
+	createServiceMarkersFromMarkers: function() {
 		for (var i = this.markers_conf.offset; i < this.markers.length; ++i) {
 		  //check if the marker has not already been created
-			if (!this.exists(this.markers[i].google_object)) {
-			   //test if value passed or use default 
+			if (!this.exists(this.markers[i].serviceObject)) {
+			   //extract options, test if value passed or use default 
 			   var marker_picture = this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture;
 			   var marker_width 	= this.exists(this.markers[i].width)   ? this.markers[i].width 	 : this.markers_conf.width;
 			   var marker_height 	= this.exists(this.markers[i].height)  ? this.markers[i].height  : this.markers_conf.length;
@@ -372,7 +378,7 @@ var Gmaps4Rails = {
 				 
 				 //alter coordinates if randomize is true
 				 if ( this.markers_conf.randomize) {
-						var LatLng = this.randomize(Lat, Lng);
+						var LatLng = Gmaps4Rails.randomize(Lat, Lng);
 				  	//retrieve coordinates from the array
 				  	Lat = LatLng[0]; Lng = LatLng[1];
 				 }
@@ -394,16 +400,17 @@ var Gmaps4Rails = {
 				 } else {
 					  thisMarker = Gmaps4Rails.createMarker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable, shadow: shadowImage});
 				 }
+
 				 //save object
-				 this.markers[i].google_object = thisMarker; 
+				 this.markers[i].serviceObject = thisMarker; 
 				 //add infowindowstuff if enabled
-				 this.create_info_window(this.markers[i]);
+				 this.createInfoWindow(this.markers[i]);
 				 //create sidebar if enabled
-				 this.create_sidebar(this.markers[i]);
-			 }
+				 this.createSidebar(this.markers[i]);
+	      }
 		  }
 		this.markers_conf.offset = this.markers.length;
-		},
+	},
 	
 	// checks if MarkerImage exists before creating a new one
 	// returns a MarkerImage or false if ever something wrong is passed as argument
@@ -431,7 +438,7 @@ var Gmaps4Rails = {
 		if (anchorLocation === null)
 		{ return null; }
 		else
-		{ return new google.maps.Point(anchorLocation[0], anchorLocation[1]); }
+		{ return Gmaps4Rails.createPoint(anchorLocation[0], anchorLocation[1]); }
 	},
 
   // clear markers
@@ -442,7 +449,7 @@ var Gmaps4Rails = {
   },
 
 	clear_marker: function(marker) {
-		marker.google_object.setMap(null);
+		marker.serviceObject.setMap(null);
 	},
 
 	// show and hide markers
@@ -453,7 +460,7 @@ var Gmaps4Rails = {
 	},
 	
 	show_marker: function(marker) {
-		marker.google_object.setVisible(true);
+		marker.serviceObject.setVisible(true);
 	},
 	
 	hide_markers: function() {
@@ -463,7 +470,7 @@ var Gmaps4Rails = {
 	},
 	
 	hide_marker: function(marker) {
-		marker.google_object.setVisible(false);
+		marker.serviceObject.setVisible(false);
 	},
 	
   // replace old markers with new markers on an existing map
@@ -502,11 +509,11 @@ var Gmaps4Rails = {
 			
 			var gmarkers_array = new Array;
 			for (var i = 0; i <  this.markers.length; ++i) {
-       gmarkers_array.push(this.markers[i].google_object);
+       gmarkers_array.push(this.markers[i].serviceObject);
       }
 			var clustererStyle = null;
-			if(this.fnSet("gmaps_custom_clusterer_pic")) {
-				clustererStyle = gmaps_custom_clusterer_pic();
+			if(this.fnSet(Gmaps4Rails.customClusterer)) {
+				clustererStyle = customClusterer();
 			}
 			this.markerClusterer = new MarkerClusterer( this.map,
 																									gmarkers_array, 
@@ -520,13 +527,13 @@ var Gmaps4Rails = {
 	////////////////////////////////////////////////////
 
 	// creates infowindows
-	create_info_window: function(marker_container){
+	createInfoWindow: function(marker_container){
 		var info_window;
 		if (this.markers_conf.custom_infowindow_class === null) {
 		//create the infowindow
 		info_window = new google.maps.InfoWindow({content: marker_container.description });
 		//add the listener associated
-		google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
+		google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
 		}
 		else { //creating custom infowindow
 			if (this.exists(marker_container.description)) {
@@ -534,7 +541,7 @@ var Gmaps4Rails = {
 				boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
 				boxText.innerHTML = marker_container.description;	
 				info_window = new InfoBox(gmaps4rails_infobox(boxText));
-				google.maps.event.addListener(marker_container.google_object, 'click', this.openInfoWindow(info_window, marker_container.google_object));
+				google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
 			}
 		}
 	},
@@ -556,7 +563,7 @@ var Gmaps4Rails = {
 	////////////////////////////////////////////////////
 
 	//creates sidebar
-	create_sidebar: function(marker_container){
+	createSidebar: function(marker_container){
 		if (this.markers_conf.list_container)
 		{
 			var ul = document.getElementById(this.markers_conf.list_container);
@@ -565,7 +572,7 @@ var Gmaps4Rails = {
 	    aSel.href = 'javascript:void(0);';
 	    var html = this.exists(marker_container.sidebar) ? marker_container.sidebar : "Marker";
 	    aSel.innerHTML = html;
-	    aSel.onclick = this.sidebar_element_handler(marker_container.google_object, 'click');
+	    aSel.onclick = this.sidebar_element_handler(marker_container.serviceObject, 'click');
 	    li.appendChild(aSel);
 	    ul.appendChild(li);
 		}
@@ -603,20 +610,20 @@ var Gmaps4Rails = {
 		if (this.map_options.auto_adjust) {
 			//from markers
 			for (var i = 0; i <  this.markers.length; ++i) {
-	     	this.google_bounds.extend(this.markers[i].google_object.position);
+	     	this.google_bounds.extend(this.markers[i].serviceObject.position);
 	    }
  		  //from polygons:
 			for (var i = 0; i <  this.polylines.length; ++i) {
-				this.polylines[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
+				this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
 			}
 			//from polylines:
 			for (var i = 0; i <  this.polygons.length; ++i) {
-				this.polygons[i].google_object.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
+				this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.google_bounds.extend(obj2);} );});
 			}
 			//from circles
 			for (var i = 0; i <  this.circles.length; ++i) {
-				this.google_bounds.extend(this.circles[i].google_object.getBounds().getNorthEast());
-				this.google_bounds.extend(this.circles[i].google_object.getBounds().getSouthWest());
+				this.google_bounds.extend(this.circles[i].serviceObject.getBounds().getNorthEast());
+				this.google_bounds.extend(this.circles[i].serviceObject.getBounds().getSouthWest());
 			}		
 		}
 		//in every case, I've to take into account the bounds set up by the user	
@@ -640,6 +647,15 @@ var Gmaps4Rails = {
 			  this.map.fitBounds(this.google_bounds); 
 			}
 		}
+	},
+	
+	////////////////////////////////////////////////////
+	/////////////// Abstracting API calls //////////////
+	//(for maybe an extension to another map provider)//
+	////////////////////////////////////////////////////
+	
+	createPoint: function(lat, lng){
+		return new google.maps.Point(lat, lng);
 	},
 	
   createLatLng: function(lat, lng){
@@ -676,10 +692,23 @@ var Gmaps4Rails = {
 	  return new google.maps.Size(width, height);
   },
 
+	//checks if obj is included in arr Array and returns the position or false
+	includeMarkerImage: function(arr, obj) {
+	  for(var i=0; i<arr.length; i++) {
+	    if (arr[i].url == obj) {return i;}
+	  }
+	return false;
+	},
+
+	////////////////////////////////////////////////////
+	///////////////// Basic functions //////////////////
+	////////////////////////////////////////////////////
+
 	//basic function to check existence of a variable
 	exists: function(var_name) {
 		return (var_name	!== "" && typeof var_name !== "undefined");
 	},
+	
 	//check existence of function
 	fnSet: function(fn_name){
 		return(typeof fn_name == 'function');
@@ -696,14 +725,6 @@ var Gmaps4Rails = {
 	},
 	
 	//gives a value between -1 and 1
-	random: function() { return ( Math.random() * 2 -1); },
-	
-	//checks if obj is included in arr Array and returns the position or false
-	includeMarkerImage: function(arr, obj) {
-	  for(var i=0; i<arr.length; i++) {
-	    if (arr[i].url == obj) {return i;}
-	  }
-	return false;
-	}
+	random: function() { return(Math.random() * 2 -1); }	
 	
 };

@@ -66,7 +66,7 @@ class Hash
     	    result << "Gmaps4Rails.create_#{category}();"
     	end 
     end
-    result << "if(typeof gmaps4rails_callback == 'function') { gmaps4rails_callback(); }"
+    result << "Gmaps4rails.callback();"
     result * ('
 ')
   end
