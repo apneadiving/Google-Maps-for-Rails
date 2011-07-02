@@ -7,7 +7,8 @@ var Gmaps4Rails = {
   //empty slots
 	geolocationFailure: function() { return false;},  //triggered when geolocation fails. If customized, must be like: function(navigator_handles_geolocation){} where 'navigator_handles_geolocation' is a boolean
   callback:           function() { return false;},  //to let user set a custom callback function
-  customClusterer:    function() { return null;},  //to let user set custom clusterer pictures
+  customClusterer:    function() { return null;},   //to let user set custom clusterer pictures
+  infobox:            function() { return null;},   //to let user use custom infoboxes
 
 	//Map settings
 	map_options: {
@@ -46,7 +47,7 @@ var Gmaps4Rails = {
 		list_container: null,     // id of the ul that will host links to all markers
 		custom_cluster_pictures: null,
 		custom_infowindow_class: null,
-		offset: 0                //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to avoid the existing are re-created.
+		offset: 0                //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
 	},
 	
 	//Stored variables
@@ -347,7 +348,7 @@ var Gmaps4Rails = {
 
 	////////////////////////////////////////////////////
 	///////////////////// MARKERS //////////////////////
-	////////////////////////////////////////////////////
+	//////////////////tests coded///////////////////////
 
 	//creates, clusterizes and adjusts map 
 	create_markers: function() {
@@ -466,7 +467,7 @@ var Gmaps4Rails = {
 	  //reset previous markers
 		this.markers = new Array;
 		//reset current bounds
-		this.googleBounds = Gmaps4Rails.createLatLngBounds();
+		this.serviceBounds = Gmaps4Rails.createLatLngBounds();
 		//reset sidebar content if exists
 		this.resetSidebarContent();
 		//add new markers
@@ -518,7 +519,7 @@ var Gmaps4Rails = {
 				var boxText = document.createElement("div");
 				boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
 				boxText.innerHTML = marker_container.description;	
-				info_window = new InfoBox(gmaps4rails_infobox(boxText));
+				info_window = new InfoBox(Gmaps4Rails.infobox(boxText));
 				google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
 			}
 		}
@@ -581,34 +582,34 @@ var Gmaps4Rails = {
 		//FIRST_STEP: retrieve all bounds
 		//create the bounds object only if necessary
 		if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
-			this.googleBounds = Gmaps4Rails.createLatLngBounds();
+			this.serviceBounds = Gmaps4Rails.createLatLngBounds();
 		}
 		
 		//if autodjust is true, must get bounds from markers polylines etc...
 		if (this.map_options.auto_adjust) {
 			//from markers
 			for (var i = 0; i <  this.markers.length; ++i) {
-	     	this.googleBounds.extend(this.markers[i].serviceObject.position);
+	     	this.serviceBounds.extend(this.markers[i].serviceObject.position);
 	    }
  		  //from polygons:
 			for (var i = 0; i <  this.polylines.length; ++i) {
-				this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.googleBounds.extend(obj2);} );});
+				this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.serviceBounds.extend(obj2);} );});
 			}
 			//from polylines:
 			for (var i = 0; i <  this.polygons.length; ++i) {
-				this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.googleBounds.extend(obj2);} );});
+				this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.serviceBounds.extend(obj2);} );});
 			}
 			//from circles
 			for (var i = 0; i <  this.circles.length; ++i) {
-				this.googleBounds.extend(this.circles[i].serviceObject.getBounds().getNorthEast());
-				this.googleBounds.extend(this.circles[i].serviceObject.getBounds().getSouthWest());
+				this.serviceBounds.extend(this.circles[i].serviceObject.getBounds().getNorthEast());
+				this.serviceBounds.extend(this.circles[i].serviceObject.getBounds().getSouthWest());
 			}		
 		}
 		//in every case, I've to take into account the bounds set up by the user	
 		for (var i = 0; i < this.map_options.bounds.length; ++i) {
 			//create points from bounds provided
 			var bound = Gmaps4Rails.createLatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
-			this.googleBounds.extend(bound);
+			this.serviceBounds.extend(bound);
 		}
 		
 		//SECOND_STEP: ajust the map to the bounds
@@ -616,13 +617,13 @@ var Gmaps4Rails = {
 	
 			//if autozoom is false, take user info into account
 			if(!this.map_options.auto_zoom) {
-				var map_center = this.googleBounds.getCenter();
+				var map_center = this.serviceBounds.getCenter();
 				this.map_options.center_longitude = map_center.lat();
 				this.map_options.center_latitude  = map_center.lng();
 				this.map.setCenter(map_center);
 			}
 			else {
-			  this.map.fitBounds(this.googleBounds); 
+			  this.map.fitBounds(this.serviceBounds); 
 			}
 		}
 	},
@@ -630,7 +631,7 @@ var Gmaps4Rails = {
 	////////////////////////////////////////////////////
 	/////////////// Abstracting API calls //////////////
 	//(for maybe an extension to another map provider)//
-	////////////////////////////////////////////////////
+	//////////////////mocks created/////////////////////
 
 	clearMarker: function(marker) {
 		marker.serviceObject.setMap(null);
@@ -703,7 +704,7 @@ var Gmaps4Rails = {
 
 	////////////////////////////////////////////////////
 	///////////////// Basic functions //////////////////
-	////////////////////////////////////////////////////
+	///////////////////tests coded//////////////////////
 
 	//basic function to check existence of a variable
 	exists: function(var_name) {

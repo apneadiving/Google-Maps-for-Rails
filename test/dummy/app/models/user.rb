@@ -6,14 +6,14 @@ class User < ActiveRecord::Base
     sec_address
   end
   
-  def gmaps4rails_marker_picture
-    {
-    "picture" => "http://www.blankdots.com/img/github-32x32.png",
-    "width" => "32",
-    "height" => "32",
-    "marker_anchor" => [10,20]
-    }
-  end
+  # def gmaps4rails_marker_picture
+  #   {
+  #   "picture" => "http://www.blankdots.com/img/github-32x32.png",
+  #   "width" => "32",
+  #   "height" => "32",
+  #   "marker_anchor" => [10,20]
+  #   }
+  # end
   # 
   # def gmaps4rails_title
   #   "Sweet Title"
