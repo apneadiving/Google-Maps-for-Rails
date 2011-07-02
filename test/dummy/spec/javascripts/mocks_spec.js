@@ -20,4 +20,7 @@ describe("Mocks Fake", function() {
 	it("should create fake Size", function() {
 		expect(Gmaps4Rails.createSize(1, 3)).toEqual([1,3]);
 	});
+	it("should create fake Clusterer", function() {
+		expect(Gmaps4Rails.createClusterer()).toEqual({ "who": "I'm Clusterer" });
+	});
 });

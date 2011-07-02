@@ -55,6 +55,25 @@ geoHelpers = new function(){
 	};
 };
 
+MarkerClusterer = function() { return {"who": "I'm Clusterer"}; };
+
 Number.prototype.toRad = function() {
   return this * Math.PI / 180;
+};
+
+getRawMarkers = function() {
+	return [{ "longitude": "5.9311119", "latitude": "43.1251606"} 
+	,{ "longitude": "2.3509871", "latitude": "48.8566667"}
+  ,{ "longitude": "2.3509871", "latitude": "48.8566667", "serviceObject": true}
+	,{ "longitude": "2.3509871", "latitude": "48.8566667", "serviceObject": false}];
+};
+
+getFullMarker = function() {
+	return { "longitude": "5", "latitude": "43", "picture": "picture", "width": "width", "height": "height", "title": "title", "marker_anchor": [0,1], "shadow_anchor": [1,0], "shadow_picture": "shadow_picture", "shadow_width": "shadow_width", "shadow_height": "shadow_height", "draggable": true };
+};
+
+clearMarkerTraces = function(){
+  Gmaps4Rails.markers = [];
+	Gmaps4Rails.markers_conf.offset = 0;
+	Gmaps4Rails.markers_conf.randomize = false;
 };

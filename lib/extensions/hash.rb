@@ -66,7 +66,7 @@ class Hash
     	    result << "Gmaps4Rails.create_#{category}();"
     	end 
     end
-    result << "Gmaps4rails.callback();"
+    result << "Gmaps4Rails.callback();"
     result * ('
 ')
   end

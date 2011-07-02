@@ -17,20 +17,6 @@ describe("Gmaps4Rails", function() {
 			});
 		});
 		
-		describe("fnSet", function() {
-			it("should render true for existing function", function() {
-				expect(Gmaps4Rails.fnSet(Gmaps4Rails.fnSet)).toBeTruthy();
-		  });
-			it("should render false for unexisting functions", function() {
-				expect(Gmaps4Rails.fnSet(Gmaps4Rails.callback)).toBeFalsy();
-			});
-			it("should render true once function is set", function() {
-				Gmaps4Rails.callback = function() {};
-				expect(Gmaps4Rails.fnSet(Gmaps4Rails.callback)).toBeTruthy();
-				Gmaps4Rails.callback = null;
-			});
-		});
-		
 		describe("random", function() {
 		  it("should return a number between between -1 and 1", function() {
 		    for (var i = 0; i < 100; ++i) {
