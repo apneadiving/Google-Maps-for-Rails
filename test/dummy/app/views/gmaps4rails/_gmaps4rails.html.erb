@@ -1,0 +1,37 @@
+<% #thanks to enable_css, user can avoid this css to be loaded
+if enable_css == true %>
+	<% content_for :head do %>
+	<%= stylesheet_link_tag 'gmaps4rails' %>
+	<% end %>
+<% end %>
+
+<% content_for :scripts do %>
+<% if enable_js == true %>
+   <!-- <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= MAPQUEST_KEY %>"></script> -->
+   <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+  
+  <%=javascript_include_tag 'gmaps4rails' %>
+ 	<%= javascript_include_tag 'bing'   %>
+  <!-- <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&libraries=geometry'></script>
+ 	<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js'></script> -->
+	<!-- <script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script> -->
+<% end  %>
+<script type="text/javascript" charset="utf-8">
+Gmaps4Rails.apiKey = '<%= BING_KEY %>';
+
+function gmaps4rails_init() {
+	<% #true is passed here to trigger map initialization %>
+	<%=raw options.to_gmaps4rails(true) %>
+};
+
+window.onload = gmaps4rails_init;
+
+</script>
+<% end %>
+<div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>"> 
+  <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>" class="bing_map"></div>
+</div>
+
+<div id="mapQuest" style="width:750px; height:475px;"></div>
+
+<div id='bingMap' style="position:relative; width:400px; height:400px;"></div>
