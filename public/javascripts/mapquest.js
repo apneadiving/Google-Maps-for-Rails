@@ -2,7 +2,7 @@
 /////////////// Abstracting API calls //////////////
 //(for maybe an extension to another map provider)//
 //////////////////mocks created/////////////////////
-
+// http://www.mapquestapi.com/sdk/js/v6.0.0/poi.html
 Gmaps4Rails.clearMarker = function(marker) {
   marker.serviceObject.setMap(null);
 };
@@ -28,12 +28,21 @@ Gmaps4Rails.createLatLngBounds = function(){
 };
 
 Gmaps4Rails.createMap = function(){
-  return new MQA.TileMap(                           // Constructs an instance of MQA.TileMap
-    document.getElementById("map"),     //Gmaps4Rails.map_options.idthe id of the element on the page you want the map to be added into 
+  var map = new MQA.TileMap(                           // Constructs an instance of MQA.TileMap
+    document.getElementById("mapQuest"),     //the id of the element on the page you want the map to be added into 
     Gmaps4Rails.map_options.zoom,                   //intial zoom level of the map
     {lat: Gmaps4Rails.map_options.center_latitude,  //the lat/lng of the map to center on
      lng: Gmaps4Rails.map_options.center_longitude}, 
     'map');                                         //map type (map, sat, hyb)
+  MQA.withModule('zoomcontrol3', function() {
+
+    map.addControl(
+      new MQA.LargeZoomControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
+    );
+
+  });
+  return map;
 };
 
 Gmaps4Rails.createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {
@@ -42,6 +51,27 @@ Gmaps4Rails.createMarkerImage = function(markerPicture, markerSize, origin, anch
 
 Gmaps4Rails.createMarker = function(args){
   return new MQA.Poi({lat: 0, lng: 0});
+};
+
+Gmaps4Rails.createMarker = function(args){
+  
+  	var marker = new MQA.Poi( {lat: args.Lat, lng: args.Lng} );
+  	
+  	if(args.marker_anchor !== null) {
+  	  marker.setBias({x: args.marker_anchor[0], y: args.marker_anchor[1]});
+    }
+
+  	if (args.marker_picture !== "" ) { 
+  	  var icon = new MQA.Icon(args.marker_picture, args.marker_height, args.marker_width);
+    	marker.setIcon(icon);
+    }
+  	
+  	Gmaps4Rails.addToMap(marker);
+  	return marker;
+};
+
+Gmaps4Rails.addToMap = function(object){
+  Gmaps4Rails.map.addShape(object);
 };
 
 Gmaps4Rails.createSize = function(width, height){
@@ -65,4 +95,14 @@ Gmaps4Rails.includeMarkerImage = function(arr, obj) {
     if (arr[i].url == obj) {return i;}
   }
   return false;
+};
+
+////////////////////////////////////////////////////
+/////////////////// INFO WINDOW ////////////////////
+////////////////////////////////////////////////////
+
+// creates infowindows
+Gmaps4Rails.createInfoWindow = function(marker_container){
+  marker_container.serviceObject.setInfoContentHTML(marker_container.description);
+//  marker_container.serviceObject.setRolloverContent(marker_container.title)
 };

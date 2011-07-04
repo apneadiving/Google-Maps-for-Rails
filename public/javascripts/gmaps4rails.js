@@ -363,17 +363,7 @@ var Gmaps4Rails = {
     for (var i = this.markers_conf.offset; i < this.markers.length; ++i) {
       //check if the marker has not already been created
       if (!this.exists(this.markers[i].serviceObject)) {
-        //extract options, test if value passed or use default 
-        var marker_picture = this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture;
-        var marker_width 	= this.exists(this.markers[i].width)    ? this.markers[i].width   : this.markers_conf.width;
-        var marker_height 	= this.exists(this.markers[i].height) ? this.markers[i].height  : this.markers_conf.length;
-        var marker_title 	= this.exists(this.markers[i].title)    ? this.markers[i].title   : null;
-        var marker_anchor  = this.exists(this.markers[i].marker_anchor)  ? this.markers[i].marker_anchor  : null;
-        var shadow_anchor  = this.exists(this.markers[i].shadow_anchor)  ? this.markers[i].shadow_anchor  : null;
-        var shadow_picture = this.exists(this.markers[i].shadow_picture) ? this.markers[i].shadow_picture : null;
-        var shadow_width 	= this.exists(this.markers[i].shadow_width)    ? this.markers[i].shadow_width   : null;
-        var shadow_height 	= this.exists(this.markers[i].shadow_height) ? this.markers[i].shadow_height  : null;
-        var marker_draggable = this.exists(this.markers[i].draggable)    ? this.markers[i].draggable      : this.markers_conf.draggable;
+        //extract options, test if value passed or use default
         var Lat = this.markers[i].latitude;
         var Lng = this.markers[i].longitude;
 
@@ -383,27 +373,21 @@ var Gmaps4Rails = {
           //retrieve coordinates from the array
           Lat = LatLng[0]; Lng = LatLng[1];
         }
-
-        var markerLatLng = Gmaps4Rails.createLatLng(Lat, Lng); 
-        var thisMarker;
-
-        // Marker sizes are expressed as a Size of X,Y
-        if (marker_picture === "" ) { 
-          thisMarker = Gmaps4Rails.createMarker({position: markerLatLng, map: this.map, title: marker_title, draggable: marker_draggable});
-        } else {
-          // calculate MarkerImage anchor location
-          var imageAnchorPosition  = this.createImageAnchorPosition(marker_anchor);
-          var shadowAnchorPosition = this.createImageAnchorPosition(shadow_anchor);
-
-          //create or retrieve existing MarkerImages
-          var markerImage = this.createOrRetrieveImage(marker_picture, marker_width, marker_height, imageAnchorPosition);
-          var shadowImage = this.createOrRetrieveImage(shadow_picture, shadow_width, shadow_height, shadowAnchorPosition);
-
-          thisMarker = Gmaps4Rails.createMarker({position: markerLatLng, map: this.map, icon: markerImage, title: marker_title, draggable: marker_draggable, shadow: shadowImage});
-        }
-
         //save object
-        this.markers[i].serviceObject = thisMarker; 
+        this.markers[i].serviceObject = Gmaps4Rails.createMarker({
+          "marker_picture":   this.exists(this.markers[i].picture) ? this.markers[i].picture : this.markers_conf.picture,
+          "marker_width":     this.exists(this.markers[i].width)    ? this.markers[i].width   : this.markers_conf.width,
+          "marker_height":    this.exists(this.markers[i].height) ? this.markers[i].height  : this.markers_conf.length,
+          "marker_title":     this.exists(this.markers[i].title)    ? this.markers[i].title   : null,
+          "marker_anchor":    this.exists(this.markers[i].marker_anchor)  ? this.markers[i].marker_anchor  : null,
+          "shadow_anchor":    this.exists(this.markers[i].shadow_anchor)  ? this.markers[i].shadow_anchor  : null,
+          "shadow_picture":   this.exists(this.markers[i].shadow_picture) ? this.markers[i].shadow_picture : null,
+          "shadow_width":     this.exists(this.markers[i].shadow_width)    ? this.markers[i].shadow_width   : null,
+          "shadow_height":    this.exists(this.markers[i].shadow_height) ? this.markers[i].shadow_height  : null,
+          "marker_draggable": this.exists(this.markers[i].draggable)    ? this.markers[i].draggable      : this.markers_conf.draggable,
+          "Lat":              Lat,
+          "Lng":              Lng
+        });
         //add infowindowstuff if enabled
         this.createInfoWindow(this.markers[i]);
         //create sidebar if enabled
@@ -413,26 +397,6 @@ var Gmaps4Rails = {
     this.markers_conf.offset = this.markers.length;
   },
 
-  // checks if MarkerImage exists before creating a new one
-  // returns a MarkerImage or false if ever something wrong is passed as argument
-  createOrRetrieveImage: function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition){
-    if (currentMarkerPicture === "" || currentMarkerPicture === null )
-    { return null;}
-
-    var test_image_index = this.includeMarkerImage(this.markerImages, currentMarkerPicture);		
-    switch (test_image_index)
-    { 
-      case false:
-      var markerImage = Gmaps4Rails.createMarkerImage(currentMarkerPicture, Gmaps4Rails.createSize(markerWidth, markerHeight), null, imageAnchorPosition, null );
-      this.markerImages.push(markerImage);
-      return markerImage;  	
-      break; 
-      default:
-      if (typeof test_image_index == 'number') { return this.markerImages[test_image_index]; }
-      else { return false; }
-      break; 
-    }		
-  },
 
   // creates Image Anchor Position or return null if nothing passed	
   createImageAnchorPosition: function(anchorLocation) {
@@ -499,42 +463,6 @@ var Gmaps4Rails = {
 
       this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
     }
-  },
-
-  ////////////////////////////////////////////////////
-  /////////////////// INFO WINDOW ////////////////////
-  ////////////////////////////////////////////////////
-
-  // creates infowindows
-  createInfoWindow: function(marker_container){
-    var info_window;
-    if (this.markers_conf.custom_infowindow_class === null && Gmaps4Rails.exists(marker_container.description)) {
-      //create the infowindow
-      info_window = new google.maps.InfoWindow({content: marker_container.description });
-      //add the listener associated
-      google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
-    }
-    else { //creating custom infowindow
-      if (this.exists(marker_container.description)) {
-        var boxText = document.createElement("div");
-        boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
-        boxText.innerHTML = marker_container.description;	
-        info_window = new InfoBox(Gmaps4Rails.infobox(boxText));
-        google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
-      }
-    }
-  },
-
-  openInfoWindow: function(infoWindow, marker) {
-    return function() {
-      // Close the latest selected marker before opening the current one.
-      if (Gmaps4Rails.visibleInfoWindow) {
-        Gmaps4Rails.visibleInfoWindow.close();
-      }
-
-      infoWindow.open(Gmaps4Rails.map, marker);
-      Gmaps4Rails.visibleInfoWindow = infoWindow;
-    };
   },
 
   ////////////////////////////////////////////////////

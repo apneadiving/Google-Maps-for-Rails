@@ -46,7 +46,22 @@ Gmaps4Rails.createMarkerImage = function(markerPicture, markerSize, origin, anch
 };
 
 Gmaps4Rails.createMarker = function(args){
-  return new google.maps.Marker(args);
+  var markerLatLng = Gmaps4Rails.createLatLng(args.Lat, args.Lng); 
+
+  // Marker sizes are expressed as a Size of X,Y
+  if (args.marker_picture === "" ) { 
+    return new google.maps.Marker({position: markerLatLng, map: Gmaps4Rails.map, title: args.marker_title, draggable: args.marker_draggable});
+  } else {
+    // calculate MarkerImage anchor location
+    var imageAnchorPosition  = this.createImageAnchorPosition(args.marker_anchor);
+    var shadowAnchorPosition = this.createImageAnchorPosition(args.shadow_anchor);
+
+    //create or retrieve existing MarkerImages
+    var markerImage = this.createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition);
+    var shadowImage = this.createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition);
+
+    return new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage});
+  }
 };
 
 Gmaps4Rails.createSize = function(width, height){
@@ -70,4 +85,61 @@ Gmaps4Rails.includeMarkerImage = function(arr, obj) {
     if (arr[i].url == obj) {return i;}
   }
   return false;
+};
+
+// checks if MarkerImage exists before creating a new one
+// returns a MarkerImage or false if ever something wrong is passed as argument
+Gmaps4Rails.createOrRetrieveImage = function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition){
+  if (currentMarkerPicture === "" || currentMarkerPicture === null )
+  { return null;}
+
+  var test_image_index = this.includeMarkerImage(this.markerImages, currentMarkerPicture);		
+  switch (test_image_index)
+  { 
+    case false:
+    var markerImage = Gmaps4Rails.createMarkerImage(currentMarkerPicture, Gmaps4Rails.createSize(markerWidth, markerHeight), null, imageAnchorPosition, null );
+    this.markerImages.push(markerImage);
+    return markerImage;  	
+    break; 
+    default:
+    if (typeof test_image_index == 'number') { return this.markerImages[test_image_index]; }
+    else { return false; }
+    break; 
+  }		
+};
+
+////////////////////////////////////////////////////
+/////////////////// INFO WINDOW ////////////////////
+////////////////////////////////////////////////////
+
+// creates infowindows
+Gmaps4Rails.createInfoWindow = function(marker_container){
+  var info_window;
+  if (this.markers_conf.custom_infowindow_class === null && Gmaps4Rails.exists(marker_container.description)) {
+    //create the infowindow
+    info_window = new google.maps.InfoWindow({content: marker_container.description });
+    //add the listener associated
+    google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
+  }
+  else { //creating custom infowindow
+    if (this.exists(marker_container.description)) {
+      var boxText = document.createElement("div");
+      boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
+      boxText.innerHTML = marker_container.description;	
+      info_window = new InfoBox(Gmaps4Rails.infobox(boxText));
+      google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
+    }
+  }
+};
+
+Gmaps4Rails.openInfoWindow = function(infoWindow, marker) {
+  return function() {
+    // Close the latest selected marker before opening the current one.
+    if (Gmaps4Rails.visibleInfoWindow) {
+      Gmaps4Rails.visibleInfoWindow.close();
+    }
+
+    infoWindow.open(Gmaps4Rails.map, marker);
+    Gmaps4Rails.visibleInfoWindow = infoWindow;
+  };
 };
