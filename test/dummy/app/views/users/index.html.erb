@@ -26,25 +26,7 @@ var styles = [{
         opt_anchor: [8, 0],
         opt_textSize: 12
       }];
-function gmaps_custom_clusterer_pic() {
-	var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
-	return [
-      {
-        url: url + '/images/heart30.png',
-        height: 26,
-        width: 30,
-      },
-      {
-        url: url + '/images/heart40.png', 
-        height: 35,
-        width: 40,
-      },
-      {
-        url: url + '/images/heart50.png',
-        width: 50,
-        height: 44,
-      }];
-  }
+
 var builder2 = [{"description": "",
 "title": "",
 "longitude": "5.9311119",
@@ -169,7 +151,7 @@ function gmaps4rails_infobox(boxText) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true  } },
+<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
@@ -188,8 +170,51 @@ function gmaps4rails_infobox(boxText) {
  	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
     //$("#markers_list").children().first().click(function(){alert('clicked');});
 	}
+	
 
+	Gmaps4Rails.customClusterer = function() {
+		var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
+		return [
+	      {
+	        url: url + '/images/heart30.png',
+	        height: 26,
+	        width: 30,
+	      },
+	      {
+	        url: url + '/images/heart40.png', 
+	        height: 35,
+	        width: 40,
+	      },
+	      {
+	        url: url + '/images/heart50.png',
+	        width: 50,
+	        height: 44,
+	      }];
+	  };
 </script>
+	<script type="text/javascript" charset="utf-8">
+
+	Gmaps4Rails.HandleDragend = function(pos) {
+	  var geocoder = new google.maps.Geocoder();
+	  geocoder.geocode({
+	    latLng: pos
+	  }, function(responses) {
+	    if (responses && responses.length > 0) {
+	      alert(responses[0].formatted_address);
+	    } else {
+	    alert('Cannot determine address at this location.');
+	    }
+	  });
+	};
+
+
+	Gmaps4Rails.callback = function() {
+	  for (var i = 0; i <  this.markers.length; ++i) {
+	     var currentMarker = Gmaps4Rails.markers[i].serviceObject;
+	     google.maps.event.addListener(currentMarker, 'dragend', function() { Gmaps4Rails.HandleDragend(currentMarker.getPosition()) });
+	  }
+	};        
+	</script>
 <% end %>
 
 <button type="button" onclick="Gmaps4Rails.replaceMarkers(data.photos)">Replace Markers 1</button>
