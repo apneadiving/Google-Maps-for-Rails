@@ -15,16 +15,16 @@ class User < ActiveRecord::Base
   #   }
   # end
   # 
-  # def gmaps4rails_title
-  #   "Sweet Title"
-  # end
+  def gmaps4rails_title
+    "Sweet Title"
+  end
   # 
   # def gmaps4rails_sidebar
   #   "<b>#{name}</b>"
   # end
   #  
-#  def gmaps4rails_infowindow
-#    "je suis l'infowindow de #{name}"
-#  end
+ def gmaps4rails_infowindow
+   "<b>je suis l'infowindow de #{name}</b>"
+ end
 
 end

@@ -57,35 +57,6 @@ var builder3 = [{"description": "",
 "width": "",
 "height": ""
 } ];
-function gmaps4rails_geolocation_failure(browser_support) {
-	if (browser_support === true)
-	 { alert('You refused geolocation'); }
-	else {
-		alert('geolocation not supported by your browser');
-	}
-}
-
-function gmaps4rails_infobox(boxText) {
-	return {
-				 content: boxText
-				,disableAutoPan: false
-				,maxWidth: 0
-				,pixelOffset: new google.maps.Size(-140, 0)
-				,zIndex: null
-				,boxStyle: { 
-				  background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
-				  ,opacity: 0.75
-				  ,width: "280px"
-				 }
-				,closeBoxMargin: "10px 2px 2px 2px"
-				,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
-				,infoBoxClearance: new google.maps.Size(1, 1)
-				,isHidden: false
-				,pane: "floatPane"
-				,enableEventPropagation: false
-	};
-}
-
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
@@ -151,8 +122,12 @@ function gmaps4rails_infobox(boxText) {
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
+<%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
+
+<%= gmaps("markers" => {"data" => @json},
+         "map_options" => { "zoom" => 5 }) %> 
+
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
@@ -162,58 +137,58 @@ function gmaps4rails_infobox(boxText) {
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
 
-	 Gmaps4Rails.callback = function() {
-    function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
-    for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
-         google.maps.event.addListener(Gmaps4Rails.markers[i].serviceObject, 'click', say_yo(i));
-    }
- 	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
-    //$("#markers_list").children().first().click(function(){alert('clicked');});
-	}
-	
-
-	Gmaps4Rails.customClusterer = function() {
-		var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
-		return [
-	      {
-	        url: url + '/images/heart30.png',
-	        height: 26,
-	        width: 30,
-	      },
-	      {
-	        url: url + '/images/heart40.png', 
-	        height: 35,
-	        width: 40,
-	      },
-	      {
-	        url: url + '/images/heart50.png',
-	        width: 50,
-	        height: 44,
-	      }];
-	  };
+	//  Gmaps4Rails.callback = function() {
+	//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
+	//     for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
+	//          google.maps.event.addListener(Gmaps4Rails.markers[i].serviceObject, 'click', say_yo(i));
+	//     }
+	//  	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
+	//     //$("#markers_list").children().first().click(function(){alert('clicked');});
+	// }
+	// 
+	// 
+	// Gmaps4Rails.customClusterer = function() {
+	// 	var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
+	// 	return [
+	//       {
+	//         url: url + '/images/heart30.png',
+	//         height: 26,
+	//         width: 30,
+	//       },
+	//       {
+	//         url: url + '/images/heart40.png', 
+	//         height: 35,
+	//         width: 40,
+	//       },
+	//       {
+	//         url: url + '/images/heart50.png',
+	//         width: 50,
+	//         height: 44,
+	//       }];
+	//   };
 </script>
 	<script type="text/javascript" charset="utf-8">
-
-	Gmaps4Rails.HandleDragend = function(pos) {
-	  var geocoder = new google.maps.Geocoder();
-	  geocoder.geocode({
-	    latLng: pos
-	  }, function(responses) {
-	    if (responses && responses.length > 0) {
-	      alert(responses[0].formatted_address);
-	    } else {
-	    alert('Cannot determine address at this location.');
-	    }
-	  });
-	};
-
-
-	Gmaps4Rails.callback = function() {
-	  for (var i = 0; i <  this.markers.length; ++i) {
-	     var currentMarker = Gmaps4Rails.markers[i].serviceObject;
-	     google.maps.event.addListener(currentMarker, 'dragend', function() { Gmaps4Rails.HandleDragend(currentMarker.getPosition()) });
-	  }
-	};        
+	// 
+	// Gmaps4Rails.HandleDragend = function(pos) {
+	//   var geocoder = new google.maps.Geocoder();
+	//   geocoder.geocode({
+	//     latLng: pos
+	//   }, function(responses) {
+	//     if (responses && responses.length > 0) {
+	//       alert(responses[0].formatted_address);
+	//     } else {
+	//     alert('Cannot determine address at this location.');
+	//     }
+	//   });
+	// };
+	// 
+	// 
+	// Gmaps4Rails.callback = function() {
+	//   for (var i = 0; i <  this.markers.length; ++i) {
+	//      var currentMarker = Gmaps4Rails.markers[i].serviceObject;
+	//      google.maps.event.addListener(currentMarker, 'dragend', function() { Gmaps4Rails.HandleDragend(currentMarker.getPosition()) });
+	//   }
+	// };        
 	</script>
 <% end %>
 
