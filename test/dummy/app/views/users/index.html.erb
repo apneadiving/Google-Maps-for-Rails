@@ -126,7 +126,7 @@ var builder3 = [{"description": "",
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 
 <%= gmaps("markers" => {"data" => @json},
-         "map_options" => { "zoom" => 5 }) %> 
+         "map_options" => { "zoom" => 5, "provider" => "openlayers" }) %> 
 
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'

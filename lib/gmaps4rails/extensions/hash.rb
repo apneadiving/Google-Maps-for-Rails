@@ -29,7 +29,7 @@ class Hash
           if option_k == "bounds" #particular case
             result << "Gmaps4Rails.map_options.#{option_k} = #{option_v};"
           else
-          result << "Gmaps4Rails.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
+            result << "Gmaps4Rails.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
           end
         end
       end
@@ -39,32 +39,32 @@ class Hash
     each do |category, content| #loop through options hash
       case category
       when "map_options"
-    	#already taken into account above => nothing to do here
-    	when "direction"
-    	  result <<  "Gmaps4Rails.direction_conf.origin = '#{content["data"]["from"]}';"
-    	  result << "Gmaps4Rails.direction_conf.destination = '#{content["data"]["to"]}';"
+        #already taken into account above => nothing to do here
+      when "direction"
+        result <<  "Gmaps4Rails.direction_conf.origin = '#{content["data"]["from"]}';"
+        result << "Gmaps4Rails.direction_conf.destination = '#{content["data"]["to"]}';"
 
         content["options"] ||= Array.new 
     	  content["options"].each do |option_k, option_v| 
           if option_k == "waypoints"
             waypoints = Array.new
-    				option_v.each do |waypoint|
-    				  waypoints << { "location" => waypoint, "stopover" => true }.to_json
-    				end
-    	      result << "Gmaps4Rails.direction_conf.waypoints = [#{waypoints * (",")}];"
+            option_v.each do |waypoint|
+              waypoints << { "location" => waypoint, "stopover" => true }.to_json
+            end
+            result << "Gmaps4Rails.direction_conf.waypoints = [#{waypoints * (",")}];"
           else #option_k != "waypoint"
-    	      result << "Gmaps4Rails.direction_conf.#{option_k} = #{Gmaps4rails.filter option_v};"	
+            result << "Gmaps4Rails.direction_conf.#{option_k} = #{Gmaps4rails.filter option_v};"	
           end
         end #end .each
-    	  result << "Gmaps4Rails.create_direction();"
-    	else #default behaviour in case condition
-    	  result << "Gmaps4Rails.#{category} = #{content["data"]};"
-    		content["options"] ||= Array.new 
-    	  content["options"].each do |option_k, option_v|
-    	    result << "Gmaps4Rails.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"		
-    		end
-    	    result << "Gmaps4Rails.create_#{category}();"
-    	end 
+        result << "Gmaps4Rails.create_direction();"
+      else #default behaviour in case condition
+        result << "Gmaps4Rails.#{category} = #{content["data"]};"
+        content["options"] ||= Array.new 
+        content["options"].each do |option_k, option_v|
+          result << "Gmaps4Rails.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"		
+        end
+        result << "Gmaps4Rails.create_#{category}();"
+      end 
     end
     result << "Gmaps4Rails.callback();"
     result * ('

@@ -3,18 +3,6 @@
 //(for maybe an extension to another map provider)//
 //////////////////mocks created/////////////////////
 
-Gmaps4Rails.clearMarker = function(marker) {
-  marker.serviceObject.setMap(null);
-};
-
-Gmaps4Rails.showMarker = function(marker) {
-  marker.serviceObject.setVisible(true);
-};
-
-Gmaps4Rails.hideMarker = function(marker) {
-  marker.serviceObject.setVisible(false);
-};
-
 Gmaps4Rails.createPoint = function(lat, lng){
   return new google.maps.Point(lat, lng);
 };
@@ -142,4 +130,65 @@ Gmaps4Rails.openInfoWindow = function(infoWindow, marker) {
     infoWindow.open(Gmaps4Rails.map, marker);
     Gmaps4Rails.visibleInfoWindow = infoWindow;
   };
+};
+
+Gmaps4Rails.extendBoundsWithMarkers = function(){
+  for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
+    Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.position);
+  }
+};
+
+Gmaps4Rails.fitBounds = function(){
+  this.map.fitBounds(this.boundsObject); 
+};
+
+//creates clusters
+Gmaps4Rails.clusterize = function()
+{
+  if (this.markers_conf.do_clustering === true)
+  {
+    //first clear the existing clusterer if any
+    if (this.markerClusterer !== null) {
+      this.clearClusterer();
+    }
+
+    var markers_array = new Array;
+    for (var i = 0; i <  this.markers.length; ++i) {
+      markers_array.push(this.markers[i].serviceObject);
+    }
+
+    this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
+  }
+};
+
+// clear markers
+Gmaps4Rails.clearMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.clearMarker(this.markers[i]);
+  }
+};
+
+// show and hide markers
+Gmaps4Rails.showMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.showMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.hideMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.hideMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.clearMarker = function(marker) {
+  marker.serviceObject.setMap(null);
+};
+
+Gmaps4Rails.showMarker = function(marker) {
+  marker.serviceObject.setVisible(true);
+};
+
+Gmaps4Rails.hideMarker = function(marker) {
+  marker.serviceObject.setVisible(false);
 };

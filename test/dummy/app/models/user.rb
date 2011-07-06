@@ -11,20 +11,19 @@ class User < ActiveRecord::Base
   #   "picture" => "http://www.blankdots.com/img/github-32x32.png",
   #   "width" => "32",
   #   "height" => "32",
-  #   "marker_anchor" => [10,20]
   #   }
   # end
   # 
-  def gmaps4rails_title
-    "Sweet Title"
-  end
+  # def gmaps4rails_title
+  #   "Sweet Title"
+  # end
   # 
   # def gmaps4rails_sidebar
   #   "<b>#{name}</b>"
   # end
   #  
  def gmaps4rails_infowindow
-   "<b>je suis l'infowindow de #{name}</b>"
+   "<b>je suis l'infowindow de <h1>#{name}</h1></b>"
  end
 
 end

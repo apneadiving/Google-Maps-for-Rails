@@ -24,8 +24,19 @@ Gmaps4Rails.createLatLng = function(lat, lng){
 };
 
 Gmaps4Rails.createLatLngBounds = function(){
-  //Microsoft.Maps.LocationRect
- // return new google.maps.LatLngBounds();
+// return new Microsoft.Maps.LocationRect();
+};
+
+Gmaps4Rails.extendBoundsWithMarkers = function(){
+  var locationsArray= [];
+  for (var i = 0; i <  this.markers.length; ++i) {
+    locationsArray.push(Gmaps4Rails.markers[i].serviceObject.getLocation());        
+  } 
+  Gmaps4Rails.boundsObject = Microsoft.Maps.LocationRect.fromLocations(locationsArray);
+};
+
+Gmaps4Rails.fitBounds = function(){
+  Gmaps4Rails.map.setView({bounds: Gmaps4Rails.boundsObject});
 };
 
 Gmaps4Rails.createMap = function(){
@@ -99,21 +110,19 @@ Gmaps4Rails.createInfoWindow = function(marker_container){
   var info_window;
   if (Gmaps4Rails.exists(marker_container.description)) {
     //create the infowindow
-    info_window = new Microsoft.Maps.Infobox(marker_container.serviceObject.getLocation(), {description: marker_container.description, visible: false});
+    marker_container.info_window = new Microsoft.Maps.Infobox(marker_container.serviceObject.getLocation(), {description: marker_container.description, visible: false});
                                      
     //add the listener associated
-    Microsoft.Maps.Events.addHandler(info_window, 'click', Gmaps4Rails.openInfoWindow(info_window));
-    Gmaps4Rails.addToMap(info_window);
+    Microsoft.Maps.Events.addHandler(marker_container.info_window, 'click', Gmaps4Rails.openInfoWindow(marker_container.info_window));
+    Gmaps4Rails.addToMap(marker_container.info_window);
   }
 };
 
 Gmaps4Rails.openInfoWindow = function(infoWindow) {
-  return function() {
       // Close the latest selected marker before opening the current one.
     if (Gmaps4Rails.visibleInfoWindow) {
-      Gmaps4Rails.setOptions({ visible: false });
+      Gmaps4Rails.visibleInfoWindow.setOptions({ visible: false });
     }
     infoWindow.setOptions({ visible:true });
     Gmaps4Rails.visibleInfoWindow = infoWindow;
-  }
 };

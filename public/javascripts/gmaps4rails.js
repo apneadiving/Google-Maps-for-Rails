@@ -3,7 +3,7 @@ var Gmaps4Rails = {
   map: null,									// contains the map we're working on
   visibleInfoWindow: null,    //contains the current opened infowindow
   userLocation: null,         //contains user's location if geolocalization was performed and successful
-  apiKey:  null,
+
   //empty slots
   geolocationFailure: function() { return false;},  //triggered when geolocation fails. If customized, must be like: function(navigator_handles_geolocation){} where 'navigator_handles_geolocation' is a boolean
   callback:           function() { return false;},  //to let user set a custom callback function
@@ -24,7 +24,7 @@ var Gmaps4Rails = {
     zoom: 1,
     maxZoom: null,
     minZoom: null,
-    auto_adjust : false,    // adjust the map to the markers if set to true
+    auto_adjust : true,    // adjust the map to the markers if set to true
     auto_zoom: true,        // zoom given by auto-adjust
     bounds: []              // adjust map to these limits. Should be [{"lat": , "lng": }]
   },
@@ -52,7 +52,7 @@ var Gmaps4Rails = {
 
   //Stored variables
   markers: [],							  // contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "serviceObject": google_marker}
-  bounds_object: null,				// contains current bounds from markers, polylines etc...
+  boundsObject: null,				// contains current bounds from markers, polylines etc...
   polygons: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
   polylines: [], 						  // contains raw data, array of arrays (first element could be a hash containing options)
   circles: [],                // contains raw data, array of hash
@@ -88,17 +88,17 @@ var Gmaps4Rails = {
 
   //Direction Settings
   direction_conf: {
-    panel_id: 					null,
-    display_panel: 			false,
-    origin: 						null, 
-    destination: 				null,
-    waypoints: 					[],       //[{location: "toulouse,fr", stopover: true}, {location: "Clermont-Ferrand, fr", stopover: true}]
-    optimizeWaypoints: 	false,
-    unitSystem: 				"METRIC", //IMPERIAL
-    avoidHighways: 			false,
-    avoidTolls: 				false,
-    region: 						null, 
-    travelMode: 				"DRIVING" //WALKING, BICYCLING
+    panel_id:           null,
+    display_panel:      false,
+    origin:             null, 
+    destination:        null,
+    waypoints:          [],       //[{location: "toulouse,fr", stopover: true}, {location: "Clermont-Ferrand, fr", stopover: true}]
+    optimizeWaypoints:  false,
+    unitSystem:         "METRIC", //IMPERIAL
+    avoidHighways:      false,
+    avoidTolls:         false,
+    region:             null, 
+    travelMode:         "DRIVING" //WALKING, BICYCLING
   },
 
   //initializes the map
@@ -386,7 +386,8 @@ var Gmaps4Rails = {
           "shadow_height":    this.exists(this.markers[i].shadow_height) ? this.markers[i].shadow_height  : null,
           "marker_draggable": this.exists(this.markers[i].draggable)    ? this.markers[i].draggable      : this.markers_conf.draggable,
           "Lat":              Lat,
-          "Lng":              Lng
+          "Lng":              Lng,
+          "index":            i
         });
         //add infowindowstuff if enabled
         this.createInfoWindow(this.markers[i]);
@@ -406,32 +407,12 @@ var Gmaps4Rails = {
     { return Gmaps4Rails.createPoint(anchorLocation[0], anchorLocation[1]); }
   },
 
-  // clear markers
-  clearMarkers: function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.clearMarker(this.markers[i]);
-    }
-  },
-
-  // show and hide markers
-  showMarkers: function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.showMarker(this.markers[i]);
-    }
-  },
-
-  hideMarkers: function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.hideMarker(this.markers[i]);
-    }
-  },
-
   // replace old markers with new markers on an existing map
   replaceMarkers: function(new_markers){
     //reset previous markers
     this.markers = new Array;
     //reset current bounds
-    this.serviceBounds = Gmaps4Rails.createLatLngBounds();
+    this.boundsObject = Gmaps4Rails.createLatLngBounds();
     //reset sidebar content if exists
     this.resetSidebarContent();
     //add new markers
@@ -444,25 +425,6 @@ var Gmaps4Rails = {
     this.markers = this.markers.concat(new_markers);
     //put markers on the map
     this.create_markers();
-  },
-
-  //creates clusters
-  clusterize: function()
-  {
-    if (this.markers_conf.do_clustering === true)
-    {
-      //first clear the existing clusterer if any
-      if (this.markerClusterer !== null) {
-        this.clearClusterer();
-      }
-
-      var markers_array = new Array;
-      for (var i = 0; i <  this.markers.length; ++i) {
-        markers_array.push(this.markers[i].serviceObject);
-      }
-
-      this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
-    }
   },
 
   ////////////////////////////////////////////////////
@@ -510,34 +472,33 @@ var Gmaps4Rails = {
     //FIRST_STEP: retrieve all bounds
     //create the bounds object only if necessary
     if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
-      this.serviceBounds = Gmaps4Rails.createLatLngBounds();
+      this.boundsObject = Gmaps4Rails.createLatLngBounds();
     }
 
     //if autodjust is true, must get bounds from markers polylines etc...
     if (this.map_options.auto_adjust) {
       //from markers
-      for (var i = 0; i <  this.markers.length; ++i) {
-        this.serviceBounds.extend(this.markers[i].serviceObject.position);
-      }
+      Gmaps4Rails.extendBoundsWithMarkers();
+
       //from polygons:
       for (var i = 0; i <  this.polylines.length; ++i) {
-        this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.serviceBounds.extend(obj2);} );});
+        this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.boundsObject.extend(obj2);} );});
       }
       //from polylines:
       for (var i = 0; i <  this.polygons.length; ++i) {
-        this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.serviceBounds.extend(obj2);} );});
+        this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ Gmaps4Rails.boundsObject.extend(obj2);} );});
       }
       //from circles
       for (var i = 0; i <  this.circles.length; ++i) {
-        this.serviceBounds.extend(this.circles[i].serviceObject.getBounds().getNorthEast());
-        this.serviceBounds.extend(this.circles[i].serviceObject.getBounds().getSouthWest());
+        this.boundsObject.extend(this.circles[i].serviceObject.getBounds().getNorthEast());
+        this.boundsObject.extend(this.circles[i].serviceObject.getBounds().getSouthWest());
       }		
     }
     //in every case, I've to take into account the bounds set up by the user	
     for (var i = 0; i < this.map_options.bounds.length; ++i) {
       //create points from bounds provided
       var bound = Gmaps4Rails.createLatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
-      this.serviceBounds.extend(bound);
+      this.boundsObject.extend(bound);
     }
 
     //SECOND_STEP: ajust the map to the bounds
@@ -545,13 +506,13 @@ var Gmaps4Rails = {
 
       //if autozoom is false, take user info into account
       if(!this.map_options.auto_zoom) {
-        var map_center = this.serviceBounds.getCenter();
+        var map_center = this.boundsObject.getCenter();
         this.map_options.center_longitude = map_center.lat();
         this.map_options.center_latitude  = map_center.lng();
         this.map.setCenter(map_center);
       }
       else {
-        this.map.fitBounds(this.serviceBounds); 
+        Gmaps4Rails.fitBounds();
       }
     }
   },
