@@ -14,14 +14,18 @@ module Gmaps4rails
   # Creates the json related to one Object (only tried ActiveRecord objects)
   # This json will contian the marker's attributes of the object 
   
-  def Gmaps4rails.create_json(object)
+  def Gmaps4rails.create_json(object, &block)
     unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
-"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
+"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"lng\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"lat\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.block_handling(object, &block)}},\n"
     end
   end  
 
-  # Returns description if gmaps4rails_infowindow is defined in the model
+  # execute block if provided so that it's included in the json string
+  def Gmaps4rails.block_handling(object, &block)
+    yield(object) if block_given?
+  end
   
+  # Returns description if gmaps4rails_infowindow is defined in the model
   def Gmaps4rails.description(object)
     return "\"description\": \"#{object.gmaps4rails_infowindow}\", " if object.respond_to?("gmaps4rails_infowindow")
   end
@@ -37,7 +41,7 @@ module Gmaps4rails
   def Gmaps4rails.sidebar(object)
     return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
   end
-  
+
   # Returns picture options if gmaps4rails_marker_picture is defined in the model
   def Gmaps4rails.picture(object)
     if object.respond_to?("gmaps4rails_marker_picture")

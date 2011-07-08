@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
   #   "<b>#{name}</b>"
   # end
   #  
- def gmaps4rails_infowindow
-   "<b>je suis l'infowindow de <h1>#{name}</h1></b>"
- end
+ # def gmaps4rails_infowindow
+ #   "<b>je suis l'infowindow de <h1>#{name}</h1></b>"
+ # end
 
 end

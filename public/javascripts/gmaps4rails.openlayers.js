@@ -4,6 +4,10 @@
 //////////////////mocks created/////////////////////
 // http://wiki.openstreetmap.org/wiki/OpenLayers
 // http://openlayers.org/dev/examples
+Gmaps4Rails.openMarkers = null;
+Gmaps4Rails.provider = "openlayers";
+
+
 Gmaps4Rails.createPoint = function(lat, lng){
   //return new Microsoft.Maps.Point(lat, lng);
 };
@@ -26,14 +30,13 @@ Gmaps4Rails.extendBoundsWithMarkers = function(){
   } 
 };
 
-
 Gmaps4Rails.fitBounds = function(){
   Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
   //toBBOX();
 };
 
 Gmaps4Rails.createMap = function(){
-  
+  //todo add customization: kind of map and other map options
   var map = new OpenLayers.Map(Gmaps4Rails.map_options.id);
   map.addLayer(new OpenLayers.Layer.OSM());
   map.setCenter(Gmaps4Rails.createLatLng(Gmaps4Rails.map_options.center_latitude, Gmaps4Rails.map_options.center_longitude), // Center of the map
@@ -44,8 +47,8 @@ Gmaps4Rails.createMap = function(){
 
 Gmaps4Rails.createMarker = function(args){
   var marker;
-  if (args.index == 0) {
-    Gmaps4Rails.openMarkers = new OpenLayers.Layer.Markers( "Markers" );
+  if (Gmaps4Rails.openMarkers == null) {
+    Gmaps4Rails.openMarkers = new OpenLayers.Layer.Markers( "Markers" + new Date().getTime() );
     Gmaps4Rails.map.addLayer(Gmaps4Rails.openMarkers);
   }
   if (args.marker_picture === "" ) { 
@@ -66,10 +69,6 @@ Gmaps4Rails.createAnchor = function(offset){
   else {
    return new OpenLayers.Pixel(offset[0], offset[1]);
   }
-};
-
-Gmaps4Rails.addToMap = function(object){
-  Gmaps4Rails.map.entities.push(object);
 };
 
 Gmaps4Rails.createSize = function(width, height){
@@ -119,22 +118,24 @@ Gmaps4Rails.createClusterer = function(markers_array){
 };
 
 Gmaps4Rails.clusterize = function() {
+  
 };
 
 // clear markers
 Gmaps4Rails.clearMarkers = function() {
   Gmaps4Rails.map.removeLayer(Gmaps4Rails.openMarkers);
+  Gmaps4Rails.openMarkers = null;
 };
 
-// show and hide markers
-Gmaps4Rails.showMarkers = function() {
-  for (var i = 0; i < this.markers.length; ++i) {
-    this.showMarker(this.markers[i]);
-  }
-};
-
-Gmaps4Rails.hideMarkers = function() {
-  for (var i = 0; i < this.markers.length; ++i) {
-    this.hideMarker(this.markers[i]);
-  }
-};
+// // show and hide markers
+// Gmaps4Rails.showMarkers = function() {
+//   for (var i = 0; i < this.markers.length; ++i) {
+//     this.showMarker(this.markers[i]);
+//   }
+// };
+// 
+// Gmaps4Rails.hideMarkers = function() {
+//   for (var i = 0; i < this.markers.length; ++i) {
+//     this.hideMarker(this.markers[i]);
+//   }
+// };

@@ -2,6 +2,7 @@
 /////////////// Abstracting API calls //////////////
 //(for maybe an extension to another map provider)//
 //////////////////mocks created/////////////////////
+Gmaps4Rails.provider = "google";
 
 Gmaps4Rails.createPoint = function(lat, lng){
   return new google.maps.Point(lat, lng);
@@ -168,7 +169,7 @@ Gmaps4Rails.clearMarkers = function() {
   }
 };
 
-// show and hide markers
+//show and hide markers
 Gmaps4Rails.showMarkers = function() {
   for (var i = 0; i < this.markers.length; ++i) {
     this.showMarker(this.markers[i]);

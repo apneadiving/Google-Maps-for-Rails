@@ -352,7 +352,6 @@ var Gmaps4Rails = {
 
   //creates, clusterizes and adjusts map 
   create_markers: function() {
-    this.markers_conf.offset = 0;
     this.createServiceMarkersFromMarkers();
     this.clusterize();
     this.adjustMapToBounds();
@@ -362,10 +361,10 @@ var Gmaps4Rails = {
   createServiceMarkersFromMarkers: function() {
     for (var i = this.markers_conf.offset; i < this.markers.length; ++i) {
       //check if the marker has not already been created
-      if (!this.exists(this.markers[i].serviceObject)) {
+      // if (!this.exists(this.markers[i].serviceObject && this.provider == "google")) {
         //extract options, test if value passed or use default
-        var Lat = this.markers[i].latitude;
-        var Lng = this.markers[i].longitude;
+        var Lat = this.markers[i].lat;
+        var Lng = this.markers[i].lng;
 
         //alter coordinates if randomize is true
         if ( this.markers_conf.randomize) {
@@ -393,7 +392,7 @@ var Gmaps4Rails = {
         this.createInfoWindow(this.markers[i]);
         //create sidebar if enabled
         this.createSidebar(this.markers[i]);
-      }
+      // }
     }
     this.markers_conf.offset = this.markers.length;
   },
@@ -421,6 +420,8 @@ var Gmaps4Rails = {
 
   //add new markers to on an existing map
   addMarkers: function(new_markers){
+    this.clearMarkers();
+    this.markers_conf.offset = 0;
     //update the list of markers to take into account
     this.markers = this.markers.concat(new_markers);
     //put markers on the map

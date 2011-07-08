@@ -43,11 +43,25 @@ describe Gmaps4rails::ActsAsGmappable do
     it "should render a valid json from an array of ojects" do
       user #needed trigger the object from the let statement
       Factory(:user_paris)
-      User.all.to_gmaps4rails.should == "[{\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"},\n{\"longitude\": \"" + PARIS[:longitude].to_s + "\", \"latitude\": \"" + PARIS[:latitude].to_s + "\"}]"
+      User.all.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
+    end
+    
+    it "should accept additional block for an array of ojects" do
+      user #needed trigger the object from the let statement
+      Factory(:user_paris)
+      User.all.to_gmaps4rails do |u|
+        ", \"model\": \"" + u.class.to_s + "\""
+      end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\", \"model\": \"User\"}]"
     end
   
+    it "should accept additional block for a single object" do
+      user.to_gmaps4rails do |u|
+        ", \"model\": \"" + u.class.to_s + "\""
+      end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"}]"
+    end
+    
     it "should render a valid json from a single object" do
-      user.to_gmaps4rails.should == "[{\"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"}]"
+      user.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
     end
     
     it "should not geocode again after address changes if checker is true" do
@@ -223,7 +237,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "Sweet Title"
           end
         end
-        user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"longitude\": \"" + TOULON[:longitude].to_s + "\", \"latitude\": \"" + TOULON[:latitude].to_s + "\"}]"
+        user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
       end
     
       it "should take into account the sidebar content provided in the model" do
@@ -234,7 +248,7 @@ describe Gmaps4rails::ActsAsGmappable do
         end
         user.to_gmaps4rails.should include "\"sidebar\": \"sidebar content\""
       end
-    
+
       it "should take into account all additional data provided in the model" do
         user.instance_eval do
           def gmaps4rails_infowindow
