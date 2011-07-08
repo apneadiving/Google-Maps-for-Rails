@@ -45,6 +45,7 @@ var Gmaps4Rails = {
 		randomize: false,         // Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
 		max_random_distance: 100, // in meters. Each marker coordinate could be altered by this distance in a random direction
 		list_container: null,     // id of the ul that will host links to all markers
+		link_container: null,     // id of the li that will host a link to a marker
 		custom_cluster_pictures: null,
 		custom_infowindow_class: null,
 		offset: 0                //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
@@ -408,6 +409,8 @@ var Gmaps4Rails = {
 				 this.createInfoWindow(this.markers[i]);
 				 //create sidebar if enabled
 				 this.createSidebar(this.markers[i]);
+				 //create link if enabled
+				 this.create_link(this.markers[i]);
 	      }
 		  }
 		this.markers_conf.offset = this.markers.length;
@@ -538,6 +541,24 @@ var Gmaps4Rails = {
   },
 
 	////////////////////////////////////////////////////
+	///////////////////// LINK /////////////////////////
+	////////////////////////////////////////////////////
+
+	//creates standalone link for a marker
+	create_link: function(marker_container){
+		if (this.markers_conf.link_container)
+		{
+			var li = document.getElementById(this.markers_conf.link_container + marker_container.link);
+			var aSel = document.createElement('a');
+			aSel.href = 'javascript:void(0);';
+			var html = this.exists(marker_container.link_text) ? marker_container.link_text : "Show on Map";
+			aSel.innerHTML = html;
+			aSel.onclick = this.link_element_handler(marker_container.serviceObject, 'click');
+			li.appendChild(aSel);
+		}
+	},
+	
+	////////////////////////////////////////////////////
 	///////////////////// SIDEBAR //////////////////////
 	////////////////////////////////////////////////////
 
@@ -551,19 +572,11 @@ var Gmaps4Rails = {
 	    aSel.href = 'javascript:void(0);';
 	    var html = this.exists(marker_container.sidebar) ? marker_container.sidebar : "Marker";
 	    aSel.innerHTML = html;
-	    aSel.onclick = this.sidebar_element_handler(marker_container.serviceObject, 'click');
+	    aSel.onclick = this.link_element_handler(marker_container.serviceObject, 'click');
 	    li.appendChild(aSel);
 	    ul.appendChild(li);
 		}
 	},
-
-	//moves map to marker clicked + open infowindow
-  sidebar_element_handler: function(marker, eventType) {
-    return function() {
-			Gmaps4Rails.map.panTo(marker.position);
-      google.maps.event.trigger(marker, eventType);
-    };
-  },	
 
 	resetSidebarContent: function(){
 		if (this.markers_conf.list_container !== null ){
@@ -575,7 +588,15 @@ var Gmaps4Rails = {
 	////////////////////////////////////////////////////
 	////////////////// MISCELLANEOUS ///////////////////
 	////////////////////////////////////////////////////
-
+	
+	//moves map to marker clicked + open infowindow
+	link_element_handler: function(marker, eventType) {
+		return function() {
+			Gmaps4Rails.map.panTo(marker.position);
+			google.maps.event.trigger(marker, eventType);
+		};
+	},	
+	
 	//to make the map fit the different LatLng points
 	adjustMapToBounds: function(latlng) {
 		
