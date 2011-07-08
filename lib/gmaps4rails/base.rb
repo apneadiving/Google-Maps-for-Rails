@@ -16,7 +16,7 @@ module Gmaps4rails
   
   def Gmaps4rails.create_json(object)
     unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
-"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
+"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.link(object)}#{Gmaps4rails.link_text(object)}#{Gmaps4rails.sidebar(object)}\"longitude\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"latitude\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}},\n"
     end
   end  
 
@@ -30,6 +30,18 @@ module Gmaps4rails
   
   def Gmaps4rails.title(object)
     return "\"title\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
+  end
+  
+  # Returns link if gmaps4rails_link is defined in the model
+  
+  def Gmaps4rails.link(object)
+    return "\"link\": \"#{object.gmaps4rails_link}\", " if object.respond_to?("gmaps4rails_link")
+  end
+  
+  # Returns link_text if gmaps4rails_link_text is defined in the model
+  
+  def Gmaps4rails.link_text(object)
+    return "\"link_text\": \"#{object.gmaps4rails_link_text}\", " if object.respond_to?("gmaps4rails_link_text")
   end
   
   # Returns sidebar content if gmaps4rails_sidebar is defined in the model

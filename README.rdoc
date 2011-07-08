@@ -47,7 +47,7 @@ Done!
 
 == Options
 
-* Markers with Info window, Custom Picture
+* Markers with Info window, Custom Picture, Link
 
 * Automatic sidebar with list of markers
 
@@ -69,7 +69,7 @@ Done!
 
 * Other options from here: http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries
 
-Feel free ton contact us, you have your say.
+Feel free to contact us, you have your say.
 
 == Copyright
 MIT license. 
