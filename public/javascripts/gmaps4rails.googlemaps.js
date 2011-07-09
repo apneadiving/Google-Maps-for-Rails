@@ -1,8 +1,61 @@
+//Map settings
+Gmaps4Rails.map_options.disableDefaultUI = false;
+Gmaps4Rails.map_options.disableDoubleClickZoom = false;
+Gmaps4Rails.map_options.type =  "ROADMAP";  // HYBRID, ROADMAP, SATELLITE, TERRAIN
+
+//markers + info styling
+Gmaps4Rails.markers_conf.clusterer_gridSize = 50; 
+Gmaps4Rails.markers_conf.clusterer_maxZoom = 5;
+Gmaps4Rails.markers_conf.custom_cluster_pictures = null;
+Gmaps4Rails.markers_conf.custom_infowindow_class = null;
+
+//Polygon Styling
+Gmaps4Rails.polygons_conf = {        // default style for polygons
+  strokeColor: "#FFAA00",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: "#000000",
+  fillOpacity: 0.35
+};
+
+//Polyline Styling
+Gmaps4Rails.polylines_conf = {           //default style for polylines
+  strokeColor: "#FF0000",
+  strokeOpacity: 1,
+  strokeWeight: 2
+};
+
+//Circle Styling	
+Gmaps4Rails.circles_conf = {             //default style for circles
+  fillColor: "#00AAFF",
+  fillOpacity: 0.35,
+  strokeColor: "#FFAA00",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  clickable: false,
+  zIndex: null
+};
+
+//Direction Settings
+Gmaps4Rails.direction_conf = {
+  panel_id:           null,
+  display_panel:      false,
+  origin:             null, 
+  destination:        null,
+  waypoints:          [],       //[{location: "toulouse,fr", stopover: true}, {location: "Clermont-Ferrand, fr", stopover: true}]
+  optimizeWaypoints:  false,
+  unitSystem:         "METRIC", //IMPERIAL
+  avoidHighways:      false,
+  avoidTolls:         false,
+  region:             null, 
+  travelMode:         "DRIVING" //WALKING, BICYCLING
+};
+
+Gmaps4Rails.openMarkers = null;
+
 ////////////////////////////////////////////////////
-/////////////// Abstracting API calls //////////////
-//(for maybe an extension to another map provider)//
-//////////////////mocks created/////////////////////
-Gmaps4Rails.provider = "google";
+/////////////// Basic Objects         //////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.createPoint = function(lat, lng){
   return new google.maps.Point(lat, lng);
@@ -34,6 +87,15 @@ Gmaps4Rails.createMarkerImage = function(markerPicture, markerSize, origin, anch
   return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize);
 };
 
+
+Gmaps4Rails.createSize = function(width, height){
+  return new google.maps.Size(width, height);
+};
+
+////////////////////////////////////////////////////
+////////////////////// Markers /////////////////////
+////////////////////////////////////////////////////
+
 Gmaps4Rails.createMarker = function(args){
   var markerLatLng = Gmaps4Rails.createLatLng(args.Lat, args.Lng); 
 
@@ -51,21 +113,6 @@ Gmaps4Rails.createMarker = function(args){
 
     return new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage});
   }
-};
-
-Gmaps4Rails.createSize = function(width, height){
-  return new google.maps.Size(width, height);
-};
-
-Gmaps4Rails.createClusterer = function(markers_array){
-  return new MarkerClusterer( Gmaps4Rails.map,
-    markers_array, 
-    {	maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize, styles: Gmaps4Rails.customClusterer() }
-  );	
-};
-
-Gmaps4Rails.clearClusterer = function() {
-  this.markerClusterer.clearMarkers();
 };
 
 //checks if obj is included in arr Array and returns the position or false
@@ -95,6 +142,78 @@ Gmaps4Rails.createOrRetrieveImage = function(currentMarkerPicture, markerWidth, 
     else { return false; }
     break; 
   }		
+};
+
+// clear markers
+Gmaps4Rails.clearMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.clearMarker(this.markers[i]);
+  }
+};
+
+//show and hide markers
+Gmaps4Rails.showMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.showMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.hideMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.hideMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.clearMarker = function(marker) {
+  marker.serviceObject.setMap(null);
+};
+
+Gmaps4Rails.showMarker = function(marker) {
+  marker.serviceObject.setVisible(true);
+};
+
+Gmaps4Rails.hideMarker = function(marker) {
+  marker.serviceObject.setVisible(false);
+};
+
+Gmaps4Rails.extendBoundsWithMarkers = function(){
+  for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
+    Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.position);
+  }
+};
+
+////////////////////////////////////////////////////
+/////////////////// Clusterer //////////////////////
+////////////////////////////////////////////////////
+
+Gmaps4Rails.createClusterer = function(markers_array){
+  return new MarkerClusterer( Gmaps4Rails.map,
+    markers_array, 
+    {	maxZoom: Gmaps4Rails.markers_conf.clusterer_maxZoom, gridSize: Gmaps4Rails.markers_conf.clusterer_gridSize, styles: Gmaps4Rails.customClusterer() }
+  );	
+};
+
+Gmaps4Rails.clearClusterer = function() {
+  this.markerClusterer.clearMarkers();
+};
+
+//creates clusters
+Gmaps4Rails.clusterize = function()
+{
+  if (this.markers_conf.do_clustering === true)
+  {
+    //first clear the existing clusterer if any
+    if (this.markerClusterer !== null) {
+      this.clearClusterer();
+    }
+
+    var markers_array = new Array;
+    for (var i = 0; i <  this.markers.length; ++i) {
+      markers_array.push(this.markers[i].serviceObject);
+    }
+
+    this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
+  }
 };
 
 ////////////////////////////////////////////////////
@@ -133,63 +252,10 @@ Gmaps4Rails.openInfoWindow = function(infoWindow, marker) {
   };
 };
 
-Gmaps4Rails.extendBoundsWithMarkers = function(){
-  for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
-    Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.position);
-  }
-};
+////////////////////////////////////////////////////
+/////////////////// Other methods //////////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.fitBounds = function(){
   this.map.fitBounds(this.boundsObject); 
-};
-
-//creates clusters
-Gmaps4Rails.clusterize = function()
-{
-  if (this.markers_conf.do_clustering === true)
-  {
-    //first clear the existing clusterer if any
-    if (this.markerClusterer !== null) {
-      this.clearClusterer();
-    }
-
-    var markers_array = new Array;
-    for (var i = 0; i <  this.markers.length; ++i) {
-      markers_array.push(this.markers[i].serviceObject);
-    }
-
-    this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
-  }
-};
-
-// clear markers
-Gmaps4Rails.clearMarkers = function() {
-  for (var i = 0; i < this.markers.length; ++i) {
-    this.clearMarker(this.markers[i]);
-  }
-};
-
-//show and hide markers
-Gmaps4Rails.showMarkers = function() {
-  for (var i = 0; i < this.markers.length; ++i) {
-    this.showMarker(this.markers[i]);
-  }
-};
-
-Gmaps4Rails.hideMarkers = function() {
-  for (var i = 0; i < this.markers.length; ++i) {
-    this.hideMarker(this.markers[i]);
-  }
-};
-
-Gmaps4Rails.clearMarker = function(marker) {
-  marker.serviceObject.setMap(null);
-};
-
-Gmaps4Rails.showMarker = function(marker) {
-  marker.serviceObject.setVisible(true);
-};
-
-Gmaps4Rails.hideMarker = function(marker) {
-  marker.serviceObject.setVisible(false);
 };

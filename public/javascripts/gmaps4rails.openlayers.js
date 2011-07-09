@@ -4,9 +4,12 @@
 //////////////////mocks created/////////////////////
 // http://wiki.openstreetmap.org/wiki/OpenLayers
 // http://openlayers.org/dev/examples
-Gmaps4Rails.openMarkers = null;
-Gmaps4Rails.provider = "openlayers";
 
+Gmaps4Rails.openMarkers = null;
+
+////////////////////////////////////////////////////
+/////////////// Basic Objects         //////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.createPoint = function(lat, lng){
   //return new Microsoft.Maps.Point(lat, lng);
@@ -20,19 +23,20 @@ Gmaps4Rails.createLatLng = function(lat, lng){
             );
 };
 
+Gmaps4Rails.createAnchor = function(offset){
+  if (offset === null)
+    { return null; }
+  else {
+   return new OpenLayers.Pixel(offset[0], offset[1]);
+  }
+};
+
+Gmaps4Rails.createSize = function(width, height){
+  return new OpenLayers.Size(width, height);
+};
+
 Gmaps4Rails.createLatLngBounds = function(){
    return new OpenLayers.Bounds();
-};
-
-Gmaps4Rails.extendBoundsWithMarkers = function(){
-  for (var i = 0; i <  this.markers.length; ++i) {
-    Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.lonlat);        
-  } 
-};
-
-Gmaps4Rails.fitBounds = function(){
-  Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
-  //toBBOX();
 };
 
 Gmaps4Rails.createMap = function(){
@@ -44,6 +48,10 @@ Gmaps4Rails.createMap = function(){
                );  
   return map;
 };
+
+////////////////////////////////////////////////////
+////////////////////// Markers /////////////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.createMarker = function(args){
   var marker;
@@ -63,16 +71,29 @@ Gmaps4Rails.createMarker = function(args){
   return marker;
 };
 
-Gmaps4Rails.createAnchor = function(offset){
-  if (offset === null)
-    { return null; }
-  else {
-   return new OpenLayers.Pixel(offset[0], offset[1]);
-  }
+// clear markers
+Gmaps4Rails.clearMarkers = function() {
+  Gmaps4Rails.map.removeLayer(Gmaps4Rails.openMarkers);
+  Gmaps4Rails.openMarkers = null;
+  Gmaps4Rails.boundsObject = new OpenLayers.Bounds();
 };
 
-Gmaps4Rails.createSize = function(width, height){
-  return new OpenLayers.Size(width, height);
+
+Gmaps4Rails.extendBoundsWithMarkers = function(){
+  for (var i = 0; i <  this.markers.length; ++i) {
+    Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.lonlat);        
+  } 
+};
+////////////////////////////////////////////////////
+/////////////////// Clusterer //////////////////////
+////////////////////////////////////////////////////
+
+Gmaps4Rails.createClusterer = function(markers_array){
+
+};
+
+Gmaps4Rails.clusterize = function() {
+  
 };
 
 ////////////////////////////////////////////////////
@@ -113,29 +134,7 @@ Gmaps4Rails.openInfoWindow = function(evt) {
 };
 
 
-Gmaps4Rails.createClusterer = function(markers_array){
-
+Gmaps4Rails.fitBounds = function(){
+  Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
+  //toBBOX();
 };
-
-Gmaps4Rails.clusterize = function() {
-  
-};
-
-// clear markers
-Gmaps4Rails.clearMarkers = function() {
-  Gmaps4Rails.map.removeLayer(Gmaps4Rails.openMarkers);
-  Gmaps4Rails.openMarkers = null;
-};
-
-// // show and hide markers
-// Gmaps4Rails.showMarkers = function() {
-//   for (var i = 0; i < this.markers.length; ++i) {
-//     this.showMarker(this.markers[i]);
-//   }
-// };
-// 
-// Gmaps4Rails.hideMarkers = function() {
-//   for (var i = 0; i < this.markers.length; ++i) {
-//     this.hideMarker(this.markers[i]);
-//   }
-// };

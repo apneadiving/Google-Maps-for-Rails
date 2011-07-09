@@ -1,7 +1,6 @@
 <%= stylesheet_link_tag 'test' %>
 
 <% content_for :scripts do -%>
-<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/data.json" type="text/javascript"></script>   
 <script type="text/javascript" charset="utf-8">
 
 var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
@@ -27,67 +26,51 @@ var styles = [{
         opt_textSize: 12
       }];
 
-var builder2 = [{"description": "",
-"title": "",
-"longitude": "5.9311119",
-"latitude": "42.1251606",
-"picture": "",
-"width": "",
-"height": ""
-} ,{"description": "",
-"title": "",
-"longitude": "32.3509871",
-"latitude": "47.8566667",
-"picture": "",
-"width": "",
-"height": ""
+var builder2 = [{
+"lng": "5.9311119",
+"lat": "42.1251606",
+} ,{
+"lng": "32.3509871",
+"lat": "47.8566667",
 } ];
-var builder3 = [{"description": "",
-"title": "",
-"longitude": "6.9311119",
-"latitude": "49.1251606",
-"picture": "",
-"width": "",
-"height": ""
-} ,{"description": "",
-"title": "",
-"longitude": "39.3509871",
-"latitude": "40.8566667",
-"picture": "",
-"width": "",
-"height": ""
+var builder3 = [{
+"lng": "6.9311119",
+"lat": "49.1251606",
+} ,{
+"lng": "39.3509871",
+"lat": "40.8566667",
 } ];
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
-        "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]',
-  											 },
+        "markers"     => { "data" => '[{ "description": "", "title": "", "lng": "5.9311119", "lat": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "lng": "2.3509871", "lat": "48.8566667", "picture": "", "width": "", "height": "" } ]',
+                          },
         "polylines"   => { "data" => '[[
-{"longitude": -122.214897, "latitude": 37.772323},
-{"longitude": -157.821856, "latitude": 21.291982},
-{"longitude": 178.431, "latitude": -18.142599},
-{"longitude": 153.027892, "latitude": -27.46758}
+{"lng": -122.214897, "lat": 37.772323},
+{"lng": -157.821856, "lat": 21.291982},
+{"lng": 178.431, "lat": -18.142599},
+{"lng": 153.027892, "lat": -27.46758}
 ],
 [
-{"longitude": -120.214897, "latitude": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
-{"longitude": -10.821856, "latitude": 50.291982}
+{"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
+{"lng": -10.821856, "lat": 50.291982}
 ]]' },
          "polygons"    => { "data" => '[[
-{"longitude": -80.190262, "latitude": 25.774252},
-{"longitude": -66.118292, "latitude": 18.466465},
-{"longitude": -64.75737, "latitude": 32.321384}
+{"lng": -80.190262, "lat": 25.774252},
+{"lng": -66.118292, "lat": 18.466465},
+{"lng": -64.75737, "lat": 32.321384}
 ]]' },
          "circles"     => { "data" => '[
-{"longitude": -122.214897, "latitude": 37.772323, "radius": 1000000},
-{"longitude": 122.214897, "latitude": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
+{"lng": -122.214897, "lat": 37.772323, "radius": 1000000},
+{"lng": 122.214897, "lat": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
 ]',
-         									},
+                          },
 "direction"   => { "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
-									 "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
-								 }
+                   "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
+                  }
 }
 @options2 = {
-  "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]', "options" => { "auto_adjust" => true } }
+  "markers"     => { "data" => '[{ "description": "", "title": "", "lng": "5.9311119", "lat": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "lng": "2.3509871", "lat": "48.8566667", "picture": "", "width": "", "height": "" } ]', "options" => { "auto_adjust" => true } }
     }
 %>
 <script type="text/javascript" charset="utf-8">
@@ -124,10 +107,8 @@ var builder3 = [{"description": "",
 <%#= gmaps(@options) %>
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
-
 <%= gmaps("markers" => {"data" => @json},
          "map_options" => { "zoom" => 5, "provider" => "openlayers" }) %> 
-
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
@@ -192,7 +173,6 @@ var builder3 = [{"description": "",
 	</script>
 <% end %>
 
-<button type="button" onclick="Gmaps4Rails.replaceMarkers(data.photos)">Replace Markers 1</button>
 <button type="button" onclick="Gmaps4Rails.replaceMarkers(builder2)">Replace Markers</button>
 <button type="button" onclick="Gmaps4Rails.addMarkers(builder2)">Add Markers</button>
 <button type="button" onclick="Gmaps4Rails.addMarkers(builder3)">Add Markers bis</button>
