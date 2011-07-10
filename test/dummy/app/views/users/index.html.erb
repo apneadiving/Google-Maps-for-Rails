@@ -108,7 +108,7 @@ var builder3 = [{
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 <%= gmaps("markers" => {"data" => @json},
-         "map_options" => { "zoom" => 5, "provider" => "openlayers" }) %> 
+         "map_options" => { "zoom" => 5, "provider" => "openlayers","auto_adjust" => true }) %> 
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>

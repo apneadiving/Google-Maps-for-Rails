@@ -6,6 +6,7 @@
 // http://openlayers.org/dev/examples
 
 Gmaps4Rails.openMarkers = null;
+Gmaps4Rails.markersLayer = null;
 
 ////////////////////////////////////////////////////
 /////////////// Basic Objects         //////////////
@@ -52,27 +53,63 @@ Gmaps4Rails.createMap = function(){
 ////////////////////////////////////////////////////
 ////////////////////// Markers /////////////////////
 ////////////////////////////////////////////////////
-
-Gmaps4Rails.createMarker = function(args){
-  var marker;
-  if (Gmaps4Rails.openMarkers == null) {
-    Gmaps4Rails.openMarkers = new OpenLayers.Layer.Markers( "Markers" + new Date().getTime() );
-    Gmaps4Rails.map.addLayer(Gmaps4Rails.openMarkers);
-  }
-  if (args.marker_picture === "" ) { 
-    marker = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng));
-  } else {
-    var anchor = Gmaps4Rails.createAnchor(args.marker_anchor);
-    var icon = new OpenLayers.Icon(args.marker_picture, Gmaps4Rails.createSize(args.marker_width, args.marker_height), anchor);
-    marker   = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng), icon);
+//http://openlayers.org/dev/examples/marker-shadow.html
+ Gmaps4Rails.createMarker = function(args){
+   if (Gmaps4Rails.markersLayer === null) {
+      Gmaps4Rails.markersLayer = new OpenLayers.Layer.Vector("Markers", null);
+  Gmaps4Rails.map.setCenter(Gmaps4Rails.createLatLng(args.Lng, args.Lat), 5);
+  Gmaps4Rails.map.addLayer(Gmaps4Rails.markersLayer);
   }
   
-  Gmaps4Rails.openMarkers.addMarker(marker);
+  var style_mark = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+              // each of the three lines below means the same, if only one of
+              // them is active: the image will have a size of 24px, and the
+              // aspect ratio will be kept
+              // style_mark.pointRadius = 12;
+              // style_mark.graphicHeight = 24; 
+              // style_mark.graphicWidth = 24;
+
+              // if graphicWidth and graphicHeight are both set, the aspect ratio
+              // of the image will be ignored
+              style_mark.graphicWidth = 24;
+              style_mark.graphicHeight = 20;
+              // style_mark.graphicXOffset = 10; // default is -(style_mark.graphicWidth/2);
+              // style_mark.graphicYOffset = -style_mark.graphicHeight;
+              style_mark.externalGraphic = "http://openlayers.org/dev/img/marker-blue.png";
+              // graphicTitle only works in Firefox and Internet Explorer
+              style_mark.graphicTitle = "this is a test tooltip";
+  
+  var marker = new OpenLayers.Feature.Vector(
+          new OpenLayers.Geometry.Point(args.Lng, args.Lat),
+          null,
+          style_mark
+      );
+  
+  Gmaps4Rails.markersLayer.addFeatures([marker]);
+  
   return marker;
+      
+  // var marker;
+  // if (Gmaps4Rails.openMarkers == null) {
+  //   Gmaps4Rails.openMarkers = new OpenLayers.Layer.Markers("Markers");
+  //   Gmaps4Rails.map.addLayer(Gmaps4Rails.openMarkers);
+  // }
+  // if (args.marker_picture === "" ) { 
+  //   marker = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng));
+  // } else {
+  //   var anchor = Gmaps4Rails.createAnchor(args.marker_anchor);
+  //   var icon = new OpenLayers.Icon(args.marker_picture, Gmaps4Rails.createSize(args.marker_width, args.marker_height), anchor);
+  //   marker   = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng), icon);
+  // }
+  // 
+  // Gmaps4Rails.openMarkers.addMarker(marker);
+  // return marker;
 };
 
 // clear markers
 Gmaps4Rails.clearMarkers = function() {
+  layer.removeFeatures(layer.features);
+  
   Gmaps4Rails.map.removeLayer(Gmaps4Rails.openMarkers);
   Gmaps4Rails.openMarkers = null;
   Gmaps4Rails.boundsObject = new OpenLayers.Bounds();
@@ -90,10 +127,63 @@ Gmaps4Rails.extendBoundsWithMarkers = function(){
 
 Gmaps4Rails.createClusterer = function(markers_array){
 
+      var style = new OpenLayers.Style({
+          pointRadius: "${radius}",
+          fillColor: "#ffcc66",
+          fillOpacity: 0.8,
+          strokeColor: "#cc6633",
+          strokeWidth: "${width}",
+          strokeOpacity: 0.8
+      }, {
+          context: {
+              width: function(feature) {
+                  return (feature.cluster) ? 2 : 1;
+              },
+              radius: function(feature) {
+                  var pix = 2;
+                  if(feature.cluster) {
+                      pix = Math.min(feature.attributes.count, 7) + 2;
+                  }
+                  return pix;
+              }
+          }
+      });
+      
+      var strategy = new OpenLayers.Strategy.Cluster();
+
+      var clusters = new OpenLayers.Layer.Vector("Clusters", {
+          strategies: [strategy],
+          styleMap: new OpenLayers.StyleMap({
+              "default": style,
+              "select": {
+                  fillColor: "#8aeeef",
+                  strokeColor: "#32a8a9"
+              }
+          })
+      });
+      
+      Gmaps4Rails.map.addLayer(clusters);
+      clusters.addFeatures(markers_array);
+      return clusters;
 };
 
 Gmaps4Rails.clusterize = function() {
   
+  // if (this.markers_conf.do_clustering === true)
+  // {
+  //   //first clear the existing clusterer if any
+  //   if (this.markerClusterer !== null) {
+  //     this.clearClusterer();
+  //   }
+  // 
+  //   var markers_array = new Array;
+  //   for (var i = 0; i <  this.markers.length; ++i) {
+  //     markers_array.push(this.markers[i].serviceObject);
+  //   }
+  // 
+  //   this.markerClusterer = Gmaps4Rails.createClusterer(markers_array);
+  // }
+  // 
 };
 
 ////////////////////////////////////////////////////
