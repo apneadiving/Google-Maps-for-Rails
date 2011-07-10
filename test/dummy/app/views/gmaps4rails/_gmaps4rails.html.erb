@@ -40,9 +40,19 @@ window.onload = gmaps4rails_init;
 
 </script>
 <% end %>
-<div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>"> 
-  <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>" ></div>
+
+
+<% case options['map_options'].try(:[], 'provider')  %>
+<% when "mapquest" %>
+<% when "bing" %>
+<div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>" > 
+  <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>" class="bing_map"></div>
 </div>
+<% else %>
+<div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>"> 
+  <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>"></div>
+</div>
+<% end %>
 
 <!-- class="bing_map" -->
 
