@@ -115,23 +115,6 @@ Gmaps4Rails.createMap = function(){
    Gmaps4Rails.markersLayer.addFeatures([marker]);
   
    return marker;
-   
-  // former marker version
-  // var marker;
-  // if (Gmaps4Rails.openMarkers == null) {
-  //   Gmaps4Rails.openMarkers = new OpenLayers.Layer.Markers("Markers");
-  //   Gmaps4Rails.map.addLayer(Gmaps4Rails.openMarkers);
-  // }
-  // if (args.marker_picture === "" ) { 
-  //   marker = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng));
-  // } else {
-  //   var anchor = Gmaps4Rails.createAnchor(args.marker_anchor);
-  //   var icon = new OpenLayers.Icon(args.marker_picture, Gmaps4Rails.createSize(args.marker_width, args.marker_height), anchor);
-  //   marker   = new OpenLayers.Marker(Gmaps4Rails.createLatLng(args.Lat, args.Lng), icon);
-  // }
-  // 
-  // Gmaps4Rails.openMarkers.addMarker(marker);
-  // return marker;
 };
 
 // clear markers
@@ -157,7 +140,8 @@ Gmaps4Rails.extendBoundsWithMarkers = function(){
 ////////////////////////////////////////////////////
 /////////////////// Clusterer //////////////////////
 ////////////////////////////////////////////////////
-
+//too ugly to be considered valid :(
+  
 Gmaps4Rails.createClusterer = function(markers_array){
 
       var style = new OpenLayers.Style({
@@ -232,43 +216,7 @@ Gmaps4Rails.createInfoWindow = function(marker_container){
   var info_window;
   if (Gmaps4Rails.exists(marker_container.description)) {
     marker_container.serviceObject.infoWindow = marker_container.description;
-    
-    //create the infowindow
-    // var popup = new OpenLayers.Feature(Gmaps4Rails.openMarkers, marker_container.serviceObject.lonlat); 
-    // popup.closeBox = true;
-    // popup.popupClass = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, { 'autoSize': true });
-    // 
-    // //other examples here : http://openlayers.org/dev/examples/popupMatrix.html
-    // //popup.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
-    // 
-    // popup.data.popupContentHTML = marker_container.description;
-    // popup.data.overflow = "auto";
-    //marker_container.serviceObject.infoWindow = popup;
-    //marker_container.serviceObject.events.register("mousedown", popup, Gmaps4Rails.openInfoWindow);
-    //Gmaps4Rails.map.addControl(new OpenLayers.Control.SelectFeature(Gmaps4Rails.markersLayer, {onSelect: Gmaps4Rails.openInfoWindow}));
   }
-};
-
-Gmaps4Rails.openInfoWindow = function(event) {
-  console.log(event.feature);
-  
-  //feature.popup = feature.infoWindow;
- Gmaps4Rails.map.addPopup(event.feature.infoWindow);
-  //Gmaps4Rails.map.addPopup(feature.popup);
-  
-  
-  // if (this.popup == null) {
-  //     this.popup = this.createPopup(this.closeBox);
-  //     Gmaps4Rails.map.addPopup(this.popup);
-  //     this.popup.show();
-  // } else {
-  //     this.popup.toggle();
-  // }
-  // //hide the previous if open
-  // if (Gmaps4Rails.visibleInfoWindow !== null) { Gmaps4Rails.visibleInfoWindow.hide(); }
-  // 
-  // Gmaps4Rails.visibleInfoWindow = this.popup;
-  // OpenLayers.Event.stop(evt);
 };
 
 Gmaps4Rails.onPopupClose = function(evt) {
@@ -277,23 +225,7 @@ Gmaps4Rails.onPopupClose = function(evt) {
 };
 
 Gmaps4Rails.onFeatureSelect = function(evt) {
-    var feature = evt.feature;
-    
-    //create the infowindow
-    // var popup = new OpenLayers.Feature(Gmaps4Rails.openMarkers, marker_container.serviceObject.lonlat); 
-    // popup.closeBox = true;
-    // popup.popupClass = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, { 'autoSize': true });
-    // 
-    // //other examples here : http://openlayers.org/dev/examples/popupMatrix.html
-    // //popup.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
-    // 
-    // popup.data.popupContentHTML = marker_container.description;
-    // popup.data.overflow = "auto";
-    //marker_container.serviceObject.infoWindow = popup;
-    //marker_container.serviceObject.events.register("mousedown", popup, Gmaps4Rails.openInfoWindow);
-    //Gmaps4Rails.map.addControl(new OpenLayers.Control.SelectFeature(Gmaps4Rails.markersLayer, {onSelect: Gmaps4Rails.openInfoWindow}));
-    
-    
+    var feature = evt.feature;    
     var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
                              feature.geometry.getBounds().getCenterLonLat(),
                              new OpenLayers.Size(300,200),
@@ -314,6 +246,9 @@ Gmaps4Rails.onFeatureUnselect = function(evt) {
     }
 };
 
+////////////////////////////////////////////////////
+/////////////////// Other methods //////////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.fitBounds = function(){
   Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
