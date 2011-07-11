@@ -73,7 +73,7 @@ var Gmaps4Rails = {
         Gmaps4Rails.userLocation = Gmaps4Rails.createLatLng(position.coords.latitude, position.coords.longitude);
         //change map's center to focus on user's geoloc if asked
         if(Gmaps4Rails.map_options.center_on_user === true) {
-          Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
+          Gmaps4Rails.centerMapOnUser();
         }
       },
       function() {

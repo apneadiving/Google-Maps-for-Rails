@@ -14,14 +14,11 @@ if enable_css == true %>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<%= javascript_include_tag 'gmaps4rails.openlayers.js' %>
   <% when "mapquest" %>
-    <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= MAPQUEST_KEY %>"></script>
+    <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= options['map_options'].try(:[], 'provider_key') %>"></script>
     <%= javascript_include_tag 'gmaps4rails.mapquest.js' %>
   <% when "bing" %>
     <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
     <%= javascript_include_tag 'gmaps4rails.bing.js' %>
-    <script type="text/javascript" charset="utf-8">
-      Gmaps4Rails.apiKey = '<%= BING_KEY %>';
-    </script>
   <% else %>
     <%= javascript_include_tag 'gmaps4rails.googlemaps.js' %>
     <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&libraries=geometry'></script>
@@ -44,6 +41,7 @@ window.onload = gmaps4rails_init;
 
 <% case options['map_options'].try(:[], 'provider')  %>
 <% when "mapquest" %>
+<div id="mapQuest" style="width:750px; height:475px;"></div>
 <% when "bing" %>
 <div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>" > 
   <div id="<%= options['map_options'].try(:[],'id').nil? ? "gmaps4rails_map" : options['map_options']['id'] %>" class="bing_map"></div>
@@ -56,6 +54,5 @@ window.onload = gmaps4rails_init;
 
 <!-- class="bing_map" -->
 
-<!-- <div id="mapQuest" style="width:750px; height:475px;"></div> -->
 
 <!-- <div id='bingMap' style="position:relative; width:400px; height:400px;"></div> -->

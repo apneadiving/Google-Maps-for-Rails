@@ -1,8 +1,13 @@
-////////////////////////////////////////////////////
-/////////////// Abstracting API calls //////////////
-//(for maybe an extension to another map provider)//
-//////////////////mocks created/////////////////////
 // http://www.mapquestapi.com/sdk/js/v6.0.0/poi.html
+
+//Map settings
+Gmaps4Rails.map_options.type =  "map";  // //map type (map, sat, hyb)
+
+
+////////////////////////////////////////////////////
+/////////////// Basic Objects         //////////////
+////////////////////////////////////////////////////
+
 Gmaps4Rails.clearMarker = function(marker) {
   marker.serviceObject.setMap(null);
 };
@@ -20,20 +25,20 @@ Gmaps4Rails.createPoint = function(lat, lng){
 };
 
 Gmaps4Rails.createLatLng = function(lat, lng){
-  return new MQA.Poi({lat: lat, lng: lng});
+  return {lat: lat, lng: lng};
 };
 
 Gmaps4Rails.createLatLngBounds = function(){
- // return new google.maps.LatLngBounds();
 };
 
+
 Gmaps4Rails.createMap = function(){
-  var map = new MQA.TileMap(                           // Constructs an instance of MQA.TileMap
-    document.getElementById("mapQuest"),     //the id of the element on the page you want the map to be added into 
-    Gmaps4Rails.map_options.zoom,                   //intial zoom level of the map
-    {lat: Gmaps4Rails.map_options.center_latitude,  //the lat/lng of the map to center on
+  var map = new MQA.TileMap(                            // Constructs an instance of MQA.TileMap
+    document.getElementById("mapQuest"),                //the id of the element on the page you want the map to be added into 
+    Gmaps4Rails.map_options.zoom,                       //intial zoom level of the map
+    {lat: Gmaps4Rails.map_options.center_latitude,      //the lat/lng of the map to center on
      lng: Gmaps4Rails.map_options.center_longitude}, 
-    'map');                                         //map type (map, sat, hyb)
+    Gmaps4Rails.map_options.type);                                             //map type (map, sat, hyb)
   MQA.withModule('zoomcontrol3', function() {
 
     map.addControl(
@@ -46,55 +51,100 @@ Gmaps4Rails.createMap = function(){
 };
 
 Gmaps4Rails.createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {
-  return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize);
+
 };
 
-Gmaps4Rails.createMarker = function(args){
-  return new MQA.Poi({lat: 0, lng: 0});
-};
+
+////////////////////////////////////////////////////
+////////////////////// Markers /////////////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.createMarker = function(args){
   
-  	var marker = new MQA.Poi( {lat: args.Lat, lng: args.Lng} );
-  	
-  	if(args.marker_anchor !== null) {
-  	  marker.setBias({x: args.marker_anchor[0], y: args.marker_anchor[1]});
+  var marker = new MQA.Poi( {lat: args.Lat, lng: args.Lng} );
+  
+  if (args.marker_picture !== "" ) { 
+    var icon = new MQA.Icon(args.marker_picture, args.marker_height, args.marker_width);
+    marker.setIcon(icon);
+    if(args.marker_anchor !== null) {
+      marker.setBias({x: args.marker_anchor[0], y: args.marker_anchor[1]});
     }
+  }
 
-  	if (args.marker_picture !== "" ) { 
-  	  var icon = new MQA.Icon(args.marker_picture, args.marker_height, args.marker_width);
-    	marker.setIcon(icon);
+  if (args.shadow_picture !== "" ) { 
+    var icon = new MQA.Icon(args.shadow_picture, args.shadow_height, args.shadow_width);
+    marker.setShadow(icon);
+    
+    if(args.shadow_anchor !== null) {
+      marker.setShadowOffset({x: args.shadow_anchor[0], y: args.shadow_anchor[1]});
+      }
+  }  
+
+  Gmaps4Rails.addToMap(marker);
+  return marker;
+};
+
+
+// clear markers
+Gmaps4Rails.clearMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.clearMarker(this.markers[i]);
+  }
+};
+
+//show and hide markers
+Gmaps4Rails.showMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.showMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.hideMarkers = function() {
+  for (var i = 0; i < this.markers.length; ++i) {
+    this.hideMarker(this.markers[i]);
+  }
+};
+
+Gmaps4Rails.clearMarker = function(marker) {
+  marker.serviceObject.setMap(null);
+};
+
+Gmaps4Rails.showMarker = function(marker) {
+  marker.serviceObject.setVisible(true);
+};
+
+Gmaps4Rails.hideMarker = function(marker) {
+  marker.serviceObject.setVisible(false);
+};
+
+Gmaps4Rails.extendBoundsWithMarkers = function(){
+  
+  if (Gmaps4Rails.markers.length >=2) {
+    Gmaps4Rails.boundsObject = new MQA.RectLL(Gmaps4Rails.markers[0].serviceObject.latLng, Gmaps4Rails.markers[1].serviceObject.latLng);
+    
+    for (var i = 2; i <  Gmaps4Rails.markers.length; ++i) {
+      Gmaps4Rails.boundsObject.extend(Gmaps4Rails.markers[i].serviceObject.latLng);
     }
-  	
-  	Gmaps4Rails.addToMap(marker);
-  	return marker;
+  }
+
 };
 
-Gmaps4Rails.addToMap = function(object){
-  Gmaps4Rails.map.addShape(object);
-};
-
-Gmaps4Rails.createSize = function(width, height){
-  return new google.maps.Size(width, height);
-};
+////////////////////////////////////////////////////
+/////////////////// Clusterer //////////////////////
+////////////////////////////////////////////////////
 
 Gmaps4Rails.createClusterer = function(markers_array){
-  // return new MarkerClusterer( Gmaps4Rails.map,
-  //   markers_array, 
-  //   {  maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: this.markers_conf.clusterer_gridSize, styles: Gmaps4Rails.customClusterer() }
-  // ); 
+
 };
 
 Gmaps4Rails.clearClusterer = function() {
-  this.markerClusterer.clearMarkers();
+
 };
 
-//checks if obj is included in arr Array and returns the position or false
-Gmaps4Rails.includeMarkerImage = function(arr, obj) {
-  for(var i=0; i<arr.length; i++) {
-    if (arr[i].url == obj) {return i;}
-  }
-  return false;
+//creates clusters
+Gmaps4Rails.clusterize = function()
+{
+
 };
 
 ////////////////////////////////////////////////////
@@ -103,6 +153,29 @@ Gmaps4Rails.includeMarkerImage = function(arr, obj) {
 
 // creates infowindows
 Gmaps4Rails.createInfoWindow = function(marker_container){
-  marker_container.serviceObject.setInfoContentHTML(marker_container.description);
-//  marker_container.serviceObject.setRolloverContent(marker_container.title)
+  marker_container.serviceObject.setInfoTitleHTML(marker_container.description);
+  //TODO: how to disable the mouseover display when using setInfoContentHTML?
+  //marker_container.serviceObject.setInfoContentHTML(marker_container.description);
+};
+
+////////////////////////////////////////////////////
+/////////////////// Other methods //////////////////
+////////////////////////////////////////////////////
+
+Gmaps4Rails.fitBounds = function(){
+  if (Gmaps4Rails.markers.length >=2) {
+    Gmaps4Rails.map.zoomToRect(Gmaps4Rails.boundsObject);
+  }
+  if (Gmaps4Rails.markers.length ==1 ) {
+    Gmaps4Rails.map.setCenter(Gmaps4Rails.markers[0].serviceObject.latLng);
+  }
+};
+
+Gmaps4Rails.centerMapOnUser = function(){
+  Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
+};
+
+
+Gmaps4Rails.addToMap = function(object){
+  Gmaps4Rails.map.addShape(object);
 };

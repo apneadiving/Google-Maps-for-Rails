@@ -16,7 +16,7 @@ Gmaps4Rails.createLatLngBounds = function(){
 
 Gmaps4Rails.createMap = function(){
   return new Microsoft.Maps.Map(document.getElementById(Gmaps4Rails.map_options.id), { 
-    credentials:  Gmaps4Rails.apiKey,
+    credentials:  Gmaps4Rails.provider_key,
     mapTypeId:    Microsoft.Maps.MapTypeId.road,
     center:       Gmaps4Rails.createLatLng(Gmaps4Rails.map_options.center_latitude, Gmaps4Rails.map_options.center_longitude),
     zoom:                   Gmaps4Rails.map_options.zoom,

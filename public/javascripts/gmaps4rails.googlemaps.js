@@ -259,3 +259,7 @@ Gmaps4Rails.openInfoWindow = function(infoWindow, marker) {
 Gmaps4Rails.fitBounds = function(){
   this.map.fitBounds(this.boundsObject); 
 };
+
+Gmaps4Rails.centerMapOnUser = function(){
+  Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
+};

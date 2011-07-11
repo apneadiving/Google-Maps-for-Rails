@@ -141,7 +141,7 @@ Gmaps4Rails.extendBoundsWithMarkers = function(){
 /////////////////// Clusterer //////////////////////
 ////////////////////////////////////////////////////
 //too ugly to be considered valid :(
-  
+
 Gmaps4Rails.createClusterer = function(markers_array){
 
       var style = new OpenLayers.Style({
@@ -252,4 +252,8 @@ Gmaps4Rails.onFeatureUnselect = function(evt) {
 
 Gmaps4Rails.fitBounds = function(){
   Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
+};
+
+Gmaps4Rails.centerMapOnUser = function(){
+  Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
 };
