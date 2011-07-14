@@ -12,6 +12,8 @@
 #
 src_files:
   - public/javascripts/gmaps4rails.js
+  - public/javascripts/gmaps4rails.googlemaps.js
+  
 # stylesheets
 #
 # Return an array of stylesheet filepaths relative to src_dir to include before jasmine specs.

@@ -8,18 +8,6 @@ Gmaps4Rails.map_options.type =  "map";  // //map type (map, sat, hyb)
 /////////////// Basic Objects         //////////////
 ////////////////////////////////////////////////////
 
-Gmaps4Rails.clearMarker = function(marker) {
-  marker.serviceObject.setMap(null);
-};
-
-Gmaps4Rails.showMarker = function(marker) {
-  marker.serviceObject.setVisible(true);
-};
-
-Gmaps4Rails.hideMarker = function(marker) {
-  marker.serviceObject.setVisible(false);
-};
-
 Gmaps4Rails.createPoint = function(lat, lng){
   return new MQA.Poi({lat: lat, lng: lng});
 };
@@ -106,15 +94,15 @@ Gmaps4Rails.hideMarkers = function() {
 };
 
 Gmaps4Rails.clearMarker = function(marker) {
-  marker.serviceObject.setMap(null);
+  this.removeFromMap(marker.serviceObject);
 };
 
 Gmaps4Rails.showMarker = function(marker) {
-  marker.serviceObject.setVisible(true);
+  // marker.serviceObject
 };
 
 Gmaps4Rails.hideMarker = function(marker) {
-  marker.serviceObject.setVisible(false);
+  // marker.serviceObject
 };
 
 Gmaps4Rails.extendBoundsWithMarkers = function(){
@@ -175,7 +163,10 @@ Gmaps4Rails.centerMapOnUser = function(){
   Gmaps4Rails.map.setCenter(Gmaps4Rails.userLocation);
 };
 
-
 Gmaps4Rails.addToMap = function(object){
   Gmaps4Rails.map.addShape(object);
 };
+
+Gmaps4Rails.removeFromMap = function(object){
+  Gmaps4Rails.map.removeShape(object);
+}

@@ -251,7 +251,7 @@ Gmaps4Rails.onFeatureUnselect = function(evt) {
 ////////////////////////////////////////////////////
 
 Gmaps4Rails.fitBounds = function(){
-  Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true)
+  Gmaps4Rails.map.zoomToExtent(Gmaps4Rails.boundsObject, true);
 };
 
 Gmaps4Rails.centerMapOnUser = function(){

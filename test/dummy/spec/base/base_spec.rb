@@ -87,8 +87,8 @@ describe "Hash extension" do
      @options = {
             "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
             "markers"     => { "data" => '[{ "description": "", "title": "", "longitude": "5.9311119", "latitude": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "longitude": "2.3509871", "latitude": "48.8566667", "picture": "", "width": "", "height": "" } ]',
-      											   "options" => { "do_clustering" => false, "list_container" => "makers_list" } 
-      											 },
+            "options" => { "do_clustering" => false, "list_container" => "makers_list" } 
+                        },
             "polylines"   => { "data" => '[[
     {"longitude": -122.214897, "latitude": 37.772323},
     {"longitude": -157.821856, "latitude": 21.291982},
@@ -108,7 +108,7 @@ describe "Hash extension" do
     {"longitude": -122.214897, "latitude": 37.772323, "radius": 1000000},
     {"longitude": 122.214897, "latitude": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
     ]',
-             									},
+    },
    "direction"   => { 
                       "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
                       "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}

@@ -68,17 +68,17 @@ describe("createServiceMarkersFromMarkers", function() {
 		  expect(Gmaps4Rails.markers_conf.offset).toEqual(Gmaps4Rails.markers.length);
 		});
 	
-		it("should trigger InfoWindow only with markers without serviceObject", function() {
-		  expect(Gmaps4Rails.createInfoWindow).toHaveBeenCalledWith(Gmaps4Rails.markers[0]);
-		  expect(Gmaps4Rails.createInfoWindow).toHaveBeenCalledWith(Gmaps4Rails.markers[1]);
-		  expect(Gmaps4Rails.createInfoWindow).not.toHaveBeenCalledWith(Gmaps4Rails.markers[2]);
-		});
-	
-		it("should trigger createSidebar only with markers without serviceObject", function() {
-		  expect(Gmaps4Rails.createSidebar).toHaveBeenCalledWith(Gmaps4Rails.markers[0]);
-		  expect(Gmaps4Rails.createSidebar).toHaveBeenCalledWith(Gmaps4Rails.markers[1]);
-		  expect(Gmaps4Rails.createSidebar).not.toHaveBeenCalledWith(Gmaps4Rails.markers[2]);
-		});
+    // it("should trigger InfoWindow only with markers without serviceObject", function() {
+    //   expect(Gmaps4Rails.createInfoWindow).toHaveBeenCalledWith(Gmaps4Rails.markers[0]);
+    //   expect(Gmaps4Rails.createInfoWindow).toHaveBeenCalledWith(Gmaps4Rails.markers[1]);
+    //   expect(Gmaps4Rails.createInfoWindow).not.toHaveBeenCalledWith(Gmaps4Rails.markers[2]);
+    // });
+    //  
+    // it("should trigger createSidebar only with markers without serviceObject", function() {
+    //   expect(Gmaps4Rails.createSidebar).toHaveBeenCalledWith(Gmaps4Rails.markers[0]);
+    //   expect(Gmaps4Rails.createSidebar).toHaveBeenCalledWith(Gmaps4Rails.markers[1]);
+    //   expect(Gmaps4Rails.createSidebar).not.toHaveBeenCalledWith(Gmaps4Rails.markers[2]);
+    // });
 	});
 	
 	describe("required delay to launch method", function() {
@@ -106,41 +106,81 @@ describe("createServiceMarkersFromMarkers full stack", function() {
     Gmaps4Rails.map = null;
   });
   
-  it("should process all attributes from a marker (with custom image)", function() {
+  it("should process all attributes from a marker (without default values)", function() {
     var marker = getFullMarker();
     Gmaps4Rails.markers = [marker];
     Gmaps4Rails.map = "map";
-    spyOn(Gmaps4Rails, "createLatLng").andReturn([5,43]);
-		spyOn(Gmaps4Rails, "createImageAnchorPosition").andReturn("anchor");
-    spyOn(Gmaps4Rails, "createOrRetrieveImage").andReturn("image");
-		spyOn(Gmaps4Rails, "createMarker").andReturn("marker");
-        
-    Gmaps4Rails.createServiceMarkersFromMarkers();
-		
-    expect(Gmaps4Rails.createLatLng).toHaveBeenCalledWith(marker.latitude, marker.longitude);	  
-		expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.marker_anchor);
-    expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.shadow_anchor);
-		expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.picture, marker.width, marker.height, "anchor");
-    expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.shadow_picture, marker.shadow_width, marker.shadow_height, "anchor");
-    expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", icon: "image", title: marker.title, draggable: marker.draggable, shadow: "image"});
-  });
-  
-  it("should process all attributes from a marker (without custom image)", function() {
-    var marker2 = getFullMarker();
-    marker2.picture = "";
-    Gmaps4Rails.map = "map";
-    Gmaps4Rails.markers = [marker2];
-    spyOn(Gmaps4Rails, "createLatLng").andReturn([5,43]);
-		spyOn(Gmaps4Rails, "createImageAnchorPosition");
-    spyOn(Gmaps4Rails, "createOrRetrieveImage");
-		spyOn(Gmaps4Rails, "createMarker").andReturn("marker");
-        
+
+    spyOn(Gmaps4Rails, "createMarker");
+    
     Gmaps4Rails.createServiceMarkersFromMarkers();
     
-  	expect(Gmaps4Rails.createImageAnchorPosition).not.toHaveBeenCalled();
-		expect(Gmaps4Rails.createOrRetrieveImage).not.toHaveBeenCalled();
-    expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", title: marker2.title, draggable: marker2.draggable});
+    expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({
+      "marker_picture":   marker.picture,
+      "marker_width":     marker.width,
+      "marker_height":    marker.height,
+      "marker_title":     marker.title,
+      "marker_anchor":    marker.marker_anchor,
+      "shadow_anchor":    marker.shadow_anchor,
+      "shadow_picture":   marker.shadow_picture,
+      "shadow_width":     marker.shadow_width,
+      "shadow_height":    marker.shadow_height,
+      "marker_draggable": marker.draggable,
+      "Lat":              marker.lat,
+      "Lng":              marker.lng,
+      "index":            0
+    });	  
+    
+    
+    //     spyOn(Gmaps4Rails, "createLatLng").andReturn([5,43]);
+    // spyOn(Gmaps4Rails, "createImageAnchorPosition").andReturn("anchor");
+    //     spyOn(Gmaps4Rails, "createOrRetrieveImage").andReturn("image");
+    // spyOn(Gmaps4Rails, "createMarker").andReturn("marker");
+    //     expect(Gmaps4Rails.createLatLng).toHaveBeenCalledWith(marker.latitude, marker.longitude);    
+    // expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.marker_anchor);
+    //     expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.shadow_anchor);
+    // expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.picture, marker.width, marker.height, "anchor");
+    //     expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.shadow_picture, marker.shadow_width, marker.shadow_height, "anchor");
+    //     expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", icon: "image", title: marker.title, draggable: marker.draggable, shadow: "image"});
   });
+  
+  it("should process all attributes from a marker (with default values)", function() {
+    var marker = getEmptyMarker();
+    Gmaps4Rails.markers = [marker];
+    Gmaps4Rails.map = "map";
+
+    spyOn(Gmaps4Rails, "createMarker");
+    
+    Gmaps4Rails.createServiceMarkersFromMarkers();
+    
+    expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({
+      "marker_picture":   Gmaps4Rails.markers_conf.picture,
+      "marker_width":     Gmaps4Rails.markers_conf.width,
+      "marker_height":    Gmaps4Rails.markers_conf.length,
+      "marker_title":     null,
+      "marker_anchor":    null,
+      "shadow_anchor":    null,
+      "shadow_picture":   null,
+      "shadow_width":     null,
+      "shadow_height":    null,
+      "marker_draggable": Gmaps4Rails.markers_conf.draggable,
+      "Lat":              marker.lat,
+      "Lng":              marker.lng,
+      "index":            0
+    });	  
+    
+    //     spyOn(Gmaps4Rails, "createLatLng").andReturn([5,43]);
+    // spyOn(Gmaps4Rails, "createImageAnchorPosition").andReturn("anchor");
+    //     spyOn(Gmaps4Rails, "createOrRetrieveImage").andReturn("image");
+    // spyOn(Gmaps4Rails, "createMarker").andReturn("marker");
+    //     expect(Gmaps4Rails.createLatLng).toHaveBeenCalledWith(marker.latitude, marker.longitude);    
+    // expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.marker_anchor);
+    //     expect(Gmaps4Rails.createImageAnchorPosition).toHaveBeenCalledWith(marker.shadow_anchor);
+    // expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.picture, marker.width, marker.height, "anchor");
+    //     expect(Gmaps4Rails.createOrRetrieveImage).toHaveBeenCalledWith(marker.shadow_picture, marker.shadow_width, marker.shadow_height, "anchor");
+    //     expect(Gmaps4Rails.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", icon: "image", title: marker.title, draggable: marker.draggable, shadow: "image"});
+  });
+
 });
 
 describe("create_markers", function() {
@@ -209,9 +249,11 @@ describe("addMarkers", function() {
   it("should concat markers and create them", function() {
     Gmaps4Rails.markers = [{"hello": "dolly"}];
     spyOn(Gmaps4Rails, "create_markers");
-		Gmaps4Rails.addMarkers(getRawMarkers());
-		expect(Gmaps4Rails.markers.length).toEqual(1 + getRawMarkers().length);
-		expect(Gmaps4Rails.create_markers).toHaveBeenCalled();	  
+    spyOn(Gmaps4Rails, "clearMarkers");
+    Gmaps4Rails.addMarkers(getRawMarkers());
+    expect(Gmaps4Rails.markers.length).toEqual(1 + getRawMarkers().length);
+    expect(Gmaps4Rails.create_markers).toHaveBeenCalled();
+    expect(Gmaps4Rails.clearMarkers).toHaveBeenCalled();
   });
 });
 
