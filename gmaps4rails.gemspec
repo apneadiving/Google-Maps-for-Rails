@@ -5,9 +5,9 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.10.0.pre1"
+  s.version = "0.10.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
   s.date = %q{2011-07-15}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
