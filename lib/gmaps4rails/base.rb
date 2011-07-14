@@ -22,7 +22,7 @@ module Gmaps4rails
 
   # execute block if provided so that it's included in the json string
   def Gmaps4rails.block_handling(object, &block)
-    yield(object) if block_given?
+     ", " + yield(object) if block_given?
   end
   
   # Returns description if gmaps4rails_infowindow is defined in the model

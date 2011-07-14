@@ -287,10 +287,10 @@ var Gmaps4Rails = {
     }
     // Construct the polyline		
     var new_poly = new google.maps.Polyline({
-      path:  				polyline_coordinates,
-      strokeColor: 	strokeColor,
+      path:         polyline_coordinates,
+      strokeColor:  strokeColor,
       strokeOpacity: strokeOpacity,
-      strokeWeight: 	strokeWeight,
+      strokeWeight: strokeWeight,
       clickable:     false
     });
     //save polyline
@@ -361,6 +361,7 @@ var Gmaps4Rails = {
 
   // replace old markers with new markers on an existing map
   replaceMarkers: function(new_markers){
+    this.clearMarkers();
     //reset previous markers
     this.markers = new Array;
     //reset current bounds
@@ -373,7 +374,6 @@ var Gmaps4Rails = {
 
   //add new markers to on an existing map
   addMarkers: function(new_markers){
-    this.clearMarkers();
     //update the list of markers to take into account
     this.markers = this.markers.concat(new_markers);
     //put markers on the map

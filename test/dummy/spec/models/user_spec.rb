@@ -40,23 +40,23 @@ describe Gmaps4rails::ActsAsGmappable do
       user.gmaps.should be_true
     end
   
-    it "should render a valid json from an array of ojects" do
+    it "should render a valid json from an array of objects" do
       user #needed trigger the object from the let statement
       Factory(:user_paris)
       User.all.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
     end
     
-    it "should accept additional block for an array of ojects" do
+    it "should accept additional block for an array of objects" do
       user #needed trigger the object from the let statement
       Factory(:user_paris)
       User.all.to_gmaps4rails do |u|
-        ", \"model\": \"" + u.class.to_s + "\""
+        "\"model\": \"" + u.class.to_s + "\""
       end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\", \"model\": \"User\"}]"
     end
   
     it "should accept additional block for a single object" do
       user.to_gmaps4rails do |u|
-        ", \"model\": \"" + u.class.to_s + "\""
+        "\"model\": \"" + u.class.to_s + "\""
       end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"}]"
     end
     

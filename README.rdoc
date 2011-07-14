@@ -10,6 +10,20 @@ It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 
 See screencasts here: http://www.youtube.com/user/TheApneadiving
 
+== When Gmaps4rails finally means Global Maps for Rails
+
+I now want to extend the gem, so it would support other map providers. I intend to add:
+
+* openlayers
+
+* mapquest
+
+* bing
+
+See: https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Map-Apis
+
+Any help would be appreciated.
+
 
 == Requirements
 - gem 'gmaps4rails'     (in your gemfile, then bundle)
@@ -20,18 +34,18 @@ See screencasts here: http://www.youtube.com/user/TheApneadiving
 == Basic configuration
 In your model, add:
 
-	acts_as_gmappable
-	
-		def gmaps4rails_address
-		  #describe how to retrieve the address from your model, if you use directly a db column, you can dry your code, see wiki
-		  "#{self.street}, #{self.city}, #{self.country}" 
-		end
+  acts_as_gmappable
+
+  def gmaps4rails_address
+    #describe how to retrieve the address from your model, if you use directly a db column, you can dry your code, see wiki
+    "#{self.street}, #{self.city}, #{self.country}" 
+  end
 
 Create a migration and add the following fields to your table (here users):
 
-	add_column :users, :latitude, :float #you can change the name, see wiki
-	add_column :users, :longitude, :float #you can change the name, see wiki
-	add_column :users, :gmaps, :boolean #not mandatory, see wiki
+  add_column :users, :latitude, :float #you can change the name, see wiki
+  add_column :users, :longitude, :float #you can change the name, see wiki
+  add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
 == How to?
 === QuickStart!
@@ -66,8 +80,6 @@ Done!
 == Todo?
 
 * Integrate Markers with Label: http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.2/
-
-* Other options from here: http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries
 
 Feel free ton contact us, you have your say.
 
