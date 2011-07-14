@@ -9,7 +9,6 @@ begin
     gem.authors = ["Benjamin Roth", "David Ruyer"]
     gem.files = Dir["{lib}/**/*", "{app}/**/*", "{public}/**/*"]
     gem.add_dependency "crack", ">= 0"
-    gem.version = '0.10.0.pre1'
   end
   Jeweler::GemcutterTasks.new
 rescue
