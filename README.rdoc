@@ -12,7 +12,7 @@ See screencasts here: http://www.youtube.com/user/TheApneadiving
 
 == When Gmaps4rails finally means Global Maps for Rails
 
-I now want to extend the gem, so it would support other map providers. I intend to add:
+I've added support for other map providers:
 
 * openlayers
 
@@ -22,7 +22,7 @@ I now want to extend the gem, so it would support other map providers. I intend 
 
 See: https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Map-Apis
 
-Any help would be appreciated.
+Any help would be appreciated to complete this work.
 
 
 == Requirements
