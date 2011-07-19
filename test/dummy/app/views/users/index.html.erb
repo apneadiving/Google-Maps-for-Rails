@@ -108,7 +108,12 @@ var builder3 = [{
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 <%= gmaps("markers" => {"data" => @json},
-         "map_options" => { "zoom" => 5, "provider" => "mapquest", "provider_key" => MAPQUEST_KEY, "auto_adjust" => true,"center_on_user" => true }) %> 
+         "map_options" => { "auto_adjust" => true }) %> 
+<%= gmaps("map_options" => {"zoom" => 12, "auto_adjust" => true,
+                                "detect_location" => true,
+                                "center_on_user" => true },
+          "markers" => {"data" => @json,
+                        "options" => {"list_container" => "markers_list"}} )%>
 
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
@@ -116,6 +121,20 @@ var builder3 = [{
 					 %>
 
 <% content_for :scripts do %>
+<script>
+    Gmaps4Rails.callback = function() {
+        for (var i = 0; i <  this.markers.length; ++i) {
+            google.maps.event.addListener(Gmaps4Rails.markers[i].serviceObject, 'click', my_test(Gmaps4Rails.markers[i].id));
+
+        }
+    };
+    
+    my_test = function(id) {
+      return function(){
+          alert(id );
+      };
+    };
+</script>
 <script type="text/javascript" charset="utf-8">
 
 	//  Gmaps4Rails.callback = function() {

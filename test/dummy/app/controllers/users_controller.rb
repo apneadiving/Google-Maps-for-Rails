@@ -1,7 +1,9 @@
 class UsersController < ApplicationController    
   def index
     @users = User.all
-    @json  = User.all.to_gmaps4rails
+    @json  = User.all.to_gmaps4rails do |user|
+      "\"id\": #{user.id}"
+    end
   end
 
   def show

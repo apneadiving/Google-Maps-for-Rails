@@ -6,18 +6,18 @@ class User < ActiveRecord::Base
     sec_address
   end
 
-  # 
-  # def gmaps4rails_marker_picture
-  #   {
-  #   "picture" => "http://www.blankdots.com/img/github-32x32.png",
-  #   "width" => "32",
-  #   "height" => "32",
-  #   "shadow_picture" => "https://secure.gravatar.com/avatar/808bec1c640143bd7091888d9edfb2f2.png",
-  #   "shadow_height" => 40, 
-  #   "shadow_width" => 50,
-  #   "shadow_anchor" => [10, -30]
-  #   }
-  # end
+  
+  def gmaps4rails_marker_picture
+    {
+    "picture" => "http://www.blankdots.com/img/github-32x32.png",
+    "width" => "32",
+    "height" => "32",
+    "shadow_picture" => "https://secure.gravatar.com/avatar/808bec1c640143bd7091888d9edfb2f2.png",
+    "shadow_height" => 40, 
+    "shadow_width" => 50,
+    "shadow_anchor" => [10, -30]
+    }
+  end
   
   # 
   # def gmaps4rails_title

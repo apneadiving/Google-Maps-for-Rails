@@ -41,7 +41,7 @@ window.onload = gmaps4rails_init;
 <% case options['map_options'].try(:[], 'provider')  %>
 <% when "mapquest" %>
 <div id="mapQuest" style="width:750px; height:475px;">
-  <!-- Todo: change this style dynamically -->  
+  <!-- TODO: change this style dynamically -->  
 </div>
 <% when "bing" %>
 <div id="<%= options['map_options'].try(:[],'container_id').nil? ? "map_container" : options['map_options']['container_id'] %>" > 
