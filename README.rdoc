@@ -1,7 +1,3 @@
-== WARNING
-versions 0.10.x have been reported as buggy...
-Keep on using 0.9.x until further notice or provide me with feedback here: [[https://github.com/apneadiving/Google-Maps-for-Rails/issues/58]]
-
 == Google Maps for Rails (gmaps4rails)
 
 Gmaps4rails is developped to simply create a Google Map:
