@@ -26,13 +26,13 @@ Gem::Specification.new do |s|
     "lib/gmaps4rails/extensions/array.rb",
     "lib/gmaps4rails/extensions/hash.rb",
     "lib/gmaps4rails/helper/gmaps4rails_helper.rb",
-    "public/images/marker.png",
-    "public/javascripts/gmaps4rails.bing.js",
-    "public/javascripts/gmaps4rails.googlemaps.js",
-    "public/javascripts/gmaps4rails.js",
-    "public/javascripts/gmaps4rails.mapquest.js",
-    "public/javascripts/gmaps4rails.openlayers.js",
-    "public/stylesheets/gmaps4rails.css"
+    "app/assets/images/marker.png",
+    "app/assets/javascripts/gmaps4rails.bing.js",
+    "app/assets/javascripts/gmaps4rails.googlemaps.js",
+    "app/assets/javascripts/gmaps4rails.js",
+    "app/assets/javascripts/gmaps4rails.mapquest.js",
+    "app/assets/javascripts/gmaps4rails.openlayers.js",
+    "app/assets/stylesheets/gmaps4rails.css"
   ]
   s.homepage = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
   s.require_paths = ["lib"]
