@@ -11,7 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
-  - public/javascripts/gmaps4rails.js
+  - public/javascripts/gmaps4rails.base.js
   - public/javascripts/gmaps4rails.googlemaps.js
   
 # stylesheets

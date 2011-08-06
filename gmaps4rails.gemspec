@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
     "lib/gmaps4rails/extensions/hash.rb",
     "lib/gmaps4rails/helper/gmaps4rails_helper.rb",
     "public/images/marker.png",
+    "public/javascripts/gmaps4rails.base.js",
     "public/javascripts/gmaps4rails.bing.js",
     "public/javascripts/gmaps4rails.googlemaps.js",
-    "public/javascripts/gmaps4rails.js",
     "public/javascripts/gmaps4rails.mapquest.js",
     "public/javascripts/gmaps4rails.openlayers.js",
     "public/stylesheets/gmaps4rails.css"
