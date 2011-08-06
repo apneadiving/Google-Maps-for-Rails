@@ -4,13 +4,17 @@
 if enable_css == true %>
   <% unless asset_pipeline_enabled %>
   	<% content_for :head do %>
-  	<%= stylesheet_link_tag 'gmaps4rails' %>
+  	  <%= stylesheet_link_tag 'gmaps4rails' %>
   	<% end %>
 	<% end %>
 <% end %>
 
 <% content_for :scripts do %>
 <% if enable_js == true %>
+  <% unless asset_pipeline_enabled %>
+    <%= javascript_include_tag 'gmaps4rails.base.js' %>
+  <% end %>
+
   <% case options['map_options'].try(:[], 'provider')  %>
   <% when "openlayers"%>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
