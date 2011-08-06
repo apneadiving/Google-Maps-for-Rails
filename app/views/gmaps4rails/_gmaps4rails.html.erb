@@ -1,7 +1,11 @@
+<% asset_pipeline_enabled = Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1 && Rails.configuration.assets.enabled %>
+
 <% #thanks to enable_css, user can avoid this css to be loaded
 if enable_css == true %>
-	<% content_for :head do %>
-	<%= stylesheet_link_tag 'gmaps4rails' %>
+  <% unless asset_pipeline_enabled %>
+  	<% content_for :head do %>
+  	<%= stylesheet_link_tag 'gmaps4rails' %>
+  	<% end %>
 	<% end %>
 <% end %>
 
@@ -10,11 +14,23 @@ if enable_css == true %>
   <% case options['map_options'].try(:[], 'provider')  %>
   <% when "openlayers"%>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <% unless asset_pipeline_enabled %>
+      <%= javascript_include_tag 'gmaps4rails.openlayers.js' %>
+    <% end %>
   <% when "mapquest" %>
     <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= options['map_options'].try(:[], 'provider_key') %>"></script>
+    <% unless asset_pipeline_enabled %>
+      <%= javascript_include_tag 'gmaps4rails.mapquest.js' %>
+    <% end %>
   <% when "bing" %>
     <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+    <% unless asset_pipeline_enabled %>
+      <%= javascript_include_tag 'gmaps4rails.bing.js' %>
+    <% end %>
   <% else %>
+    <% unless asset_pipeline_enabled %>
+      <%= javascript_include_tag 'gmaps4rails.googlemaps.js' %>
+    <% end %>
     <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry'></script>
     <script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js'></script>
     <script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script>
