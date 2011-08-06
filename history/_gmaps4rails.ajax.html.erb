@@ -7,7 +7,7 @@ if enable_css == true %>
 
 <% content_for :scripts do %>
 <% if enable_js == true %>
-	<%=javascript_include_tag 'gmaps4rails' %>
+	<%=javascript_include_tag 'gmaps4rails.base' %>
 	<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script>
 <% end  %>
 <script type="text/javascript" charset="utf-8">

@@ -6,7 +6,7 @@ module Gmaps4rails
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
       def copy_locale
-        copy_file '../../../public/javascripts/gmaps4rails.js', 'public/javascripts/gmaps4rails.js'
+        copy_file '../../../public/javascripts/gmaps4rails.base.js', 'public/javascripts/gmaps4rails.base.js'
         copy_file '../../../public/javascripts/gmaps4rails.googlemaps.js', 'public/javascripts/gmaps4rails.googlemaps.js'
         copy_file '../../../public/javascripts/gmaps4rails.bing.js', 'public/javascripts/gmaps4rails.bing.js'
         copy_file '../../../public/javascripts/gmaps4rails.openlayers.js', 'public/javascripts/gmaps4rails.openlayers.js'
