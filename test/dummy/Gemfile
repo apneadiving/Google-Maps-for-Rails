@@ -7,11 +7,12 @@ gem "gmaps4rails", :path => "../../"
 gem 'ruby-debug'
 gem "jquery-rails"
 
-group :test do
+#group :test do
 	gem 'rspec-rails'
   gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
 	gem 'database_cleaner'
 	gem 'launchy'
 	gem 'factory_girl_rails'
 	gem 'jasmine'
-end
+	gem "shoulda-matchers"
+#end

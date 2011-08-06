@@ -14,11 +14,11 @@ module Gmaps4rails
   # Creates the json related to one Object (only tried ActiveRecord objects)
   # This json will contian the marker's attributes of the object 
   
-  def Gmaps4rails.create_json(object, &block)
+ def Gmaps4rails.create_json(object, &block)
     unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
 "{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"lng\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"lat\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}#{Gmaps4rails.block_handling(object, &block)}},\n"
     end
-  end  
+ end  
 
   # execute block if provided so that it's included in the json string
   def Gmaps4rails.block_handling(object, &block)

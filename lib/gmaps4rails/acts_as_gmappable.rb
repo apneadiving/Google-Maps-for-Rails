@@ -49,9 +49,8 @@ module Gmaps4rails
         unless args[:process_geocoding] == false
           validate :process_geocoding
         end
-
-        #instance method containing all the options to configure the behaviour of the gem regarding the current Model
         
+        #instance method containing all the options to configure the behaviour of the gem regarding the current Model
         define_method "gmaps4rails_options" do
           {
             :lat_column         => args[:lat]                    || "latitude",

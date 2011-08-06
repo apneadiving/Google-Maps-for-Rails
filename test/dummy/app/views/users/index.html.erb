@@ -1,8 +1,25 @@
 <%= stylesheet_link_tag 'test' %>
 
 <% content_for :scripts do -%>
-<script type="text/javascript" charset="utf-8">
+<!-- <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry,places'></script>
+<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js'></script>
+<script type="text/javascript" src='http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js'></script> -->
+<%#= javascript_include_tag 'gmaps4rails' %>
+<%#= javascript_include_tag 'gmaps4rails.googlemaps.js' %>
 
+ <script type="text/javascript" charset="utf-8">
+
+// function initialize_gmaps_autocomplete_user_address()
+//   {
+//    var input = document.getElementById('user_address');
+//    var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
+//                                                     new google.maps.LatLng(51.179343,8.47412)
+//                                                     );
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    autocomplete.setBounds(defaultBounds);
+//    autocomplete.setTypes(['geocode']);
+// }
+// initialize_gmaps_autocomplete_user_address();
 var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
 var styles = [{
         url: url + '/images/conv30.png',
@@ -26,13 +43,19 @@ var styles = [{
         opt_textSize: 12
       }];
 
-var builder2 = [{
-"lng": "5.9311119",
-"lat": "42.1251606",
-} ,{
-"lng": "32.3509871",
-"lat": "47.8566667",
-} ];
+var builder2 =       {
+      "lng": "5.9311119",
+      "lat": "42.1251606",
+      };
+      // [
+// {
+// "lng": "5.9311119",
+// "lat": "42.1251606",
+// } //,{
+// // "lng": "32.3509871",
+// // "lat": "47.8566667",
+// // }
+// ];
 var builder3 = [{
 "lng": "6.9311119",
 "lat": "49.1251606",
@@ -79,6 +102,7 @@ var builder3 = [{
 	}
 </script>
 <% end -%>
+<%= "There are #{@users.size} users in the db" %>
 <table>
   <tr>
     <th>Name</th>
@@ -86,7 +110,7 @@ var builder3 = [{
     <th>Latitude</th>
     <th>Longitude</th>
   </tr>
-  <% for user in @users %>
+  <% for user in @users.take 5 %>
     <tr>
       <td><%= user.name %></td>
       <td><%= user.sec_address %></td>
@@ -98,7 +122,7 @@ var builder3 = [{
     </tr>
   <% end %>
 </table>
-
+<input type="text" name="some_name" value="" id="user_address">
 <p><%= link_to "New User", new_user_path %></p>
 <%#= gmaps({ 
 	"map_options" => {"zoom" =>3, "auto_adjust" => true},
@@ -107,14 +131,13 @@ var builder3 = [{
 <%#= gmaps(@options) %>
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
-<%= gmaps("markers" => {"data" => @json},
-         "map_options" => { "auto_adjust" => true }) %> 
-<%= gmaps("map_options" => {"zoom" => 12, "auto_adjust" => true,
-                                "detect_location" => true,
-                                "center_on_user" => true },
-          "markers" => {"data" => @json,
-                        "options" => {"list_container" => "markers_list"}} )%>
-
+<%= gmaps({
+         "map_options" => { "auto_adjust" => false, "zoom" => 0, "g_libraries" => ["places"] },
+         "markers" => { "data" => @json }
+          }, true, true) %> 
+<div id="second_cont" class="map_container"> 
+  <div id="second_map" class="gmaps4rails_map"></div>
+</div>
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
 <%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
@@ -122,19 +145,32 @@ var builder3 = [{
 
 <% content_for :scripts do %>
 <script>
-    Gmaps4Rails.callback = function() {
-        for (var i = 0; i <  this.markers.length; ++i) {
-            google.maps.event.addListener(Gmaps4Rails.markers[i].serviceObject, 'click', my_test(Gmaps4Rails.markers[i].id));
 
-        }
+Gmaps4Rails.counter = 0;
+
+  Gmaps4Rails.callback = function() {
+  if (Gmaps4Rails.counter == 0){
+        Gmaps4Rails.counter += 1;
+        
+
+  <%=   { "map_options" => {  "container_id" => "second_cont", "id" => "second_map",
+                              "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true 
+                              },
+             "markers"     => { "data" => @json }
+           }.to_gmaps4rails(true).html_safe
+  %>
+   }
+  };
+
+
+  
+  my_test = function(id) {
+    return function(){
+        alert(id );
     };
-    
-    my_test = function(id) {
-      return function(){
-          alert(id );
-      };
-    };
+  };
 </script>
+
 <script type="text/javascript" charset="utf-8">
 
 	//  Gmaps4Rails.callback = function() {

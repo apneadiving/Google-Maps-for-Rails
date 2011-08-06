@@ -15,5 +15,10 @@ module Gmaps4railsHelper
   def gmaps(options, enable_css = true, enable_js = true )
     render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options, :enable_css => enable_css, :enable_js => enable_js }
   end
+  
+  def g_libraries(libraries_array)
+    return "" if libraries_array.nil?
+    "," + libraries_array.join(",")
+  end
 
 end
