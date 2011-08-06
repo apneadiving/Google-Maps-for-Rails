@@ -126,7 +126,7 @@ var builder3 = [{
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
 <%= gmaps({
-         "map_options" => { "auto_adjust" => false, "zoom" => 0, "g_libraries" => ["places"] },
+         "map_options" => { "auto_adjust" => false, "zoom" => 0, "libraries" => ["places"] },
          "markers" => { "data" => @json }
           }, true, true) %> 
 <div id="second_cont" class="map_container"> 
