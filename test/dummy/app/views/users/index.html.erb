@@ -3,17 +3,7 @@
 <% content_for :scripts do -%>
  <script type="text/javascript" charset="utf-8">
 
-// function initialize_gmaps_autocomplete_user_address()
-//   {
-//    var input = document.getElementById('user_address');
-//    var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
-//                                                     new google.maps.LatLng(51.179343,8.47412)
-//                                                     );
-//    var autocomplete = new google.maps.places.Autocomplete(input);
-//    autocomplete.setBounds(defaultBounds);
-//    autocomplete.setTypes(['geocode']);
-// }
-// initialize_gmaps_autocomplete_user_address();
+
 var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
 var styles = [{
         url: url + '/images/conv30.png',
@@ -166,7 +156,17 @@ Gmaps4Rails.counter = 0;
 </script>
 
 <script type="text/javascript" charset="utf-8">
-
+function initialize_gmaps_autocomplete_user_address()
+  {
+   var input = document.getElementById('user_address');
+   var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
+                                                    new google.maps.LatLng(51.179343,8.47412)
+                                                    );
+   var autocomplete = new google.maps.places.Autocomplete(input);
+   autocomplete.setBounds(defaultBounds);
+   autocomplete.setTypes(['geocode']);
+}
+initialize_gmaps_autocomplete_user_address();
 	//  Gmaps4Rails.callback = function() {
 	//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
 	//     for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
