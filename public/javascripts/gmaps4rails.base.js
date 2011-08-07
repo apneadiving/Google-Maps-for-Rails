@@ -456,16 +456,24 @@ var Gmaps4Rails = {
 
     //SECOND_STEP: ajust the map to the bounds
     if (this.map_options.auto_adjust || this.map_options.bounds.length > 0) {
-
-      //if autozoom is false, take user info into account
-      if(!this.map_options.auto_zoom) {
-        var map_center = this.boundsObject.getCenter();
-        this.map_options.center_latitude  = map_center.lat();
-        this.map_options.center_longitude = map_center.lng();
-        this.map.setCenter(map_center);
-      }
-      else {
-        Gmaps4Rails.fitBounds();
+      //if no user data provided, which means still at 0,-180 and
+      // the user has provided center lat/lng values
+      if (this.boundsObject.getCenter().lat() == 0 && this.boundsObject.getCenter().lng() == -180 &&
+          this.map_options.center_latitude != 0 && this.map_options.center_longitude != 0) {
+        //center to provided values
+        this.map.setCenter(new google.maps.LatLng(this.map_options.center_latitude, this.map_options.center_longitude));
+        this.map.setZoom(11);
+      } else {
+        //if autozoom is false, take user info into account
+        if(!this.map_options.auto_zoom) {
+          var map_center = this.boundsObject.getCenter();
+          this.map_options.center_latitude  = map_center.lat();
+          this.map_options.center_longitude = map_center.lng();
+          this.map.setCenter(map_center);
+        }
+        else {
+          Gmaps4Rails.fitBounds();
+        }
       }
     }
   },
