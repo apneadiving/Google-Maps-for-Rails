@@ -8,23 +8,19 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     require 'gmaps4rails/helper/gmaps4rails_helper'
   
     class Engine < Rails::Engine
-       initializer "static assets" do |app|
-         app.middleware.use ::ActionDispatch::Static, "#{root}/public"
-       end
-
        initializer "gmaps4rails view helpers" do |app|
          ActionView::Base.send :include, Gmaps4railsHelper
        end
-
-       if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
-         initializer "add asset directories to pipeline" do |app|
+       initializer "add asset directories to pipeline" do |app|
+         if Rails::VERSION::MINOR >= 1
            app.config.assets.paths << "#{root}/public/javascripts"
            app.config.assets.paths << "#{root}/public/stylesheets"
            app.config.assets.paths << "#{root}/public/images"
+         else
+           app.middleware.use ::ActionDispatch::Static, "#{root}/public"
          end
        end
     end
 
   end
 end
-
