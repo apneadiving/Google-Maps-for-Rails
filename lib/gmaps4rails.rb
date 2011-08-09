@@ -11,8 +11,17 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
        initializer "static assets" do |app|
          app.middleware.use ::ActionDispatch::Static, "#{root}/public"
        end
+
        initializer "gmaps4rails view helpers" do |app|
          ActionView::Base.send :include, Gmaps4railsHelper
+       end
+
+       if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
+         initializer "add asset directories to pipeline" do |app|
+           app.config.assets.paths << "#{root}/public/javascripts"
+           app.config.assets.paths << "#{root}/public/stylesheets"
+           app.config.assets.paths << "#{root}/public/images"
+         end
        end
     end
 
