@@ -108,4 +108,4 @@ MIT license.
 
 Authors: Benjamin Roth, David Ruyer
 
-Contributors: Mircea Pricop, Alex Vorobiev
+Contributors: Mircea Pricop, Kamil Śliwak, Alex Vorobiev
