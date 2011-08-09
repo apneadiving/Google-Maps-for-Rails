@@ -4,25 +4,33 @@ if enable_css == true %>
 	<%= stylesheet_link_tag 'gmaps4rails' %>
 	<% end %>
 <% end %>
-
 <% content_for :scripts do %>
 <% if enable_js == true %>
-  <%= javascript_include_tag 'gmaps4rails.base.js' %>
   <% case options['map_options'].try(:[], 'provider') %>
   <% when "openlayers" %>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-    <%= javascript_include_tag 'gmaps4rails.openlayers.js' %>
   <% when "mapquest" %>
     <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=#{options['map_options'].try(:[], 'provider_key')}"></script>
-    <%= javascript_include_tag 'gmaps4rails.mapquest.js' %>
   <% when "bing" %>
     <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
-    <%= javascript_include_tag 'gmaps4rails.bing.js' %>
   <% else %>
-    <%= javascript_include_tag 'gmaps4rails.googlemaps.js' %>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry<%= g_libraries(options['map_options'].try(:[], 'libraries')) %>"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/src/infobox.js"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer_compiled.js"></script>
+  <% end %>
+  
+  <% if Rails::VERSION::MINOR < 1 %>
+    <%= javascript_include_tag 'gmaps4rails/gmaps4rails.base.js' %>
+    <% case options['map_options'].try(:[], 'provider') %>
+    <% when "openlayers" %>
+      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.openlayers.js' %>
+    <% when "mapquest" %>
+      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.mapquest.js' %>
+    <% when "bing" %>
+      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.bing.js' %>
+    <% else %>
+      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.googlemaps.js' %>
+    <% end %>
   <% end %>
 <% end  %>
 <script type="text/javascript" charset="utf-8">
