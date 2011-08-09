@@ -460,8 +460,8 @@ var Gmaps4Rails = {
       //if autozoom is false, take user info into account
       if(!this.map_options.auto_zoom) {
         var map_center = this.boundsObject.getCenter();
-        this.map_options.center_longitude = map_center.lat();
-        this.map_options.center_latitude  = map_center.lng();
+        this.map_options.center_latitude  = map_center.lat();
+        this.map_options.center_longitude = map_center.lng();
         this.map.setCenter(map_center);
       }
       else {
