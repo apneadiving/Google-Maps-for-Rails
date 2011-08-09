@@ -41,7 +41,7 @@ To make Rails serve the assets (javascripts, stylesheets and marker images) you 
   
   * //= require gmaps4rails/openlayers.js
   
-- if you are using Rails 3.0 or have asset pipeline disabled:
+- if you are using Rails 3.0:
   if you have Rails configured to serve static assets ('config.serve_static_assets = true'; note that it is disabled by default in production environment), they'll be served directly from gem's public/ directory.
 
 - finally you can just copy assets to your application's public/stylesheets, public/javascripts/gmaps4rails and public/images. It's recommended to do this in production so that you can let your webserver serve them rather than go through Rails each time they are requested. There's a generator to help you with that:
