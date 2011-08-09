@@ -33,13 +33,13 @@ Any help would be appreciated to complete this work.
 To make Rails serve the assets (javascripts, stylesheets and marker images) you have several options, depending on your configuration and Rails version:
 - if you are using Rails 3.1 and have asset pipeline enabled ('config.assets.enabled = true' in config/application.rb), include the appropriate manifest:
 
-  * //= require gmaps4rails/bing.js
+  * `//= require gmaps4rails/bing.js`
   
-  * //= require gmaps4rails/googlemaps.js
+  * `//= require gmaps4rails/googlemaps.js`
   
-  * //= require gmaps4rails/mapquest.js
+  * `//= require gmaps4rails/mapquest.js`
   
-  * //= require gmaps4rails/openlayers.js
+  * `//= require gmaps4rails/openlayers.js`
   
 - if you are using Rails 3.0:
   if you have Rails configured to serve static assets ('config.serve_static_assets = true'; note that it is disabled by default in production environment), they'll be served directly from gem's public/ directory.
