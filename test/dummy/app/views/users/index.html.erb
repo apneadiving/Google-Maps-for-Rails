@@ -115,24 +115,29 @@ var builder3 = [{
 <%#= gmaps(@options) %>
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
-<%= gmaps({
+<%#= gmaps({
          "map_options" => { "auto_adjust" => false, "zoom" => 0, "libraries" => ["places"] },
          "markers" => { "data" => @json }
           }, true, true) %> 
-<div id="second_cont" class="map_container"> 
+
+<!-- <div id="second_cont" class="map_container"> 
   <div id="second_map" class="gmaps4rails_map"></div>
-</div>
+</div> -->
 <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 %>
 <%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
 					 %>
+<%= link_to "add a new avatar", root_path, :remote => true %>
+
 
 <% content_for :scripts do %>
 <script>
 
-Gmaps4Rails.counter = 0;
+Gmaps4Rails.counter = 1;
 
   Gmaps4Rails.callback = function() {
+
+    
   if (Gmaps4Rails.counter == 0){
         Gmaps4Rails.counter += 1;
         
@@ -144,6 +149,7 @@ Gmaps4Rails.counter = 0;
            }.to_gmaps4rails(true).html_safe
   %>
    }
+
   };
 
 
@@ -166,7 +172,7 @@ function initialize_gmaps_autocomplete_user_address()
    autocomplete.setBounds(defaultBounds);
    autocomplete.setTypes(['geocode']);
 }
-initialize_gmaps_autocomplete_user_address();
+//initialize_gmaps_autocomplete_user_address();
 	//  Gmaps4Rails.callback = function() {
 	//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
 	//     for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
