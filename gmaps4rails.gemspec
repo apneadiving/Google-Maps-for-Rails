@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "0.10.2"
+  s.version = "0.11.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = %q{2011-07-20}
+  s.date = %q{2011-08-12}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
   s.email = ["apnea.diving.deep@gmail.com", "david.ruyer@gmail.com"]
   s.extra_rdoc_files = [
@@ -27,11 +27,15 @@ Gem::Specification.new do |s|
     "lib/gmaps4rails/extensions/hash.rb",
     "lib/gmaps4rails/helper/gmaps4rails_helper.rb",
     "public/images/marker.png",
-    "public/javascripts/gmaps4rails.bing.js",
-    "public/javascripts/gmaps4rails.googlemaps.js",
-    "public/javascripts/gmaps4rails.base.js",
-    "public/javascripts/gmaps4rails.mapquest.js",
-    "public/javascripts/gmaps4rails.openlayers.js",
+    "public/javascripts/gmaps4rails/bing.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.base.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.bing.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.mapquest.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.openlayers.js",
+    "public/javascripts/gmaps4rails/googlemaps.js",
+    "public/javascripts/gmaps4rails/mapquest.js",
+    "public/javascripts/gmaps4rails/openlayers.js",
     "public/stylesheets/gmaps4rails.css"
   ]
   s.homepage = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
@@ -62,13 +66,35 @@ Gem::Specification.new do |s|
     "test/dummy/db/schema.rb",
     "test/dummy/db/seeds.rb",
     "test/dummy/spec/base/base_spec.rb",
+    "test/dummy/spec/helpers/gmaps4rails_helper_spec.rb",
     "test/dummy/spec/javascripts/support/jasmine_config.rb",
     "test/dummy/spec/javascripts/support/jasmine_runner.rb",
     "test/dummy/spec/models/user_spec.rb",
     "test/dummy/spec/requests/users_spec.rb",
     "test/dummy/spec/spec_helper.rb",
     "test/dummy/spec/support/factories.rb",
-    "test/dummy/spec/support/matchers.rb"
+    "test/dummy/spec/support/matchers.rb",
+    "test/dummy31/app/controllers/application_controller.rb",
+    "test/dummy31/app/controllers/users_controller.rb",
+    "test/dummy31/app/helpers/application_helper.rb",
+    "test/dummy31/app/helpers/users_helper.rb",
+    "test/dummy31/app/models/user.rb",
+    "test/dummy31/config/application.rb",
+    "test/dummy31/config/boot.rb",
+    "test/dummy31/config/environment.rb",
+    "test/dummy31/config/environments/development.rb",
+    "test/dummy31/config/environments/production.rb",
+    "test/dummy31/config/environments/test.rb",
+    "test/dummy31/config/initializers/backtrace_silencers.rb",
+    "test/dummy31/config/initializers/inflections.rb",
+    "test/dummy31/config/initializers/mime_types.rb",
+    "test/dummy31/config/initializers/secret_token.rb",
+    "test/dummy31/config/initializers/session_store.rb",
+    "test/dummy31/config/initializers/wrap_parameters.rb",
+    "test/dummy31/config/routes.rb",
+    "test/dummy31/db/migrate/20110809134019_create_users.rb",
+    "test/dummy31/db/schema.rb",
+    "test/dummy31/db/seeds.rb"
   ]
 
   if s.respond_to? :specification_version then
