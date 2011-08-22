@@ -1,23 +1,31 @@
 class User < ActiveRecord::Base
    
-  acts_as_gmappable
-    
+  acts_as_gmappable :callback => :save_country 
+  
+  def save_country(data)
+    joe = []
+    debugger
+    joe << 1
+  end
+
   def gmaps4rails_address
     sec_address
   end
+  
+  
 
   
-  # def gmaps4rails_marker_picture
-  #   {
-  #   "picture" => "http://www.blankdots.com/img/github-32x32.png",
-  #   "width" => "32",
-  #   "height" => "32",
-  #   "shadow_picture" => "https://secure.gravatar.com/avatar/808bec1c640143bd7091888d9edfb2f2.png",
-  #   "shadow_height" => 40, 
-  #   "shadow_width" => 50,
-  #   "shadow_anchor" => [10, -30]
-  #   }
-  # end
+  def gmaps4rails_marker_picture
+    {
+    "width" => "32",
+    "height" => "32",
+    "rich_marker" => "<div class='my-marker'><img height='30' width='30' src='http://farm4.static.flickr.com/3212/3012579547_097e27ced9_m.jpg'/></div>",
+    "shadow_picture" => "https://secure.gravatar.com/avatar/808bec1c640143bd7091888d9edfb2f2.png",
+    "shadow_height" => 40, 
+    "shadow_width" => 50,
+    "shadow_anchor" => [10, -30]
+    }
+  end
   
   # 
   # def gmaps4rails_title

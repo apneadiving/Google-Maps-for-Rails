@@ -16,3 +16,9 @@
   width: 800px;
   height: 400px;
 }
+.my-marker {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+}

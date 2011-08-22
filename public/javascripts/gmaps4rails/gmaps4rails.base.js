@@ -337,6 +337,7 @@ var Gmaps4Rails = {
           "shadow_width":     this.exists(this.markers[i].shadow_width)   ? this.markers[i].shadow_width   : null,
           "shadow_height":    this.exists(this.markers[i].shadow_height)  ? this.markers[i].shadow_height  : null,
           "marker_draggable": this.exists(this.markers[i].draggable)      ? this.markers[i].draggable      : this.markers_conf.draggable,
+          "rich_marker":      this.exists(this.markers[i].rich_marker)    ? this.markers[i].rich_marker    : null,
           "Lat":              Lat,
           "Lng":              Lng,
           "index":            i

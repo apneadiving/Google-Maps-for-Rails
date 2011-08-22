@@ -15,4 +15,5 @@ gem "jquery-rails"
 	gem 'factory_girl_rails'
 	gem 'jasmine'
 	gem "shoulda-matchers"
+	gem 'wirble'
 #end

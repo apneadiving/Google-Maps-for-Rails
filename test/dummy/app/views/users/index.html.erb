@@ -1,5 +1,4 @@
 <%= stylesheet_link_tag 'test' %>
-
 <% content_for :scripts do -%>
  <script type="text/javascript" charset="utf-8">
 
@@ -109,9 +108,10 @@ var builder3 = [{
 <input type="text" name="some_name" value="" id="user_address">
 <p><%= link_to "New User", new_user_path %></p>
 <%#= gmaps({ 
-	"map_options" => {"zoom" =>3, "auto_adjust" => true},
+	"map_options" => { "do_clustering" => true},
 	"markers"     => {"data" => @json}
 }) %>
+<%= gmaps4rails(@json) %>
 <%#= gmaps(@options) %>
 <%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
           "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 

@@ -98,9 +98,10 @@ Gmaps4Rails.createMarker = function(args){
   var markerLatLng = Gmaps4Rails.createLatLng(args.Lat, args.Lng); 
 
   // Marker sizes are expressed as a Size of X,Y
-  if (args.marker_picture === "" ) { 
+  if (args.marker_picture === "" && args.rich_marker === null) { 
     return new google.maps.Marker({position: markerLatLng, map: Gmaps4Rails.map, title: args.marker_title, draggable: args.marker_draggable});
-  } else {
+  } 
+  else {
     // calculate MarkerImage anchor location
     var imageAnchorPosition  = this.createImageAnchorPosition(args.marker_anchor);
     var shadowAnchorPosition = this.createImageAnchorPosition(args.shadow_anchor);
@@ -108,8 +109,18 @@ Gmaps4Rails.createMarker = function(args){
     //create or retrieve existing MarkerImages
     var markerImage = this.createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition);
     var shadowImage = this.createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition);
-
-    return new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage});
+    if (args.rich_marker === null) {
+      return new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage});
+    }
+    else {
+      return new RichMarker({
+        position: markerLatLng,
+        map: Gmaps4Rails.map,
+        draggable: args.marker_draggable,
+        content: args.rich_marker,
+        flat: false
+        });
+    }
   }
 };
 
