@@ -1,4 +1,7 @@
 class UsersController < ApplicationController    
+  
+  respond_to :html, :json, :gmaps4rails
+  
   def index
     @users = User.all
     @json  = User.all.to_gmaps4rails do |user|
@@ -12,6 +15,11 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+  end
+  
+  def renderer
+    @users = User.all
+    respond_with @users
   end
 
   def create

@@ -6,7 +6,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     require 'gmaps4rails/extensions/array'
     require 'gmaps4rails/extensions/hash'
     require 'gmaps4rails/helper/gmaps4rails_helper'
-  
+    
     class Engine < Rails::Engine
        initializer "gmaps4rails view helpers" do |app|
          ActionView::Base.send :include, Gmaps4railsHelper

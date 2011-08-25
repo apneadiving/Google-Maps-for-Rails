@@ -20,4 +20,3 @@ describe "list creation", :js => true do
   end
   
 end
-

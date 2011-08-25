@@ -83,7 +83,7 @@ Done!
 
 == Options
 
-* Markers with Info window, Custom Picture
+* Markers with Info window, Custom Picture, RichMarkers (make your own markers with custom html)
 
 * Automatic sidebar with list of markers
 

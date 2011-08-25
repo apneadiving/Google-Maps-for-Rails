@@ -19,6 +19,7 @@
 .my-marker {
   background-color: red;
   width: 30px;
-  height: 30px;
+  height: 50px;
   padding: 5px;
+  font: 10% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
 }

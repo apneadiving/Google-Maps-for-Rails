@@ -106,7 +106,7 @@ Gmaps4Rails.createMarker = function(args){
       map: Gmaps4Rails.map,
       draggable: args.marker_draggable,
       content: args.rich_marker,
-      flat: false,
+      flat: args.marker_anchor === null ? false : args.marker_anchor[1],
       anchor: args.marker_anchor === null ? 0 : args.marker_anchor[0]
     });
   }
