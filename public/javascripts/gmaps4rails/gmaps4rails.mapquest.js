@@ -8,8 +8,8 @@ var Gmaps4RailsMapquest = function() {
   };
   this.markers_conf = {};
 
-  this.mergeObjectWithDefault("markers_conf");
-  this.mergeObjectWithDefault("map_options");
+  this.mergeWithDefault("markers_conf");
+  this.mergeWithDefault("map_options");
 
   ////////////////////////////////////////////////////
   /////////////// Basic Objects         //////////////

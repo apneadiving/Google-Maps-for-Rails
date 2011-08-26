@@ -7,7 +7,7 @@ var Gmaps4RailsGoogle = function() {
     type:                   "ROADMAP" // HYBRID, ROADMAP, SATELLITE, TERRAIN
   };
   
-  this.mergeObjectWithDefault("map_options");
+  this.mergeWithDefault("map_options");
   
   //markers + info styling
   this.markers_conf = {
@@ -17,8 +17,14 @@ var Gmaps4RailsGoogle = function() {
     custom_infowindow_class: null  
   };
   
-  this.mergeObjectWithDefault("markers_conf");
-      
+  this.mergeWithDefault("markers_conf");
+  
+  this.kml_options = {
+    clickable: true,
+    preserveViewport: false,
+    suppressInfoWindows: false
+  }; 
+  
   //Polygon Styling
   this.polygons_conf = {        // default style for polygons
     strokeColor: "#FFAA00",
@@ -268,6 +274,21 @@ var Gmaps4RailsGoogle = function() {
       this.visibleInfoWindow = infoWindow;
     };
   };
+  
+  ////////////////////////////////////////////////////
+  /////////////////        KML      //////////////////
+  ////////////////////////////////////////////////////
+  
+  this.createKmlLayer = function(kml){
+    var kml_options = kml.options || {};
+    kml_options = this.mergeObjectWithDefault(kml_options, this.kml_options);
+    var kml =  new google.maps.KmlLayer( kml.url,
+                                         kml_options 
+                                       );
+    kml.setMap(this.map);
+    return kml;                     
+  };
+
 
   ////////////////////////////////////////////////////
   /////////////////// Other methods //////////////////
@@ -280,6 +301,6 @@ var Gmaps4RailsGoogle = function() {
   this.centerMapOnUser = function(){
     this.map.setCenter(this.userLocation);
   };
-}
+};
 
 Gmaps4RailsGoogle.prototype = new Gmaps4Rails();

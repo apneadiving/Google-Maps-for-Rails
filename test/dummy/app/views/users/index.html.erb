@@ -111,20 +111,23 @@ var builder3 = [{
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps({:markers => {:data => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "zoom" => 5, "id" => "bob" } }) %>
-<%= gmaps({"markers" => {"data" => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 },
-          :scripts => "none" }) %>
-<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "provider" => "openlayers", "id" => "joe" },
-          "scripts" => "api" }) %> 
-<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "id" => "joe3", "provider" => "mapquest", "provider_key" => MAPQUEST_KEY },
-          "scripts" => "api" }) %> 
-<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "id" => "joe2", "provider" => "bing", "provider_key" => BING_KEY },
-          "scripts" => "api" }) %>
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true  } },
+          :map_options => { :auto_adjust => true, :zoom => 5, :id => "bob" },
+          :kml => {:data => '[{ url: "http://www.searcharoo.net/SearchKml/newyork.kml"}, 
+                              { url: "http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml",
+                                options: {clickable: false } }]' } ) %>
+<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
+          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5 },
+          :scripts => "none" ) %>
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
+          :scripts => "api" ) %> 
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
+          :scripts => "api" ) %> 
+<%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
+          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe2", :provider => "bing", :provider_key => BING_KEY },
+          :scripts => "api" ) %>
 <%#= gmaps({
          "map_options" => { "auto_adjust" => false, "zoom" => 0, "libraries" => ["places"] },
          "markers" => { "data" => @json }

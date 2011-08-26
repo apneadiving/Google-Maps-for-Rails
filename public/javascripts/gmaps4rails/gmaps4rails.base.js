@@ -241,7 +241,7 @@ function Gmaps4Rails() {
     //save polygon in list
     this.polygons[i].serviceObject = new_poly;
     new_poly.setMap(this.map);
-  },
+  }
 
   ////////////////////////////////////////////////////
   /////////////////// POLYLINES //////////////////////
@@ -252,7 +252,7 @@ function Gmaps4Rails() {
     for (var i = 0; i < this.polylines.length; ++i) {
       this.create_polyline(i);
     }
-  },
+  }
 
   //creates a single polyline, triggered by create_polylines
   this.create_polyline = function(i) {
@@ -298,7 +298,7 @@ function Gmaps4Rails() {
     //save polyline
     this.polylines[i].serviceObject = new_poly;
     new_poly.setMap(this.map);
-  },
+  }
 
   ////////////////////////////////////////////////////
   ///////////////////// MARKERS //////////////////////
@@ -472,6 +472,16 @@ function Gmaps4Rails() {
       }
     }
   }
+  
+  ////////////////////////////////////////////////////
+  /////////////////        KML      //////////////////
+  ////////////////////////////////////////////////////
+  
+  this.create_kml = function(){
+    for (var i = 0; i <  this.kml.length; ++i) {
+      this.kml[i].serviceObject = this.createKmlLayer(this.kml[i]);
+    }
+  }
 
 
   ////////////////////////////////////////////////////
@@ -493,18 +503,23 @@ function Gmaps4Rails() {
     return [Lat, Lng];
   }
   
-  this.mergeObjectWithDefault = function(objectName){
-    var default_obj = this["default_" + objectName];
-    var obj = this[objectName];
-    for (var attrname in default_obj) {
-      if ( typeof(obj[attrname]) === "undefined") {
-        obj[attrname] = default_obj[attrname];
+  this.mergeObjectWithDefault = function(object1, object2){
+    var copy_object1 = object1;
+    for (var attrname in object2) {
+      if ( typeof(copy_object1[attrname]) === "undefined") {
+        copy_object1[attrname] = object2[attrname];
       } 
     }
+    return copy_object1;
+  }
+  
+  this.mergeWithDefault = function(objectName){
+    var default_object = this["default_" + objectName];
+    var object = this[objectName];
+    this[objectName] = this.mergeObjectWithDefault(object, default_object);
     return true;
   }
-
   //gives a value between -1 and 1
   this.random = function() { return(Math.random() * 2 -1); }	
 
-};
+}

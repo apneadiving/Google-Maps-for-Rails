@@ -19,24 +19,42 @@ describe("Gmaps4Rails", function() {
       });
     });
     
-    describe("mergeObjectWithDefault", function() {
-      it("should merge default_object within object", function() {
-        gmap.default_foo = {
-          foo: 1,
-          bar: 1
-        };
-        gmap.foo= {
-          bar: 2,
-          baz: 3
-        };
-        expect(gmap.mergeObjectWithDefault("foo")).toBeTruthy();
-        expect(gmap.foo).toEqual({
-                                   foo: 1,
-                                   bar: 2,
-                                   baz: 3
-                                });
+    describe("merges", function() {
+      var default_obj = {
+        foo: 1,
+        bar: 1
+      };
+      var obj = {
+        bar: 2,
+        baz: 3
+      };
+      var expected_result = {  
+         foo: 1,
+         bar: 2,
+         baz: 3
+      };
+      
+      describe("mergeWithDefault", function() {
+        it("should merge default_object within object", function() {
+          gmap.default_foo = default_obj;
+          gmap.foo = obj;
+          expect(gmap.mergeWithDefault("foo")).toBeTruthy();
+          expect(gmap.foo).toEqual(expected_result);
+        });
+      });
+    
+      describe("mergeObjectWithDefault", function() {
+        it("should return proper values without changing actual objects", function() {
+          var copy_default = default_obj;
+          var copy_obj = obj;
+          var result = gmap.mergeObjectWithDefault(copy_obj, copy_default);
+          expect(result).toEqual(expected_result);
+          expect(obj).toEqual(copy_obj);
+          expect(default_obj).toEqual(copy_default);
+        });
       });
     });
+
 
     describe("random", function() {
       it("should return a number between between -1 and 1", function() {

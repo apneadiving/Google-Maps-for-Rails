@@ -7,8 +7,8 @@ var Gmaps4RailsBing = function() {
     infobox:  "description"  // description or htmlContent
   };
 
-  this.mergeObjectWithDefault("map_options");
-  this.mergeObjectWithDefault("markers_conf");
+  this.mergeWithDefault("map_options");
+  this.mergeWithDefault("markers_conf");
   
   ////////////////////////////////////////////////////
   /////////////// Basic Objects         //////////////
@@ -202,6 +202,6 @@ var Gmaps4RailsBing = function() {
   this.centerMapOnUser = function(){
     this.map.setView({ center: this.userLocation});
   };
-}
+};
 
 Gmaps4RailsBing.prototype = new Gmaps4Rails();

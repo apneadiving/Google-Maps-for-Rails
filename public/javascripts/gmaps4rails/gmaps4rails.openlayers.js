@@ -8,9 +8,9 @@ var Gmaps4RailsOpenlayers = function() {
   // http://openlayers.org/dev/examples
   //http://docs.openlayers.org/contents.html
   this.map_options = {};
-  this.mergeObjectWithDefault("map_options");
+  this.mergeWithDefault("map_options");
   this.markers_conf = {};
-  this.mergeObjectWithDefault("markers_conf");
+  this.mergeWithDefault("markers_conf");
   
   this.openMarkers = null;
   this.markersLayer = null;
@@ -263,6 +263,6 @@ var Gmaps4RailsOpenlayers = function() {
   this.centerMapOnUser = function(){
     this.map.setCenter(this.userLocation);
   };
-}
+};
 
 Gmaps4RailsOpenlayers.prototype = new Gmaps4Rails();
