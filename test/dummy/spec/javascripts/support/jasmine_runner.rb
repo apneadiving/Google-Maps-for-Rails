@@ -16,5 +16,5 @@ RSpec.configuration.after(:suite) do
 end
 
 spec_builder.start
-should_stop = true
+should_stop = false #default true
 spec_builder.declare_suites

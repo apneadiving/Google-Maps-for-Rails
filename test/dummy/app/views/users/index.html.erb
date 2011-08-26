@@ -48,7 +48,7 @@ var builder3 = [{
 </script>
 <% @options = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
-        "markers"     => { "data" => '[{ "description": "", "title": "", "lng": "5.9311119", "lat": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "lng": "2.3509871", "lat": "48.8566667", "picture": "", "width": "", "height": "" } ]',
+        "markers"     => { "data" => '[{ "lng": "5.9311119", "lat": "43.1251606" } ,{  "lng": "2.3509871", "lat": "48.8566667"},{  "lng": "O", "lat": "0"} ]',
                           },
         "polylines"   => { "data" => '[[
 {"lng": -122.214897, "lat": 37.772323},
@@ -80,7 +80,7 @@ var builder3 = [{
 %>
 <script type="text/javascript" charset="utf-8">
 	function add_all(locations) {
-	<%=raw @options.to_gmaps4rails(true) %>
+	<%#=raw @options.to_gmaps4rails(true) %>
 	}
 </script>
 <% end -%>
@@ -110,10 +110,21 @@ var builder3 = [{
 	"map_options" => { "do_clustering" => true},
 	"markers"     => {"data" => @json}
 }) %>
-<%= gmaps4rails(@json) %>
 <%#= gmaps(@options) %>
-<%#= gmaps("markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
-          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 }) %> 
+<%= gmaps({:markers => {:data => @json, "options" => {"do_clustering" => true, "draggable" => true  } },
+          "map_options" => { "auto_adjust" => true, "zoom" => 5, "id" => "bob" } }) %>
+<%= gmaps({"markers" => {"data" => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5 },
+          :scripts => "none" }) %>
+<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "provider" => "openlayers", "id" => "joe" },
+          "scripts" => "api" }) %> 
+<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "id" => "joe3", "provider" => "mapquest", "provider_key" => MAPQUEST_KEY },
+          "scripts" => "api" }) %> 
+<%= gmaps({"markers" => {"data" => @json, "options" => {"do_clustering" => false, "draggable" => true  } },
+          "map_options" => { "auto_adjust" => true, "center_on_user" => true, "zoom" => 5, "id" => "joe2", "provider" => "bing", "provider_key" => BING_KEY },
+          "scripts" => "api" }) %>
 <%#= gmaps({
          "map_options" => { "auto_adjust" => false, "zoom" => 0, "libraries" => ["places"] },
          "markers" => { "data" => @json }
@@ -128,36 +139,6 @@ var builder3 = [{
 					 %>
 
 <% content_for :scripts do %>
-<script>
-
-Gmaps4Rails.counter = 1;
-
-  Gmaps4Rails.callback = function() {
-
-    
-  if (Gmaps4Rails.counter == 0){
-        Gmaps4Rails.counter += 1;
-        
-
-  <%=   { "map_options" => {  "container_id" => "second_cont", "id" => "second_map",
-                              "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true 
-                              },
-             "markers"     => { "data" => @json }
-           }.to_gmaps4rails(true).html_safe
-  %>
-   }
-
-  };
-
-
-  
-  my_test = function(id) {
-    return function(){
-        alert(id );
-    };
-  };
-</script>
-
 <script type="text/javascript" charset="utf-8">
 function initialize_gmaps_autocomplete_user_address()
   {
@@ -224,7 +205,6 @@ function initialize_gmaps_autocomplete_user_address()
 	// };        
 	</script>
 <% end %>
-
 <div> style="margin-top: 500px;"
   <button type="button" onclick="Gmaps4Rails.replaceMarkers(builder2)">Replace Markers</button>
   <button type="button" onclick="Gmaps4Rails.addMarkers(builder2)">Add Markers</button>

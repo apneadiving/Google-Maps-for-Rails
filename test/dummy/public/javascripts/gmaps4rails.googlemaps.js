@@ -1,1 +1,1 @@
-../../../../public/javascripts/gmaps4rails.googlemaps.js
+../../../../public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js

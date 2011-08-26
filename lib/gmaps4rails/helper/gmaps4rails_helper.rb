@@ -5,15 +5,15 @@ module Gmaps4railsHelper
   def gmaps4rails(builder, enable_css = true, enable_js = true )
     options = {
       "map_options" => { "auto_adjust" => true},
-      "markers"     => { "data" => builder }
-    }
+      "markers"     => { "data" => builder, "options" => { "do_clustering" => true} }
+    }.with_indifferent_access
     render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options, :enable_css => enable_css, :enable_js => enable_js }
   end
   
   # complete helper to pass all variables alongside their options
   
   def gmaps(options, enable_css = true, enable_js = true )
-    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options, :enable_css => enable_css, :enable_js => enable_js }
+    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options.with_indifferent_access, :enable_css => enable_css, :enable_js => enable_js }
   end
   
   def g_libraries(libraries_array)

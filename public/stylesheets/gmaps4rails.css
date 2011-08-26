@@ -1,4 +1,4 @@
-#map_container {
+.map_container {
   padding: 6px;
   border-width: 1px;
   border-style: solid;
@@ -9,7 +9,7 @@
   width: 800px;
 }
 
-#gmaps4rails_map {
+.gmaps4rails_map {
   width: 800px;
   height: 400px;
 }

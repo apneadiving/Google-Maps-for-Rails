@@ -77,7 +77,7 @@ getEmptyMarker = function() {
 };
 
 clearMarkerTraces = function(){
-  Gmaps4Rails.markers = [];
-	Gmaps4Rails.markers_conf.offset = 0;
-	Gmaps4Rails.markers_conf.randomize = false;
+  gmap.markers = [];
+	gmap.markers_conf.offset = 0;
+	gmap.markers_conf.randomize = false;
 };

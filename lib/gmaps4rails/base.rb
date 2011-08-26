@@ -3,6 +3,7 @@ require 'uri'
 require 'crack'
 
 module Gmaps4rails
+  DEFAULT_MAP_ID     = "map"
   
   class GeocodeStatus < StandardError; end
   class GeocodeNetStatus < StandardError; end
@@ -40,6 +41,14 @@ module Gmaps4rails
   
   def Gmaps4rails.sidebar(object)
     return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
+  end
+  
+  def Gmaps4rails.get_map_id(hash)
+    hash.nil? || hash.try(:[], "id").nil? ? DEFAULT_MAP_ID : hash["id"]
+  end
+  
+  def Gmaps4rails.get_constructor(hash)
+    hash.nil? || hash.try(:[], "provider").nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash["provider"].capitalize}()"
   end
 
   # Returns picture options if gmaps4rails_marker_picture is defined in the model

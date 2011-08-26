@@ -1,16 +1,16 @@
 <% #thanks to enable_css, user can avoid this css to be loaded
-if enable_css == true %>
+if enable_css == true && options[:scripts] == nil %>
 	<% content_for :head do %>
 	<%= stylesheet_link_tag 'gmaps4rails' %>
 	<% end %>
 <% end %>
 <% content_for :scripts do %>
-<% if enable_js == true %>
+<% if enable_js == true &&  options[:scripts] != "none" %>
   <% case options[:map_options].try(:[], :provider) %>
   <% when "openlayers" %>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
   <% when "mapquest" %>
-    <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=#{options[:map_options].try(:[], :provider_key)}"></script>
+    <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= options[:map_options].try(:[], :provider_key) %>"></script>
   <% when "bing" %>
     <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
   <% else %>
@@ -20,17 +20,16 @@ if enable_css == true %>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/richmarker/src/richmarker-compiled.js"></script>  
   <% end %>
   
-  <% if Rails::VERSION::MINOR < 1 %>
-    <% unless options[:scripts] == :api %>
+  <% if Rails::VERSION::MAJOR >= 3 and Rails::VERSION::MINOR < 1 %>
+    <% unless options[:scripts] == "api" %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.base.js' %>
     <% end %>
-    
     <% case options[:map_options].try(:[], :provider) %>
-    <% when :openlayers %>
+    <% when "openlayers" %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.openlayers.js' %>
-    <% when :mapquest %>
+    <% when "mapquest" %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.mapquest.js' %>
-    <% when :bing %>
+    <% when "bing" %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.bing.js' %>
     <% else %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.googlemaps.js' %>
@@ -38,28 +37,29 @@ if enable_css == true %>
   <% end %>
 <% end  %>
 <script type="text/javascript" charset="utf-8">
-function gmaps4rails_init() {
+
+function <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>() {
   <% #true is passed here to trigger map initialization %>
   <%=raw options.to_gmaps4rails(true) %>
 };
 
-window.onload = gmaps4rails_init;
+window.onload = <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>();
 
 </script>
 <% end %>
 
 
-<% case options['map_options'].try(:[], :provider)  %>
+<% case options[:map_options].try(:[], :provider)  %>
 <% when "mapquest" %>
-<div id="mapQuest" style="width:750px; height:475px;">
+<div id="<%= options[:map_options].try(:[],:id) || Gmaps4rails::DEFAULT_MAP_ID %>" style="width:750px; height:475px;">
   <!-- TODO: change this style dynamically -->  
 </div>
 <% when "bing" %>
-<div id="<%= options['map_options'].try(:[],'container_id') || "map_container" %>" > 
-  <div id="<%= options['map_options'].try(:[],'id') || "gmaps4rails_map" %>" class="bing_map"></div>
+<div id="<%= options[:map_options].try(:[], :container_id) || "map_container" %>" > 
+  <div id="<%= options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID %>" class="bing_map"></div>
 </div>
 <% else %>
-<div id="<%= options['map_options'].try(:[],'container_id') || "map_container" %>"> 
-  <div id="<%= options['map_options'].try(:[],'id') || "gmaps4rails_map" %>"></div>
+<div class="<%= options[:map_options].try(:[], :container_id) || "map_container" %>"> 
+  <div id="<%= options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID %>" class="<%= options[:map_options].try(:[], :class) || "gmaps4rails_map" %>"></div>
 </div>
 <% end %>

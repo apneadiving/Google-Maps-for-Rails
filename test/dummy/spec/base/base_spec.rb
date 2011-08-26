@@ -13,6 +13,43 @@ describe "Geocode" do
   it "should raise an error when net connection failed" #TODO: Damn, I don't know how to test that!
 
 end
+describe "JS building methods" do
+  
+  describe "constructor name retrieval" do
+    it "should render google if nothing passed" do
+      Gmaps4rails.get_constructor(nil).should eq "Gmaps4RailsGoogle()"
+    end
+    
+    it "should render proper provider when provided" do
+      options_hash = { "provider" => "bing" }
+      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsBing()"
+      
+      options_hash = { "provider" => "mapquest" }
+      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsMapquest()"
+      
+      options_hash = { "provider" => "openlayers" }
+      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsOpenlayers()"
+    end
+  end
+  
+  describe "map ID retrieval" do
+    it "should return the default ID when nothing is passed" do
+      options_hash = nil
+      Gmaps4rails.get_map_id(options_hash).should eq Gmaps4rails::DEFAULT_MAP_ID
+    end
+  
+    it "should return the default ID when no id is passed within map_options" do
+      options_hash = { "foo" => "bar" }
+      Gmaps4rails.get_map_id(options_hash).should eq Gmaps4rails::DEFAULT_MAP_ID
+    end
+  
+    it "should return the proper ID when id passed" do
+      options_hash = { "id" => "foo" }
+      Gmaps4rails.get_map_id(options_hash).should eq "foo"    
+    end
+  
+  end
+end
 
 describe "JS creation from hash" do  
 
@@ -117,6 +154,7 @@ describe "Hash extension" do
   
     @options.to_gmaps4rails(true).should include "Gmaps4Rails.initialize();"
   end
+  
 
 end
 
