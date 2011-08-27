@@ -3,31 +3,33 @@ class Hash
   # this method extracts all info from the hash to create javascript
   # this javascript is then rendered raw to the view so it can be interpreted and executed
   
-  def to_gmaps4rails(init = false)
+  def to_gmaps4rails(edit_map_with_id = false)
     #the variable 'options' must have the following structure
     #{  
-    #   "map_options" => hash,
-    #   "markers"     => { "data" => json, "options" => hash },
-    #   "polylines"   => { "data" => json, "options" => hash },
-    #   "polygons"    => { "data" => json, "options" => hash },
-    #   "circles"     => { "data" => json, "options" => hash },
-    #   "direction"   => { "data" => hash, "options" => hash }
+    #   :map_options => hash,
+    #   :markers     => { :data => json, :options => hash },
+    #   :polylines   => { :data => json, :options => hash },
+    #   :polygons    => { :data => json, :options => hash },
+    #   :circles     => { :data => json, :options => hash },
+    #   :direction   => { :data => hash, :options => hash },
+    #   :kml         => { :data => json, :options => hash }
     #}
-    # "map_options" and "direction" must be treated separately because there content is slightly different from the others:
-    # - "map_options" has no data
+    # "map_options", "scripts" and "direction" must be treated separately because there content is slightly different from the others:
+    # - "map_options" and "scripts" don't contain interesting data for the view
     # - "direction" has a hash as a data and waypoints options must be processed properly
     # 
     # in the following code, I loop through the elements of the hash
     #
     result = Array.new
-    map_id = "Gmaps." + Gmaps4rails.get_map_id(self[:map_options])
-    js_object_constructor = Gmaps4rails.get_constructor(self[:map_options])
+    map_id = edit_map_with_id || "Gmaps." + Gmaps4rails.get_map_id(self[:map_options])
     
-    result << "#{map_id} = new #{js_object_constructor}" + ";"
-    
-    #Don't display js concerning map if no need to be initialized
-    #if init == true
-      #because map should be initialized first, we must extract possible map_options
+    #means we are creating a new map
+    if edit_map_with_id == false 
+      
+      js_object_constructor = Gmaps4rails.get_constructor(self[:map_options])
+      result << "#{map_id} = new #{js_object_constructor}" + ";"
+      
+      #extract map_options
       unless self[:map_options].nil?
         self[:map_options].each do |option_k, option_v|
           if option_k == "bounds" #particular case
@@ -39,7 +41,8 @@ class Hash
       end
 
       result << "#{map_id}.initialize();"
-    #end #if init
+    end
+    
     each do |category, content| #loop through options hash
       case category
       when "map_options"

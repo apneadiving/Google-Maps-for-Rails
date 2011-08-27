@@ -39,8 +39,7 @@ if enable_css == true && options[:scripts] == nil %>
 <script type="text/javascript" charset="utf-8">
 
 function <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>() {
-  <% #true is passed here to trigger map initialization %>
-  <%=raw options.to_gmaps4rails(true) %>
+  <%=raw options.to_gmaps4rails %>
 };
 
 window.onload = <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>();
