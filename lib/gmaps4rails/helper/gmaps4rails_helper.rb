@@ -21,4 +21,19 @@ module Gmaps4railsHelper
     "," + libraries_array.join(",")
   end
 
+  def gmap_get_function(options)
+    "load_" + Gmaps4rails.get_map_id(options[:map_options])
+  end
+  
+  def gmap_map_id(options)
+    options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID
+  end
+  
+  def gmap_container_id(options)
+    options[:map_options].try(:[], :container_id) || "map_container"
+  end
+  
+  def gmap_map_class(options)
+    options[:map_options].try(:[], :class) || "gmaps4rails_map"
+  end
 end

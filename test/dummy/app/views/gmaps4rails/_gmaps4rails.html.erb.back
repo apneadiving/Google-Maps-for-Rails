@@ -38,11 +38,11 @@ if enable_css == true && options[:scripts] == nil %>
 <% end  %>
 <script type="text/javascript" charset="utf-8">
 
-function <%= gmaps_get_function %>() {
-  <%=raw options.to_gmaps4rails(options) %>
+function <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>() {
+  <%=raw options.to_gmaps4rails %>
 };
 
-window.onload = <%= gmap_get_function(options) %>();
+window.onload = <%= "load_" + Gmaps4rails.get_map_id(options[:map_options]) %>();
 
 </script>
 <% end %>
@@ -50,15 +50,15 @@ window.onload = <%= gmap_get_function(options) %>();
 
 <% case options[:map_options].try(:[], :provider)  %>
 <% when "mapquest" %>
-<div id="<%= gmap_map_id(options) %>" style="width:750px; height:475px;">
+<div id="<%= options[:map_options].try(:[],:id) || Gmaps4rails::DEFAULT_MAP_ID %>" style="width:750px; height:475px;">
   <!-- TODO: change this style dynamically -->  
 </div>
 <% when "bing" %>
-<div id="<%= gmap_container_id(options) %>" > 
-  <div id="<%= gmap_map_id(options) %>" class="bing_map"></div>
+<div id="<%= options[:map_options].try(:[], :container_id) || "map_container" %>" > 
+  <div id="<%= options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID %>" class="bing_map"></div>
 </div>
 <% else %>
-<div class="<%= gmap_container_id(options) %>"> 
-  <div id="<%= gmap_map_id(options) %>" class="<%= gmap_map_class(options) %>"></div>
+<div class="<%= options[:map_options].try(:[], :container_id) || "map_container" %>"> 
+  <div id="<%= options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID %>" class="<%= options[:map_options].try(:[], :class) || "gmaps4rails_map" %>"></div>
 </div>
 <% end %>
