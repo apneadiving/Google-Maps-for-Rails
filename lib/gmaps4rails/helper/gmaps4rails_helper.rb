@@ -20,10 +20,6 @@ module Gmaps4railsHelper
     return "" if libraries_array.nil?
     "," + libraries_array.join(",")
   end
-
-  def gmaps_get_function(options)
-    "load_" + Gmaps4rails.get_map_id(options[:map_options])
-  end
   
   def gmaps_map_id(options)
     options[:map_options].try(:[], :id) || Gmaps4rails::DEFAULT_MAP_ID

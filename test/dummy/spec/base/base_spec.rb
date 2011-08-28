@@ -91,7 +91,8 @@ describe "to_gmaps4rails for hash" do
       }
     result = options_hash.to_gmaps4rails
     #map
-    result.should include "Gmaps.map = new Gmaps4RailsGoogle();\nGmaps.map.map_options.center_longitude = 180;\nGmaps.map.map_options.type = 'SATELLITE';\nGmaps.map.map_options.zoom = 3;\nGmaps.map.initialize();"
+    result.should include "Gmaps.map = new Gmaps4RailsGoogle();"
+    result.should include "Gmaps.map.map_options.center_longitude = 180;\nGmaps.map.map_options.type = 'SATELLITE';\nGmaps.map.map_options.zoom = 3;\nGmaps.map.initialize();"
     #polylines
     result.should include "Gmaps.map.polylines = [[\n{\"longitude\": -122.214897, \"latitude\": 37.772323},\n{\"longitude\": -157.821856, \"latitude\": 21.291982},\n{\"longitude\": 178.431, \"latitude\": -18.142599},\n{\"longitude\": 153.027892, \"latitude\": -27.46758}\n],\n[\n{\"longitude\": -120.214897, \"latitude\": 30.772323, \"strokeColor\": \"#000\", \"strokeWeight\" : 2 },\n{\"longitude\": -10.821856, \"latitude\": 50.291982}\n]];\nGmaps.map.create_polylines();"
     #circles

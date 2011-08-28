@@ -436,13 +436,19 @@ function Gmaps4Rails() {
       //from markers
       this.extendBoundsWithMarkers();
 
-      //from polygons:
-      for (var i = 0; i <  this.polylines.length; ++i) {
-        this.polylines[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ this.boundsObject.extend(obj2);} );});
-      }
       //from polylines:
-      for (var i = 0; i <  this.polygons.length; ++i) {
-        this.polygons[i].serviceObject.latLngs.forEach(function(obj1){ obj1.forEach(function(obj2){ this.boundsObject.extend(obj2);} );});
+      for (var i = 0; i < this.polylines.length; ++i) {        
+        var polyline_points = this.polylines[i].serviceObject.latLngs.getArray()[0].getArray();
+        for (var j = 0; j < polyline_points.length; ++j) {
+         this.boundsObject.extend(polyline_points[j]);
+        }
+      }
+      //from polygons:
+      for (var i = 0; i < this.polygons.length; ++i) {
+        var polygon_points = this.polygons[i].serviceObject.latLngs.getArray()[0].getArray();
+        for (var j = 0; j < polygon_points.length; ++j) {
+          this.boundsObject.extend(polygon_points[j]);
+        }
       }
       //from circles
       for (var i = 0; i <  this.circles.length; ++i) {

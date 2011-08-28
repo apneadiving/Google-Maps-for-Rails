@@ -180,6 +180,10 @@ module Gmaps4rails
     end #end resp test
   end
   
+  def Gmaps4rails.js_function_name(hash)
+    "load_" + Gmaps4rails.get_map_id(hash[:map_options])
+  end
+  
   def Gmaps4rails.create_js_from_hash(hash, edit_map_with_id = false)
     #the variable 'options' must have the following structure
     #{  
@@ -204,7 +208,7 @@ module Gmaps4rails
 
       js_object_constructor = Gmaps4rails.get_constructor(hash[:map_options])
       result << "#{map_id} = new #{js_object_constructor}" + ";"
-
+      result << "function #{Gmaps4rails.js_function_name(hash)}() {"
       #extract map_options
       unless hash[:map_options].nil?
         hash[:map_options].each do |option_k, option_v|
@@ -252,6 +256,11 @@ module Gmaps4rails
       end 
     end
     result << "#{map_id}.callback();"
+    
+    if edit_map_with_id == false 
+      result << "};\nwindow.onload = #{Gmaps4rails.js_function_name(hash)};"
+    end
+    
     result * ('
 ')
   end

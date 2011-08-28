@@ -24,19 +24,16 @@ var styles = [{
         opt_textSize: 12
       }];
 
-var builder2 =       {
-      "lng": "5.9311119",
-      "lat": "42.1251606",
-      };
-      // [
-// {
-// "lng": "5.9311119",
-// "lat": "42.1251606",
-// } //,{
-// // "lng": "32.3509871",
-// // "lat": "47.8566667",
-// // }
-// ];
+var builder2 =  
+      [
+{
+"lng": "5.9311119",
+"lat": "42.1251606",
+} ,{
+"lng": "32.3509871",
+"lat": "47.8566667",
+}
+];
 var builder3 = [{
 "lng": "6.9311119",
 "lat": "49.1251606",
@@ -46,8 +43,8 @@ var builder3 = [{
 } ];
 </script>
 <% @options = {
-        "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, "auto_adjust" => true},
-        "markers"     => { "data" => '[{ "lng": "5.9311119", "lat": "43.1251606" } ,{  "lng": "2.3509871", "lat": "48.8566667"},{  "lng": "O", "lat": "0"} ]',
+        "map_options" => { "type" => "SATELLITE", "zoom" => 3, "auto_adjust" => true},
+        "markers"     => { "data" => '[{ "lng": "5.9311119", "lat": "43.1251606" } ,{  "lng": "2.3509871", "lat": "48.8566667"},{  "lng": "0", "lat": "0"} ]',
                           },
         "polylines"   => { "data" => '[[
 {"lng": -122.214897, "lat": 37.772323},
@@ -69,19 +66,14 @@ var builder3 = [{
 {"lng": 122.214897, "lat": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
 ]',
                           },
-"direction"   => { "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
-                   "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
-                  }
+# "direction"   => { "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
+#                    "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
+#                   }
 }
 @options2 = {
   "markers"     => { "data" => '[{ "description": "", "title": "", "lng": "5.9311119", "lat": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "lng": "2.3509871", "lat": "48.8566667", "picture": "", "width": "", "height": "" } ]', "options" => { "auto_adjust" => true } }
     }
 %>
-<script type="text/javascript" charset="utf-8">
-	function add_all(locations) {
-	<%#=raw @options.to_gmaps4rails(true) %>
-	}
-</script>
 <% end -%>
 <%= "There are #{@users.size} users in the db" %>
 <table>
@@ -109,12 +101,9 @@ var builder3 = [{
 	"map_options" => { "do_clustering" => true},
 	"markers"     => {"data" => @json}
 }) %>
-<%#= gmaps(@options) %>
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true  } },
-          :map_options => { :auto_adjust => true, :zoom => 5, :id => "bob" },
-          :kml => {:data => '[{ url: "http://www.searcharoo.net/SearchKml/newyork.kml"}, 
-                              { url: "http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml",
-                                options: {clickable: false } }]' } ) %>
+<%= gmaps(@options) %>
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => true } },
+          :map_options => { :auto_adjust => true, :zoom => 5 }) %>
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5 },
           :scripts => "none" ) %>
@@ -132,35 +121,26 @@ var builder3 = [{
          "markers" => { "data" => @json }
           }, true, true) %> 
 
-<!-- <div id="second_cont" class="map_container"> 
-  <div id="second_map" class="gmaps4rails_map"></div>
-</div> -->
-<%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
-%>
-<%#= gmaps({"map_options" => { "auto_adjust" => true } }) %> <%#"bounds" => '[{"lat": 0, "lng": 10 }, {"lat": 20, "lng": 110 } ]'
-					 %>
-
 <% content_for :scripts do %>
 <script type="text/javascript" charset="utf-8">
-function initialize_gmaps_autocomplete_user_address()
-  {
-   var input = document.getElementById('user_address');
-   var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
-                                                    new google.maps.LatLng(51.179343,8.47412)
-                                                    );
-   var autocomplete = new google.maps.places.Autocomplete(input);
-   autocomplete.setBounds(defaultBounds);
-   autocomplete.setTypes(['geocode']);
-}
-//initialize_gmaps_autocomplete_user_address();
-	//  Gmaps4Rails.callback = function() {
-	//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
-	//     for (var i = 0; i <  Gmaps4Rails.markers.length; ++i) {
-	//          google.maps.event.addListener(Gmaps4Rails.markers[i].serviceObject, 'click', say_yo(i));
-	//     }
-	//  	//google.maps.event.addListener(Gmaps4Rails.map, 'click', function(event){ Gmaps4Rails.bounds = event; new google.maps.Marker({position: event.latLng, map: Gmaps4Rails.map});});
-	//     //$("#markers_list").children().first().click(function(){alert('clicked');});
-	// }
+// function initialize_gmaps_autocomplete_user_address()
+//   {
+//    var input = document.getElementById('user_address');
+//    var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
+//                                                     new google.maps.LatLng(51.179343,8.47412)
+//                                                     );
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    autocomplete.setBounds(defaultBounds);
+//    autocomplete.setTypes(['geocode']);
+// };
+// initialize_gmaps_autocomplete_user_address();
+//  Gmaps.map.callback = function() {
+//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};}
+//     
+//     for (var i = 0; i <  Gmaps.map.markers.length; ++i) {
+//          google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'click', say_yo(i));
+//     }
+// }
 	// 
 	// 
 	// Gmaps4Rails.customClusterer = function() {
@@ -185,33 +165,31 @@ function initialize_gmaps_autocomplete_user_address()
 </script>
 	<script type="text/javascript" charset="utf-8">
 	// 
-	// Gmaps4Rails.HandleDragend = function(pos) {
-	//   var geocoder = new google.maps.Geocoder();
-	//   geocoder.geocode({
-	//     latLng: pos
-	//   }, function(responses) {
-	//     if (responses && responses.length > 0) {
-	//       alert(responses[0].formatted_address);
-	//     } else {
-	//     alert('Cannot determine address at this location.');
-	//     }
-	//   });
-	// };
-	// 
-	// 
-	// Gmaps4Rails.callback = function() {
-	//   for (var i = 0; i <  this.markers.length; ++i) {
-	//      var currentMarker = Gmaps4Rails.markers[i].serviceObject;
-	//      google.maps.event.addListener(currentMarker, 'dragend', function() { Gmaps4Rails.HandleDragend(currentMarker.getPosition()) });
-	//   }
-	// };        
+  // Gmaps.map.HandleDragend = function(pos) {
+  //   var geocoder = new google.maps.Geocoder();
+  //   geocoder.geocode({
+  //     latLng: pos
+  //   }, function(responses) {
+  //     if (responses && responses.length > 0) {
+  //       alert(responses[0].formatted_address);
+  //     } else {
+  //     alert('Cannot determine address at this location.');
+  //     }
+  //   });
+  // };
+  // 
+  // 
+  // Gmaps.map.callback = function() {
+  //   for (var i = 0; i <  this.markers.length; ++i) {
+  //      google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'dragend', function() { Gmaps.map.HandleDragend(this.getPosition()) });
+  //   }
+  // };        
 	</script>
 <% end %>
 <div> style="margin-top: 500px;"
-  <button type="button" onclick="Gmaps4Rails.replaceMarkers(builder2)">Replace Markers</button>
-  <button type="button" onclick="Gmaps4Rails.addMarkers(builder2)">Add Markers</button>
-  <button type="button" onclick="Gmaps4Rails.addMarkers(builder3)">Add Markers bis</button>
-  <button type="button" onclick="add_all()">Add all</button>
+  <button type="button" onclick="Gmaps.map.replaceMarkers(builder2)">Replace Markers</button>
+  <button type="button" onclick="Gmaps.map.addMarkers(builder2)">Add Markers</button>
+  <button type="button" onclick="Gmaps.map.addMarkers(builder3)">Add Markers bis</button>
   <button type="button" id="ajax_map">Ajax Map</button>
 
   <div>
