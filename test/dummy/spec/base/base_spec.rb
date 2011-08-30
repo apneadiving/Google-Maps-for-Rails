@@ -112,6 +112,8 @@ describe "to_gmaps4rails for hash" do
     result.should include "Gmaps.map.kml = [{ url: \"http://www.searcharoo.net/SearchKml/newyork.kml\"}, { url: \"http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml\", options: {clickable: false } }];\nGmaps.map.create_kml();"
     #callback
     result.should include "Gmaps.map.callback();"
+    #launch array
+    result.should include "Gmaps.mapsToLoad.push('load_map');"
   end 
   
   
@@ -122,6 +124,18 @@ describe "to_gmaps4rails for hash" do
     result = options_hash.to_gmaps4rails("id_foo")
     result.should include "Gmaps.id_foo"
     result.should_not include "Gmaps.map"
+  end
+  
+  it "should not call map builder if not last_map" do
+    hash = {:last_map => false}
+    hash.to_gmaps4rails.should_not include "window.onload = Gmaps.loadMaps;"
+  end
+  
+  it "should call map builder if last_map" do
+    hash = {:last_map => true}
+    hash.to_gmaps4rails.should include "window.onload = Gmaps.loadMaps;"
+    hash = {}
+    hash.to_gmaps4rails.should include "window.onload = Gmaps.loadMaps;"
   end
 end
 

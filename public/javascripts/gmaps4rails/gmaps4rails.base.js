@@ -1,4 +1,10 @@
-var Gmaps = {};
+var Gmaps = {mapsToLoad: []};
+
+Gmaps.loadMaps = function(){
+  for (var i = 0; i <  Gmaps.mapsToLoad.length; ++i) {
+    window[Gmaps.mapsToLoad[i]]();
+  }
+};
 
 function Gmaps4Rails() {
 
@@ -431,7 +437,6 @@ function Gmaps4Rails() {
     if (this.map_options.auto_adjust) {
       //from markers
       this.extendBoundsWithMarkers();
-
       //from polylines:
       for (var i = 0; i < this.polylines.length; ++i) {        
         var polyline_points = this.polylines[i].serviceObject.latLngs.getArray()[0].getArray();

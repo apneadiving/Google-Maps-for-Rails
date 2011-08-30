@@ -102,15 +102,19 @@ var builder3 = [{
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true } },
-          :map_options => { :auto_adjust => true, :zoom => 5 }) %>
-<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
-          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5 },
-          :scripts => "none" ) %>
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true } },
+          :map_options => { :auto_adjust => true, :zoom => 5 },
+          :last_map => false) %>
+<%= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', 
+                       "options" => {"do_clustering" => true, "draggable" => true  } },
+          :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
+          :scripts => "none",
+          :last_map => false ) %>
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
-          :scripts => "api" ) %> 
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+          :scripts => "api",
+          :last_map => false ) %> 
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
           :scripts => "api" ) %> 
 <%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
@@ -164,26 +168,26 @@ var builder3 = [{
 	//   };
 </script>
 	<script type="text/javascript" charset="utf-8">
-	// 
-  // Gmaps.map.HandleDragend = function(pos) {
-  //   var geocoder = new google.maps.Geocoder();
-  //   geocoder.geocode({
-  //     latLng: pos
-  //   }, function(responses) {
-  //     if (responses && responses.length > 0) {
-  //       alert(responses[0].formatted_address);
-  //     } else {
-  //     alert('Cannot determine address at this location.');
-  //     }
-  //   });
-  // };
-  // 
-  // 
-  // Gmaps.map.callback = function() {
-  //   for (var i = 0; i <  this.markers.length; ++i) {
-  //      google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'dragend', function() { Gmaps.map.HandleDragend(this.getPosition()) });
-  //   }
-  // };        
+  
+  Gmaps.map.HandleDragend = function(pos) {
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+      latLng: pos
+    }, function(responses) {
+      if (responses && responses.length > 0) {
+        alert(responses[0].formatted_address);
+      } else {
+      alert('Cannot determine address at this location.');
+      }
+    });
+  };
+  
+  
+  Gmaps.map.callback = function() {
+    for (var i = 0; i <  this.markers.length; ++i) {
+       google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'dragend', function() { Gmaps.map.HandleDragend(this.getPosition()); });
+    }
+  };        
 	</script>
 <% end %>
 <div> style="margin-top: 500px;"

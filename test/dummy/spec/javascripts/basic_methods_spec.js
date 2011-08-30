@@ -83,3 +83,17 @@ describe("Gmaps4Rails", function() {
     });	
   });
 });
+
+function test1(){};
+function test2() {};
+describe("Gmaps", function() {
+  it("should initialize all requested maps", function() {
+    spyOn(window, "test1");
+    spyOn(window, "test2");
+    Gmaps.mapsToLoad = ["test1", "test2"];
+    Gmaps.loadMaps();
+    expect(window.test1).toHaveBeenCalled();
+    expect(window.test2).toHaveBeenCalled();
+  });
+  
+});

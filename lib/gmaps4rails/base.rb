@@ -199,6 +199,7 @@ module Gmaps4rails
     # - "map_options" and "scripts" don't contain interesting data for the view
     # - "direction" has a hash as a data and waypoints options must be processed properly
     #
+    #TODO: clean up this method
     result = Array.new
     map_id = edit_map_with_id || Gmaps4rails.get_map_id(hash[:map_options])
     map_id = "Gmaps." + map_id
@@ -212,7 +213,7 @@ module Gmaps4rails
       #extract map_options
       unless hash[:map_options].nil?
         hash[:map_options].each do |option_k, option_v|
-          if option_k == "bounds" #particular case
+          if option_k.to_sym == :bounds #particular case
             result << "#{map_id}.map_options.#{option_k} = #{option_v};"
           else
             result << "#{map_id}.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
@@ -224,12 +225,9 @@ module Gmaps4rails
     end
 
     hash.each do |category, content| #loop through options hash
-      case category
-      when "map_options"
-        #already taken into account above => nothing to do here
-      when "scripts"
-        #nothing to do 
-      when "direction"
+      if [:map_options, :last_map, :scripts].include? category.to_sym
+        #nothing to do
+      elsif category.to_sym == :direction
         result <<  "#{map_id}.direction_conf.origin = '#{content["data"]["from"]}';"
         result << "#{map_id}.direction_conf.destination = '#{content["data"]["to"]}';"
 
@@ -246,7 +244,7 @@ module Gmaps4rails
           end
         end #end .each
         result << "#{map_id}.create_direction();"
-      else #default behaviour in case condition
+      else #default behaviour
         result << "#{map_id}.#{category} = #{content[:data]};"
         content[:options] ||= Array.new 
         content[:options].each do |option_k, option_v|
@@ -258,7 +256,10 @@ module Gmaps4rails
     result << "#{map_id}.callback();"
     
     if edit_map_with_id == false 
-      result << "};\nwindow.onload = #{Gmaps4rails.js_function_name(hash)};"
+      result << "};\nGmaps.mapsToLoad.push('#{Gmaps4rails.js_function_name(hash)}');"
+      if hash[:last_map].nil? || hash[:last_map] == true
+        result << "window.onload = Gmaps.loadMaps;"
+      end
     end
     
     result * ('

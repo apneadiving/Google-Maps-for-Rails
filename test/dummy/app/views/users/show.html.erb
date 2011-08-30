@@ -1,4 +1,13 @@
-<p>
+<script type="text/javascript" charset="utf-8">
+  function testMe(){alert('first')};
+  
+  window.onload = testMe;
+  
+  function second(){alert('second')};
+  
+  window.onload = second;
+  
+</script><p>
   <strong>Name:</strong>
   <%= @user.name %>
 </p>
