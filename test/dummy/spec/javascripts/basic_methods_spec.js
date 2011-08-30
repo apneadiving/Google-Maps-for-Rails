@@ -84,16 +84,17 @@ describe("Gmaps4Rails", function() {
   });
 });
 
-function test1(){};
-function test2() {};
+function load_test1(){};
+function load_test2() {};
 describe("Gmaps", function() {
   it("should initialize all requested maps", function() {
-    spyOn(window, "test1");
-    spyOn(window, "test2");
-    Gmaps.mapsToLoad = ["test1", "test2"];
+    spyOn(window, "load_test2");
+    spyOn(window, "load_test1");
+    Gmaps.test1 = true;
+    Gmaps.test2 = true; 
     Gmaps.loadMaps();
-    expect(window.test1).toHaveBeenCalled();
-    expect(window.test2).toHaveBeenCalled();
+    expect(window.load_test1).toHaveBeenCalled();
+    expect(window.load_test2).toHaveBeenCalled();
   });
   
 });

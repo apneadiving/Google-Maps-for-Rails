@@ -201,15 +201,13 @@ module Gmaps4rails
     #
     #TODO: clean up this method
     result = Array.new
-    map_id = edit_map_with_id || Gmaps4rails.get_map_id(hash[:map_options])
-    map_id = "Gmaps." + map_id
+    map_id = "Gmaps." + (edit_map_with_id || Gmaps4rails.get_map_id(hash[:map_options]) )
 
     #means we are creating a new map
     if edit_map_with_id == false 
 
-      js_object_constructor = Gmaps4rails.get_constructor(hash[:map_options])
-      result << "#{map_id} = new #{js_object_constructor}" + ";"
-      result << "function #{Gmaps4rails.js_function_name(hash)}() {"
+      result << "#{map_id} = new #{Gmaps4rails.get_constructor hash[:map_options] }" + ";"
+      result << "function #{Gmaps4rails.js_function_name hash }() {"
       #extract map_options
       unless hash[:map_options].nil?
         hash[:map_options].each do |option_k, option_v|
@@ -228,7 +226,7 @@ module Gmaps4rails
       if [:map_options, :last_map, :scripts].include? category.to_sym
         #nothing to do
       elsif category.to_sym == :direction
-        result <<  "#{map_id}.direction_conf.origin = '#{content["data"]["from"]}';"
+        result << "#{map_id}.direction_conf.origin = '#{content["data"]["from"]}';"
         result << "#{map_id}.direction_conf.destination = '#{content["data"]["to"]}';"
 
         content[:options] ||= Array.new 
@@ -256,7 +254,7 @@ module Gmaps4rails
     result << "#{map_id}.callback();"
     
     if edit_map_with_id == false 
-      result << "};\nGmaps.mapsToLoad.push('#{Gmaps4rails.js_function_name(hash)}');"
+      result << "};"
       if hash[:last_map].nil? || hash[:last_map] == true
         result << "window.onload = Gmaps.loadMaps;"
       end

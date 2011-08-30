@@ -1,10 +1,14 @@
-var Gmaps = {mapsToLoad: []};
+var Gmaps = {};
 
 Gmaps.loadMaps = function(){
-  for (var i = 0; i <  Gmaps.mapsToLoad.length; ++i) {
-    window[Gmaps.mapsToLoad[i]]();
+  //loop through all variable names.
+  // there should only be maps inside so it trigger their load function
+  for (var attrname in Gmaps) {
+    if (attrname !== "loadMaps"){
+      window["load_" + attrname]();
+    }
   }
-};
+}
 
 function Gmaps4Rails() {
 

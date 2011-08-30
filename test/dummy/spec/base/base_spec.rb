@@ -112,8 +112,6 @@ describe "to_gmaps4rails for hash" do
     result.should include "Gmaps.map.kml = [{ url: \"http://www.searcharoo.net/SearchKml/newyork.kml\"}, { url: \"http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml\", options: {clickable: false } }];\nGmaps.map.create_kml();"
     #callback
     result.should include "Gmaps.map.callback();"
-    #launch array
-    result.should include "Gmaps.mapsToLoad.push('load_map');"
   end 
   
   
