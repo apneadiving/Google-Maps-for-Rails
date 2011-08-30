@@ -41,7 +41,7 @@ function Gmaps4Rails() {
     randomize: false,         // Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
     max_random_distance: 100, // in meters. Each marker coordinate could be altered by this distance in a random direction
     list_container: null,     // id of the ul that will host links to all markers
-    offset: null                //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
+    offset: 0                 //used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
   };
   
   //Stored variables
@@ -306,7 +306,6 @@ function Gmaps4Rails() {
 
   //creates, clusterizes and adjusts map 
   this.create_markers = function() {
-    this.markers_conf.offset = this.markers_conf.offset === null ? 0 : this.markers_conf.offset;
     this.createServiceMarkersFromMarkers();
     this.clusterize();
     this.adjustMapToBounds();
@@ -378,21 +377,7 @@ function Gmaps4Rails() {
     this.markers = this.markers.concat(new_markers);
     //put markers on the map
     this.create_markers();
-  }
-  
-  // this.addMarkers = function(new_markers){
-  //   //backup existing markers
-  //   var backup = this.markers;
-  //   console.log(backup);
-  //   //replace markers list with new markers
-  //   this.markers = new_markers;
-  //   //process markers
-  //   this.create_markers();
-  //   //merge added markers with existing
-  //   this.markers= this.markers.concat(backup);
-  //   console.log(backup);
-  // }
-  
+  }  
 
   ////////////////////////////////////////////////////
   ///////////////////// SIDEBAR //////////////////////

@@ -62,10 +62,10 @@ Number.prototype.toRad = function() {
 };
 
 getRawMarkers = function() {
-	return [{ "lng": "5.9311119", "latitude": "43.1251606"} 
-	,{ "lng": "2.3509871", "lat": "48.8566667"}
-  ,{ "lng": "2.3509871", "lat": "48.8566667", "serviceObject": true}
-	,{ "lng": "2.3509871", "lat": "48.8566667", "serviceObject": false}];
+  return [{ "lng": "5.9311119", "latitude": "43.1251606"} 
+  ,{ "lng": "2.3509871", "lat": "48.8566667"}
+  ,{ "lng": "2.3509871", "lat": "48.8566667", "serviceObject": true} 
+  ,{ "lng": "2.3509871", "lat": "48.8566667", "serviceObject": false}];
 };
 
 getFullMarker = function() {
@@ -78,6 +78,6 @@ getEmptyMarker = function() {
 
 clearMarkerTraces = function(){
   gmap.markers = [];
-	gmap.markers_conf.offset = 0;
-	gmap.markers_conf.randomize = false;
+  gmap.markers_conf.offset = 0;
+  gmap.markers_conf.randomize = false;
 };

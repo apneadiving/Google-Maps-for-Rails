@@ -1,5 +1,7 @@
+var gmap;
+
 beforeEach(function() {
-  var gmap = new Gmaps4RailsGoogle();
+  gmap = new Gmaps4RailsGoogle();
 });
 
 describe("Images Handling", function() {
@@ -195,13 +197,35 @@ describe("create_markers", function() {
     spyOn(gmap, "createServiceMarkersFromMarkers");
     spyOn(gmap, "clusterize");
     spyOn(gmap, "adjustMapToBounds");
-    gmap.markers_conf.offset = 42;
     gmap.create_markers();
     expect(gmap.createServiceMarkersFromMarkers).toHaveBeenCalled();    
     expect(gmap.clusterize).toHaveBeenCalled();    
-    expect(gmap.adjustMapToBounds).toHaveBeenCalled();    
+    expect(gmap.adjustMapToBounds).toHaveBeenCalled();
+  });
+  
+  it("should set offset properly", function() {
+    spyOn(gmap, "createServiceMarkersFromMarkers");
+    spyOn(gmap, "clusterize");
+    spyOn(gmap, "adjustMapToBounds");
+    gmap.create_markers();
+    //offset should be 0 here: createServiceMarkersFromMarkers has been mocked
     expect(gmap.markers_conf.offset).toEqual(0);
   });
+  
+  it("should set offset properly", function() {
+    //spyOn(gmap, "createServiceMarkersFromMarkers");
+    spyOn(gmap, "clusterize");
+    spyOn(gmap, "adjustMapToBounds");
+    gmap.markers_conf.offset = 2;
+    gmap.markers = getRawMarkers();
+    gmap.create_markers();
+    //offset should not have changed here: createServiceMarkersFromMarkers has been mocked
+    expect(gmap.markers[0]).toBeUndefined;
+    expect(gmap.markers[1]).toBeUndefined;
+    expect(gmap.markers_conf.offset).toEqual(4);
+  });
+  
+  
 });
 
 describe("generic markers methods", function() {

@@ -1,5 +1,9 @@
-var gmap = new Gmaps4RailsGoogle();
+var gmap;
 
+beforeEach(function() {
+  gmap = new Gmaps4RailsGoogle();
+});
+ 
 describe("Gmaps4Rails", function() {
 
   describe("Basic methods", function() {

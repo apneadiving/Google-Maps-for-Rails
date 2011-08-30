@@ -195,7 +195,6 @@ var Gmaps4RailsBing = function() {
   };
 
   this.removeFromMap = function(object){
-    console.log(object);
     this.map.entities.remove(object);
   };
 
