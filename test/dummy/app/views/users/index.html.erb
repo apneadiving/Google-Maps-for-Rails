@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag 'test' %>
 <% content_for :scripts do -%>
  <script type="text/javascript" charset="utf-8">
 var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
@@ -116,8 +115,9 @@ var builder3 = [{
           :last_map => false ) %> 
 <%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
-          :scripts => "api" ) %> 
-<%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
+          :scripts => "api",
+          :last_map => false ) %> 
+<%= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe2", :provider => "bing", :provider_key => BING_KEY },
           :scripts => "api" ) %>
 <%#= gmaps({

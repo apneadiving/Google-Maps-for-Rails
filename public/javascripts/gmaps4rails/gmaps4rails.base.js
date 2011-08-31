@@ -429,7 +429,7 @@ function Gmaps4Rails() {
   ////////////////////////////////////////////////////
 
   //to make the map fit the different LatLng points
-  this.adjustMapToBounds = function(latlng) {
+  this.adjustMapToBounds = function() {
 
     //FIRST_STEP: retrieve all bounds
     //create the bounds object only if necessary
@@ -464,6 +464,7 @@ function Gmaps4Rails() {
     //in every case, I've to take into account the bounds set up by the user	
     for (var i = 0; i < this.map_options.bounds.length; ++i) {
       //create points from bounds provided
+      //TODO:only works with google maps
       var bound = this.createLatLng(this.map_options.bounds[i].lat, this.map_options.bounds[i].lng);
       this.boundsObject.extend(bound);
     }

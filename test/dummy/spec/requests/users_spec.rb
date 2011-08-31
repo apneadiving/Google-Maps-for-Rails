@@ -14,7 +14,6 @@ describe "list creation", :js => true do
     Factory(:user, :name => "User1")
     Factory(:user, :name => "User2")
     
-    visit test_list_path
     page.should have_content("User1")
     page.should have_content("User2")
   end
