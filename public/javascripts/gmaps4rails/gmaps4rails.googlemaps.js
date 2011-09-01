@@ -250,7 +250,8 @@ var Gmaps4RailsGoogle = function() {
       //create the infowindow
       info_window = new google.maps.InfoWindow({content: marker_container.description });
       //add the listener associated
-      google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
+      var currentMap = this;
+      google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(currentMap, info_window, marker_container.serviceObject));
     }
     else { //creating custom infowindow
       if (this.exists(marker_container.description)) {
@@ -258,20 +259,21 @@ var Gmaps4RailsGoogle = function() {
         boxText.setAttribute("class", this.markers_conf.custom_infowindow_class); //to customize
         boxText.innerHTML = marker_container.description;	
         info_window = new InfoBox(this.infobox(boxText));
-        google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(info_window, marker_container.serviceObject));
+        var currentMap = this;
+        google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(currentMap, info_window, marker_container.serviceObject));
       }
     }
   };
 
-  this.openInfoWindow = function(infoWindow, marker) {
+  this.openInfoWindow = function(currentMap, infoWindow, marker) {
     return function() {
       // Close the latest selected marker before opening the current one.
-      if (this.visibleInfoWindow) {
-        this.visibleInfoWindow.close();
+      if (currentMap.visibleInfoWindow !== null ) {
+        currentMap.visibleInfoWindow.close();
       }
 
-      infoWindow.open(this.map, marker);
-      this.visibleInfoWindow = infoWindow;
+      infoWindow.open(currentMap.map, marker);
+      currentMap.visibleInfoWindow = infoWindow;
     };
   };
   
