@@ -403,16 +403,17 @@ function Gmaps4Rails() {
       aSel.href = 'javascript:void(0);';
       var html = this.exists(marker_container.sidebar) ? marker_container.sidebar : "Marker";
       aSel.innerHTML = html;
-      aSel.onclick = this.sidebar_element_handler(marker_container.serviceObject, 'click');
+      var currentMap = this;
+      aSel.onclick = this.sidebar_element_handler(currentMap, marker_container.serviceObject, 'click');
       li.appendChild(aSel);
       ul.appendChild(li);
     }
   }
 
   //moves map to marker clicked + open infowindow
-  this.sidebar_element_handler = function(marker, eventType) {
+  this.sidebar_element_handler = function(currentMap, marker, eventType) {
     return function() {
-      this.map.panTo(marker.position);
+      currentMap.map.panTo(marker.position);
       google.maps.event.trigger(marker, eventType);
     };
   }
