@@ -1,0 +1,20 @@
+source 'http://rubygems.org'
+
+gem "rails", '3.0.7'
+gem 'sqlite3'
+gem "nifty-generators"
+gem "gmaps4rails", :path => "../../"
+gem 'ruby-debug'
+gem "jquery-rails"
+
+#group :test do
+	gem 'rspec-rails'
+  gem 'capybara', :git => "git://github.com/jnicklas/capybara.git"
+	gem 'database_cleaner'
+	gem 'launchy'
+	gem 'factory_girl_rails'
+	gem 'jasmine'
+	gem "shoulda-matchers"
+	gem 'wirble'
+	gem 'selenium-webdriver', '2.5.0'
+#end

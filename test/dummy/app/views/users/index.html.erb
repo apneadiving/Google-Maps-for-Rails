@@ -1,203 +1,74 @@
-<% content_for :scripts do -%>
- <script type="text/javascript" charset="utf-8">
-var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
-var styles = [{
-        url: url + '/images/conv30.png',
-        height: 27,
-        width: 30,
-        anchor: [3, 0],
-        textColor: '#FF00FF',
-        opt_textSize: 10
-      }, {
-        url: url + '/images/conv40.png',
-        height: 36,
-        width: 40,
-        opt_anchor: [6, 0],
-        opt_textColor: '#FF0000',
-        opt_textSize: 11
-      }, {
-        url: url + '/images/conv50.png',
-        width: 50,
-        height: 45,
-        opt_anchor: [8, 0],
-        opt_textSize: 12
-      }];
+<h1>Listing users</h1>
 
-var builder2 =  
-      [
-{
-"lng": "5.9311119",
-"lat": "42.1251606",
-} ,{
-"lng": "32.3509871",
-"lat": "47.8566667",
-}
-];
-var builder3 = [{
-"lng": "6.9311119",
-"lat": "49.1251606",
-} ,{
-"lng": "39.3509871",
-"lat": "40.8566667",
-} ];
-</script>
-<% @options = {
-        "map_options" => { "type" => "SATELLITE", "zoom" => 3, "auto_adjust" => true},
-        "markers"     => { "data" => '[{ "lng": "5.9311119", "lat": "43.1251606" } ,{  "lng": "2.3509871", "lat": "48.8566667"},{  "lng": "0", "lat": "0"} ]',
-                          },
-        "polylines"   => { "data" => '[[
-{"lng": -122.214897, "lat": 37.772323},
-{"lng": -157.821856, "lat": 21.291982},
-{"lng": 178.431, "lat": -18.142599},
-{"lng": 153.027892, "lat": -27.46758}
-],
-[
-{"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
-{"lng": -10.821856, "lat": 50.291982}
-]]' },
-         "polygons"    => { "data" => '[[
-{"lng": -80.190262, "lat": 25.774252},
-{"lng": -66.118292, "lat": 18.466465},
-{"lng": -64.75737, "lat": 32.321384}
-]]' },
-         "circles"     => { "data" => '[
-{"lng": -122.214897, "lat": 37.772323, "radius": 1000000},
-{"lng": 122.214897, "lat": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
-]',
-                          },
-# "direction"   => { "data"    => { "from" => "toulon, france", "to" => "paris, france"} , 
-#                    "options" => {"waypoints" => ["toulouse, france", "brest, france"], "travelMode" => "DRIVING", "display_panel" => true, "panel_id" => "instructions"}
-#                   }
-}
-@options2 = {
-  "markers"     => { "data" => '[{ "description": "", "title": "", "lng": "5.9311119", "lat": "43.1251606", "picture": "", "width": "", "height": "" } ,{ "description": "", "title": "", "lng": "2.3509871", "lat": "48.8566667", "picture": "", "width": "", "height": "" } ]', "options" => { "auto_adjust" => true } }
-    }
-%>
-<% end -%>
-<%= "There are #{@users.size} users in the db" %>
 <table>
   <tr>
     <th>Name</th>
     <th>Address</th>
     <th>Latitude</th>
     <th>Longitude</th>
+    <th>Gmaps</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
-  <% for user in @users.take 5 %>
-    <tr>
-      <td><%= user.name %></td>
-      <td><%= user.sec_address %></td>
-      <td><%= user.latitude %></td>
-      <td><%= user.longitude %></td>
-      <td><%= link_to "Show", user %></td>
-      <td><%= link_to "Edit", edit_user_path(user) %></td>
-      <td><%= link_to "Destroy", user, :confirm => 'Are you sure?', :method => :delete %></td>
-    </tr>
-  <% end %>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.name %></td>
+    <td><%= user.address %></td>
+    <td><%= user.latitude %></td>
+    <td><%= user.longitude %></td>
+    <td><%= user.gmaps %></td>
+    <td><%= link_to 'Show', user %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
 </table>
-<input type="text" name="some_name" value="" id="user_address">
-<p><%= link_to "New User", new_user_path %></p>
-<%#= gmaps({ 
-	"map_options" => { "do_clustering" => true},
-	"markers"     => {"data" => @json}
-}) %>
-<%#= gmaps(@options) %>
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true } },
+
+<br />
+
+<!-- <div class="map_container"> 
+  <div id="map" class="gmaps4rails_map"></div> 
+</div>  -->
+<script type="text/javascript" charset="utf-8"> 
+//  
+// Gmaps.map = new Gmaps4RailsGoogle();
+// function load_map() {
+// Gmaps.map.initialize();
+// Gmaps.map.callback();
+// };
+// window.onload = function() { Gmaps.loadMaps(); };
+//  
+//Gmaps.map.map_options.class = 'gmaps4railsmap';
+</script> 
+
+
+<%= link_to 'New User', new_user_path %>
+
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true } },
           :map_options => { :auto_adjust => true, :zoom => 5 },
-          :last_map => false) %>
-<%= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', 
-                       "options" => {"do_clustering" => true, "draggable" => true  } },
+          :last_map => true) %>
+<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "none",
           :last_map => false ) %>
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
           :scripts => "api",
           :last_map => false ) %> 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
           :scripts => "api",
           :last_map => false ) %> 
-<%= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe2", :provider => "bing", :provider_key => BING_KEY },
           :scripts => "api" ) %>
 <%#= gmaps({
          "map_options" => { "auto_adjust" => false, "zoom" => 0, "libraries" => ["places"] },
          "markers" => { "data" => @json }
-          }, true, true) %> 
-
-<% content_for :scripts do %>
-<script type="text/javascript" charset="utf-8">
-// function initialize_gmaps_autocomplete_user_address()
-//   {
-//    var input = document.getElementById('user_address');
-//    var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(42.71422,-4.222666), 
-//                                                     new google.maps.LatLng(51.179343,8.47412)
-//                                                     );
-//    var autocomplete = new google.maps.places.Autocomplete(input);
-//    autocomplete.setBounds(defaultBounds);
-//    autocomplete.setTypes(['geocode']);
-// };
-// initialize_gmaps_autocomplete_user_address();
-//  Gmaps.map.callback = function() {
-//     function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};}
-//     
-//     for (var i = 0; i <  Gmaps.map.markers.length; ++i) {
-//          google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'click', say_yo(i));
-//     }
-// }
-	// 
-	// 
-	// Gmaps4Rails.customClusterer = function() {
-	// 	var url = "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/1.0";
-	// 	return [
-	//       {
-	//         url: url + '/images/heart30.png',
-	//         height: 26,
-	//         width: 30,
-	//       },
-	//       {
-	//         url: url + '/images/heart40.png', 
-	//         height: 35,
-	//         width: 40,
-	//       },
-	//       {
-	//         url: url + '/images/heart50.png',
-	//         width: 50,
-	//         height: 44,
-	//       }];
-	//   };
-</script>
-	<script type="text/javascript" charset="utf-8">
-  
-  Gmaps.map.HandleDragend = function(pos) {
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({
-      latLng: pos
-    }, function(responses) {
-      if (responses && responses.length > 0) {
-        alert(responses[0].formatted_address);
-      } else {
-      alert('Cannot determine address at this location.');
-      }
-    });
-  };
-  
-  
-  Gmaps.map.callback = function() {
-    for (var i = 0; i <  this.markers.length; ++i) {
-       google.maps.event.addListener(Gmaps.map.markers[i].serviceObject, 'dragend', function() { Gmaps.map.HandleDragend(this.getPosition()); });
-    }
-  };        
-	</script>
-<% end %>
-<div> style="margin-top: 500px;"
-  <button type="button" onclick="Gmaps.map.replaceMarkers(builder2)">Replace Markers</button>
-  <button type="button" onclick="Gmaps.map.addMarkers(builder2)">Add Markers</button>
-  <button type="button" onclick="Gmaps.map.addMarkers(builder3)">Add Markers bis</button>
-  <button type="button" id="ajax_map">Ajax Map</button>
-
-  <div>
-    <ul id="markers_list"></ul>
-  </div>
-  <div id="instructions"></div>
-</div>
+          }, true, true) %>
+<% @circles_json = '[ {"lng": -122.214897, "lat": 37.772323, "radius": 1000000} ]' %>
+          <%#= gmaps(
+              "circles"    => { "data" => @circles_json } , "map_options" => { "auto_adjust" => true }
+            )  %>

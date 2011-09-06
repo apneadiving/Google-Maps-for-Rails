@@ -13,9 +13,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
        end
        initializer "add asset directories to pipeline" do |app|
          if Rails::VERSION::MINOR >= 1
-           app.config.assets.paths << "#{root}/public/javascripts"
            app.config.assets.paths << "#{root}/public/stylesheets"
-           app.config.assets.paths << "#{root}/public/images"
          else
            app.middleware.use ::ActionDispatch::Static, "#{root}/public"
          end

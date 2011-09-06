@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dummy</title>
+  <%#= javascript_include_tag :defaults %>
+	<%= yield :head %>
+  <%= csrf_meta_tag %>
+  <%= stylesheet_link_tag :all %>
+
+</head>
+<body>
+
+<%= yield %>
+<%= javascript_include_tag "jquery.min", "jquery_ujs" %>
+<%= yield :scripts %>
+</body>
+</html>

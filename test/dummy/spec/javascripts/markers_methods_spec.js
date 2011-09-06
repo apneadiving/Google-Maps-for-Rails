@@ -196,11 +196,9 @@ describe("create_markers", function() {
   it("should call all necessary methods", function() {
     spyOn(gmap, "createServiceMarkersFromMarkers");
     spyOn(gmap, "clusterize");
-    spyOn(gmap, "adjustMapToBounds");
     gmap.create_markers();
     expect(gmap.createServiceMarkersFromMarkers).toHaveBeenCalled();    
     expect(gmap.clusterize).toHaveBeenCalled();    
-    expect(gmap.adjustMapToBounds).toHaveBeenCalled();
   });
   
   it("should set offset properly", function() {
@@ -282,9 +280,11 @@ describe("addMarkers", function() {
     gmap.markers = [{"hello": "dolly"}];
     spyOn(gmap, "create_markers");
     spyOn(gmap, "clearMarkers");
+    spyOn(gmap, "adjustMapToBounds");    
     gmap.addMarkers(getRawMarkers());
     expect(gmap.markers.length).toEqual(1 + getRawMarkers().length);
     expect(gmap.create_markers).toHaveBeenCalled();
+    expect(gmap.adjustMapToBounds).toHaveBeenCalled();
   });
 });
 

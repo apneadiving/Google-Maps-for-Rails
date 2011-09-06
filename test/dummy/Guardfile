@@ -1,0 +1,9 @@
+# A sample Guardfile
+# More info at https://github.com/guard/guard#readme
+guard 'coffeescript', :output => '../../public/javascripts/gmaps4rails' do
+  watch(/^app\/assets\/javascripts\/gmaps4rails\/(.*).coffee/)
+end
+
+guard 'coffeescript', :output => 'spec/javascripts/compiled' do
+  watch(/^spec\/javascripts\/(.*).coffee/)
+end

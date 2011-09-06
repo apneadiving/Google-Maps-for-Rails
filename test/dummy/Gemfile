@@ -1,20 +1,46 @@
 source 'http://rubygems.org'
 
-gem "rails", '3.0.7'
-gem 'sqlite3'
-gem "nifty-generators"
-gem "gmaps4rails", :path => "../../"
-gem 'ruby-debug'
-gem "jquery-rails"
+gem 'rails', '3.1.0'
 
-#group :test do
-	gem 'rspec-rails'
-  gem 'capybara', :git => "git://github.com/jnicklas/capybara.git"
+# Bundle edge Rails instead:
+# gem 'rails',     :git => 'git://github.com/rails/rails.git'
+
+gem 'sqlite3'
+gem "gmaps4rails", :path => "../../"
+gem 'json'
+
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails', "~> 3.1.0"
+  gem 'coffee-rails', "~> 3.1.0"
+  gem 'uglifier'
+end
+
+gem 'jquery-rails'
+
+# Use unicorn as the web server
+# gem 'unicorn'
+
+# Deploy with Capistrano
+# gem 'capistrano'
+
+# To use debugger
+#gem 'ruby-debug'
+
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'jasmine'
+  gem 'guard'
+  gem 'guard-coffeescript'
+  gem 'growl_notify'
+  gem 'capybara'
 	gem 'database_cleaner'
 	gem 'launchy'
 	gem 'factory_girl_rails'
-	gem 'jasmine'
 	gem "shoulda-matchers"
-	gem 'wirble'
 	gem 'selenium-webdriver', '2.5.0'
-#end
+end

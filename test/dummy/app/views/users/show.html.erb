@@ -1,31 +1,30 @@
-<script type="text/javascript" charset="utf-8">
-  function testMe(){alert('first')};
-  
-  window.onload = testMe;
-  
-  function second(){alert('second')};
-  
-  window.onload = second;
-  
-</script><p>
-  <strong>Name:</strong>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
   <%= @user.name %>
 </p>
+
 <p>
-  <strong>Address:</strong>
-  <%= @user.sec_address %>
+  <b>Address:</b>
+  <%= @user.address %>
 </p>
+
 <p>
-  <strong>Latitude:</strong>
+  <b>Latitude:</b>
   <%= @user.latitude %>
 </p>
+
 <p>
-  <strong>Longitude:</strong>
+  <b>Longitude:</b>
   <%= @user.longitude %>
 </p>
 
 <p>
-  <%= link_to "Edit", edit_user_path(@user) %> |
-  <%= link_to "Destroy", @user, :confirm => 'Are you sure?', :method => :delete %> |
-  <%= link_to "View All", users_path %>
+  <b>Gmaps:</b>
+  <%= @user.gmaps %>
 </p>
+
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

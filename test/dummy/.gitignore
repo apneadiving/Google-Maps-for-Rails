@@ -2,4 +2,5 @@
 db/*.sqlite3
 log/*.log
 tmp/
-config/initializers/mapquest.rb
+.sass-cache/
+config/initializers/map_api_keys.rb

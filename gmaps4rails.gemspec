@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Benjamin Roth}, %q{David Ruyer}]
-  s.date = %q{2011-08-31}
+  s.date = %q{2011-09-06}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
   s.email = [%q{apnea.diving.deep@gmail.com}, %q{david.ruyer@gmail.com}]
   s.extra_rdoc_files = [
@@ -17,6 +17,11 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
+    "app/assets/javascripts/gmaps4rails.base.js.coffee",
+    "app/assets/javascripts/gmaps4rails.bing.js.coffee",
+    "app/assets/javascripts/gmaps4rails.googlemaps.js.coffee",
+    "app/assets/javascripts/gmaps4rails.mapquest.js.coffee",
+    "app/assets/javascripts/gmaps4rails.openlayers.js.coffee",
     "app/views/gmaps4rails/_gmaps4rails.html.erb",
     "lib/generators/gmaps4rails/install_generator.rb",
     "lib/generators/templates/README",
@@ -29,11 +34,6 @@ Gem::Specification.new do |s|
     "public/images/marker.png",
     "public/javascripts/gmaps4rails/all_apis.js",
     "public/javascripts/gmaps4rails/bing.js",
-    "public/javascripts/gmaps4rails/gmaps4rails.base.js",
-    "public/javascripts/gmaps4rails/gmaps4rails.bing.js",
-    "public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js",
-    "public/javascripts/gmaps4rails/gmaps4rails.mapquest.js",
-    "public/javascripts/gmaps4rails/gmaps4rails.openlayers.js",
     "public/javascripts/gmaps4rails/googlemaps.js",
     "public/javascripts/gmaps4rails/mapquest.js",
     "public/javascripts/gmaps4rails/openlayers.js",

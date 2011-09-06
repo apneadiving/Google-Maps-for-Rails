@@ -1,182 +1,145 @@
-var Gmaps4RailsMapquest = function() {
-
-  // http://www.mapquestapi.com/sdk/js/v6.0.0/poi.html
-
-  //Map settings
-  this.map_options = {
-    type:  "map"  // //map type (map, sat, hyb)
+(function() {
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
   };
-  this.markers_conf = {};
-
-  this.mergeWithDefault("markers_conf");
-  this.mergeWithDefault("map_options");
-
-  ////////////////////////////////////////////////////
-  /////////////// Basic Objects         //////////////
-  ////////////////////////////////////////////////////
-
-  this.createPoint = function(lat, lng){
-    return new MQA.Poi({lat: lat, lng: lng});
-  };
-
-  this.createLatLng = function(lat, lng){
-    return {lat: lat, lng: lng};
-  };
-
-  this.createLatLngBounds = function(){
-  };
-
-
-  this.createMap = function(){
-    var map = new MQA.TileMap(                            // Constructs an instance of MQA.TileMap
-      document.getElementById(this.map_options.id),                //the id of the element on the page you want the map to be added into 
-      this.map_options.zoom,                       //intial zoom level of the map
-      {lat: this.map_options.center_latitude,      //the lat/lng of the map to center on
-       lng: this.map_options.center_longitude}, 
-      this.map_options.type);                                             //map type (map, sat, hyb)
-    MQA.withModule('zoomcontrol3', function() {
-
-      map.addControl(
-        new MQA.LargeZoomControl3(), 
-        new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
-      );
-
-    });
-    return map;
-  };
-
-  this.createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {
-
-  };
-
-
-  ////////////////////////////////////////////////////
-  ////////////////////// Markers /////////////////////
-  ////////////////////////////////////////////////////
-
-  this.createMarker = function(args){
-  
-    var marker = new MQA.Poi( {lat: args.Lat, lng: args.Lng} );
-  
-    if (args.marker_picture !== "" ) { 
-      var icon = new MQA.Icon(args.marker_picture, args.marker_height, args.marker_width);
-      marker.setIcon(icon);
-      if(args.marker_anchor !== null) {
-        marker.setBias({x: args.marker_anchor[0], y: args.marker_anchor[1]});
-      }
+  this.Gmaps4RailsMapquest = (function() {
+    __extends(Gmaps4RailsMapquest, Gmaps4Rails);
+    function Gmaps4RailsMapquest() {
+      Gmaps4RailsMapquest.__super__.constructor.apply(this, arguments);
+      this.map_options = {
+        type: "map"
+      };
+      this.markers_conf = {};
+      this.mergeWithDefault("markers_conf");
+      this.mergeWithDefault("map_options");
     }
-
-    if (args.shadow_picture !== "" ) { 
-      var icon = new MQA.Icon(args.shadow_picture, args.shadow_height, args.shadow_width);
-      marker.setShadow(icon);
-    
-      if(args.shadow_anchor !== null) {
-        marker.setShadowOffset({x: args.shadow_anchor[0], y: args.shadow_anchor[1]});
+    Gmaps4RailsMapquest.prototype.createPoint = function(lat, lng) {
+      return new MQA.Poi({
+        lat: lat,
+        lng: lng
+      });
+    };
+    Gmaps4RailsMapquest.prototype.createLatLng = function(lat, lng) {
+      return {
+        lat: lat,
+        lng: lng
+      };
+    };
+    Gmaps4RailsMapquest.prototype.createLatLngBounds = function() {};
+    Gmaps4RailsMapquest.prototype.createMap = function() {
+      var map;
+      map = new MQA.TileMap(document.getElementById(this.map_options.id), this.map_options.zoom, {
+        lat: this.map_options.center_latitude,
+        lng: this.map_options.center_longitude
+      }, this.map_options.type);
+      MQA.withModule('zoomcontrol3', (function() {
+        return map.addControl(new MQA.LargeZoomControl3(), new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT));
+      }));
+      return map;
+    };
+    Gmaps4RailsMapquest.prototype.createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {};
+    Gmaps4RailsMapquest.prototype.createMarker = function(args) {
+      var icon, marker;
+      marker = new MQA.Poi({
+        lat: args.Lat,
+        lng: args.Lng
+      });
+      if (args.marker_picture !== "") {
+        icon = new MQA.Icon(args.marker_picture, args.marker_height, args.marker_width);
+        marker.setIcon(icon);
+        if (args.marker_anchor !== null) {
+          marker.setBias({
+            x: args.marker_anchor[0],
+            y: args.marker_anchor[1]
+          });
         }
-    }  
-
-    this.addToMap(marker);
-    return marker;
-  };
-
-
-  // clear markers
-  this.clearMarkers = function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.clearMarker(this.markers[i]);
-    }
-  };
-
-  //show and hide markers
-  this.showMarkers = function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.showMarker(this.markers[i]);
-    }
-  };
-
-  this.hideMarkers = function() {
-    for (var i = 0; i < this.markers.length; ++i) {
-      this.hideMarker(this.markers[i]);
-    }
-  };
-
-  this.clearMarker = function(marker) {
-    this.removeFromMap(marker.serviceObject);
-  };
-
-  this.showMarker = function(marker) {
-    // marker.serviceObject
-  };
-
-  this.hideMarker = function(marker) {
-    // marker.serviceObject
-  };
-
-  this.extendBoundsWithMarkers = function(){
-  
-    if (this.markers.length >=2) {
-      this.boundsObject = new MQA.RectLL(this.markers[0].serviceObject.latLng, this.markers[1].serviceObject.latLng);
-    
-      for (var i = 2; i <  this.markers.length; ++i) {
-        this.boundsObject.extend(this.markers[i].serviceObject.latLng);
       }
-    }
-
-  };
-
-  ////////////////////////////////////////////////////
-  /////////////////// Clusterer //////////////////////
-  ////////////////////////////////////////////////////
-
-  this.createClusterer = function(markers_array){
-
-  };
-
-  this.clearClusterer = function() {
-
-  };
-
-  //creates clusters
-  this.clusterize = function()
-  {
-
-  };
-
-  ////////////////////////////////////////////////////
-  /////////////////// INFO WINDOW ////////////////////
-  ////////////////////////////////////////////////////
-
-  // creates infowindows
-  this.createInfoWindow = function(marker_container){
-    marker_container.serviceObject.setInfoTitleHTML(marker_container.description);
-    //TODO: how to disable the mouseover display when using setInfoContentHTML?
-    //marker_container.serviceObject.setInfoContentHTML(marker_container.description);
-  };
-
-  ////////////////////////////////////////////////////
-  /////////////////// Other methods //////////////////
-  ////////////////////////////////////////////////////
-
-  this.fitBounds = function(){
-    if (this.markers.length >=2) {
-      this.map.zoomToRect(this.boundsObject);
-    }
-    if (this.markers.length ==1 ) {
-      this.map.setCenter(this.markers[0].serviceObject.latLng);
-    }
-  };
-
-  this.centerMapOnUser = function(){
-    this.map.setCenter(this.userLocation);
-  };
-
-  this.addToMap = function(object){
-    this.map.addShape(object);
-  };
-
-  this.removeFromMap = function(object){
-    this.map.removeShape(object);
-  }
-}
-
-Gmaps4RailsMapquest.prototype = new Gmaps4Rails();
+      if (args.shadow_picture !== "") {
+        icon = new MQA.Icon(args.shadow_picture, args.shadow_height, args.shadow_width);
+        marker.setShadow(icon);
+        if (args.shadow_anchor !== null) {
+          marker.setShadowOffset({
+            x: args.shadow_anchor[0],
+            y: args.shadow_anchor[1]
+          });
+        }
+      }
+      this.addToMap(marker);
+      return marker;
+    };
+    Gmaps4RailsMapquest.prototype.clearMarkers = function() {
+      var marker, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = markers.length; _i < _len; _i++) {
+        marker = markers[_i];
+        _results.push(this.clearMarker(marker));
+      }
+      return _results;
+    };
+    Gmaps4RailsMapquest.prototype.showMarkers = function() {
+      var marker, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = markers.length; _i < _len; _i++) {
+        marker = markers[_i];
+        _results.push(this.showMarker(marker));
+      }
+      return _results;
+    };
+    Gmaps4RailsMapquest.prototype.hideMarkers = function() {
+      var marker, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = markers.length; _i < _len; _i++) {
+        marker = markers[_i];
+        _results.push(this.hideMarker(marker));
+      }
+      return _results;
+    };
+    Gmaps4RailsMapquest.prototype.clearMarker = function(marker) {
+      return this.removeFromMap(marker.serviceObject);
+    };
+    Gmaps4RailsMapquest.prototype.showMarker = function(marker) {};
+    Gmaps4RailsMapquest.prototype.hideMarker = function(marker) {};
+    Gmaps4RailsMapquest.prototype.extendBoundsWithMarkers = function() {
+      var marker, _i, _len, _ref, _results;
+      if (this.markers.length >= 2) {
+        this.boundsObject = new MQA.RectLL(this.markers[0].serviceObject.latLng, this.markers[1].serviceObject.latLng);
+        _ref = this.markers;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          marker = _ref[_i];
+          _results.push(this.boundsObject.extend(marker.serviceObject.latLng));
+        }
+        return _results;
+      }
+    };
+    Gmaps4RailsMapquest.prototype.createClusterer = function(markers_array) {};
+    Gmaps4RailsMapquest.prototype.clearClusterer = function() {};
+    Gmaps4RailsMapquest.prototype.clusterize = function() {};
+    Gmaps4RailsMapquest.prototype.createInfoWindow = function(marker_container) {
+      return marker_container.serviceObject.setInfoTitleHTML(marker_container.description);
+    };
+    Gmaps4RailsMapquest.prototype.fitBounds = function() {
+      if (this.markers.length >= 2) {
+        this.map.zoomToRect(this.boundsObject);
+      }
+      if (this.markers.length === 1) {
+        return this.map.setCenter(this.markers[0].serviceObject.latLng);
+      }
+    };
+    Gmaps4RailsMapquest.prototype.centerMapOnUser = function() {
+      return this.map.setCenter(this.userLocation);
+    };
+    Gmaps4RailsMapquest.prototype.addToMap = function(object) {
+      return this.map.addShape(object);
+    };
+    Gmaps4RailsMapquest.prototype.removeFromMap = function(object) {
+      return this.map.removeShape(object);
+    };
+    return Gmaps4RailsMapquest;
+  })();
+}).call(this);

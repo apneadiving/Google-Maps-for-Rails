@@ -1,0 +1,1 @@
+../../../../../../app/assets/javascripts/gmaps4rails/gmaps4rails.base.js.coffee

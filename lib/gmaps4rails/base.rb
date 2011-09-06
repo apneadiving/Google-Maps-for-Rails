@@ -205,14 +205,17 @@ module Gmaps4rails
 
     #means we are creating a new map
     if edit_map_with_id == false 
-
       result << "#{map_id} = new #{Gmaps4rails.get_constructor hash[:map_options] }" + ";"
       result << "function #{Gmaps4rails.js_function_name hash }() {"
+      
       #extract map_options
       unless hash[:map_options].nil?
         hash[:map_options].each do |option_k, option_v|
-          if option_k.to_sym == :bounds #particular case
+          case option_k.to_sym 
+          when :bounds #particular case
             result << "#{map_id}.map_options.#{option_k} = #{option_v};"
+          when :class
+          when :container_class
           else
             result << "#{map_id}.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
           end
@@ -251,12 +254,14 @@ module Gmaps4rails
         result << "#{map_id}.create_#{category}();"
       end 
     end
+    result << "#{map_id}.adjustMapToBounds();"
     result << "#{map_id}.callback();"
     
     if edit_map_with_id == false 
       result << "};"
       if hash[:last_map].nil? || hash[:last_map] == true
-        result << "window.onload = Gmaps.loadMaps;"
+        result << "window.onload = function() { Gmaps.loadMaps(); };"
+        #result << "window.onload = load_map;"
       end
     end
     
