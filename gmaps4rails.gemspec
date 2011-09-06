@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gmaps4rails}
-  s.version = "1.0.2"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Benjamin Roth}, %q{David Ruyer}]
@@ -17,11 +17,16 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    "app/assets/javascripts/gmaps4rails.base.js.coffee",
-    "app/assets/javascripts/gmaps4rails.bing.js.coffee",
-    "app/assets/javascripts/gmaps4rails.googlemaps.js.coffee",
-    "app/assets/javascripts/gmaps4rails.mapquest.js.coffee",
-    "app/assets/javascripts/gmaps4rails.openlayers.js.coffee",
+    "app/assets/javascripts/gmaps4rails/all_apis.js",
+    "app/assets/javascripts/gmaps4rails/bing.js",
+    "app/assets/javascripts/gmaps4rails/gmaps4rails.base.js.coffee",
+    "app/assets/javascripts/gmaps4rails/gmaps4rails.bing.js.coffee",
+    "app/assets/javascripts/gmaps4rails/gmaps4rails.googlemaps.js.coffee",
+    "app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee",
+    "app/assets/javascripts/gmaps4rails/gmaps4rails.openlayers.js.coffee",
+    "app/assets/javascripts/gmaps4rails/googlemaps.js",
+    "app/assets/javascripts/gmaps4rails/mapquest.js",
+    "app/assets/javascripts/gmaps4rails/openlayers.js",
     "app/views/gmaps4rails/_gmaps4rails.html.erb",
     "lib/generators/gmaps4rails/install_generator.rb",
     "lib/generators/templates/README",
@@ -32,11 +37,11 @@ Gem::Specification.new do |s|
     "lib/gmaps4rails/extensions/hash.rb",
     "lib/gmaps4rails/helper/gmaps4rails_helper.rb",
     "public/images/marker.png",
-    "public/javascripts/gmaps4rails/all_apis.js",
-    "public/javascripts/gmaps4rails/bing.js",
-    "public/javascripts/gmaps4rails/googlemaps.js",
-    "public/javascripts/gmaps4rails/mapquest.js",
-    "public/javascripts/gmaps4rails/openlayers.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.base.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.bing.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.mapquest.js",
+    "public/javascripts/gmaps4rails/gmaps4rails.openlayers.js",
     "public/stylesheets/gmaps4rails.css"
   ]
   s.homepage = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
