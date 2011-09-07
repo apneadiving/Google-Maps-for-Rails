@@ -96,7 +96,7 @@ class @Gmaps4Rails
 
     directionsDisplay.setMap(@map)
     #display panel only if required
-    if this.direction_conf.display_panel 
+    if @direction_conf.display_panel 
       directionsDisplay.setPanel(document.getElementById(@direction_conf.panel_id))
       
     directionsDisplay.setOptions
@@ -143,14 +143,14 @@ class @Gmaps4Rails
       # always check if a config is given, if not, use defaults
       # NOTE: is there a cleaner way to do this? Maybe a hash merge of some sort?
       newCircle = new google.maps.Circle
-        center:        this.createLatLng(circle.lat, circle.lng)
-        strokeColor:   circle.strokeColor   || this.circles_conf.strokeColor
-        strokeOpacity: circle.strokeOpacity || this.circles_conf.strokeOpacity
-        strokeWeight:  circle.strokeWeight  || this.circles_conf.strokeWeight
-        fillOpacity:   circle.fillOpacity   || this.circles_conf.fillOpacity
-        fillColor:     circle.fillColor     || this.circles_conf.fillColor
-        clickable:     circle.clickable     || this.circles_conf.clickable
-        zIndex:        circle.zIndex        || this.circles_conf.zIndex
+        center:        @createLatLng(circle.lat, circle.lng)
+        strokeColor:   circle.strokeColor   || @circles_conf.strokeColor
+        strokeOpacity: circle.strokeOpacity || @circles_conf.strokeOpacity
+        strokeWeight:  circle.strokeWeight  || @circles_conf.strokeWeight
+        fillOpacity:   circle.fillOpacity   || @circles_conf.fillOpacity
+        fillColor:     circle.fillColor     || @circles_conf.fillColor
+        clickable:     circle.clickable     || @circles_conf.clickable
+        zIndex:        circle.zIndex        || @circles_conf.zIndex
         radius:        circle.radius
 
       circle.serviceObject = newCircle
@@ -197,11 +197,11 @@ class @Gmaps4Rails
       polygon_coordinates.push(latlng)
       #first element of an Array could contain specific configuration for this particular polygon. If no config given, use default
       if point == polygon[0]
-        strokeColor   = this.polygons[i][j].strokeColor   || this.polygons_conf.strokeColor
-        strokeOpacity = this.polygons[i][j].strokeOpacity || this.polygons_conf.strokeOpacity
-        strokeWeight  = this.polygons[i][j].strokeWeight  || this.polygons_conf.strokeWeight
-        fillColor     = this.polygons[i][j].fillColor     || this.polygons_conf.fillColor
-        fillOpacity   = this.polygons[i][j].fillOpacity   || this.polygons_conf.fillOpacity
+        strokeColor   = @polygons[i][j].strokeColor   || @polygons_conf.strokeColor
+        strokeOpacity = @polygons[i][j].strokeOpacity || @polygons_conf.strokeOpacity
+        strokeWeight  = @polygons[i][j].strokeWeight  || @polygons_conf.strokeWeight
+        fillColor     = @polygons[i][j].fillColor     || @polygons_conf.fillColor
+        fillOpacity   = @polygons[i][j].fillOpacity   || @polygons_conf.fillOpacity
 
     #Construct the polygon
     new_poly = new google.maps.Polygon
@@ -290,9 +290,9 @@ class @Gmaps4Rails
       
       #save object
       @markers[index].serviceObject = @createMarker
-        "marker_picture":   if @markers[index].picture  then @markers[index].picture else this.markers_conf.picture
-        "marker_width":     if @markers[index].width    then @markers[index].width   else this.markers_conf.width
-        "marker_height":    if @markers[index].height   then @markers[index].height  else this.markers_conf.length
+        "marker_picture":   if @markers[index].picture  then @markers[index].picture else @markers_conf.picture
+        "marker_width":     if @markers[index].width    then @markers[index].width   else @markers_conf.width
+        "marker_height":    if @markers[index].height   then @markers[index].height  else @markers_conf.length
         "marker_title":     if @markers[index].title    then @markers[index].title   else null
         "marker_anchor":    if @markers[index].marker_anchor  then @markers[index].marker_anchor  else null
         "shadow_anchor":    if @markers[index].shadow_anchor  then @markers[index].shadow_anchor  else null
@@ -311,7 +311,6 @@ class @Gmaps4Rails
       @createSidebar(@markers[index])
       
     @markers_conf.offset = @markers.length
-
 
   #creates Image Anchor Position or return null if nothing passed	
   createImageAnchorPosition : (anchorLocation) ->
@@ -356,7 +355,7 @@ class @Gmaps4Rails
       html = if marker_container.sidebar? then marker_container.sidebar else "Marker"
       aSel.innerHTML = html
       currentMap = this
-      aSel.onclick = this.sidebar_element_handler(currentMap, marker_container.serviceObject, 'click')
+      aSel.onclick = @sidebar_element_handler(currentMap, marker_container.serviceObject, 'click')
       li.appendChild(aSel)
       ul.appendChild(li)
 
@@ -465,4 +464,3 @@ class @Gmaps4Rails
   
   #gives a value between -1 and 1
   random : -> return(Math.random() * 2 -1)
-

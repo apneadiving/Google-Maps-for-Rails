@@ -164,12 +164,10 @@
     Gmaps4RailsOpenlayers.prototype.clearClusterer = function() {
       return this.map.removeLayer(this.markerClusterer);
     };
-    Gmaps4RailsOpenlayers.prototype.createInfoWindow = function() {
-      return function(marker_container) {
-        if (marker_container.description != null) {
-          return marker_container.serviceObject.infoWindow = marker_container.description;
-        }
-      };
+    Gmaps4RailsOpenlayers.prototype.createInfoWindow = function(marker_container) {
+      if (marker_container.description != null) {
+        return marker_container.serviceObject.infoWindow = marker_container.description;
+      }
     };
     Gmaps4RailsOpenlayers.prototype.onPopupClose = function(evt) {
       return this.markersControl.unselect(this.feature);

@@ -107,7 +107,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
     @boundsObject = new OpenLayers.Bounds()
   
   clearMarkersLayerIfExists: -> 
-    this.map.removeLayer(this.markersLayer) if @markersLayer != null and @map.getLayer(@markersLayer.id) != null
+    @map.removeLayer(@markersLayer) if @markersLayer != null and @map.getLayer(@markersLayer.id) != null
   
   extendBoundsWithMarkers: ->
     for marker in @markers
@@ -171,9 +171,8 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
   #////////////////////////////////////////////////////
 
   #// creates infowindows
-  createInfoWindow: -> (marker_container) ->
-    if marker_container.description?
-      marker_container.serviceObject.infoWindow = marker_container.description
+  createInfoWindow: (marker_container) ->
+    marker_container.serviceObject.infoWindow = marker_container.description if marker_container.description?
   
   onPopupClose: (evt) ->
     #// 'this' is the popup.

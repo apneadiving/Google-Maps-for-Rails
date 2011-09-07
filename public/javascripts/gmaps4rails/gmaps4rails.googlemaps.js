@@ -105,7 +105,7 @@
       } else if (args.rich_marker !== null) {
         return new RichMarker({
           position: markerLatLng,
-          map: this["this"].map,
+          map: this.map,
           draggable: args.marker_draggable,
           content: args.rich_marker,
           flat: args.marker_anchor === null ? false : args.marker_anchor[1],

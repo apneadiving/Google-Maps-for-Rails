@@ -112,7 +112,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     else if (args.rich_marker != null)
       return new RichMarker({
         position: markerLatLng
-        map:       @this.map
+        map:       @map
         draggable: args.marker_draggable
         content:   args.rich_marker
         flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
@@ -127,7 +127,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       #create or retrieve existing MarkerImages
       markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
       shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-      return new google.maps.Marker({position: markerLatLng, map: this.map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage})
+      return new google.maps.Marker({position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage})
 
   #checks if obj is included in arr Array and returns the position or false
   includeMarkerImage : (arr, obj) ->
@@ -183,7 +183,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
   #////////////////////////////////////////////////////
 
   createClusterer : (markers_array) ->
-    return new MarkerClusterer( @map, markers_array, {  maxZoom: this.markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
+    return new MarkerClusterer( @map, markers_array, {  maxZoom: @markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
 
   clearClusterer : ->
     @markerClusterer.clearMarkers()
