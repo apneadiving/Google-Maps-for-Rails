@@ -277,6 +277,7 @@ class @Gmaps4Rails
   #create google.maps Markers from data provided by user
   createServiceMarkersFromMarkers : ->
     for index in [@markers_conf.offset..(@markers.length-1)]
+      console.log index
       #extract options, test if value passed or use default
       Lat = @markers[index].lat
       Lng = @markers[index].lng
@@ -330,8 +331,8 @@ class @Gmaps4Rails
     #reset sidebar content if exists
     @resetSidebarContent()
     #add new markers
+    @markers_conf.offset = 0
     @addMarkers(new_markers)
-
 
   #add new markers to on an existing map
   addMarkers : (new_markers) ->

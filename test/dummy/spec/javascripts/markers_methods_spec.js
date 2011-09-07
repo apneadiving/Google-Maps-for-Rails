@@ -271,19 +271,23 @@ describe("replaceMarkers", function() {
     expect(gmap.clearMarkers).toHaveBeenCalled();    
     expect(gmap.createLatLngBounds).toHaveBeenCalled();    
     expect(gmap.resetSidebarContent).toHaveBeenCalled();    
-    expect(gmap.addMarkers).toHaveBeenCalledWith(getRawMarkers());    
+    expect(gmap.addMarkers).toHaveBeenCalledWith(getRawMarkers());
+    expect(gmap.markers_conf.offset).toEqual(0);
   });
 });
 
 describe("addMarkers", function() {
   it("should concat markers and create them", function() {
     gmap.markers = [{"hello": "dolly"}];
-    spyOn(gmap, "create_markers");
     spyOn(gmap, "clearMarkers");
-    spyOn(gmap, "adjustMapToBounds");    
+    spyOn(gmap, "adjustMapToBounds");
+    spyOn(gmap, "createMarker");
+    spyOn(gmap, "createInfoWindow");
+    spyOn(gmap, "createSidebar");
+
     gmap.addMarkers(getRawMarkers());
     expect(gmap.markers.length).toEqual(1 + getRawMarkers().length);
-    expect(gmap.create_markers).toHaveBeenCalled();
+    expect(gmap.markers_conf.offset).toEqual(1 + getRawMarkers().length);
     expect(gmap.adjustMapToBounds).toHaveBeenCalled();
   });
 });

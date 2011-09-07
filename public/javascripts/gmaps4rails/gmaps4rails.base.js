@@ -290,6 +290,7 @@
     Gmaps4Rails.prototype.createServiceMarkersFromMarkers = function() {
       var Lat, LatLng, Lng, index, _ref, _ref2;
       for (index = _ref = this.markers_conf.offset, _ref2 = this.markers.length - 1; _ref <= _ref2 ? index <= _ref2 : index >= _ref2; _ref <= _ref2 ? index++ : index--) {
+        console.log(index);
         Lat = this.markers[index].lat;
         Lng = this.markers[index].lng;
         if (this.markers_conf.randomize) {
@@ -330,6 +331,7 @@
       this.markers = new Array;
       this.boundsObject = this.createLatLngBounds();
       this.resetSidebarContent();
+      this.markers_conf.offset = 0;
       return this.addMarkers(new_markers);
     };
     Gmaps4Rails.prototype.addMarkers = function(new_markers) {
