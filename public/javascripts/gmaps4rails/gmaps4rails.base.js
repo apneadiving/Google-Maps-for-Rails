@@ -40,7 +40,8 @@
         minZoom: null,
         auto_adjust: true,
         auto_zoom: true,
-        bounds: []
+        bounds: [],
+        raw: {}
       };
       this.default_markers_conf = {
         title: "",
@@ -52,7 +53,8 @@
         randomize: false,
         max_random_distance: 100,
         list_container: null,
-        offset: 0
+        offset: 0,
+        raw: {}
       };
       this.markers = [];
       this.boundsObject = null;
@@ -438,7 +440,11 @@
     };
     Gmaps4Rails.prototype.mergeObjectWithDefault = function(object1, object2) {
       var copy_object1, key, value;
-      copy_object1 = object1;
+      copy_object1 = {};
+      for (key in object1) {
+        value = object1[key];
+        copy_object1[key] = value;
+      }
       for (key in object2) {
         value = object2[key];
         if (copy_object1[key] == null) {

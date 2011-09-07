@@ -74,7 +74,8 @@
       return new google.maps.LatLngBounds();
     };
     Gmaps4RailsGoogle.prototype.createMap = function() {
-      return new google.maps.Map(document.getElementById(this.map_options.id), {
+      var defaultOptions, mergedOptions;
+      defaultOptions = {
         maxZoom: this.map_options.maxZoom,
         minZoom: this.map_options.minZoom,
         zoom: this.map_options.zoom,
@@ -84,7 +85,9 @@
         disableDefaultUI: this.map_options.disableDefaultUI,
         disableDoubleClickZoom: this.map_options.disableDoubleClickZoom,
         draggable: this.map_options.draggable
-      });
+      };
+      mergedOptions = this.mergeObjectWithDefault(this.map_options.raw, defaultOptions);
+      return new google.maps.Map(document.getElementById(this.map_options.id), mergedOptions);
     };
     Gmaps4RailsGoogle.prototype.createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {
       return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize);
@@ -93,16 +96,19 @@
       return new google.maps.Size(width, height);
     };
     Gmaps4RailsGoogle.prototype.createMarker = function(args) {
-      var imageAnchorPosition, markerImage, markerLatLng, shadowAnchorPosition, shadowImage;
+      var defaultOptions, imageAnchorPosition, markerImage, markerLatLng, mergedOptions, shadowAnchorPosition, shadowImage;
       markerLatLng = this.createLatLng(args.Lat, args.Lng);
-      if (args.marker_picture && args.rich_marker === null) {
-        return new google.maps.Marker({
+      if (args.marker_picture === "" && args.rich_marker === null) {
+        defaultOptions = {
           position: markerLatLng,
           map: this.map,
           title: args.marker_title,
           draggable: args.marker_draggable
-        });
-      } else if (args.rich_marker !== null) {
+        };
+        mergedOptions = this.mergeObjectWithDefault(this.markers_conf.raw, defaultOptions);
+        return new google.maps.Marker(mergedOptions);
+      }
+      if (args.rich_marker !== null) {
         return new RichMarker({
           position: markerLatLng,
           map: this.map,
@@ -111,20 +117,21 @@
           flat: args.marker_anchor === null ? false : args.marker_anchor[1],
           anchor: args.marker_anchor === null ? 0 : args.marker_anchor[0]
         });
-      } else {
-        imageAnchorPosition = this.createImageAnchorPosition(args.marker_anchor);
-        shadowAnchorPosition = this.createImageAnchorPosition(args.shadow_anchor);
-        markerImage = this.createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition);
-        shadowImage = this.createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition);
-        return new google.maps.Marker({
-          position: markerLatLng,
-          map: this.map,
-          icon: markerImage,
-          title: args.marker_title,
-          draggable: args.marker_draggable,
-          shadow: shadowImage
-        });
       }
+      imageAnchorPosition = this.createImageAnchorPosition(args.marker_anchor);
+      shadowAnchorPosition = this.createImageAnchorPosition(args.shadow_anchor);
+      markerImage = this.createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition);
+      shadowImage = this.createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition);
+      defaultOptions = {
+        position: markerLatLng,
+        map: this.map,
+        icon: markerImage,
+        title: args.marker_title,
+        draggable: args.marker_draggable,
+        shadow: shadowImage
+      };
+      mergedOptions = this.mergeObjectWithDefault(this.markers_conf.raw, defaultOptions);
+      return new google.maps.Marker(mergedOptions);
     };
     Gmaps4RailsGoogle.prototype.includeMarkerImage = function(arr, obj) {
       var index, object, _len;

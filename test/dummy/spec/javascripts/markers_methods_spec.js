@@ -139,16 +139,6 @@ describe("createServiceMarkersFromMarkers full stack", function() {
       "index":            0
     }); 
     
-    //     spyOn(gmap, "createLatLng").andReturn([5,43]);
-    // spyOn(gmap, "createImageAnchorPosition").andReturn("anchor");
-    //     spyOn(gmap, "createOrRetrieveImage").andReturn("image");
-    // spyOn(gmap, "createMarker").andReturn("marker");
-    //     expect(gmap.createLatLng).toHaveBeenCalledWith(marker.latitude, marker.longitude);    
-    // expect(gmap.createImageAnchorPosition).toHaveBeenCalledWith(marker.marker_anchor);
-    //     expect(gmap.createImageAnchorPosition).toHaveBeenCalledWith(marker.shadow_anchor);
-    // expect(gmap.createOrRetrieveImage).toHaveBeenCalledWith(marker.picture, marker.width, marker.height, "anchor");
-    //     expect(gmap.createOrRetrieveImage).toHaveBeenCalledWith(marker.shadow_picture, marker.shadow_width, marker.shadow_height, "anchor");
-    //     expect(gmap.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", icon: "image", title: marker.title, draggable: marker.draggable, shadow: "image"});
   });
   
   it("should process all attributes from a marker (with default values)", function() {
@@ -177,17 +167,34 @@ describe("createServiceMarkersFromMarkers full stack", function() {
       "index":            0
     });    
     
-    //     spyOn(gmap, "createLatLng").andReturn([5,43]);
-    // spyOn(gmap, "createImageAnchorPosition").andReturn("anchor");
-    //     spyOn(gmap, "createOrRetrieveImage").andReturn("image");
-    // spyOn(gmap, "createMarker").andReturn("marker");
-    //     expect(gmap.createLatLng).toHaveBeenCalledWith(marker.latitude, marker.longitude);    
-    // expect(gmap.createImageAnchorPosition).toHaveBeenCalledWith(marker.marker_anchor);
-    //     expect(gmap.createImageAnchorPosition).toHaveBeenCalledWith(marker.shadow_anchor);
-    // expect(gmap.createOrRetrieveImage).toHaveBeenCalledWith(marker.picture, marker.width, marker.height, "anchor");
-    //     expect(gmap.createOrRetrieveImage).toHaveBeenCalledWith(marker.shadow_picture, marker.shadow_width, marker.shadow_height, "anchor");
-    //     expect(gmap.createMarker).toHaveBeenCalledWith({position: [5,43], map: "map", icon: "image", title: marker.title, draggable: marker.draggable, shadow: "image"});
-  });
+   });
+   
+   it("should create Richmarker", function() {
+     var args = { "rich_marker": true, "marker_anchor":null };
+     var marker = gmap.createMarker(args);
+     expect(marker.who).toEqual("I'm RichMarker");
+   });
+   
+   it("should create marker with picture", function() {
+     var args = { "marker_picture": "foo.png", "rich_marker": null };
+     spyOn(gmap, "createImageAnchorPosition");
+     spyOn(gmap, "createOrRetrieveImage");
+     spyOn(gmap, "mergeObjectWithDefault");
+     var marker = gmap.createMarker(args);
+     expect(marker.who).toEqual("I'm marker");
+     expect(gmap.createImageAnchorPosition).toHaveBeenCalled();
+   });
+   
+   it("should create marker with no picture", function() {
+     var args = { "marker_picture": "", "rich_marker": null };
+     spyOn(gmap, "createImageAnchorPosition");
+     spyOn(gmap, "createOrRetrieveImage");
+     spyOn(gmap, "mergeObjectWithDefault");
+     var marker = gmap.createMarker(args);
+     expect(marker.who).toEqual("I'm marker");
+     expect(gmap.createImageAnchorPosition).not.toHaveBeenCalled();
+   });
+   
 
 });
 

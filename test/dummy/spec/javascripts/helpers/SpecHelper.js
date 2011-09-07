@@ -1,3 +1,7 @@
+RichMarker = function(args) {
+  return { "who": "I'm RichMarker" };
+}
+
 google = new function(){
 	this.maps = new function(){
    this.Point = function(a,b){
@@ -6,7 +10,7 @@ google = new function(){
    this.LatLng = function(a,b){
    	return [a, b];
    };
-   this.Map = function(args){
+   this.Map = function(arg1, arg2){
    	return { "who": "I'm map"};
    };
    this.LatLngBounds = function(){

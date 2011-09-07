@@ -212,16 +212,17 @@ module Gmaps4rails
       unless hash[:map_options].nil?
         hash[:map_options].each do |option_k, option_v|
           case option_k.to_sym 
-          when :bounds #particular case
+          when :bounds #particular case, render the content unescaped
             result << "#{map_id}.map_options.#{option_k} = #{option_v};"
-          when :class
-          when :container_class
+          when :raw #particular case, render the content unescaped
+            result << "#{map_id}.map_options.#{option_k} = #{option_v};"
+          when :class           #do nothing
+          when :container_class #do nothing
           else
             result << "#{map_id}.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
           end
         end
       end
-
       result << "#{map_id}.initialize();"
     end
 
@@ -234,7 +235,7 @@ module Gmaps4rails
 
         content[:options] ||= Array.new 
     	  content[:options].each do |option_k, option_v| 
-          if option_k == "waypoints"
+          if option_k.to_sym == :waypoints
             waypoints = Array.new
             option_v.each do |waypoint|
               waypoints << { "location" => waypoint, "stopover" => true }.to_json
@@ -249,7 +250,11 @@ module Gmaps4rails
         result << "#{map_id}.#{category} = #{content[:data]};"
         content[:options] ||= Array.new 
         content[:options].each do |option_k, option_v|
-          result << "#{map_id}.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"		
+          if option_k.to_sym == :raw
+            result << "#{map_id}.#{category}_conf.#{option_k} = #{option_v};"
+          else
+            result << "#{map_id}.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"
+          end	
         end
         result << "#{map_id}.create_#{category}();"
       end 
@@ -261,7 +266,6 @@ module Gmaps4rails
       result << "};"
       if hash[:last_map].nil? || hash[:last_map] == true
         result << "window.onload = function() { Gmaps.loadMaps(); };"
-        #result << "window.onload = load_map;"
       end
     end
     

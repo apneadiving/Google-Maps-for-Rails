@@ -36,6 +36,7 @@ class @Gmaps4Rails
       auto_adjust : true      # adjust the map to the markers if set to true
       auto_zoom: true         # zoom given by auto-adjust
       bounds: []              # adjust map to these limits. Should be [{"lat": , "lng": }]    
+      raw: {}                  # raw json to pass additional options
 
     @default_markers_conf = 
       #Marker config
@@ -51,7 +52,8 @@ class @Gmaps4Rails
       max_random_distance: 100 # in meters. Each marker coordinate could be altered by this distance in a random direction
       list_container: null     # id of the ul that will host links to all markers
       offset: 0                # used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
-  
+      raw: {}                  # raw json to pass additional options
+
     #Stored variables
     @markers = []            # contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "serviceObject": google_marker}
     @boundsObject = null     # contains current bounds from markers, polylines etc...
@@ -68,7 +70,7 @@ class @Gmaps4Rails
       @findUserLocation(this)       
     #resets sidebar if needed
     @resetSidebarContent()
-
+      
   findUserLocation : (map_object) ->
     if (navigator.geolocation)
       #try to retrieve user's position
@@ -450,7 +452,10 @@ class @Gmaps4Rails
     return [Lat, Lng]
   
   mergeObjectWithDefault : (object1, object2) ->
-    copy_object1 = object1
+    copy_object1 = {}
+    for key, value of object1
+      copy_object1[key] = value
+
     for key, value of object2
       unless copy_object1[key]?
         copy_object1[key] = value

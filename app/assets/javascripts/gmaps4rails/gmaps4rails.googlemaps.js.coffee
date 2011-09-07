@@ -79,7 +79,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     return new google.maps.LatLngBounds()
 
   createMap : ->
-    return new google.maps.Map document.getElementById(@map_options.id), {
+    defaultOptions = 
       maxZoom:                @map_options.maxZoom
       minZoom:                @map_options.minZoom
       zoom:                   @map_options.zoom
@@ -89,7 +89,10 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       disableDefaultUI:       @map_options.disableDefaultUI
       disableDoubleClickZoom: @map_options.disableDoubleClickZoom
       draggable:              @map_options.draggable
-    }
+
+    mergedOptions = @mergeObjectWithDefault @map_options.raw, defaultOptions
+    
+    return new google.maps.Map document.getElementById(@map_options.id), mergedOptions
 
 
   createMarkerImage : (markerPicture, markerSize, origin, anchor, scaledSize) ->
@@ -104,12 +107,13 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
 
   createMarker : (args) ->
     markerLatLng = @createLatLng(args.Lat, args.Lng) 
-
     #Marker sizes are expressed as a Size of X,Y
-    if args.marker_picture and args.rich_marker == null
-      return new google.maps.Marker({position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable})
+    if args.marker_picture == "" and args.rich_marker == null
+      defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable}
+      mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions  
+      return new google.maps.Marker mergedOptions
 
-    else if (args.rich_marker != null)
+    if (args.rich_marker != null)
       return new RichMarker({
         position: markerLatLng
         map:       @map
@@ -119,15 +123,16 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
         anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
       })
 
-    else 
-      #calculate MarkerImage anchor location
-      imageAnchorPosition  = @createImageAnchorPosition args.marker_anchor
-      shadowAnchorPosition = @createImageAnchorPosition args.shadow_anchor
-
-      #create or retrieve existing MarkerImages
-      markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
-      shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-      return new google.maps.Marker({position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage})
+    #default behavior 
+    #calculate MarkerImage anchor location
+    imageAnchorPosition  = @createImageAnchorPosition args.marker_anchor
+    shadowAnchorPosition = @createImageAnchorPosition args.shadow_anchor
+    #create or retrieve existing MarkerImages
+    markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
+    shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
+    defaultOptions = {position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage}
+    mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions      
+    return new google.maps.Marker mergedOptions
 
   #checks if obj is included in arr Array and returns the position or false
   includeMarkerImage : (arr, obj) ->

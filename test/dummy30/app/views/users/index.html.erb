@@ -107,7 +107,9 @@ var builder3 = [{
     #:map_options => {:container_class => "map_container", :id => "map", :class => "gmaps4rails_map"},
     :last_map => true
     })  %>  
-
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true, :raw => '{ animation: google.maps.Animation.BOUNCE }' } },
+          :map_options => { :auto_adjust => true, :zoom => 5, :raw => '{ disableDefaultUI: true, scrollwheel: true }' },
+          :last_map => true) %>
 <%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true } },
           :map_options => { :auto_adjust => true, :zoom => 5 },
           :last_map => true) %>
