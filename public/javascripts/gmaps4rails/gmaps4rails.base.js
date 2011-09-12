@@ -290,8 +290,10 @@
       return this.clusterize();
     };
     Gmaps4Rails.prototype.createServiceMarkersFromMarkers = function() {
-      var Lat, LatLng, Lng, index, _ref, _ref2;
-      for (index = _ref = this.markers_conf.offset, _ref2 = this.markers.length - 1; _ref <= _ref2 ? index <= _ref2 : index >= _ref2; _ref <= _ref2 ? index++ : index--) {
+      var Lat, LatLng, Lng, index, marker, _len, _ref;
+      _ref = this.markers;
+      for (index = 0, _len = _ref.length; index < _len; index++) {
+        marker = _ref[index];
         Lat = this.markers[index].lat;
         Lng = this.markers[index].lng;
         if (this.markers_conf.randomize) {
