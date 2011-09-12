@@ -47,7 +47,7 @@
 <%= link_to 'New User', new_user_path %>
 
 <%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true } },
-          :map_options => { :auto_adjust => true, :zoom => 5 },
+          :map_options => { :auto_adjust => true, :zoom => 5, :center_on_user => true, :detect_location => true },
           :last_map => true) %>
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },

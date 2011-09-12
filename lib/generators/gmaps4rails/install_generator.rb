@@ -12,6 +12,7 @@ module Gmaps4rails
           copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.openlayers.js.coffee', 'app/assets/javascripts/gmaps4rails/gmaps4rails.openlayers.js.coffee'
           copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.bing.js.coffee',       'app/assets/javascripts/gmaps4rails/gmaps4rails.bing.js.coffee'
           copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee',   'app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee'        
+          copy_file '../../../app/assets/stylesheets/gmaps4rails.css', 'public/stylesheets/gmaps4rails.css'
         else
         #I don't copy manifests, kind of useless
           copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.base.js', 'public/javascripts/gmaps4rails.base.js'
@@ -19,8 +20,8 @@ module Gmaps4rails
           copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.bing.js', 'public/javascripts/gmaps4rails.bing.js'
           copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.openlayers.js', 'public/javascripts/gmaps4rails.openlayers.js'
           copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.mapquest.js', 'public/javascripts/gmaps4rails.mapquest.js'
+          copy_file '../../../public/stylesheets/gmaps4rails.css', 'public/stylesheets/gmaps4rails.css'
         end
-        copy_file '../../../public/stylesheets/gmaps4rails.css', 'public/stylesheets/gmaps4rails.css'
         copy_file '../../../public/images/marker.png', 'public/images/marker.png'
       end
 
