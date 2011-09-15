@@ -221,11 +221,11 @@
         latlng = this.createLatLng(point.lat, point.lng);
         polygon_coordinates.push(latlng);
         if (point === polygon[0]) {
-          strokeColor = this.polygons[i][j].strokeColor || this.polygons_conf.strokeColor;
-          strokeOpacity = this.polygons[i][j].strokeOpacity || this.polygons_conf.strokeOpacity;
-          strokeWeight = this.polygons[i][j].strokeWeight || this.polygons_conf.strokeWeight;
-          fillColor = this.polygons[i][j].fillColor || this.polygons_conf.fillColor;
-          fillOpacity = this.polygons[i][j].fillOpacity || this.polygons_conf.fillOpacity;
+          strokeColor = point.strokeColor || this.polygons_conf.strokeColor;
+          strokeOpacity = point.strokeOpacity || this.polygons_conf.strokeOpacity;
+          strokeWeight = point.strokeWeight || this.polygons_conf.strokeWeight;
+          fillColor = point.fillColor || this.polygons_conf.fillColor;
+          fillOpacity = point.fillOpacity || this.polygons_conf.fillOpacity;
         }
       }
       new_poly = new google.maps.Polygon({
@@ -381,8 +381,8 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           polyline = _ref[_i];
           polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray();
-          for (_j = 0, _len2 = polyline.length; _j < _len2; _j++) {
-            point = polyline[_j];
+          for (_j = 0, _len2 = polyline_points.length; _j < _len2; _j++) {
+            point = polyline_points[_j];
             this.boundsObject.extend(point);
           }
         }
@@ -390,8 +390,8 @@
         for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
           polygon = _ref2[_k];
           polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray();
-          for (_l = 0, _len4 = polygon.length; _l < _len4; _l++) {
-            point = polygon[_l];
+          for (_l = 0, _len4 = polygon_points.length; _l < _len4; _l++) {
+            point = polygon_points[_l];
             this.boundsObject.extend(point);
           }
         }

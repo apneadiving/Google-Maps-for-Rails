@@ -199,11 +199,11 @@ class @Gmaps4Rails
       polygon_coordinates.push(latlng)
       #first element of an Array could contain specific configuration for this particular polygon. If no config given, use default
       if point == polygon[0]
-        strokeColor   = @polygons[i][j].strokeColor   || @polygons_conf.strokeColor
-        strokeOpacity = @polygons[i][j].strokeOpacity || @polygons_conf.strokeOpacity
-        strokeWeight  = @polygons[i][j].strokeWeight  || @polygons_conf.strokeWeight
-        fillColor     = @polygons[i][j].fillColor     || @polygons_conf.fillColor
-        fillOpacity   = @polygons[i][j].fillOpacity   || @polygons_conf.fillOpacity
+        strokeColor   = point.strokeColor   || @polygons_conf.strokeColor
+        strokeOpacity = point.strokeOpacity || @polygons_conf.strokeOpacity
+        strokeWeight  = point.strokeWeight  || @polygons_conf.strokeWeight
+        fillColor     = point.fillColor     || @polygons_conf.fillColor
+        fillOpacity   = point.fillOpacity   || @polygons_conf.fillOpacity
 
     #Construct the polygon
     new_poly = new google.maps.Polygon
@@ -389,16 +389,17 @@ class @Gmaps4Rails
     if @map_options.auto_adjust
       #from markers
       @extendBoundsWithMarkers()
+      
       #from polylines:
       for polyline in @polylines        
         polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-        for point in polyline
-         @boundsObject.extend point
+        for point in polyline_points
+          @boundsObject.extend point
       
       #from polygons:
       for polygon in @polygons
         polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-        for point in polygon
+        for point in polygon_points          
           @boundsObject.extend point
           
       #from circles
