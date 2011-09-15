@@ -46,13 +46,13 @@ To make Rails serve the assets (javascripts, stylesheets and marker images) you 
   You even don't need the `yield :head` if you include `require gmaps4rails` in your CSS manifest.
   
 - if you are using Rails 3.0:
-  if you have Rails configured to serve static assets ('config.serve_static_assets = true'; note that it is disabled by default in production environment), they'll be served directly from gem's public/ directory.
+  see para below to be sure everything will work in production.
 
 - finally you can just copy assets to your application's public/stylesheets, public/javascripts/gmaps4rails and public/images. It's recommended to do this in production so that you can let your webserver serve them rather than go through Rails each time they are requested. There's a generator to help you with that:
 
      rails generate gmaps4rails:install
      
-  This will copy the coffeescript files if you're running Rails 3.1 or the js files 
+  This will copy the coffeescript files if you're running Rails 3.1 or the js files for Rails 3.0.x
 
 == Basic configuration
 In your model, add:
