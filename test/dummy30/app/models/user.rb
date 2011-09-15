@@ -5,12 +5,7 @@ class User < ActiveRecord::Base
   def gmaps4rails_address
     sec_address
   end
-  
-  def name
-    "yp"
-  end
-  
-     
+
   #   def gmaps4rails_marker_picture
   #     {
   #     "width" => "32",
