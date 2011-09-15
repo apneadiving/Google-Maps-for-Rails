@@ -116,16 +116,6 @@ describe "to_gmaps4rails for hash" do
     result.should include "Gmaps.map.callback();"
   end 
   
-  
-  it "should take into account id passed" do
-    options_hash = {
-      "markers"     => { "data" => '[{ ""longitude": "5.9311119", "latitude": "43.1251606" }, { "longitude": "2.3509871", "latitude": "48.8566667"} ]' }
-    }
-    result = options_hash.to_gmaps4rails("id_foo")
-    result.should include "Gmaps.id_foo"
-    result.should_not include "Gmaps.map"
-  end
-  
   it "should not call map builder if not last_map" do
     hash = {:last_map => false}
     hash.to_gmaps4rails.should_not include "window.onload = Gmaps.loadMaps;"

@@ -42,14 +42,6 @@ module Gmaps4rails
   def Gmaps4rails.sidebar(object)
     return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
   end
-  
-  def Gmaps4rails.get_map_id(hash)
-    hash.nil? || hash.try(:[], "id").nil? ? DEFAULT_MAP_ID : hash["id"]
-  end
-  
-  def Gmaps4rails.get_constructor(hash)
-    hash.nil? || hash.try(:[], "provider").nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash["provider"].capitalize}()"
-  end
 
   # Returns picture options if gmaps4rails_marker_picture is defined in the model
   def Gmaps4rails.picture(object)
@@ -106,7 +98,6 @@ module Gmaps4rails
   end #end destination
   
   # To create valid js, this method escapes everything but Numeric, true or false
-  
   def Gmaps4rails.filter(data)
     return data if data.is_a?(Numeric) || data.is_a?(TrueClass) || data.is_a?(FalseClass)
     "'#{data}'"
@@ -180,11 +171,72 @@ module Gmaps4rails
     end #end resp test
   end
   
+  ###### JS CREATION #######
+  
   def Gmaps4rails.js_function_name(hash)
     "load_" + Gmaps4rails.get_map_id(hash[:map_options])
   end
   
-  def Gmaps4rails.create_js_from_hash(hash, edit_map_with_id = false)
+  def Gmaps4rails.get_map_id(hash)
+    hash.nil? || hash.try(:[], "id").nil? ? DEFAULT_MAP_ID : hash["id"]
+  end
+  
+  def Gmaps4rails.get_constructor(hash)
+    hash.nil? || hash.try(:[], "provider").nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash["provider"].capitalize}()"
+  end
+  
+  def Gmaps4rails.create_map_js(map_hash, map_id)
+    output = Array.new
+    skipped_keys = [:class, :container_class]
+    map_hash.each do |option_k, option_v|
+      unless skipped_keys.include? option_k.to_sym
+        case option_k.to_sym 
+        when :bounds, :raw #particular case, render the content unescaped
+          output << "#{map_id}.map_options.#{option_k} = #{option_v};"
+        else
+          output << "#{map_id}.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
+        end
+      end
+    end
+    output
+  end
+  
+  def Gmaps4rails.create_general_js(hash, map_id, category)
+    output = Array.new
+    output << "#{map_id}.#{category} = #{hash[:data]};"
+    hash[:options] ||= Array.new
+    hash[:options].each do |option_k, option_v|
+      if option_k.to_sym == :raw
+        output << "#{map_id}.#{category}_conf.#{option_k} = #{option_v};"
+      else
+        output << "#{map_id}.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"
+      end	
+    end
+    output << "#{map_id}.create_#{category}();"
+    output
+  end
+  
+  def Gmaps4rails.create_direction_js(hash, map_id)
+    output = Array.new
+    output << "#{map_id}.direction_conf.origin = '#{hash["data"]["from"]}';"
+    output << "#{map_id}.direction_conf.destination = '#{hash["data"]["to"]}';"
+    hash[:options] ||= Array.new
+	  hash[:options].each do |option_k, option_v|
+      if option_k.to_sym == :waypoints
+        waypoints = Array.new
+        option_v.each do |waypoint|
+          waypoints << { "location" => waypoint, "stopover" => true }.to_json
+        end
+        output << "#{map_id}.direction_conf.waypoints = [#{waypoints * (",")}];"
+      else #option_k != "waypoint"
+        output << "#{map_id}.direction_conf.#{option_k} = #{Gmaps4rails.filter option_v};"
+      end
+    end #end .each
+    output << "#{map_id}.create_direction();"
+    output
+  end
+  
+  def Gmaps4rails.create_js_from_hash(hash)
     #the variable 'options' must have the following structure
     #{  
     #   :map_options => hash,
@@ -195,78 +247,31 @@ module Gmaps4rails
     #   :direction   => { :data => hash, :options => hash },
     #   :kml         => { :data => json, :options => hash }
     #}
-    # "map_options", "scripts" and "direction" must be treated separately because there content is slightly different from the others:
-    # - "map_options" and "scripts" don't contain interesting data for the view
-    # - "direction" has a hash as a data and waypoints options must be processed properly
-    #
-    #TODO: clean up this method
     result = Array.new
-    map_id = "Gmaps." + (edit_map_with_id || Gmaps4rails.get_map_id(hash[:map_options]) )
+    map_id = "Gmaps." + Gmaps4rails.get_map_id(hash[:map_options])
 
     #means we are creating a new map
-    if edit_map_with_id == false 
-      result << "#{map_id} = new #{Gmaps4rails.get_constructor hash[:map_options] }" + ";"
-      result << "function #{Gmaps4rails.js_function_name hash }() {"
-      
-      #extract map_options
-      unless hash[:map_options].nil?
-        hash[:map_options].each do |option_k, option_v|
-          case option_k.to_sym 
-          when :bounds #particular case, render the content unescaped
-            result << "#{map_id}.map_options.#{option_k} = #{option_v};"
-          when :raw #particular case, render the content unescaped
-            result << "#{map_id}.map_options.#{option_k} = #{option_v};"
-          when :class           #do nothing
-          when :container_class #do nothing
-          else
-            result << "#{map_id}.map_options.#{option_k} = #{Gmaps4rails.filter option_v};"
-          end
+    result << "#{map_id} = new #{Gmaps4rails.get_constructor hash[:map_options] }" + ";"
+    result << "function #{Gmaps4rails.js_function_name hash }() {"
+    result << Gmaps4rails.create_map_js(hash[:map_options], map_id) unless hash[:map_options].nil?
+    result << "#{map_id}.initialize();"
+    
+    hash.each do |category, content| #loop through options hash
+      skipped_categories = [:map_options, :last_map, :scripts]
+      unless skipped_categories.include? category.to_sym
+        if category.to_sym == :direction
+          result << Gmaps4rails.create_direction_js(content, map_id)
+        else  
+          result << Gmaps4rails.create_general_js(content, map_id, category)
         end
       end
-      result << "#{map_id}.initialize();"
-    end
-
-    hash.each do |category, content| #loop through options hash
-      if [:map_options, :last_map, :scripts].include? category.to_sym
-        #nothing to do
-      elsif category.to_sym == :direction
-        result << "#{map_id}.direction_conf.origin = '#{content["data"]["from"]}';"
-        result << "#{map_id}.direction_conf.destination = '#{content["data"]["to"]}';"
-
-        content[:options] ||= Array.new 
-    	  content[:options].each do |option_k, option_v| 
-          if option_k.to_sym == :waypoints
-            waypoints = Array.new
-            option_v.each do |waypoint|
-              waypoints << { "location" => waypoint, "stopover" => true }.to_json
-            end
-            result << "#{map_id}.direction_conf.waypoints = [#{waypoints * (",")}];"
-          else #option_k != "waypoint"
-            result << "#{map_id}.direction_conf.#{option_k} = #{Gmaps4rails.filter option_v};"	
-          end
-        end #end .each
-        result << "#{map_id}.create_direction();"
-      else #default behaviour
-        result << "#{map_id}.#{category} = #{content[:data]};"
-        content[:options] ||= Array.new 
-        content[:options].each do |option_k, option_v|
-          if option_k.to_sym == :raw
-            result << "#{map_id}.#{category}_conf.#{option_k} = #{option_v};"
-          else
-            result << "#{map_id}.#{category}_conf.#{option_k} = #{Gmaps4rails.filter option_v};"
-          end	
-        end
-        result << "#{map_id}.create_#{category}();"
-      end 
     end
     result << "#{map_id}.adjustMapToBounds();"
     result << "#{map_id}.callback();"
     
-    if edit_map_with_id == false 
-      result << "};"
-      if hash[:last_map].nil? || hash[:last_map] == true
-        result << "window.onload = function() { Gmaps.loadMaps(); };"
-      end
+    result << "};"
+    if hash[:last_map].nil? || hash[:last_map] == true
+      result << "window.onload = function() { Gmaps.loadMaps(); };"
     end
     
     result * ('
