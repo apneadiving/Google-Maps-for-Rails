@@ -178,11 +178,11 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.get_map_id(hash)
-    hash.nil? || hash.try(:[], "id").nil? ? DEFAULT_MAP_ID : hash["id"]
+    hash.nil? || hash[:id].nil? ? DEFAULT_MAP_ID : hash[:id]
   end
   
   def Gmaps4rails.get_constructor(hash)
-    hash.nil? || hash.try(:[], "provider").nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash["provider"].capitalize}()"
+    hash.nil? || hash[:provider].nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash[:provider].capitalize}()"
   end
   
   def Gmaps4rails.create_map_js(map_hash, map_id)
@@ -202,6 +202,7 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.create_general_js(hash, map_id, category)
+    hash = hash.with_indifferent_access
     output = Array.new
     output << "#{map_id}.#{category} = #{hash[:data]};"
     hash[:options] ||= Array.new
@@ -217,6 +218,7 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.create_direction_js(hash, map_id)
+    hash = hash.with_indifferent_access
     output = Array.new
     output << "#{map_id}.direction_conf.origin = '#{hash["data"]["from"]}';"
     output << "#{map_id}.direction_conf.destination = '#{hash["data"]["to"]}';"

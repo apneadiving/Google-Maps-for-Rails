@@ -91,7 +91,10 @@
           <%#= gmaps(
               "circles"    => { "data" => @circles_json } , "map_options" => { "auto_adjust" => true }
             )  %>
-            
+            <button type="button" onclick="Gmaps.map.replaceMarkers(builder2)">Replace Markers</button>
+            <button type="button" onclick="Gmaps.map.addMarkers(builder2)">Add Markers</button>
+            <button type="button" onclick="Gmaps.map.addMarkers(builder3)">Add Markers bis</button>
+
 <% content_for :scripts do -%>
 <script type="text/javascript" charset="utf-8">
 // Gmaps.map.callback = function() {
@@ -102,5 +105,24 @@
 //   
 // }
 
+</script>
+ <script type="text/javascript" charset="utf-8">
+var builder2 =  
+      [
+{
+"lng": "5.9311119",
+"lat": "42.1251606",
+} ,{
+"lng": "32.3509871",
+"lat": "47.8566667",
+}
+];
+var builder3 = [{
+"lng": "6.9311119",
+"lat": "49.1251606",
+} ,{
+"lng": "39.3509871",
+"lat": "40.8566667",
+} ];
 </script>
 <% end -%>

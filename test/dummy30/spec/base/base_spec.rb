@@ -23,13 +23,13 @@ describe "JS building methods" do
     
     it "should render proper provider when provided" do
       options_hash = { "provider" => "bing" }
-      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsBing()"
+      Gmaps4rails.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsBing()"
       
       options_hash = { "provider" => "mapquest" }
-      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsMapquest()"
+      Gmaps4rails.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsMapquest()"
       
       options_hash = { "provider" => "openlayers" }
-      Gmaps4rails.get_constructor(options_hash).should eq "Gmaps4RailsOpenlayers()"
+      Gmaps4rails.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsOpenlayers()"
     end
   end
   
@@ -46,7 +46,7 @@ describe "JS building methods" do
   
     it "should return the proper ID when id passed" do
       options_hash = { "id" => "foo" }
-      Gmaps4rails.get_map_id(options_hash).should eq "foo"    
+      Gmaps4rails.get_map_id(options_hash.with_indifferent_access).should eq "foo"    
     end
   
   end
@@ -58,7 +58,7 @@ describe "to_gmaps4rails for hash" do
     hash2 = {"markers" => {"data" => @json, "options" => {"do_clustering" => true, "draggable" => true  } }}
     hash1.to_gmaps4rails.should eq hash2.to_gmaps4rails
   end
-  
+    
   it "should format entries properly" do
      options_hash = {
         "map_options" => { "type" => "SATELLITE", "center_longitude" => 180, "zoom" => 3, :raw => '{ok: true}'},
