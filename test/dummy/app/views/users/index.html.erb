@@ -91,3 +91,16 @@
           <%#= gmaps(
               "circles"    => { "data" => @circles_json } , "map_options" => { "auto_adjust" => true }
             )  %>
+            
+<% content_for :scripts do -%>
+<script type="text/javascript" charset="utf-8">
+Gmaps.map.callback = function() {
+  for (var i = 0; i <  this.markers.length; ++i) {
+     google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
+  }
+  
+  
+}
+
+</script>
+<% end -%>

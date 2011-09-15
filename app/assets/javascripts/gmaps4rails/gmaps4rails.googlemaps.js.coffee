@@ -213,18 +213,18 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
   createInfoWindow : (marker_container) ->
     if @markers_conf.custom_infowindow_class == null && marker_container.description?
       #create the infowindow
-      info_window = new google.maps.InfoWindow({content: marker_container.description })
+      marker_container.infowindow = new google.maps.InfoWindow({content: marker_container.description })
       #add the listener associated
       currentMap = this
-      google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, info_window, marker_container.serviceObject))
+      google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject))
     else #creating custom infowindow
       if marker_container.description?
         boxText = document.createElement("div")
         boxText.setAttribute("class", @markers_conf.custom_infowindow_class) #to customize
         boxText.innerHTML = marker_container.description 
-        info_window = new InfoBox(@infobox(boxText))
+        marker_container.infowindow = new InfoBox(@infobox(boxText))
         currentMap = this
-        google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, info_window, marker_container.serviceObject))
+        google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject))
 
 
   openInfoWindow : (currentMap, infoWindow, marker) ->
