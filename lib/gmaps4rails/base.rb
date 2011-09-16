@@ -28,7 +28,7 @@ module Gmaps4rails
   
   # Returns description if gmaps4rails_infowindow is defined in the model
   def Gmaps4rails.description(object)
-    return "\"description\": \"#{object.gmaps4rails_infowindow}\", " if object.respond_to?("gmaps4rails_infowindow")
+    return "\"description\": \"#{object.gmaps4rails_infowindow.gsub('"','\"')}\", " if object.respond_to?("gmaps4rails_infowindow")
   end
   
   # Returns title if gmaps4rails_title is defined in the model
