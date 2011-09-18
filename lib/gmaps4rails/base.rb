@@ -62,7 +62,6 @@ module Gmaps4rails
   # * address: string, mandatory
   # * lang: to set the language one wants the result to be translated (default is english)
   # * raw: to get the raw response from google, default is false
-  
   def Gmaps4rails.geocode(address, lang="en", raw = false)
    if address.nil? || address.empty?
      raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address"
@@ -81,7 +80,6 @@ module Gmaps4rails
   # * start_end: Hash { "from" => string, "to" => string}, mandatory
   # * options: details given in the github's wiki
   # * output: could be "pretty", "raw" or "clean"; filters the output from google
-   
   #output could be raw, pretty or clean
   def Gmaps4rails.destination(start_end, options={}, output="pretty")
    if start_end["from"].nil? || start_end["to"].empty?
