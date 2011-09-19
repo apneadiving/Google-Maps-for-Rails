@@ -6,7 +6,11 @@
     _results = [];
     for (key in Gmaps) {
       value = Gmaps[key];
-      _results.push(key !== "loadMaps" ? window["load_" + key]() : void 0);
+      var searchLoadIncluded = key.search(/load/);
+      if (searchLoadIncluded === -1) {
+	var load_function_name = "load_" + key;
+	_results.push(Gmaps[load_function_name]());
+      }
     }
     return _results;
   };
