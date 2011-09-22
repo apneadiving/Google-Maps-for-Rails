@@ -4,8 +4,10 @@ Gmaps.loadMaps = ->
   #loop through all variable names.
   #there should only be maps inside so it trigger their load function
   for key, value of Gmaps
-    if key != "loadMaps"
-      window["load_" + key]()
+    searchLoadIncluded = key.search(/load/)
+    if searchLoadIncluded == -1
+      load_function_name = "load_" + key
+      Gmaps[load_function_name]()
 
 window.Gmaps = Gmaps
 
