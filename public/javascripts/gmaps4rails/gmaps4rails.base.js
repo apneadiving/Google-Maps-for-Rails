@@ -2,11 +2,12 @@
   var Gmaps;
   Gmaps = {};
   Gmaps.loadMaps = function() {
-    var key, value, _results;
+    var key, load_function_name, searchLoadIncluded, value, _results;
     _results = [];
     for (key in Gmaps) {
       value = Gmaps[key];
-      _results.push(key !== "loadMaps" ? window["load_" + key]() : void 0);
+      searchLoadIncluded = key.search(/load/);
+      _results.push(searchLoadIncluded === -1 ? (load_function_name = "load_" + key, Gmaps[load_function_name]()) : void 0);
     }
     return _results;
   };

@@ -252,7 +252,7 @@ module Gmaps4rails
 
     #means we are creating a new map
     result << "#{map_id} = new #{Gmaps4rails.get_constructor hash[:map_options] }" + ";"
-    result << "function #{Gmaps4rails.js_function_name hash }() {"
+    result << "Gmaps.#{Gmaps4rails.js_function_name hash } = function() {"
     result << Gmaps4rails.create_map_js(hash[:map_options], map_id) unless hash[:map_options].nil?
     result << "#{map_id}.initialize();"
     
@@ -270,6 +270,7 @@ module Gmaps4rails
     result << "#{map_id}.callback();"
     
     result << "};"
+    # result << "debugger;"
     if hash[:last_map].nil? || hash[:last_map] == true
       result << "window.onload = function() { Gmaps.loadMaps(); };"
     end
