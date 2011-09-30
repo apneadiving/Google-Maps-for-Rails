@@ -14,10 +14,10 @@ module Gmaps4rails
         begin
           coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language])
         rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to base.
-          logger.warn(e)
+          Rails.logger.warn(e)
           errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
-          logger.warn(e)
+          Rails.logger.warn(e)
           #TODO add customization here?
         else #if no exception, save the values
           self.send(gmaps4rails_options[:lng_column]+"=", coordinates.first[:lng]) if self.respond_to?(gmaps4rails_options[:lng_column]+"=")
