@@ -89,7 +89,7 @@ describe("Gmaps4Rails", function() {
 });
 
 function load_test1(){};
-function load_test2() {};
+function load_test2(){};
 describe("Gmaps", function() {
   it("should initialize all requested maps", function() {
     spyOn(window, "load_test2");

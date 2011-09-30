@@ -57,7 +57,7 @@ module Gmaps4rails
       else
         "\"#{k}\": \"#{v}\""
       end
-    end.join(", ")
+    end.join(", ") + ", "
   end
   ##################################################
   # in use in block
