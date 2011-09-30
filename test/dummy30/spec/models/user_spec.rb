@@ -46,20 +46,58 @@ describe Gmaps4rails::ActsAsGmappable do
       User.all.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
     end
     
-    it "should accept additional block for an array of objects" do
-      user #needed trigger the object from the let statement
-      Factory(:user_paris)
-      User.all.to_gmaps4rails do |u|
-        "\"model\": \"" + u.class.to_s + "\""
-      end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\", \"model\": \"User\"}]"
+    context "to_gmaps4rails block" do
+      it "should extend json string for Arrays" do
+        user #needed trigger the object from the let statement
+        Factory(:user_paris)
+        User.all.to_gmaps4rails do |u, marker|
+          '"model": "' + u.class.to_s + '"'
+        end.should == "[{\"model\": \"User\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"model\": \"User\", \"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
+      end
+            
+      it "should extend json string for a single object" do
+        user.to_gmaps4rails do |u, marker|
+          "\"model\": \"" + u.class.to_s + "\""
+        end.should == "[{\"model\": \"User\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
+      end
+      
+      it "json method should produce same result as raw string" do
+        user.to_gmaps4rails do |u, marker|
+          marker.json "\"model\": \"" + u.class.to_s + "\""
+        end.should == user.to_gmaps4rails do |u, marker|
+                        "\"model\": \"" + u.class.to_s + "\""
+                      end
+      end
+      
+      it "infowindow content should be included in json" do
+        user.to_gmaps4rails do |u, marker|
+          marker.infowindow "i'm inside the infowindow!"
+        end.should include "\"description\": \"i'm inside the infowindow!\""
+      end
+      
+      it "marker_picture should be included in json" do
+        user.to_gmaps4rails do |u, marker|
+          marker.picture({
+                          :picture => "http://www.blankdots.com/img/github-32x32.png",
+                          :width   => "32",
+                          :height  => "32"
+                          })
+        end.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
+      end
+      
+      it "title content should be included in json" do
+        user.to_gmaps4rails do |u, marker|
+          marker.title "i'm the title"
+        end.should include "\"title\": \"i'm the title\""
+      end
+      
+      it "sidebar content should be included in json" do
+        user.to_gmaps4rails do |u, marker|
+          marker.sidebar "i'm the sidebar"
+        end.should include "\"sidebar\": \"i'm the sidebar\""
+      end
     end
   
-    it "should accept additional block for a single object" do
-      user.to_gmaps4rails do |u|
-        "\"model\": \"" + u.class.to_s + "\""
-      end.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\", \"model\": \"User\"}]"
-    end
-    
     it "should render a valid json from a single object" do
       user.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
     end

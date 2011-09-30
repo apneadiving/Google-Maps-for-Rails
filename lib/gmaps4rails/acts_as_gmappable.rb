@@ -13,7 +13,8 @@ module Gmaps4rails
         #try to geocode
         begin
           coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language])
-        rescue GeocodeStatus, GeocodeInvalidQuery  #address was invalid, add error to base.
+        rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to base.
+          logger.warn(e)
           errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           logger.warn(e)

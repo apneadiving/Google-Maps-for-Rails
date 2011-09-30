@@ -3,13 +3,20 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @users = User.all
-    @json = User.all.to_gmaps4rails
+    @json = User.all.to_gmaps4rails do |user, marker|
+      marker.infowindow render_to_string :partial => "/users/my_template", :locals => { :object => user}
+      marker.marker_picture({:width => 20, :height => 25, :picture => "/images/marker.png"})
+      marker.json "\"test\": #{user.id}"
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @users }
     end
   end
 
+  def json(string)
+    string
+  end 
   # GET /users/1
   # GET /users/1.json
   def show

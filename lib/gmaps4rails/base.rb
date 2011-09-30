@@ -14,47 +14,101 @@ module Gmaps4rails
 
   # Creates the json related to one Object (only tried ActiveRecord objects)
   # This json will contian the marker's attributes of the object 
-  
+ mattr_accessor :json_from_block 
+
  def Gmaps4rails.create_json(object, &block)
-    unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
-"{#{Gmaps4rails.description(object)}#{Gmaps4rails.title(object)}#{Gmaps4rails.sidebar(object)}\"lng\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"lat\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"#{Gmaps4rails.picture(object)}#{Gmaps4rails.block_handling(object, &block)}},\n"
-    end
+   @json_from_block = String.new
+   unless object.send(object.gmaps4rails_options[:lat_column]).blank? && object.send(object.gmaps4rails_options[:lng_column]).blank?
+     Gmaps4rails.block_handling(object, &block)
+"{#{description(object)}#{get_title(object)}#{get_sidebar(object)}#{marker_picture(object)}#{@json_from_block}\"lng\": \"#{object.send(object.gmaps4rails_options[:lng_column])}\", \"lat\": \"#{object.send(object.gmaps4rails_options[:lat_column])}\"},\n"
+   end
  end  
 
   # execute block if provided so that it's included in the json string
   def Gmaps4rails.block_handling(object, &block)
-     ", " + yield(object) if block_given?
+     block_result = yield(object, ::Gmaps4rails) if block_given?
+     Gmaps4rails.json(block_result) if block_result.is_a? String
   end
   
-  # Returns description if gmaps4rails_infowindow is defined in the model
+  def Gmaps4rails.json(string)
+    @json_from_block += "#{gsub_string(string)}, "
+    return true
+  end
+  
+  ################################################
+  # in use to create json from model
+  def Gmaps4rails.marker_picture(object)
+    create_js_for_picture object.gmaps4rails_marker_picture if object.respond_to?("gmaps4rails_marker_picture")
+  end
+  
+  # in use in block
+  def Gmaps4rails.picture(hash)
+    @json_from_block += create_js_for_picture hash
+    return true
+  end
+  
+  # Returns picture js from a hash
+  def Gmaps4rails.create_js_for_picture(raw_hash)
+    hash = raw_hash.with_indifferent_access
+    result = hash.map do |k,v|
+      #specific case, anchors are array and should be interpreted this way
+      if k.include? "_anchor"
+        "\"#{k}\": [#{v[0]}, #{v[1]}]"
+      else
+        "\"#{k}\": \"#{v}\""
+      end
+    end.join(", ")
+  end
+  ##################################################
+  # in use in block
+  def Gmaps4rails.infowindow(string)
+    @json_from_block += create_js_for_infowindow string
+    return true
+  end
+  
+  # in use to create json from model
   def Gmaps4rails.description(object)
-    return "\"description\": \"#{object.gmaps4rails_infowindow}\", " if object.respond_to?("gmaps4rails_infowindow")
+    create_js_for_infowindow object.gmaps4rails_infowindow if object.respond_to?("gmaps4rails_infowindow")
   end
   
-  # Returns title if gmaps4rails_title is defined in the model
-  
-  def Gmaps4rails.title(object)
-    return "\"title\": \"#{object.gmaps4rails_title}\", " if object.respond_to?("gmaps4rails_title")
-  end
-  
-  # Returns sidebar content if gmaps4rails_sidebar is defined in the model
-  
-  def Gmaps4rails.sidebar(object)
-    return "\"sidebar\": \"#{object.gmaps4rails_sidebar}\"," if object.respond_to?("gmaps4rails_sidebar")
+  def Gmaps4rails.create_js_for_infowindow(string)
+    "\"description\": \"#{gsub_string(string)}\", "
   end
 
-  # Returns picture options if gmaps4rails_marker_picture is defined in the model
-  def Gmaps4rails.picture(object)
-    if object.respond_to?("gmaps4rails_marker_picture")
-      ", " + object.gmaps4rails_marker_picture.map do |k,v|
-        #specific case, anchors are array and should be interpreted this way
-        if k.include? "_anchor"
-          "\"#{k}\": [#{v[0]}, #{v[1]}]"
-        else
-          "\"#{k}\": \"#{v}\""
-        end
-      end.join(", ")
-    end
+  ##################################################
+  # in use in block
+  def Gmaps4rails.title(string)
+    create_js_for_title string
+  end
+
+  # in use to create json from model
+  def Gmaps4rails.get_title(object)
+    create_js_for_title object.gmaps4rails_title if object.respond_to?("gmaps4rails_title")
+  end
+  
+  def Gmaps4rails.create_js_for_title(string)
+    "\"title\": \"#{gsub_string(string)}\", "
+  end
+  ##################################################
+
+  # in use in block  
+  def Gmaps4rails.sidebar(string)
+    create_js_for_sidebar string
+  end 
+  
+  # in use to create json from model  
+  def Gmaps4rails.get_sidebar(object)
+    create_js_for_sidebar object.gmaps4rails_sidebar if object.respond_to?("gmaps4rails_sidebar")
+  end
+
+  def Gmaps4rails.create_js_for_sidebar(string)
+    "\"sidebar\": \"#{gsub_string(string)}\", "
+  end
+  ##################################################
+
+  
+  def Gmaps4rails.gsub_string(string)
+    string   #you could do override with something like: string.gsub(/\n/, '').gsub(/"/, '\"')
   end
   
   # This method geocodes an address using the GoogleMaps webservice
@@ -270,7 +324,6 @@ module Gmaps4rails
     result << "#{map_id}.callback();"
     
     result << "};"
-    # result << "debugger;"
     if hash[:last_map].nil? || hash[:last_map] == true
       result << "window.onload = function() { Gmaps.loadMaps(); };"
     end

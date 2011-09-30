@@ -4,8 +4,10 @@ class UsersController < ApplicationController
   
   def index
     @users = User.all
-    @json  = User.all.to_gmaps4rails do |user|
-      "\"id\": #{user.id}"
+    @json = User.all.to_gmaps4rails do |user, marker|
+      marker.infowindow render_to_string(:partial => "/users/my_template", :locals => { :object => user}).gsub(/\n/, '').gsub(/"/, '\"')
+      marker.marker_picture({:width => 20, :height => 25, :picture => "/images/marker.png"})
+      marker.json "\"test\": #{user.id}"
     end
   end
 
