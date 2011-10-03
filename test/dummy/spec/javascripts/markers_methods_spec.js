@@ -335,3 +335,32 @@ describe("clusterize", function() {
   });
 
 });
+
+describe("infowindows", function() {
+  beforeEach(function() {
+    gmap.markers = [getFullMarker()];
+    this.initial_description = getFullMarker().description;
+  });
+  
+  it("infowindow should contain marker's description", function() {
+      gmap.createInfoWindow(gmap.markers[0]);
+      expect(gmap.markers[0].description).toEqual(this.initial_description);
+  });
+  
+  it("infowindow should contain template's content", function() {
+      gmap.jsTemplate = function(marker_container){ 
+        var output = "ok ";
+        output += marker_container.description;
+        return output;
+      }
+      gmap.createInfoWindow(gmap.markers[0]);
+      expect(gmap.markers[0].description).toEqual("ok " + this.initial_description);
+  });
+  
+  it("infowindow should not contain template's content if it's not a function", function() {
+      gmap.jsTemplate = "ok ";
+      gmap.createInfoWindow(gmap.markers[0]);
+      expect(gmap.markers[0].description).toEqual(this.initial_description);
+  });
+
+});

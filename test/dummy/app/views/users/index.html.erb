@@ -46,28 +46,30 @@
 
 <%= link_to 'New User', new_user_path %>
 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true } },
-          :polygons => {:data =>  '[[
-  {"lng": 5.190262, "lat": 25.774252},
-  {"lng": 7.118292, "lat": 45.466465},
-  {"lng": 4.75737, "lat": 53.321384}
-  ]]'},
-  "circles"     => { "data" => '[
-{"lng": -122.214897, "lat": 37.772323, "radius": 1000000},
-{"lng": 122.214897, "lat": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
-]'},
-        "polylines"   => { "data" => '[[
-{"lng": -122.214897, "lat": 37.772323},
-{"lng": -157.821856, "lat": 21.291982},
-{"lng": 178.431, "lat": -18.142599},
-{"lng": 153.027892, "lat": -27.46758}
-],
-[
-{"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
-{"lng": -10.821856, "lat": 50.291982}
-]]' },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false } },
+#           :polygons => {:data =>  '[[
+#   {"lng": 5.190262, "lat": 25.774252},
+#   {"lng": 7.118292, "lat": 45.466465},
+#   {"lng": 4.75737, "lat": 53.321384}
+#   ]]'},
+#   "circles"     => { "data" => '[
+# {"lng": -122.214897, "lat": 37.772323, "radius": 1000000},
+# {"lng": 122.214897, "lat": 37.772323, "radius": 1000000, "strokeColor": "#FF0000"}
+# ]'},
+#         "polylines"   => { "data" => '[[
+# {"lng": -122.214897, "lat": 37.772323},
+# {"lng": -157.821856, "lat": 21.291982},
+# {"lng": 178.431, "lat": -18.142599},
+# {"lng": 153.027892, "lat": -27.46758}
+# ],
+# [
+# {"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
+# {"lng": -10.821856, "lat": 50.291982}
+# ]]' },
           :map_options => { :auto_adjust => true, :zoom => 5, :center_on_user => false, :detect_location => false },
           :last_map => true) %>
+          
+
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "none",
@@ -97,6 +99,10 @@
 
 <% content_for :scripts do -%>
 <script type="text/javascript" charset="utf-8">
+
+Gmaps.map.jsTemplate = function(){
+  return "ok";
+}
 // Gmaps.map.callback = function() {
 //   for (var i = 0; i <  this.markers.length; ++i) {
 //      google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });

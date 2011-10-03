@@ -159,7 +159,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
        if @markerClusterer != null
          @clearClusterer()
        markers_array = new Array
-       for marker in markers
+       for marker in @markers
          markers_array.push(marker.serviceObject)
        @markerClusterer = @createClusterer markers_array
    

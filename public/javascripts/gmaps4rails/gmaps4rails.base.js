@@ -29,6 +29,7 @@
       this.infobox = function() {
         return false;
       };
+      this.jsTemplate = false;
       this.default_map_options = {
         id: 'map',
         draggable: true,

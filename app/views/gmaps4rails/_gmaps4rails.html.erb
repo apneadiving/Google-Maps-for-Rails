@@ -1,7 +1,9 @@
 <% #thanks to enable_css, user can avoid this css to be loaded
 if enable_css == true and options[:scripts].nil? %>
-	<% content_for :head do %>
-	<%= stylesheet_link_tag 'gmaps4rails' %>
+  <% if Rails::VERSION::MAJOR >= 3 and Rails::VERSION::MINOR < 1 %>
+    <% content_for :head do %>
+      <%= stylesheet_link_tag 'gmaps4rails' %>
+    <% end %>
 	<% end %>
 <% end %>
 <% content_for :scripts do %>

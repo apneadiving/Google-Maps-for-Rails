@@ -239,18 +239,21 @@
     };
     Gmaps4RailsGoogle.prototype.createInfoWindow = function(marker_container) {
       var boxText, currentMap;
-      if (this.markers_conf.custom_infowindow_class === null && (marker_container.description != null)) {
-        marker_container.infowindow = new google.maps.InfoWindow({
-          content: marker_container.description
-        });
-        currentMap = this;
-        return google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject));
-      } else {
-        if (marker_container.description != null) {
+      if (typeof this.jsTemplate === "function" || (marker_container.description != null)) {
+        if (typeof this.jsTemplate === "function") {
+          marker_container.description = this.jsTemplate(marker_container);
+        }
+        if (this.markers_conf.custom_infowindow_class !== null) {
           boxText = document.createElement("div");
           boxText.setAttribute("class", this.markers_conf.custom_infowindow_class);
           boxText.innerHTML = marker_container.description;
           marker_container.infowindow = new InfoBox(this.infobox(boxText));
+          currentMap = this;
+          return google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject));
+        } else {
+          marker_container.infowindow = new google.maps.InfoWindow({
+            content: marker_container.description
+          });
           currentMap = this;
           return google.maps.event.addListener(marker_container.serviceObject, 'click', this.openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject));
         }

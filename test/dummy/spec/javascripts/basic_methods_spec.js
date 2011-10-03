@@ -88,17 +88,16 @@ describe("Gmaps4Rails", function() {
   });
 });
 
-function load_test1(){};
-function load_test2(){};
 describe("Gmaps", function() {
+  
   it("should initialize all requested maps", function() {
-    spyOn(window, "load_test2");
-    spyOn(window, "load_test1");
+    Gmaps.load_test1 = jasmine.createSpy('myStub');
+    Gmaps.load_test2 = jasmine.createSpy('myStub');
     Gmaps.test1 = true;
     Gmaps.test2 = true; 
     Gmaps.loadMaps();
-    expect(window.load_test1).toHaveBeenCalled();
-    expect(window.load_test2).toHaveBeenCalled();
+    expect(Gmaps.load_test1).toHaveBeenCalled();
+    expect(Gmaps.load_test2).toHaveBeenCalled();
   });
   
 });

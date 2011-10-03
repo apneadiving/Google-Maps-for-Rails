@@ -3,9 +3,8 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @users = User.all
-    @json = User.all.to_gmaps4rails do |user, marker|
-      marker.json "\"test\": #{user.name}"
-    end
+    @json = User.all.to_gmaps4rails 
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @users }

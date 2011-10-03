@@ -73,7 +73,7 @@ getRawMarkers = function() {
 };
 
 getFullMarker = function() {
-  return { "lng": "5", "lat": "43", "picture": "picture", "width": "width", "height": "height", "title": "title", "marker_anchor": [0,1], "shadow_anchor": [1,0], "shadow_picture": "shadow_picture", "shadow_width": "shadow_width", "shadow_height": "shadow_height", "draggable": true };
+  return { "lng": "5", "lat": "43", "picture": "picture", "width": "width", "height": "height", "title": "title", "marker_anchor": [0,1], "shadow_anchor": [1,0], "shadow_picture": "shadow_picture", "shadow_width": "shadow_width", "shadow_height": "shadow_height", "draggable": true, "description": "infowindow content" };
 };
 
 getEmptyMarker = function() {

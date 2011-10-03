@@ -24,6 +24,7 @@ class @Gmaps4Rails
     @callback           = -> false  #to let user set a custom callback function
     @customClusterer    = -> false  #to let user set custom clusterer pictures
     @infobox            = -> false  #to let user use custom infoboxes
+    @jsTemplate         = false     #to let user create infowindows client side
 
     @default_map_options = 
       id: 'map'
