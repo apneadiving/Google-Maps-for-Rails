@@ -111,7 +111,7 @@ Done!
 
 == Todo?
 
-Feel free ton contact us, you have your say.
+Feel free to contact us, you have your say.
 
 == Copyright
 MIT license. 
