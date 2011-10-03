@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Benjamin Roth}, %q{David Ruyer}]
-  s.date = %q{2011-09-30}
+  s.date = %q{2011-10-03}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
   s.email = [%q{apnea.diving.deep@gmail.com}, %q{david.ruyer@gmail.com}]
   s.extra_rdoc_files = [
