@@ -1,3 +1,0 @@
-class HomeController < ApplicationController
-  
-end
