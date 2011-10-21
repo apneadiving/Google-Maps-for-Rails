@@ -31,7 +31,7 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.json(string)
-    @json_from_block += "#{gsub_string(string)}, "
+    @json_from_block << "#{gsub_string(string)}, "
     return true
   end
   
@@ -43,7 +43,7 @@ module Gmaps4rails
   
   # in use in block
   def Gmaps4rails.picture(hash)
-    @json_from_block += create_js_for_picture hash
+    @json_from_block << (create_js_for_picture hash)
     return true
   end
   
@@ -62,7 +62,7 @@ module Gmaps4rails
   ##################################################
   # in use in block
   def Gmaps4rails.infowindow(string)
-    @json_from_block += create_js_for_infowindow string
+    @json_from_block << (create_js_for_infowindow string)
     return true
   end
   

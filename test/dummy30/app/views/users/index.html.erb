@@ -101,7 +101,9 @@ var builder3 = [{
 	"markers"     => {"data" => @json}
 }) %>
 <%#= gmaps(@options) %>
-
+<%= debug @last_template %>
+<%#= debug request %>
+<%#= self._template.identifier%>
 
 <%#= gmaps({
     #:map_options => {:container_class => "map_container", :id => "map", :class => "gmaps4rails_map"},
