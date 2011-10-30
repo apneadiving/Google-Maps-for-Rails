@@ -120,7 +120,7 @@ module Gmaps4rails
    if address.nil? || address.empty?
      raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address"
    else #coordinates are valid
-     geocoder = "http://maps.googleapis.com/maps/api/geocode/json?language=#{lang}&address="
+     geocoder = "//maps.googleapis.com/maps/api/geocode/json?language=#{lang}&address="
      output = "&sensor=false"
      #send request to the google api to get the lat/lng
      request = geocoder + address + output
@@ -139,7 +139,7 @@ module Gmaps4rails
    if start_end["from"].nil? || start_end["to"].empty?
      raise Gmaps4rails::DirectionInvalidQuery, "Origin and destination must be provided in a hash as first argument"
    else #great, we have stuff to work with
-     geocoder = "http://maps.googleapis.com/maps/api/directions/json?origin=#{start_end["from"]}&destination=#{start_end["to"]}"
+     geocoder = "//maps.googleapis.com/maps/api/directions/json?origin=#{start_end["from"]}&destination=#{start_end["to"]}"
      #if value is an Array, it means it contains the waypoints, otherwise it's chained normally
      dest_options = options.empty? ? "" : "&" + options.map {|k,v| v.is_a?(Array) ? k + "=" + v * ("|") : k + "=" + v }*("&") 
      #send request to the google api to get the directions
