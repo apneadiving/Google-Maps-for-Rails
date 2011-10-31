@@ -65,10 +65,8 @@
 # {"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
 # {"lng": -10.821856, "lat": 50.291982}
 # ]]' },
-          :map_options => { :provider => "bing", :auto_adjust => true, :zoom => 5, :center_on_user => false, :detect_location => false },
+          :map_options => {:auto_adjust => true, :auto_zoom => false, :zoom => 3, :center_on_user => false, :detect_location => false },
           :last_map => true) %>
-          
-
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "none",
@@ -111,6 +109,16 @@ Gmaps.map.jsTemplate = function(marker_container){
 // }
 
 </script>
+
+<script type="text/javascript" charset="utf-8">
+ Gmaps.map.callback = function ()
+ {
+   google.maps.event.addListener(Gmaps.map.map, 'click',
+           function(object){alert("it works");}
+   );
+ }
+</script>
+
  <script type="text/javascript" charset="utf-8">
 var builder2 =  
       [

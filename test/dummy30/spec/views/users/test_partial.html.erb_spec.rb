@@ -31,38 +31,28 @@ describe "users/test_partial.html.erb" do
 
   context "content_for content" do
     
-    before(:each) do
-      #hack to access attr_readers      
-      self.instance_eval do
-        def get_partials; @partials; end
-      end
-      view.instance_eval do
-        def get_content_for; @_content_for; end
-      end
-    end
-    
     it "partial should have been inserted 5 times" do
-      get_partials["_gmaps4rails"].should eq 5
+      instance_variable_get(:@partials)["_gmaps4rails"].should eq 5
     end
     
     it "all scripts should have only be inserted once" do
       [ 
-        /http:\/\/maps.google.com\/maps\/api\/js/,
-        /http:\/\/www.openlayers.org\/api/,
-        /http:\/\/mapquestapi.com\/sdk\/js/,
-        /http:\/\/ecn.dev.virtualearth.net/,
+        /maps.google.com\/maps\/api\/js/,
+        /www.openlayers.org\/api/,
+        /mapquestapi.com\/sdk\/js/,
+        /ecn.dev.virtualearth.net/,
         /gmaps4rails.base.js/,
         /gmaps4rails.googlemaps.js/,
         /gmaps4rails.mapquest.js/,
         /gmaps4rails.bing.js/,
         /gmaps4rails.openlayers.js/
       ].each do |regexp|
-          view.get_content_for[:scripts].scan(regexp).size.should eq 1
+          view.instance_variable_get(:@_content_for)[:scripts].scan(regexp).size.should eq 1
         end
     end
     
     it "css should only be inserted once" do
-      view.get_content_for[:head].scan(/stylesheets\/gmaps4rails.css/).size.should eq 1      
+      view.instance_variable_get(:@_content_for)[:head].scan(/stylesheets\/gmaps4rails.css/).size.should eq 1      
     end
   end
   

@@ -30,7 +30,7 @@ gem 'jquery-rails'
 gem "ruby-debug19"
 
 group :development, :test do
-  gem 'rspec'
+  gem 'pry', :group => :development
   gem 'rspec-rails'
   gem 'jasmine'
   gem 'guard'

@@ -12,7 +12,7 @@ module Gmaps4rails
         return true if gmaps4rails_options[:check_process] == true && self.send(gmaps4rails_options[:checker]) == true
         #try to geocode
         begin
-          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language])
+          coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language], false, gmaps4rails_options[:protocol])
         rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to base.
           Rails.logger.warn(e)
           errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
@@ -63,7 +63,8 @@ module Gmaps4rails
             :normalized_address => args[:normalized_address],
             :address            => args[:address]                || "gmaps4rails_address",
             :callback           => args[:callback],
-            :language           => args[:language]               || "en"
+            :language           => args[:language]               || "en",
+            :protocol           => args[:protocol]               || "http"
           }
         end
 

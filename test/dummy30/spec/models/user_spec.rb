@@ -7,8 +7,9 @@ DEFAULT_CONFIG_HASH = {
   :checker        => "gmaps",
   :msg            => "Address invalid",
   :validation     => true,
-  :address    => "gmaps4rails_address",
-  :language   => "en"
+  :address        => "gmaps4rails_address",
+  :language       => "en",
+  :protocol       => "http"
 }
 
 PARIS  = { :latitude => 48.856614, :longitude => 2.3522219 }
@@ -31,6 +32,20 @@ describe Gmaps4rails::ActsAsGmappable do
   let(:invalid_user) { Factory.build(:invalid_user) }
   
   context "standard configuration, valid user" do  
+    
+    it "should call google api with http by default" do
+      address = "toulon, france"
+      Gmaps4rails.should_receive(:geocode).with(address, "en", false, "http").and_return [TOULON]
+      User.create(:sec_address => address)
+    end
+    
+    it "should call google api with https if passed in settings" do
+      set_gmaps4rails_options!({ :protocol => "https" })
+      address = "toulon, france"
+      Gmaps4rails.should_receive(:geocode).with(address, "en", false, "https").and_return [TOULON]
+      User.create(:sec_address => address)
+      set_gmaps4rails_options!({ :protocol => "http" })
+    end
     
     it "should have a geocoded position" do
       user.should have_same_position_as TOULON

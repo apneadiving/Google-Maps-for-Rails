@@ -67,5 +67,5 @@ class UsersController < ApplicationController
   def comment
     
   end
-  
+
 end

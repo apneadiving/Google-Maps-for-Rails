@@ -8,6 +8,7 @@ gem 'ruby-debug'
 gem "jquery-rails"
 
 #group :test do
+  gem 'pry', :group => :development
 	gem 'rspec-rails'
   gem 'capybara', :git => "git://github.com/jnicklas/capybara.git"
 	gem 'database_cleaner'
