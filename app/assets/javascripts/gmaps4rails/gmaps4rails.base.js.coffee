@@ -382,9 +382,8 @@ class @Gmaps4Rails
 
   #to make the map fit the different LatLng points
   adjustMapToBounds : ->
-
     #FIRST_STEP: retrieve all bounds
-    #create the bounds object only if necessary    
+    #create the bounds object only if necessary
     if @map_options.auto_adjust or @map_options.bounds isnt null
       @boundsObject = @createLatLngBounds()
 
@@ -426,9 +425,9 @@ class @Gmaps4Rails
         @map_options.center_latitude  = map_center.lat()
         @map_options.center_longitude = map_center.lng()
         @map.setCenter(map_center)
-      else 
+      else   
         @fitBounds()
-  
+    
   #////////////////////////////////////////////////////
   #/////////////////        KML      //////////////////
   #////////////////////////////////////////////////////

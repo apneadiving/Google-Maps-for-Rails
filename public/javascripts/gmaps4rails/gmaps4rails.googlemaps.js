@@ -277,7 +277,9 @@
       return kml;
     };
     Gmaps4RailsGoogle.prototype.fitBounds = function() {
-      return this.map.fitBounds(this.boundsObject);
+      if (!this.boundsObject.isEmpty()) {
+        return this.map.fitBounds(this.boundsObject);
+      }
     };
     Gmaps4RailsGoogle.prototype.centerMapOnUser = function() {
       return this.map.setCenter(this.userLocation);
