@@ -78,7 +78,8 @@ module Gmaps4rails
   ##################################################
   # in use in block
   def Gmaps4rails.title(string)
-    create_js_for_title string
+    @json_from_block << (create_js_for_title string)
+    return true
   end
 
   # in use to create json from model
@@ -93,7 +94,8 @@ module Gmaps4rails
 
   # in use in block  
   def Gmaps4rails.sidebar(string)
-    create_js_for_sidebar string
+    @json_from_block << (create_js_for_sidebar string)
+    return true
   end 
   
   # in use to create json from model  
