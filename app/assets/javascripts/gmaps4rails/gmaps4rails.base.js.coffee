@@ -226,6 +226,24 @@ class @Gmaps4Rails
   #/////////////////// POLYLINES //////////////////////
   #////////////////////////////////////////////////////
 
+  #replace old markers with new markers on an existing map
+  replacePolylines : (new_polylines) ->
+    #reset previous polylines and kill them from map
+    @destroy_polylines()
+    #set new polylines
+    @polylines = new_polylines
+    #create
+    @create_polylines()
+    #.... and adjust map boundaries
+    @adjustMapToBounds()
+
+  destroy_polylines : ->
+    for polyline in @polylines
+      #delete polylines from map
+      polyline.serviceObject.setMap(null)
+    #empty array
+    @polylines = []
+
   #polylines is an array of arrays. It loops.
   create_polylines : ->
     for polyline in @polylines
