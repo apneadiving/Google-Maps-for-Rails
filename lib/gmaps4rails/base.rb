@@ -15,6 +15,7 @@ module Gmaps4rails
   # Creates the json related to one Object (only tried ActiveRecord objects)
   # This json will contian the marker's attributes of the object 
  mattr_accessor :json_from_block 
+ mattr_accessor :http_proxy
 
  def Gmaps4rails.create_json(object, &block)
    @json_from_block = String.new
@@ -128,7 +129,7 @@ module Gmaps4rails
      #send request to the google api to get the lat/lng
      request = geocoder + address + output
      url = URI.escape(request)
-     Gmaps4rails.handle_geocoding_response(request, Net::HTTP.get_response(URI.parse(url)), raw)
+     Gmaps4rails.handle_geocoding_response(request, Gmaps4rails.get_response(url), raw)
    end # end address valid
   end
   
@@ -148,7 +149,7 @@ module Gmaps4rails
      #send request to the google api to get the directions
      request = geocoder + dest_options + "&sensor=false"
      url = URI.escape(request)
-     Gmaps4rails.handle_destination_response(request, Net::HTTP.get_response(URI.parse(url)), output)
+     Gmaps4rails.handle_destination_response(request, Gmaps4rails.get_response(url), output)
    end # end origin + destination exist
   end #end destination
   
@@ -158,6 +159,24 @@ module Gmaps4rails
   end
   
   private
+  # get the response from the url encoded address string
+  def Gmaps4rails.get_response(url)
+    url = URI.parse(url)
+    http = Gmaps4rails.http_agent
+    http.get_response(url)
+  end
+
+  # looks for proxy settings and returns a Net::HTTP or Net::HTTP::Proxy class
+  def Gmaps4rails.http_agent
+    proxy = ENV['HTTP_PROXY'] || ENV['http_proxy'] || self.http_proxy
+    if proxy
+      proxy = URI.parse(proxy)
+      http_agent = Net::HTTP::Proxy(proxy.host,proxy.port)
+    else
+      http_agent = Net::HTTP
+    end
+    http_agent
+  end
   
   def Gmaps4rails.handle_geocoding_response(request, response, raw)
     #parse result if result received properly
