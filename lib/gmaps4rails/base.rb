@@ -26,8 +26,9 @@ module Gmaps4rails
 
   # execute block if provided so that it's included in the json string
   def Gmaps4rails.block_handling(object, &block)
-     block_result = yield(object, ::Gmaps4rails) if block_given?
-     Gmaps4rails.json(block_result) if block_result.is_a? String
+    return unless block_given?
+    block_result = yield(object, ::Gmaps4rails)
+    Gmaps4rails.json(block_result) if block_result.is_a? String
   end
   
   def Gmaps4rails.json(string)
@@ -108,9 +109,9 @@ module Gmaps4rails
   end
   ##################################################
 
-  
+  #Used to remove invalid json characters in string
   def Gmaps4rails.gsub_string(string)
-    string   #you could do override with something like: string.gsub(/\n/, '').gsub(/"/, '\"')
+    string.to_json #you could customize it with something like: string.gsub(/\t/, ' ').gsub(/\n/, ' ').gsub(/"/, '\"')
   end
   
   # This method geocodes an address using the GoogleMaps webservice

@@ -209,6 +209,7 @@ class @Gmaps4Rails
         fillOpacity   = point.fillOpacity   || @polygons_conf.fillOpacity
 
     #Construct the polygon
+    console.log polygon_coordinates
     new_poly = new google.maps.Polygon
       paths:          polygon_coordinates
       strokeColor:    strokeColor
@@ -217,10 +218,10 @@ class @Gmaps4Rails
       fillColor:      fillColor
       fillOpacity:    fillOpacity
       clickable:      false
+      map:            @map
 
     #save polygon in list
     polygon.serviceObject = new_poly
-    new_poly.setMap(@map)
 
   #////////////////////////////////////////////////////
   #/////////////////// POLYLINES //////////////////////

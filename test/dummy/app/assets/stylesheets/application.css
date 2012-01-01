@@ -14,3 +14,5 @@
   padding: 5px;
   font: 10% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
 }
+
+.yellow { border: 1px solid black; margin-top: 8px; background: yellow; padding: 5px; }

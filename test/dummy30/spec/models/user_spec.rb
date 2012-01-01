@@ -31,7 +31,7 @@ describe Gmaps4rails::ActsAsGmappable do
   let(:user)         { Factory(:user) }
   let(:invalid_user) { Factory.build(:invalid_user) }
   
-  context "standard configuration, valid user" do  
+  context "standard configuration, valid user" do
     
     it "should call google api with http by default" do
       address = "toulon, france"
