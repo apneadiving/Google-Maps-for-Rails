@@ -1,13 +1,13 @@
 <% #thanks to enable_css, user can avoid this css to be loaded
-if enable_css == true and options[:scripts].nil? %>
-  <% if Rails::VERSION::MAJOR >= 3 and Rails::VERSION::MINOR < 1 %>
+if enable_css == true && options[:scripts].nil? %>
+  <% if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR < 1 %>
     <% content_for :head do %>
       <%= stylesheet_link_tag 'gmaps4rails' %>
     <% end %>
 	<% end %>
 <% end %>
 <% content_for :scripts do %>
-<% if enable_js == true and options[:scripts].try(:to_sym) != :none %>
+<% if enable_js == true && options[:scripts].try(:to_sym) != :none %>
   <% case options[:map_options].try(:[], :provider) %>
   <% when "openlayers" %>
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
@@ -22,7 +22,7 @@ if enable_css == true and options[:scripts].nil? %>
     <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/trunk/richmarker/src/richmarker-compiled.js"></script>  
   <% end %>
   
-  <% if Rails::VERSION::MAJOR >= 3 and Rails::VERSION::MINOR < 1 %>
+  <% if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR < 1 %>
     <% unless options[:scripts].try(:to_sym) == :api %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.base.js' %>
     <% end %>

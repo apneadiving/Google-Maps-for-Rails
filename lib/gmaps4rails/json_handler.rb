@@ -8,6 +8,8 @@ module Gmaps4rails
       handle_block(&block) if block_given?
       handle_model_methods
       return_json
+    else
+      nil
     end
   end
   

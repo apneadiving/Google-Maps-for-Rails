@@ -1,6 +1,11 @@
 module Gmaps4rails
   module ActsAsGmappable
-
+    
+    def self.included base
+      base.send :include, InstanceMethods
+      base.send :extend, ClassMethods
+    end
+    
     module InstanceMethods
       
       # This is a before_filter to trigger the geocoding and save its results

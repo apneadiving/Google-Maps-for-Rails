@@ -18,9 +18,10 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
        end
        
        initializer "include acts_as_gmappable within ActiveRecord" do
-         if defined?(::ActiveRecord::Base)
-           ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable::InstanceMethods)
-           ActiveRecord::Base.send(:extend, Gmaps4rails::ActsAsGmappable::ClassMethods)
+         if defined? ::ActiveRecord 
+           ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable
+         elsif defined? ::Mongoid
+           Mongoid::Document.send :include, Gmaps4rails::ActsAsGmappable
          end
        end
        

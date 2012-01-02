@@ -5,7 +5,8 @@ class Array
     output = "["
     json_array = []
     each do |object|
-      json_array << Gmaps4rails.create_json(object, &block).to_s
+      json = Gmaps4rails.create_json(object, &block)
+      json_array << json.to_s unless json.nil?
     end
     output << json_array * (",")
     output << "]"
