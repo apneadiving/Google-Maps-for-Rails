@@ -18,7 +18,7 @@ module Gmaps4rails
      #send request to the google api to get the lat/lng
      request = geocoder + address + output
      url = URI.escape(request)
-     Gmaps4rails.handle_geocoding_response(request, Net::HTTP.get_response(URI.parse(url)), raw)
+     Gmaps4rails.handle_geocoding_response(request, Gmaps4rails.get_response(url), raw)
    end # end address valid
   end
   
@@ -38,7 +38,7 @@ module Gmaps4rails
      #send request to the google api to get the directions
      request = geocoder + dest_options + "&sensor=false"
      url = URI.escape(request)
-     Gmaps4rails.handle_destination_response(request, Net::HTTP.get_response(URI.parse(url)), output)
+     Gmaps4rails.handle_destination_response(request, Gmaps4rails.get_response(url), output)
    end # end origin + destination exist
   end #end destination
   

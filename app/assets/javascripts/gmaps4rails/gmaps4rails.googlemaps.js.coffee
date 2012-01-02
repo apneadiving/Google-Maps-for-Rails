@@ -171,7 +171,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       @hideMarker marker
 
   clearMarker : (marker) ->
-    console.log marker
     marker.serviceObject.setMap(null)
 
   showMarker : (marker) ->

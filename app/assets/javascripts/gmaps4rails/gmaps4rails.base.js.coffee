@@ -209,7 +209,6 @@ class @Gmaps4Rails
         fillOpacity   = point.fillOpacity   || @polygons_conf.fillOpacity
 
     #Construct the polygon
-    console.log polygon_coordinates
     new_poly = new google.maps.Polygon
       paths:          polygon_coordinates
       strokeColor:    strokeColor
@@ -226,6 +225,24 @@ class @Gmaps4Rails
   #////////////////////////////////////////////////////
   #/////////////////// POLYLINES //////////////////////
   #////////////////////////////////////////////////////
+  
+  #replace old markers with new markers on an existing map
+  replacePolylines : (new_polylines) ->
+    #reset previous polylines and kill them from map
+    @destroy_polylines()
+    #set new polylines
+    @polylines = new_polylines
+    #create
+    @create_polylines()
+    #.... and adjust map boundaries
+    @adjustMapToBounds()
+  
+  destroy_polylines : ->
+    for polyline in @polylines
+      #delete polylines from map
+      polyline.serviceObject.setMap(null)
+    #empty array
+    @polylines = []
 
   #polylines is an array of arrays. It loops.
   create_polylines : ->

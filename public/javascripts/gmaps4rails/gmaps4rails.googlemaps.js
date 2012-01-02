@@ -193,7 +193,6 @@
       return _results;
     };
     Gmaps4RailsGoogle.prototype.clearMarker = function(marker) {
-      console.log(marker);
       return marker.serviceObject.setMap(null);
     };
     Gmaps4RailsGoogle.prototype.showMarker = function(marker) {
