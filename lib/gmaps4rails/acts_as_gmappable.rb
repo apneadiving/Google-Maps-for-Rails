@@ -1,8 +1,6 @@
 module Gmaps4rails
   module ActsAsGmappable
 
-    extend ActiveSupport::Concern
-
     module InstanceMethods
       
       # This is a before_filter to trigger the geocoding and save its results
@@ -67,20 +65,9 @@ module Gmaps4rails
             :protocol           => args[:protocol]               || "http"
           }
         end
-
-        include InstanceMethods
-
+        
       end
     end
 
   end #ActsAsGmappable
 end
-
-ActiveSupport.on_load(:active_record) do
-  ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
-end
-
-#::ActiveRecord::Base.send :include, Gmaps4rails::ActsAsGmappable
-# Mongoid::Document::ClassMethods.class_eval do
-#   include Gmaps4rails::ActsAsGmappable::Base
-# end
