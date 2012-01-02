@@ -15,4 +15,13 @@ module Gmaps4rails
   class DirectionNetStatus    < StandardError; end
   class DirectionInvalidQuery < StandardError; end
 
+  def Gmaps4rails.condition_eval(object, condition)
+    case condition
+    when Symbol     then object.send condition
+    when Proc       then condition.call(object)
+    when TrueClass  then condition
+    when FalseClass then condition
+    end
+  end
+  
 end

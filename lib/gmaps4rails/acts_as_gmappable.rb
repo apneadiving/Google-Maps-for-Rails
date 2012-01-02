@@ -11,9 +11,9 @@ module Gmaps4rails
         #try to geocode
         begin
           coordinates = Gmaps4rails.geocode(self.send(gmaps4rails_options[:address]), gmaps4rails_options[:language], false, gmaps4rails_options[:protocol])
-        rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to base.
+        rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to address.
           Rails.logger.warn(e)
-          errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if gmaps4rails_options[:validation]
+          errors[gmaps4rails_options[:address]] << gmaps4rails_options[:msg] if Gmaps4rails.condition_eval(self, gmaps4rails_options[:validation])
         rescue GeocodeNetStatus => e #connection error, No need to prevent save.
           Rails.logger.warn(e)
           #TODO add customization here?
@@ -25,7 +25,7 @@ module Gmaps4rails
           end
           # Call the callback method to let the user do what he wants with the data
           self.send(gmaps4rails_options[:callback], coordinates.first[:full_data]) unless gmaps4rails_options[:callback].nil?
-          if gmaps4rails_options[:check_process] == true
+          if Gmaps4rails.condition_eval(self, gmaps4rails_options[:check_process])
             self[gmaps4rails_options[:checker]] = true
           end
         end

@@ -67,17 +67,17 @@ module Gmaps4rails
     output
   end
 
+  #the variable 'hash' must have the following structure
+  #{  
+  #   :map_options => hash,
+  #   :markers     => { :data => json, :options => hash },
+  #   :polylines   => { :data => json, :options => hash },
+  #   :polygons    => { :data => json, :options => hash },
+  #   :circles     => { :data => json, :options => hash },
+  #   :direction   => { :data => hash, :options => hash },
+  #   :kml         => { :data => json, :options => hash }
+  #}
   def Gmaps4rails.create_js_from_hash(hash)
-    #the variable 'options' must have the following structure
-    #{  
-    #   :map_options => hash,
-    #   :markers     => { :data => json, :options => hash },
-    #   :polylines   => { :data => json, :options => hash },
-    #   :polygons    => { :data => json, :options => hash },
-    #   :circles     => { :data => json, :options => hash },
-    #   :direction   => { :data => hash, :options => hash },
-    #   :kml         => { :data => json, :options => hash }
-    #}
     result = Array.new
     map_id = "Gmaps." + Gmaps4rails.get_map_id(hash[:map_options])
 

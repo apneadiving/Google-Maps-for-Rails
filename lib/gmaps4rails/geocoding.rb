@@ -1,6 +1,6 @@
 require 'net/http'
 require 'uri'
-require 'crack'
+require 'json'
 
 module Gmaps4rails
   
@@ -53,7 +53,8 @@ module Gmaps4rails
     #parse result if result received properly
     if response.is_a?(Net::HTTPSuccess)             
       #parse the json
-      parse = Crack::JSON.parse(response.body)
+      #parse = Crack::JSON.parse(response.body)
+      parse = JSON.parse(response.body)
       #check if google went well
       if parse["status"] == "OK"
         return parse if raw == true
@@ -82,7 +83,8 @@ module Gmaps4rails
   def Gmaps4rails.handle_destination_response(request, response, output)
     if response.is_a?(Net::HTTPSuccess)             
       #parse the json
-      parse = Crack::JSON.parse(response.body)
+      #parse = Crack::JSON.parse(response.body)
+      parse = JSON.parse(response.body)
       #check if google went well
       if parse["status"] == "OK"
        legs = []

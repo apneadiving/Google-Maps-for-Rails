@@ -1,7 +1,5 @@
 module Gmaps4rails
 
-  # Creates the json related to one Object (only tried ActiveRecord objects)
-  # This json will contain the marker's attributes of the object 
   mattr_accessor :json_hash, :custom_json, :object
   
   def Gmaps4rails.create_json(object, &block)
@@ -36,7 +34,7 @@ module Gmaps4rails
   
   private
   
-  def Gmaps4rails.attributes
+  def Gmaps4rails.model_attributes
     { 
       :description    => :gmaps4rails_infowindow,
       :title          => :gmaps4rails_title,
@@ -48,7 +46,7 @@ module Gmaps4rails
   end
   
   def Gmaps4rails.handle_model_methods
-    attributes.each do |json_name, method_name|
+    model_attributes.each do |json_name, method_name|
       if @object.respond_to? method_name
         if json_name == :marker_picture
           @json_hash.merge! @object.send(method_name)
@@ -59,6 +57,11 @@ module Gmaps4rails
     end
   end
   
+  # returns the proper json
+  # three cases here:
+  # - no custom json provided
+  # - custom json provided as a hash (marker.json { :id => user.id })     => merge hashes then create json
+  # - custom json provided as string (marker.json {"\"id\": #{user.id}" } => create json from hash then insert string inside
   def Gmaps4rails.return_json
     return @json_hash.to_json if @custom_json.nil?
     if @custom_json.is_a? Hash
