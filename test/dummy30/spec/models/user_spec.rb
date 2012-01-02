@@ -58,7 +58,7 @@ describe Gmaps4rails::ActsAsGmappable do
     it "should render a valid json from an array of objects" do
       user #needed trigger the object from the let statement
       Factory(:user_paris)
-      User.all.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
+      User.all.to_gmaps4rails.should == [{ :lng => TOULON[:longitude], :lat => TOULON[:latitude] },{:lng => PARIS[:longitude], :lat => PARIS[:latitude]} ].to_json
     end
     
     context "to_gmaps4rails block" do
@@ -66,28 +66,36 @@ describe Gmaps4rails::ActsAsGmappable do
         user #needed trigger the object from the let statement
         Factory(:user_paris)
         User.all.to_gmaps4rails do |u, marker|
-          '"model": "' + u.class.to_s + '"'
-        end.should == "[{\"model\": \"User\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"},\n{\"model\": \"User\", \"lng\": \"" + PARIS[:longitude].to_s + "\", \"lat\": \"" + PARIS[:latitude].to_s + "\"}]"
+          '"model":"' + u.class.to_s + '"'
+        end.should == [{:model => "User", :lng => TOULON[:longitude], :lat => TOULON[:latitude]},{:model => "User", :lng => PARIS[:longitude], :lat => PARIS[:latitude] }].to_json
+      end
+      
+      it "should extend json string for Arrays and custom hash" do
+        user #needed trigger the object from the let statement
+        Factory(:user_paris)
+        User.all.to_gmaps4rails do |u, marker|
+           marker.json({ :model => u.class.to_s })
+        end.should == [{:model => "User", :lng => TOULON[:longitude], :lat => TOULON[:latitude]},{:model => "User", :lng => PARIS[:longitude], :lat => PARIS[:latitude] }].to_json
       end
             
       it "should extend json string for a single object" do
         user.to_gmaps4rails do |u, marker|
-          "\"model\": \"" + u.class.to_s + "\""
-        end.should == "[{\"model\": \"User\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
+          "\"model\":\"" + u.class.to_s + "\""
+        end.should == [{ :model => "User", :lng =>TOULON[:longitude], :lat => TOULON[:latitude] }].to_json
       end
       
       it "json method should produce same result as raw string" do
         user.to_gmaps4rails do |u, marker|
-          marker.json "\"model\": \"" + u.class.to_s + "\""
+          marker.json({ :model => u.class.to_s })
         end.should == user.to_gmaps4rails do |u, marker|
-                        "\"model\": \"" + u.class.to_s + "\""
+                        "\"model\":\"" + u.class.to_s + "\""
                       end
       end
       
       it "infowindow content should be included in json" do
         user.to_gmaps4rails do |u, marker|
           marker.infowindow "i'm inside the infowindow!"
-        end.should include "\"description\": \"i'm inside the infowindow!\""
+        end.should include "\"description\":\"i'm inside the infowindow!\""
       end
       
       it "marker_picture should be included in json" do
@@ -97,24 +105,24 @@ describe Gmaps4rails::ActsAsGmappable do
                           :width   => "32",
                           :height  => "32"
                           })
-        end.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
+        end.should include "\"picture\":\"http://www.blankdots.com/img/github-32x32.png\""
       end
       
       it "title content should be included in json" do
         user.to_gmaps4rails do |u, marker|
           marker.title "i'm the title"
-        end.should include "\"title\": \"i'm the title\""
+        end.should include "\"title\":\"i'm the title\""
       end
       
       it "sidebar content should be included in json" do
         user.to_gmaps4rails do |u, marker|
           marker.sidebar "i'm the sidebar"
-        end.should include "\"sidebar\": \"i'm the sidebar\""
+        end.should include "\"sidebar\":\"i'm the sidebar\""
       end
     end
   
     it "should render a valid json from a single object" do
-      user.to_gmaps4rails.should == "[{\"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
+      user.to_gmaps4rails.should == [{:lng => TOULON[:longitude], :lat => TOULON[:latitude] }].to_json
     end
     
     it "should not geocode again after address changes if checker is true" do
@@ -242,7 +250,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "My Beautiful Picture: #{picture}"
           end
         end
-        user_with_pic.to_gmaps4rails.should include "\"description\": \"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\""
+        user_with_pic.to_gmaps4rails.should include "\"description\":\"My Beautiful Picture: http://www.blankdots.com/img/github-32x32.png\""
       end
     
       it "should take into account the picture provided in the model" do
@@ -256,9 +264,9 @@ describe Gmaps4rails::ActsAsGmappable do
           end
         end
         result = user.to_gmaps4rails
-        result.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
-        result.should include "\"width\": \"32\"" 
-        result.should include "\"height\": \"32\""
+        result.should include "\"picture\":\"http://www.blankdots.com/img/github-32x32.png\""
+        result.should include "\"width\":\"32\"" 
+        result.should include "\"height\":\"32\""
       end
       
       it "should take into account the picture and shadow provided in the model" do
@@ -277,11 +285,11 @@ describe Gmaps4rails::ActsAsGmappable do
           end
         end
         result = user.to_gmaps4rails
-        result.should include "\"shadow_width\": \"40\""
-        result.should include "\"shadow_height\": \"40\""
-        result.should include "\"shadow_picture\": \"http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png\""
-        result.should include "\"shadow_anchor\": [5, 10]"
-        result.should include "\"marker_anchor\": [10, 20]"
+        result.should include "\"shadow_width\":\"40\""
+        result.should include "\"shadow_height\":\"40\""
+        result.should include "\"shadow_picture\":\"http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag_shadow.png\""
+        result.should include "\"shadow_anchor\":[5,10]"
+        result.should include "\"marker_anchor\":[10,20]"
       end
     
       it "should take into account the title provided in the model" do
@@ -290,7 +298,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "Sweet Title"
           end
         end
-        user.to_gmaps4rails.should == "[{\"title\": \"Sweet Title\", \"lng\": \"" + TOULON[:longitude].to_s + "\", \"lat\": \"" + TOULON[:latitude].to_s + "\"}]"
+        user.to_gmaps4rails.should == [{:title => "Sweet Title", :lng => TOULON[:longitude], :lat => TOULON[:latitude]}].to_json
       end
     
       it "should take into account the sidebar content provided in the model" do
@@ -299,7 +307,7 @@ describe Gmaps4rails::ActsAsGmappable do
             "sidebar content"
           end
         end
-        user.to_gmaps4rails.should include "\"sidebar\": \"sidebar content\""
+        user.to_gmaps4rails.should include "\"sidebar\":\"sidebar content\""
       end
 
       it "should take into account all additional data provided in the model" do
@@ -325,10 +333,10 @@ describe Gmaps4rails::ActsAsGmappable do
           end
         end
         result = user.to_gmaps4rails
-        result.should include "\"description\": \"My Beautiful Picture: \""
-        result.should include "\"title\": \"Sweet Title\""
-        result.should include "\"sidebar\": \"sidebar content\""
-        result.should include "\"picture\": \"http://www.blankdots.com/img/github-32x32.png\""
+        result.should include "\"description\":\"My Beautiful Picture: \""
+        result.should include "\"title\":\"Sweet Title\""
+        result.should include "\"sidebar\":\"sidebar content\""
+        result.should include "\"picture\":\"http://www.blankdots.com/img/github-32x32.png\""
       end
       
     end

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Benjamin Roth}, %q{David Ruyer}]
-  s.date = %q{2011-10-31}
+  s.date = %q{2012-01-02}
   s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples.}
   s.email = [%q{apnea.diving.deep@gmail.com}, %q{david.ruyer@gmail.com}]
   s.extra_rdoc_files = [
@@ -35,7 +35,10 @@ Gem::Specification.new do |s|
     "lib/gmaps4rails/base.rb",
     "lib/gmaps4rails/extensions/array.rb",
     "lib/gmaps4rails/extensions/hash.rb",
+    "lib/gmaps4rails/geocoding.rb",
     "lib/gmaps4rails/helper/gmaps4rails_helper.rb",
+    "lib/gmaps4rails/js_handler.rb",
+    "lib/gmaps4rails/json_handler.rb",
     "public/images/marker.png",
     "public/javascripts/gmaps4rails/gmaps4rails.base.js",
     "public/javascripts/gmaps4rails/gmaps4rails.bing.js",

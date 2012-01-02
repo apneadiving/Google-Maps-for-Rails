@@ -14,29 +14,6 @@ describe "Geocode" do
 
 end
 
-describe "gsub_string" do
-
-  it "should escape tabs" do
-    test_string = "These	words		are		separated				by					tabs"
-    test_string.should                              include "\t"
-    Gmaps4rails.gsub_string(test_string).should_not include "\t"
-  end
-  
-  it "should escapes endlines" do
-    test_string = "These\nwords\n\nare\n\nseparated\n\n\n\nby\n\n\n\n\n\n
-    endlines"
-    test_string.should                              include "\n"
-    Gmaps4rails.gsub_string(test_string).should_not include "\n"
-  end
-  
-  it "should escape double quotes" do
-    test_string = %Q{ "I" "contain" "6 double quotes". }
-    test_string.scan(/\\"/).count.should                            eq 0  
-    (Gmaps4rails.gsub_string(test_string)).scan(/\\"/).count.should eq 6      
-  end
-    
-end
-
 describe "JS building methods" do
   
   describe "constructor name retrieval" do
