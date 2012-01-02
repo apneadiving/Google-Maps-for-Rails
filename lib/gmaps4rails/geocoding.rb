@@ -42,11 +42,6 @@ module Gmaps4rails
    end # end origin + destination exist
   end #end destination
   
-  # To create valid js, this method escapes everything but Numeric, true or false
-  def Gmaps4rails.filter(data)
-    data.to_json
-  end
-  
   private
   
   def Gmaps4rails.handle_geocoding_response(request, response, raw)
