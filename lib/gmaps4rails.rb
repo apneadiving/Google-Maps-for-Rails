@@ -3,7 +3,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     require 'rails'
     require 'gmaps4rails/base'
     
-    class Railtie < Rails::Railtie
+    class Engine < Rails::Engine
        
        initializer "gmaps4rails view helpers" do |app|
          ActionView::Base.send :include, Gmaps4railsHelper
@@ -11,13 +11,13 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
        
        initializer "add asset directories to pipeline" do |app|
          if Rails::VERSION::MINOR >= 1
-           #app.config.assets.paths << "#{root}/public/stylesheets"
+           app.config.assets.paths << "#{root}/public/stylesheets"
          else
-           #app.middleware.use ::ActionDispatch::Static, "#{root}/public"
+           app.middleware.use ::ActionDispatch::Static, "#{root}/public"
          end
        end
        
-       initializer "include acts_as_gmappable within ORM" do
+       initializer "aaa include acts_as_gmappable within ORM" do
          ActiveSupport.on_load(:active_record) do
            ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
          end
