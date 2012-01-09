@@ -3,7 +3,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     require 'rails'
     require 'gmaps4rails/base'
     
-    class Engine < Rails::Engine
+    class Railtie < Rails::Railtie
        
        initializer "gmaps4rails view helpers" do |app|
          ActionView::Base.send :include, Gmaps4railsHelper
