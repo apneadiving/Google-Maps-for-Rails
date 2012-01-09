@@ -18,7 +18,9 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
        end
        
        initializer "include acts_as_gmappable within ORM" do
-         ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
+         ActiveSupport.on_load(:active_record) do
+           ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
+         end
          
          ActiveSupport.on_load(:mongoid) do
            Mongoid::Document.send(:include, Gmaps4rails::ActsAsGmappable)
