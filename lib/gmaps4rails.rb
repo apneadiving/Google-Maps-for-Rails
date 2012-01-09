@@ -21,7 +21,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     
     class Railtie < Rails::Railtie
     
-       initializer "aaa include acts_as_gmappable within ORM" do
+       initializer "include acts_as_gmappable within ORM" do
          ActiveSupport.on_load(:active_record) do
            ActiveRecord::Base.send(:include, Gmaps4rails::ActsAsGmappable)
          end
