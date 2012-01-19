@@ -45,7 +45,8 @@
 
 <%= link_to 'New User', new_user_path %>
 
-<%#= gmaps("markers" => {"data" => @json, "options" => {"custom_infowindow_class" => "yellow" } }) %> 
+<%= gmaps({"markers"     => {"data" => @json }, 
+          "map_options" => { :provider => "openlayers"}}) %> 
 <%#= gmaps({}) %> 
 
 
@@ -60,7 +61,7 @@
           :libraries => ["places"] }
  }) %>
 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
   {"lng": 7.118292, "lat": 45.466465},
@@ -84,7 +85,7 @@
           :last_map => true) %>
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
-          :scripts => "none",
+          :scripts => "api",
           :last_map => false ) %>
 <%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
@@ -112,39 +113,37 @@
 <% content_for :scripts do -%>
 <script type="text/javascript" charset="utf-8">
 
-Gmaps.map.jsTemplate = function(marker_container){
-  return "ok";
-}
-Gmaps.map.callback = function() {
-  // for (var i = 0; i <  this.markers.length; ++i) {
-  //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
-  // }
-  // 
-  
-  Gmaps.map.polygons = <%=raw [[{"lng"=>-80.190262, "lat"=>25.774252, "strokeColor"=>"#FF0000", "strokeOpacity"=>0.3, "strokeWeight"=>1, "fillColor"=>"#FF0000", "fillOpacity"=>0.7}, {"lng"=>-87.6245284080505, "lat"=>41.8868315803506}, {"lng"=>-87.6241636276245, "lat"=>41.8674515900783}, {"lng"=>-87.6203870773315, "lat"=>41.8674835487326}, {"lng"=>-87.6167392730712, "lat"=>41.8579591627635}, {"lng"=>-87.6348495483398, "lat"=>41.8577034549953}, {"lng"=>-87.6342701911926, "lat"=>41.8588701133785}, {"lng"=>-87.6341199874878, "lat"=>41.858946025344}, {"lng"=>-87.6341146230697, "lat"=>41.8590858629394}, {"lng"=>-87.6341199874878, "lat"=>41.8600767034266}, {"lng"=>-87.6342219114303, "lat"=>41.8612433185139}, {"lng"=>-87.634157538414, "lat"=>41.8613112372298}, {"lng"=>-87.6342540979385, "lat"=>41.8621502271823}, {"lng"=>-87.6341950893402, "lat"=>41.8622580965204}, {"lng"=>-87.6342433691024, "lat"=>41.8626336402037}, {"lng"=>-87.6341092586517, "lat"=>41.8630930789441}, {"lng"=>-87.6342326402664, "lat"=>41.8631010691539}, {"lng"=>-87.6342862844467, "lat"=>41.8651984646832}, {"lng"=>-87.6342165470123, "lat"=>41.865314318812}, {"lng"=>-87.6342540979385, "lat"=>41.865929540668}, {"lng"=>-87.6343238353729, "lat"=>41.8661652409794}, {"lng"=>-87.6343667507171, "lat"=>41.8664728485533}, {"lng"=>-87.6342701911926, "lat"=>41.866564731048}, {"lng"=>-87.6343882083892, "lat"=>41.8673317449823}, {"lng"=>-87.6344525814056, "lat"=>41.8680388278011}, {"lng"=>-87.6346457004547, "lat"=>41.8691693450993}, {"lng"=>-87.6346671581268, "lat"=>41.8696886572982}, {"lng"=>-87.6345813274383, "lat"=>41.8698804022745}, {"lng"=>-87.6347583532333, "lat"=>41.869992253245}, {"lng"=>-87.634892463684, "lat"=>41.8706873227465}, {"lng"=>-87.6353269815445, "lat"=>41.8726167002032}, {"lng"=>-87.6352626085281, "lat"=>41.8728443868687}, {"lng"=>-87.6354557275772, "lat"=>41.8730081609862}, {"lng"=>-87.6353698968887, "lat"=>41.8732797854267}, {"lng"=>-87.6356971263885, "lat"=>41.8740227522642}, {"lng"=>-87.6356971263885, "lat"=>41.8746458790817}, {"lng"=>-87.6359224319458, "lat"=>41.87509724279}, {"lng"=>-87.6361316442489, "lat"=>41.8754088017203}, {"lng"=>-87.6364105939865, "lat"=>41.8754727110567}, {"lng"=>-87.6364642381668, "lat"=>41.8757642965932}, {"lng"=>-87.6371240615844, "lat"=>41.876678987795}, {"lng"=>-87.637939453125, "lat"=>41.8801059676767}, {"lng"=>-87.6379930973053, "lat"=>41.8806172030015}, {"lng"=>-87.6378536224365, "lat"=>41.8829017358812}, {"lng"=>-87.6375961303711, "lat"=>41.8844593251054}, {"lng"=>-87.6372849941253, "lat"=>41.8857213439117}, {"lng"=>-87.6371347904205, "lat"=>41.8860408383893}, {"lng"=>-87.6355576515197, "lat"=>41.8870552227663}, {"lng"=>-87.6282513141632, "lat"=>41.8870951588295}, 
-                            {"lng"=>-87.6281654834747, "lat"=>41.8868076186168}]].to_json %>;
-  
-}
-
-Gmaps.map.infobox = function(boxText) {
- return {
-    content: boxText
-   ,disableAutoPan: false
-   ,maxWidth: 0
-   ,pixelOffset: new google.maps.Size(-140, 0)
-   ,zIndex: null
-   ,boxStyle: { 
-     background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
-     ,opacity: 0.75
-     ,width: "280px"
-      }
-   ,closeBoxMargin: "10px 2px 2px 2px"
-   ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
-   ,infoBoxClearance: new google.maps.Size(1, 1)
-   ,isHidden: false
-   ,pane: "floatPane"
-   ,enableEventPropagation: false
-}};
+// Gmaps.map.jsTemplate = function(marker_container){
+//   return "ok";
+// }
+// Gmaps.map.callback = function() {
+//   // for (var i = 0; i <  this.markers.length; ++i) {
+//   //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
+//   // }
+//   // 
+//   
+//   
+// }
+// 
+// Gmaps.map.infobox = function(boxText) {
+//  return {
+//     content: boxText
+//    ,disableAutoPan: false
+//    ,maxWidth: 0
+//    ,pixelOffset: new google.maps.Size(-140, 0)
+//    ,zIndex: null
+//    ,boxStyle: { 
+//      background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
+//      ,opacity: 0.75
+//      ,width: "280px"
+//       }
+//    ,closeBoxMargin: "10px 2px 2px 2px"
+//    ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+//    ,infoBoxClearance: new google.maps.Size(1, 1)
+//    ,isHidden: false
+//    ,pane: "floatPane"
+//    ,enableEventPropagation: false
+// }};
 
 </script>
 

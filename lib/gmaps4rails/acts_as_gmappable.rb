@@ -38,7 +38,8 @@ module Gmaps4rails
 
       def to_gmaps4rails(&block)
         json = "["
-        json << Gmaps4rails.create_json(self, &block) #removes the extra comma
+        object_json = Gmaps4rails.create_json(self, &block)
+        json << object_json.to_s unless json.nil?
         json << "]"
       end
 

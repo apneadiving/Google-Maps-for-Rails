@@ -6,55 +6,14 @@ if enable_css == true && options[:scripts].nil? %>
     <% end %>
 	<% end %>
 <% end %>
+
 <% content_for :scripts do %>
-<% if enable_js == true && options[:scripts].try(:to_sym) != :none %>
-  <% case options[:map_options].try(:[], :provider) %>
-  <% when "openlayers" %>
-    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-  <% when "mapquest" %>
-    <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=<%= options[:map_options].try(:[], :provider_key) %>"></script>
-  <% when "bing" %>
-    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
-  <% else %>
-    <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3.5&sensor=false&amp;libraries=geometry<%= g_libraries(options[:map_options].try(:[], :libraries)) %>"></script>
-    <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.9/src/infobox_packed.js"></script>
-    <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.5/src/markerclusterer_packed.js"></script>
-    <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/trunk/richmarker/src/richmarker-compiled.js"></script>  
-  <% end %>
-  
-  <% if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR < 1 %>
-    <% unless options[:scripts].try(:to_sym) == :api %>
-      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.base.js' %>
-    <% end %>
-    <% case options[:map_options].try(:[], :provider) %>
-    <% when "openlayers" %>
-      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.openlayers.js' %>
-    <% when "mapquest" %>
-      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.mapquest.js' %>
-    <% when "bing" %>
-      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.bing.js' %>
-    <% else %>
-      <%= javascript_include_tag 'gmaps4rails/gmaps4rails.googlemaps.js' %>
-    <% end %>
-  <% end %>
-<% end  %>
-<script type="text/javascript" charset="utf-8">
 
+<%= gmaps4rails_js_files(options, enable_js) %>
+ <script type="text/javascript" charset="utf-8">
 <%=raw options.to_gmaps4rails %>
-
 </script>
+
 <% end %>
 
-
-<% case options[:map_options].try(:[], :provider)  %>
-<% when "mapquest" %>
-<div id="<%= gmaps_map_id(options) %>" style="width:750px; height:475px;">
-  <!-- TODO: change this style dynamically -->  
-</div>
-<% when "bing" %>
-  <div id="<%= gmaps_map_id(options) %>" class="<%= gmaps_map_class(options) %>"></div>
-<% else %>
-<div class="<%= gmaps_container_class(options) %>"> 
-  <div id="<%= gmaps_map_id(options) %>" class="<%= gmaps_map_class(options) %>"></div>
-</div>
-<% end %>
+<%= gmaps4rails_html(options) %>
