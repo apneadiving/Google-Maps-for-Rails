@@ -1,5 +1,8 @@
 Dummy31::Application.routes.draw do
-  resources :users
+  resources :users do
+    get 'ajax_test', :on => :collection
+  end
+    
 
   root :to => "users#index"
   # The priority is based upon order of creation:

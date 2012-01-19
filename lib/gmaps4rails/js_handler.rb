@@ -31,7 +31,6 @@ module Gmaps4rails
   end
 
   def Gmaps4rails.create_general_js(hash, map_id, category)
-    hash = hash.with_indifferent_access
     output = Array.new
     output << "#{map_id}.#{category} = #{hash[:data]};"
     hash[:options] ||= Array.new
@@ -47,7 +46,6 @@ module Gmaps4rails
   end
 
   def Gmaps4rails.create_direction_js(hash, map_id)
-    hash = hash.with_indifferent_access
     output = Array.new
     output << "#{map_id}.direction_conf.origin = '#{hash["data"]["from"]}';"
     output << "#{map_id}.direction_conf.destination = '#{hash["data"]["to"]}';"
@@ -77,6 +75,7 @@ module Gmaps4rails
   #   :direction   => { :data => hash, :options => hash },
   #   :kml         => { :data => json, :options => hash }
   #}
+  #should be with only symbol keys or with indifferent access
   def Gmaps4rails.create_js_from_hash(hash)
     result = Array.new
     map_id = "Gmaps." + Gmaps4rails.get_map_id(hash[:map_options])

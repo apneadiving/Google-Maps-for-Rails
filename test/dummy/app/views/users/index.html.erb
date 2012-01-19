@@ -45,7 +45,7 @@
 
 <%= link_to 'New User', new_user_path %>
 
-<%= gmaps({"markers"     => {"data" => @json }, 
+<%#= gmaps({"markers"     => {"data" => @json }, 
           "map_options" => { :provider => "openlayers"}}) %> 
 <%#= gmaps({}) %> 
 
@@ -83,19 +83,19 @@
 ]]' },
           :map_options => {:auto_adjust => true, :auto_zoom => false, :zoom => 3, :center_on_user => false, :detect_location => false },
           :last_map => true) %>
-<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
+<%= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "api",
           :last_map => false ) %>
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
           :scripts => "api",
           :last_map => false ) %> 
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
           :scripts => "api",
           :last_map => false ) %> 
-<%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe2", :provider => "bing", :provider_key => BING_KEY },
           :scripts => "api" ) %>
 <%#= gmaps({

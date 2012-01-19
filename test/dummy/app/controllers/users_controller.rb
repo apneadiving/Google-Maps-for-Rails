@@ -7,8 +7,11 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @users }
+      format.json { render :json => @json }
     end
+  end
+  
+  def ajax_test
   end
 
   def json(string)
