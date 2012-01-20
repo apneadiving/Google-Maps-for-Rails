@@ -1,6 +1,6 @@
 == Google Maps for Rails (gmaps4rails)
 
-Gmaps4rails is developped to simply create a Google Map:
+Gmaps4rails is developed to simply create a Google Map:
 
 - directly from your model,
 
