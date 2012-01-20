@@ -1,6 +1,7 @@
 Dummy31::Application.routes.draw do
   resources :users do
     get 'ajax_test', :on => :collection
+    get 'ajax_data', :on => :collection
   end
     
 

@@ -1,17 +1,20 @@
 class UsersController < ApplicationController
   # GET /users
   # GET /users.json
+  respond_to :html, :json
+  
+  
   def index
-    @users = User.all
     @json = User.all.to_gmaps4rails 
-    
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render :json => @json }
-    end
+    respond_with @json
   end
   
   def ajax_test
+  end
+  
+  def ajax_data
+     @json = User.all.to_gmaps4rails
+     render :json => @json and return
   end
 
   def json(string)

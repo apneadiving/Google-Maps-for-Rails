@@ -237,10 +237,25 @@
         strokeWeight: strokeWeight,
         fillColor: fillColor,
         fillOpacity: fillOpacity,
-        clickable: false
+        clickable: false,
+        map: this.map
       });
-      polygon.serviceObject = new_poly;
-      return new_poly.setMap(this.map);
+      return polygon.serviceObject = new_poly;
+    };
+    Gmaps4Rails.prototype.replacePolylines = function(new_polylines) {
+      this.destroy_polylines();
+      this.polylines = new_polylines;
+      this.create_polylines();
+      return this.adjustMapToBounds();
+    };
+    Gmaps4Rails.prototype.destroy_polylines = function() {
+      var polyline, _i, _len, _ref;
+      _ref = this.polylines;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        polyline = _ref[_i];
+        polyline.serviceObject.setMap(null);
+      }
+      return this.polylines = [];
     };
     Gmaps4Rails.prototype.create_polylines = function() {
       var polyline, _i, _len, _ref, _results;
