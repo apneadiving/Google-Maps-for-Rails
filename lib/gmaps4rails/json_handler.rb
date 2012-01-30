@@ -96,7 +96,7 @@ module Gmaps4rails
   #                    })
   #     marker.title   "i'm the title"
   #     marker.sidebar "i'm the sidebar"
-  #     marker.json    { :id => user.id }
+  #     marker.json({ :id => user.id })
   #   end
   #
   # For backward compability, a mere string could be passed:
