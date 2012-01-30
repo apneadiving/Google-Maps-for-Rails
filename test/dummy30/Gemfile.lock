@@ -13,7 +13,7 @@ GIT
 PATH
   remote: ../../
   specs:
-    gmaps4rails (1.4.2)
+    gmaps4rails (1.4.3)
       json
 
 GEM
@@ -72,7 +72,7 @@ GEM
     jquery-rails (1.0.2)
       railties (~> 3.0)
       thor (~> 0.14)
-    json (1.6.1)
+    json (1.6.3)
     json_pure (1.5.3)
     launchy (0.4.0)
       configuration (>= 0.0.5)

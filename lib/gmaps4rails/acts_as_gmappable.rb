@@ -23,15 +23,15 @@ module Gmaps4rails
           Rails.logger.warn(e)
           #TODO add customization here?
         else #if no exception, save the values
-          self.send(gmaps4rails_options[:lng_column]+"=", coordinates.first[:lng]) if self.respond_to?(gmaps4rails_options[:lng_column]+"=")
-          self.send(gmaps4rails_options[:lat_column]+"=", coordinates.first[:lat]) if self.respond_to?(gmaps4rails_options[:lat_column]+"=")
+          self.send("#{gmaps4rails_options[:lng_column]}=", coordinates.first[:lng]) if self.respond_to?("#{gmaps4rails_options[:lng_column]}=")
+          self.send("#{gmaps4rails_options[:lat_column]}=", coordinates.first[:lat]) if self.respond_to?("#{gmaps4rails_options[:lat_column]}=")
           unless gmaps4rails_options[:normalized_address].nil?
-            self.send(gmaps4rails_options[:normalized_address].to_s+"=", coordinates.first[:matched_address])
+            self.send("#{gmaps4rails_options[:normalized_address]}=", coordinates.first[:matched_address])
           end
           # Call the callback method to let the user do what he wants with the data
           self.send(gmaps4rails_options[:callback], coordinates.first[:full_data]) unless gmaps4rails_options[:callback].nil?
           if Gmaps4rails.condition_eval(self, gmaps4rails_options[:check_process])
-            self[gmaps4rails_options[:checker]] = true
+            self.send("#{gmaps4rails_options[:checker]}=", true)
           end
         end
       end
@@ -58,17 +58,17 @@ module Gmaps4rails
         #instance method containing all the options to configure the behaviour of the gem regarding the current Model
         define_method "gmaps4rails_options" do
           {
-            :lat_column         => args[:lat]                    || "latitude",
-            :lng_column         => args[:lng]                    || "longitude",
-            :check_process      => args[:check_process].nil?     ?   true : args[:check_process],
-            :checker            => args[:checker]                || "gmaps",
-            :msg                => args[:msg]                    || "Address invalid",
-            :validation         => args[:validation].nil?        ?   true  : args[:validation],
-            :normalized_address => args[:normalized_address],
-            :address            => args[:address]                || "gmaps4rails_address",
-            :callback           => args[:callback],
-            :language           => args[:language]               || "en",
-            :protocol           => args[:protocol]               || "http"
+            :lat_column         => args[:lat]                 || "latitude",
+            :lng_column         => args[:lng]                 || "longitude",
+            :check_process      => args[:check_process].nil?  ?   true : args[:check_process],
+            :checker            => args[:checker]             || "gmaps",
+            :msg                => args[:msg]                 || "Address invalid",
+            :validation         => args[:validation].nil?     ?   true  : args[:validation],
+            :normalized_address => args[:normalized_address], 
+            :address            => args[:address]             || "gmaps4rails_address",
+            :callback           => args[:callback],           
+            :language           => args[:language]            || "en",
+            :protocol           => args[:protocol]            || "http"
           }
         end
         
