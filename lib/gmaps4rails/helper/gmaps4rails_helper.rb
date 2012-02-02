@@ -7,13 +7,13 @@ module Gmaps4railsHelper
       :map_options => { :auto_adjust => true},
       :markers     => { :data => builder, :options => {:do_clustering => true} }
     }
-    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options.with_indifferent_access, :enable_css => enable_css, :enable_js => enable_js }
+    render :partial => '/gmaps4rails/gmaps4rails', :locals => { :options => options.with_indifferent_access, :enable_css => enable_css, :enable_js => enable_js }
   end
   
   # complete helper to pass all variables alongside their options
   
   def gmaps(options, enable_css = true, enable_js = true )
-    render :partial => 'gmaps4rails/gmaps4rails', :locals => { :options => options.with_indifferent_access, :enable_css => enable_css, :enable_js => enable_js }
+    render :partial => '/gmaps4rails/gmaps4rails', :locals => { :options => options.with_indifferent_access, :enable_css => enable_css, :enable_js => enable_js }
   end
   
   def gmaps4rails_js_libraries(libraries_array)
@@ -35,10 +35,10 @@ module Gmaps4railsHelper
   end
   
   def gmaps4rails_js_files(map_options = nil, scripts = nil, enable_js = true)
-    render "gmaps4rails/scripts", :map_options => map_options, :scripts => scripts, :enable_js => enable_js
+    render "/gmaps4rails/scripts", :map_options => map_options, :scripts => scripts, :enable_js => enable_js
   end
   
   def gmaps4rails_html(map_options = nil)
-    render "gmaps4rails/html", :map_options => map_options
+    render "/gmaps4rails/html", :map_options => map_options
   end
 end
