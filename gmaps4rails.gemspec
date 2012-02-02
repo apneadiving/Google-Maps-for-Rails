@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "gmaps4rails"
-  s.version = "1.4.4"
+  s.version = "1.4.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Benjamin Roth", "David Ruyer"]
-  s.date = "2012-01-30"
+  s.date = "2012-02-02"
   s.description = "Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest and Bing. Geocoding + Directions included. Provides much options: markers customization, infowindows, auto-adjusted zoom, polylines, polygons, circles etc... See wiki on github for full description and examples."
   s.email = ["apnea.diving.deep@gmail.com", "david.ruyer@gmail.com"]
   s.extra_rdoc_files = [
