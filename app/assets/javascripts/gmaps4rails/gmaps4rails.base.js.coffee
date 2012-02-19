@@ -256,11 +256,10 @@ class @Gmaps4Rails
     #2 cases here, either we have a coded array of LatLng or we have an Array of LatLng
     for element in polyline
       #if we have a coded array
-      if element.coded_array?
+      if element.coded_array?        
         decoded_array = new google.maps.geometry.encoding.decodePath(element.coded_array)
         #loop through every point in the array
-        for point in decoded_array.length
-          polyline_coordinates.push(point)
+        for point in decoded_array
           polyline_coordinates.push(point)
     
       #or we have an array of latlng

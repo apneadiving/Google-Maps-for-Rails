@@ -268,16 +268,14 @@
       return _results;
     };
     Gmaps4Rails.prototype.create_polyline = function(polyline) {
-      var decoded_array, element, latlng, new_poly, point, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, _i, _j, _len, _len2, _ref;
+      var decoded_array, element, latlng, new_poly, point, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, _i, _j, _len, _len2;
       polyline_coordinates = [];
       for (_i = 0, _len = polyline.length; _i < _len; _i++) {
         element = polyline[_i];
         if (element.coded_array != null) {
           decoded_array = new google.maps.geometry.encoding.decodePath(element.coded_array);
-          _ref = decoded_array.length;
-          for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
-            point = _ref[_j];
-            polyline_coordinates.push(point);
+          for (_j = 0, _len2 = decoded_array.length; _j < _len2; _j++) {
+            point = decoded_array[_j];
             polyline_coordinates.push(point);
           }
         } else {
