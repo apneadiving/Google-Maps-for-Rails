@@ -41,7 +41,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       strokeOpacity: 1
       strokeWeight: 2
       clickable: false
-      zIndex: undefined
+      zIndex: null
 
     #Circle Styling
     @circles_conf =           #default style for circles
