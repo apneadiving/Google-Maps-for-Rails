@@ -1,18 +1,28 @@
 (function() {
   var Gmaps;
+
   Gmaps = {};
+
   Gmaps.loadMaps = function() {
     var key, load_function_name, searchLoadIncluded, value, _results;
     _results = [];
     for (key in Gmaps) {
       value = Gmaps[key];
       searchLoadIncluded = key.search(/load/);
-      _results.push(searchLoadIncluded === -1 ? (load_function_name = "load_" + key, Gmaps[load_function_name]()) : void 0);
+      if (searchLoadIncluded === -1) {
+        load_function_name = "load_" + key;
+        _results.push(Gmaps[load_function_name]());
+      } else {
+        _results.push(void 0);
+      }
     }
     return _results;
   };
+
   window.Gmaps = Gmaps;
+
   this.Gmaps4Rails = (function() {
+
     function Gmaps4Rails() {
       this.map = null;
       this.visibleInfoWindow = null;
@@ -66,6 +76,7 @@
       this.markerClusterer = null;
       this.markerImages = [];
     }
+
     Gmaps4Rails.prototype.initialize = function() {
       this.map = this.createMap();
       if (this.map_options.detect_location === true || this.map_options.center_on_user === true) {
@@ -73,6 +84,7 @@
       }
       return this.resetSidebarContent();
     };
+
     Gmaps4Rails.prototype.findUserLocation = function(map_object) {
       var positionFailure, positionSuccessful;
       if (navigator.geolocation) {
@@ -90,6 +102,7 @@
         return map_object.geolocationFailure(false);
       }
     };
+
     Gmaps4Rails.prototype.create_direction = function() {
       var directionsDisplay, directionsService, request;
       directionsDisplay = new google.maps.DirectionsRenderer();
@@ -121,6 +134,7 @@
         }
       });
     };
+
     Gmaps4Rails.prototype.create_circles = function() {
       var circle, _i, _len, _ref, _results;
       _ref = this.circles;
@@ -131,6 +145,7 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.create_circle = function(circle) {
       var newCircle;
       if (circle === this.circles[0]) {
@@ -166,6 +181,7 @@
         return newCircle.setMap(this.map);
       }
     };
+
     Gmaps4Rails.prototype.clear_circles = function() {
       var circle, _i, _len, _ref, _results;
       _ref = this.circles;
@@ -176,9 +192,11 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.clear_circle = function(circle) {
       return circle.serviceObject.setMap(null);
     };
+
     Gmaps4Rails.prototype.hide_circles = function() {
       var circle, _i, _len, _ref, _results;
       _ref = this.circles;
@@ -189,9 +207,11 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.hide_circle = function(circle) {
       return circle.serviceObject.setMap(null);
     };
+
     Gmaps4Rails.prototype.show_circles = function() {
       var circle, _i, _len, _ref, _results;
       _ref = this.circles;
@@ -202,9 +222,11 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.show_circle = function(circle) {
       return circle.serviceObject.setMap(this.map);
     };
+
     Gmaps4Rails.prototype.create_polygons = function() {
       var polygon, _i, _len, _ref, _results;
       _ref = this.polygons;
@@ -215,6 +237,7 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.create_polygon = function(polygon) {
       var fillColor, fillOpacity, latlng, new_poly, point, polygon_coordinates, strokeColor, strokeOpacity, strokeWeight, _i, _len;
       polygon_coordinates = [];
@@ -242,12 +265,14 @@
       });
       return polygon.serviceObject = new_poly;
     };
+
     Gmaps4Rails.prototype.replacePolylines = function(new_polylines) {
       this.destroy_polylines();
       this.polylines = new_polylines;
       this.create_polylines();
       return this.adjustMapToBounds();
     };
+
     Gmaps4Rails.prototype.destroy_polylines = function() {
       var polyline, _i, _len, _ref;
       _ref = this.polylines;
@@ -257,6 +282,7 @@
       }
       return this.polylines = [];
     };
+
     Gmaps4Rails.prototype.create_polylines = function() {
       var polyline, _i, _len, _ref, _results;
       _ref = this.polylines;
@@ -267,8 +293,9 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.create_polyline = function(polyline) {
-      var decoded_array, element, latlng, new_poly, point, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, _i, _j, _len, _len2;
+      var clickable, decoded_array, element, latlng, new_poly, point, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _j, _len, _len2;
       polyline_coordinates = [];
       for (_i = 0, _len = polyline.length; _i < _len; _i++) {
         element = polyline[_i];
@@ -283,6 +310,8 @@
             strokeColor = element.strokeColor || this.polylines_conf.strokeColor;
             strokeOpacity = element.strokeOpacity || this.polylines_conf.strokeOpacity;
             strokeWeight = element.strokeWeight || this.polylines_conf.strokeWeight;
+            clickable = element.clickable || this.polylines_conf.clickable;
+            zIndex = element.zIndex || this.polylines_conf.zIndex;
           }
           if ((element.lat != null) && (element.lng != null)) {
             latlng = this.createLatLng(element.lat, element.lng);
@@ -295,15 +324,18 @@
         strokeColor: strokeColor,
         strokeOpacity: strokeOpacity,
         strokeWeight: strokeWeight,
-        clickable: false
+        clickable: clickable,
+        zIndex: zIndex
       });
       polyline.serviceObject = new_poly;
       return new_poly.setMap(this.map);
     };
+
     Gmaps4Rails.prototype.create_markers = function() {
       this.createServiceMarkersFromMarkers();
       return this.clusterize();
     };
+
     Gmaps4Rails.prototype.createServiceMarkersFromMarkers = function() {
       var Lat, LatLng, Lng, index, marker, _len, _ref;
       _ref = this.markers;
@@ -337,6 +369,7 @@
       }
       return this.markers_conf.offset = this.markers.length;
     };
+
     Gmaps4Rails.prototype.createImageAnchorPosition = function(anchorLocation) {
       if (anchorLocation === null) {
         return null;
@@ -344,6 +377,7 @@
         return this.createPoint(anchorLocation[0], anchorLocation[1]);
       }
     };
+
     Gmaps4Rails.prototype.replaceMarkers = function(new_markers) {
       this.clearMarkers();
       this.markers = new Array;
@@ -352,11 +386,13 @@
       this.markers_conf.offset = 0;
       return this.addMarkers(new_markers);
     };
+
     Gmaps4Rails.prototype.addMarkers = function(new_markers) {
       this.markers = this.markers.concat(new_markers);
       this.create_markers();
       return this.adjustMapToBounds();
     };
+
     Gmaps4Rails.prototype.createSidebar = function(marker_container) {
       var aSel, currentMap, html, li, ul;
       if (this.markers_conf.list_container) {
@@ -372,12 +408,14 @@
         return ul.appendChild(li);
       }
     };
+
     Gmaps4Rails.prototype.sidebar_element_handler = function(currentMap, marker, eventType) {
       return function() {
         currentMap.map.panTo(marker.position);
         return google.maps.event.trigger(marker, eventType);
       };
     };
+
     Gmaps4Rails.prototype.resetSidebarContent = function() {
       var ul;
       if (this.markers_conf.list_container !== null) {
@@ -385,6 +423,7 @@
         return ul.innerHTML = "";
       }
     };
+
     Gmaps4Rails.prototype.adjustMapToBounds = function() {
       var bound, circle, map_center, point, polygon, polygon_points, polyline, polyline_points, _i, _j, _k, _l, _len, _len2, _len3, _len4, _len5, _len6, _m, _n, _ref, _ref2, _ref3, _ref4;
       if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
@@ -434,6 +473,7 @@
         }
       }
     };
+
     Gmaps4Rails.prototype.create_kml = function() {
       var kml, _i, _len, _ref, _results;
       _ref = this.kml;
@@ -444,9 +484,11 @@
       }
       return _results;
     };
+
     Gmaps4Rails.prototype.exists = function(var_name) {
       return var_name !== "" && typeof var_name !== "undefined";
     };
+
     Gmaps4Rails.prototype.randomize = function(Lat0, Lng0) {
       var Lat, Lng, dx, dy;
       dx = this.markers_conf.max_random_distance * this.random();
@@ -455,6 +497,7 @@
       Lng = parseFloat(Lng0) + (90 / Math.PI) * (dx / 6378137) / Math.cos(Lat0);
       return [Lat, Lng];
     };
+
     Gmaps4Rails.prototype.mergeObjectWithDefault = function(object1, object2) {
       var copy_object1, key, value;
       copy_object1 = {};
@@ -464,12 +507,11 @@
       }
       for (key in object2) {
         value = object2[key];
-        if (copy_object1[key] == null) {
-          copy_object1[key] = value;
-        }
+        if (copy_object1[key] == null) copy_object1[key] = value;
       }
       return copy_object1;
     };
+
     Gmaps4Rails.prototype.mergeWithDefault = function(objectName) {
       var default_object, object;
       default_object = this["default_" + objectName];
@@ -477,9 +519,13 @@
       this[objectName] = this.mergeObjectWithDefault(object, default_object);
       return true;
     };
+
     Gmaps4Rails.prototype.random = function() {
       return Math.random() * 2 - 1;
     };
+
     return Gmaps4Rails;
+
   })();
+
 }).call(this);
