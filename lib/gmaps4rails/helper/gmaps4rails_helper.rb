@@ -34,8 +34,8 @@ module Gmaps4railsHelper
     map_options.try(:[], :class) || default_class
   end
   
-  def gmaps4rails_js_files(map_options = nil, scripts = nil, enable_js = true)
-    render "/gmaps4rails/scripts", :map_options => map_options, :scripts => scripts, :enable_js => enable_js
+  def gmaps4rails_js_files(map_options = nil, scripts = nil, enable_js = true, marker_options = nil)
+    render "/gmaps4rails/scripts", :map_options => map_options, :scripts => scripts, :enable_js => enable_js, :marker_options => marker_options
   end
   
   def gmaps4rails_html(map_options = nil)
