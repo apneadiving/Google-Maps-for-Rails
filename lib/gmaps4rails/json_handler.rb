@@ -105,9 +105,7 @@ module Gmaps4rails
   #   end
   #
   def Gmaps4rails.handle_block(&block)
-    block_result = yield(@object, ::Gmaps4rails)
-    return Gmaps4rails.json(block_result) unless block_result.is_a? String
-    @custom_json = block_result
+    Gmaps4rails.json(yield(@object, ::Gmaps4rails))
   end
   
 end
