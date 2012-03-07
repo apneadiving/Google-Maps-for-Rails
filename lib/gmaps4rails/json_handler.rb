@@ -15,23 +15,27 @@ module Gmaps4rails
   
   def Gmaps4rails.infowindow(string)
     @json_hash[:description] = string
+    true
   end
   
   def Gmaps4rails.title(string)
     @json_hash[:title] = string
+    true
   end
   
   def Gmaps4rails.sidebar(string)
     @json_hash[:sidebar] = string
+    true
   end
   
   def Gmaps4rails.json(json)
     return @json_hash.merge! json if json.is_a? Hash
-    json
+    true
   end
   
   def Gmaps4rails.picture(hash)
     @json_hash.merge! hash
+    true
   end
   
   private
@@ -105,7 +109,8 @@ module Gmaps4rails
   #   end
   #
   def Gmaps4rails.handle_block(&block)
-    Gmaps4rails.json(yield(@object, ::Gmaps4rails))
+    block_result = yield(@object, ::Gmaps4rails)
+    @custom_json = block_result unless block_result == true
   end
   
 end
