@@ -11,7 +11,8 @@
     <th></th>
     <th></th>
   </tr>
-<% @users.each do |user| %>
+<% @users.each_with_index do |user, index| %>
+  <% break if index == 5  %>
   <tr>
     <td><%= user.name %></td>
     <td><%= user.address %></td>
@@ -61,7 +62,7 @@
           :libraries => ["places"] }
  }) %>
 
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false } },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => true, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
   {"lng": 7.118292, "lat": 45.466465},
@@ -81,21 +82,21 @@
 {"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
 {"lng": -10.821856, "lat": 50.291982}
 ]]' },
-          :map_options => {:auto_adjust => true, :auto_zoom => false, :zoom => 3, :center_on_user => false, :detect_location => false },
+          :map_options => {:auto_adjust => true, :auto_zoom => false, :zoom => 3, :center_on_user => false, :detect_location => false, :raw => "{styles: pinkParksStyles}" },
           :last_map => true) %>
-<%= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
+<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "api",
           :last_map => false ) %>
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
           :scripts => "api",
           :last_map => false ) %> 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe3", :provider => "mapquest", :provider_key => MAPQUEST_KEY },
           :scripts => "api",
           :last_map => false ) %> 
-<%= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%#= gmaps(:markers => {"data" => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "joe2", :provider => "bing", :provider_key => BING_KEY },
           :scripts => "api" ) %>
 <%#= gmaps({
@@ -116,44 +117,54 @@
 // Gmaps.map.jsTemplate = function(marker_container){
 //   return "ok";
 // }
-// Gmaps.map.callback = function() {
-//   // for (var i = 0; i <  this.markers.length; ++i) {
-//   //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
-//   // }
-//   // 
+    var pinkParksStyles = [
+      {
+        featureType: "all",
+        stylers: [
+          { saturation: -80 }
+        ]
+      },
+      {
+        featureType: "poi.park",
+        stylers: [
+          { hue: "#ff0023" },
+          { saturation: 40 }
+        ]
+      }
+    ];
+
+Gmaps.map.callback = function() {
+
+
+ // Gmaps.map.map.setOptions({styles: pinkParksStyles});
+  // for (var i = 0; i <  this.markers.length; ++i) {
+  //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
+  }
+  // 
 //   
 //   
 // }
 // 
-// Gmaps.map.infobox = function(boxText) {
-//  return {
-//     content: boxText
-//    ,disableAutoPan: false
-//    ,maxWidth: 0
-//    ,pixelOffset: new google.maps.Size(-140, 0)
-//    ,zIndex: null
-//    ,boxStyle: { 
-//      background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
-//      ,opacity: 0.75
-//      ,width: "280px"
-//       }
-//    ,closeBoxMargin: "10px 2px 2px 2px"
-//    ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
-//    ,infoBoxClearance: new google.maps.Size(1, 1)
-//    ,isHidden: false
-//    ,pane: "floatPane"
-//    ,enableEventPropagation: false
-// }};
+Gmaps.map.infobox = function(boxText) {
+ return {
+    content: boxText
+   ,disableAutoPan: false
+   ,maxWidth: 0
+   ,pixelOffset: new google.maps.Size(-140, 0)
+   ,zIndex: null
+   ,boxStyle: { 
+     background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
+     ,opacity: 0.75
+     ,width: "280px"
+      }
+   ,closeBoxMargin: "10px 2px 2px 2px"
+   ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+   ,infoBoxClearance: new google.maps.Size(1, 1)
+   ,isHidden: false
+   ,pane: "floatPane"
+   ,enableEventPropagation: false
+}};
 
-</script>
-
-<script type="text/javascript" charset="utf-8">
- // Gmaps.map.callback = function ()
- // {
- //   google.maps.event.addListener(Gmaps.map.map, 'click',
- //           function(object){alert("it works");}
- //   );
- // }
 </script>
 
  <script type="text/javascript" charset="utf-8">

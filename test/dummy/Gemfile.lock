@@ -1,7 +1,7 @@
 PATH
   remote: ../../
   specs:
-    gmaps4rails (1.4.4)
+    gmaps4rails (1.4.5)
       json
 
 GEM
