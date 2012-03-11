@@ -51,7 +51,7 @@
         width: 22,
         length: 32,
         draggable: false,
-        do_clustering: true,
+        do_clustering: false,
         randomize: false,
         max_random_distance: 100,
         list_container: null,
