@@ -62,7 +62,9 @@
           :libraries => ["places"] }
  }) %>
 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
+<%= gmaps( {:map_options => { :disableDefaultUI => true, :auto_adjust => true, :center_on_user => true, :detect_location => true,  :center_latitude => 41.574361,
+ :center_longitude => -72.949219 }}) %>
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
   {"lng": 7.118292, "lat": 45.466465},
@@ -117,6 +119,50 @@
 // Gmaps.map.jsTemplate = function(marker_container){
 //   return "ok";
 // }
+    function HomeControl(controlDiv, map) {
+      var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+
+      // Set CSS styles for the DIV containing the control
+      // Setting padding to 5 px will offset the control
+      // from the edge of the map.
+      controlDiv.style.padding = '5px';
+
+      // Set CSS for the control border.
+      var controlUI = document.createElement('DIV');
+      controlUI.style.backgroundColor = 'white';
+      controlUI.style.borderStyle = 'solid';
+      controlUI.style.borderWidth = '2px';
+      controlUI.style.cursor = 'pointer';
+      controlUI.style.textAlign = 'center';
+      controlUI.title = 'Click to set the map to Home';
+      controlDiv.appendChild(controlUI);
+
+      // Set CSS for the control interior.
+      var controlText = document.createElement('DIV');
+      controlText.style.fontFamily = 'Arial,sans-serif';
+      controlText.style.fontSize = '12px';
+      controlText.style.paddingLeft = '4px';
+      controlText.style.paddingRight = '4px';
+      controlText.innerHTML = 'Home';
+      controlUI.appendChild(controlText);
+
+      // Setup the click event listeners: simply set the map to Chicago.
+      google.maps.event.addDomListener(controlUI, 'click', function() {
+        map.setCenter(chicago)
+      });
+    }
+
+    Gmaps.map.callback = function(){
+      // Create the DIV to hold the control and call the HomeControl() constructor
+      // passing in this DIV.
+      var homeControlDiv = document.createElement('DIV');
+      var homeControl = new HomeControl(homeControlDiv, Gmaps.map.map);
+
+      homeControlDiv.index = 1;
+      Gmaps.map.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+    };
+
+
     var pinkParksStyles = [
       {
         featureType: "all",
@@ -133,13 +179,13 @@
       }
     ];
 
-Gmaps.map.callback = function() {
-
-
- // Gmaps.map.map.setOptions({styles: pinkParksStyles});
-  // for (var i = 0; i <  this.markers.length; ++i) {
-  //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
-  }
+// Gmaps.map.callback = function() {
+// 
+// 
+//  // Gmaps.map.map.setOptions({styles: pinkParksStyles});
+//   // for (var i = 0; i <  this.markers.length; ++i) {
+//   //    google.maps.event.addListener(Gmaps.map.markers[i].infowindow, 'closeclick', function() { alert('closed'); });
+//   }
   // 
 //   
 //   

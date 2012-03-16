@@ -19,7 +19,7 @@
     <% end  %>
   <% end %>
 
-  <% if gmaps4rails_pipeline_enabled? %>
+  <% unless gmaps4rails_pipeline_enabled? %>
     <% unless scripts.try(:to_sym) == :api %>
       <%= javascript_include_tag 'gmaps4rails/gmaps4rails.base.js' %>
     <% end %>
