@@ -111,7 +111,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     markerLatLng = @createLatLng(args.Lat, args.Lng)
     #Marker sizes are expressed as a Size of X,Y
     if args.marker_picture == "" and args.rich_marker == null
-      defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable}
+      defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
       mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
       return new google.maps.Marker mergedOptions
 
@@ -123,6 +123,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
         content:   args.rich_marker
         flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
         anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
+        zIndex:    args.zindex
       })
 
     #default behavior
@@ -132,7 +133,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     #create or retrieve existing MarkerImages
     markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
     shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-    defaultOptions = {position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage}
+    defaultOptions = {position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage, zIndex: args.zindex}
     mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
     return new google.maps.Marker mergedOptions
 

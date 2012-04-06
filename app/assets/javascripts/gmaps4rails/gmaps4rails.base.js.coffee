@@ -326,6 +326,7 @@ class @Gmaps4Rails
         "shadow_height":    if @markers[index].shadow_height  then @markers[index].shadow_height  else null
         "marker_draggable": if @markers[index].draggable      then @markers[index].draggable      else @markers_conf.draggable
         "rich_marker":      if @markers[index].rich_marker    then @markers[index].rich_marker    else null
+        "zindex":           if @markers[index].zindex         then @markers[index].zindex    else null
         "Lat":              Lat
         "Lng":              Lng
         "index":            index
