@@ -302,38 +302,39 @@ class @Gmaps4Rails
   #create google.maps Markers from data provided by user
   createServiceMarkersFromMarkers : ->
     for marker, index in @markers
-      #extract options, test if value passed or use default
-      Lat = @markers[index].lat
-      Lng = @markers[index].lng
+      if not @markers[index].serviceObject?
+        #extract options, test if value passed or use default
+        Lat = @markers[index].lat
+        Lng = @markers[index].lng
 
-      #alter coordinates if randomize is true
-      if @markers_conf.randomize
-        LatLng = @randomize(Lat, Lng)
-        #retrieve coordinates from the æarray
-        Lat = LatLng[0]
-        Lng = LatLng[1]
+        #alter coordinates if randomize is true
+        if @markers_conf.randomize
+          LatLng = @randomize(Lat, Lng)
+          #retrieve coordinates from the æarray
+          Lat = LatLng[0]
+          Lng = LatLng[1]
 
-      #save object
-      @markers[index].serviceObject = @createMarker
-        "marker_picture":   if @markers[index].picture  then @markers[index].picture else @markers_conf.picture
-        "marker_width":     if @markers[index].width    then @markers[index].width   else @markers_conf.width
-        "marker_height":    if @markers[index].height   then @markers[index].height  else @markers_conf.length
-        "marker_title":     if @markers[index].title    then @markers[index].title   else null
-        "marker_anchor":    if @markers[index].marker_anchor  then @markers[index].marker_anchor  else null
-        "shadow_anchor":    if @markers[index].shadow_anchor  then @markers[index].shadow_anchor  else null
-        "shadow_picture":   if @markers[index].shadow_picture then @markers[index].shadow_picture else null
-        "shadow_width":     if @markers[index].shadow_width   then @markers[index].shadow_width   else null
-        "shadow_height":    if @markers[index].shadow_height  then @markers[index].shadow_height  else null
-        "marker_draggable": if @markers[index].draggable      then @markers[index].draggable      else @markers_conf.draggable
-        "rich_marker":      if @markers[index].rich_marker    then @markers[index].rich_marker    else null
-        "Lat":              Lat
-        "Lng":              Lng
-        "index":            index
+        #save object
+        @markers[index].serviceObject = @createMarker
+          "marker_picture":   if @markers[index].picture  then @markers[index].picture else @markers_conf.picture
+          "marker_width":     if @markers[index].width    then @markers[index].width   else @markers_conf.width
+          "marker_height":    if @markers[index].height   then @markers[index].height  else @markers_conf.length
+          "marker_title":     if @markers[index].title    then @markers[index].title   else null
+          "marker_anchor":    if @markers[index].marker_anchor  then @markers[index].marker_anchor  else null
+          "shadow_anchor":    if @markers[index].shadow_anchor  then @markers[index].shadow_anchor  else null
+          "shadow_picture":   if @markers[index].shadow_picture then @markers[index].shadow_picture else null
+          "shadow_width":     if @markers[index].shadow_width   then @markers[index].shadow_width   else null
+          "shadow_height":    if @markers[index].shadow_height  then @markers[index].shadow_height  else null
+          "marker_draggable": if @markers[index].draggable      then @markers[index].draggable      else @markers_conf.draggable
+          "rich_marker":      if @markers[index].rich_marker    then @markers[index].rich_marker    else null
+          "Lat":              Lat
+          "Lng":              Lng
+          "index":            index
 
-      #add infowindowstuff if enabled
-      @createInfoWindow(@markers[index])
-      #create sidebar if enabled
-      @createSidebar(@markers[index])
+        #add infowindowstuff if enabled
+        @createInfoWindow(@markers[index])
+        #create sidebar if enabled
+        @createSidebar(@markers[index])
 
     @markers_conf.offset = @markers.length
 
