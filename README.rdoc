@@ -104,6 +104,21 @@ Done!
 
 Feel free to contact us, you have your say.
 
+== Want to help?
+
+This is how you can launch the spec suite (js + ruby):
+
+* Clone the gem repository
+
+* Go to the gem's folder
+
+* run `bundle`
+
+* run `cd spec/dummy; rake db:migrate RAILS_ENV=test; cd ../..`
+
+* run `bundle exec rspec spec`
+
+
 == Copyright
 MIT license. 
 
