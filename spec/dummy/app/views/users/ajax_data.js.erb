@@ -1,0 +1,2 @@
+$('#joe').html("<%= escape_javascript(gmaps({})) %>");
+<%= {:markers => {:data => @json }}.to_gmaps4rails %>

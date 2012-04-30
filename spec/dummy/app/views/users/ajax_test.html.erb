@@ -1,0 +1,22 @@
+<%= gmaps({:last_map => false}) %>
+
+
+<button type="button" id="ajax">Replace Markers</button>
+
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  
+  $(".map_container").hide();
+  
+  
+$("#ajax").click(function(){  
+  $.getJSON('/users', function(response){
+    $(".map_container").show();
+    Gmaps.map.initialize();
+    Gmaps.map.addMarkers(response);
+  })
+  
+})
+});</script>
+
+<!--  -->
