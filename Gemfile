@@ -8,3 +8,4 @@ gemspec
 
 gem 'growl'
 gem 'jquery-rails'
+gem 'jasmine'

@@ -110,13 +110,13 @@ describe("createServiceMarkersFromMarkers full stack", function() {
   
   afterEach(function() {
     clearMarkerTraces();
-    gmap.map = null;
+    gmap.serviceObject = null;
   });
   
   it("should process all attributes from a marker (without default values)", function() {
     var marker = getFullMarker();
     gmap.markers = [marker];
-    gmap.map = "map";
+    gmap.serviceObject = "map";
 
     spyOn(gmap, "createMarker");
     
@@ -145,7 +145,7 @@ describe("createServiceMarkersFromMarkers full stack", function() {
   it("should process all attributes from a marker (with default values)", function() {
     var marker = getEmptyMarker();
     gmap.markers = [marker];
-    gmap.map = "map";
+    gmap.serviceObject = "map";
 
     spyOn(gmap, "createMarker");
     

@@ -80,7 +80,7 @@ describe("Gmaps4Rails", function() {
         for (var i = 0; i < 100; ++i) {
           var x = gmap.randomize(0,0);
           var distanceInMeters = geoHelpers.getDistanceFromO(x[0], x[1])/1000;
-          //this test coul seem weird, but because latitude AND longitude could be moved by 100m, the highest diagonal is 142m
+          //this test could seem weird, but because latitude AND longitude could be moved by 100m, the highest diagonal is 142m
           expect(distanceInMeters).toBeLessThan(142);
         }
       });
