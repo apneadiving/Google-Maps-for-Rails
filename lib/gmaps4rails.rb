@@ -9,7 +9,8 @@ module Gmaps4rails
      end
      
      initializer "deprecation warning" do |app|
-       warn "[Gmaps4rails DEPRECATION]: Javascript Gmaps.map.map is now deprecated and will be removed in later version. Please use Gmaps.map.serviceObject instead."
+       warn "[Gmaps4rails]: DEPRECATION: Javascript Gmaps.map.map is now deprecated and will be removed in later version. Please use Gmaps.map.serviceObject instead."
+       warn "[Gmaps4rails]: Be sure to run 'rails g gmaps4rails:install' to get js and css files in your app they are not added automatically anymore see Readme on Github"
      end
      
   end

@@ -51,12 +51,12 @@ module Gmaps4rails
     # I assume they'll be within
     def get_gem_scripts
       unless gmaps4rails_pipeline_enabled?
-        @js_array << '/gmaps4rails/gmaps4rails.base.js' unless scripts == :api
+        @js_array << '/javascripts/gmaps4rails/gmaps4rails.base.js' unless scripts == :api
         @js_array << case map_provider
-                     when "openlayers" then '/gmaps4rails/gmaps4rails.openlayers.js'
-                     when "mapquest"   then '/gmaps4rails/gmaps4rails.mapquest.js'
-                     when "bing"       then '/gmaps4rails/gmaps4rails.bing.js'
-                     else                   '/gmaps4rails/gmaps4rails.googlemaps.js'
+                     when "openlayers" then '/javascripts/gmaps4rails/gmaps4rails.openlayers.js'
+                     when "mapquest"   then '/javascripts/gmaps4rails/gmaps4rails.mapquest.js'
+                     when "bing"       then '/javascripts/gmaps4rails/gmaps4rails.bing.js'
+                     else                   '/javascripts/gmaps4rails/gmaps4rails.googlemaps.js'
                      end
       end
     end
