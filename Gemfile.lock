@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gmaps4rails (1.5.0.pre)
+    gmaps4rails (1.5.0.pre2)
 
 GEM
   remote: http://rubygems.org/
