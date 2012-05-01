@@ -50,11 +50,11 @@
       style_mark.fillOpacity = 1;
       if (this.markersLayer === null) {
         this.markersLayer = new OpenLayers.Layer.Vector("Markers", null);
-        this.map.addLayer(this.markersLayer);
+        this.serviceObject.addLayer(this.markersLayer);
         this.markersLayer.events.register("featureselected", this.markersLayer, this.onFeatureSelect);
         this.markersLayer.events.register("featureunselected", this.markersLayer, this.onFeatureUnselect);
         this.markersControl = new OpenLayers.Control.SelectFeature(this.markersLayer);
-        this.map.addControl(this.markersControl);
+        this.serviceObject.addControl(this.markersControl);
         this.markersControl.activate();
       }
       if (args.marker_picture === "") {
@@ -92,8 +92,8 @@
     };
 
     Gmaps4RailsOpenlayers.prototype.clearMarkersLayerIfExists = function() {
-      if (this.markersLayer !== null && this.map.getLayer(this.markersLayer.id) !== null) {
-        return this.map.removeLayer(this.markersLayer);
+      if (this.markersLayer !== null && this.serviceObject.getLayer(this.markersLayer.id) !== null) {
+        return this.serviceObject.removeLayer(this.markersLayer);
       }
     };
 
@@ -147,7 +147,7 @@
         })
       });
       this.clearMarkersLayerIfExists();
-      this.map.addLayer(clusters);
+      this.serviceObject.addLayer(clusters);
       clusters.addFeatures(markers_array);
       return clusters;
     };
@@ -167,7 +167,7 @@
     };
 
     Gmaps4RailsOpenlayers.prototype.clearClusterer = function() {
-      return this.map.removeLayer(this.markerClusterer);
+      return this.serviceObject.removeLayer(this.markerClusterer);
     };
 
     Gmaps4RailsOpenlayers.prototype.createInfoWindow = function(marker_container) {
@@ -186,25 +186,25 @@
       popup = new OpenLayers.Popup.FramedCloud("featurePopup", feature.geometry.getBounds().getCenterLonLat(), new OpenLayers.Size(300, 200), feature.infoWindow, null, true, this.onPopupClose);
       feature.popup = popup;
       popup.feature = feature;
-      return this.map.addPopup(popup);
+      return this.serviceObject.addPopup(popup);
     };
 
     Gmaps4RailsOpenlayers.prototype.onFeatureUnselect = function(evt) {
       var feature;
       feature = evt.feature;
       if (feature.popup) {
-        this.map.removePopup(feature.popup);
+        this.serviceObject.removePopup(feature.popup);
         feature.popup.destroy();
         return feature.popup = null;
       }
     };
 
     Gmaps4RailsOpenlayers.prototype.fitBounds = function() {
-      return this.map.zoomToExtent(this.boundsObject, true);
+      return this.serviceObject.zoomToExtent(this.boundsObject, true);
     };
 
     Gmaps4RailsOpenlayers.prototype.centerMapOnUser = function() {
-      return this.map.setCenter(this.userLocation);
+      return this.serviceObject.setCenter(this.userLocation);
     };
 
     return Gmaps4RailsOpenlayers;

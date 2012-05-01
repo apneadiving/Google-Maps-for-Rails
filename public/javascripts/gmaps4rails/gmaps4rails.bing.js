@@ -188,21 +188,21 @@
     };
 
     Gmaps4RailsBing.prototype.fitBounds = function() {
-      return this.map.setView({
+      return this.serviceObject.setView({
         bounds: this.boundsObject
       });
     };
 
     Gmaps4RailsBing.prototype.addToMap = function(object) {
-      return this.map.entities.push(object);
+      return this.serviceObject.entities.push(object);
     };
 
     Gmaps4RailsBing.prototype.removeFromMap = function(object) {
-      return this.map.entities.remove(object);
+      return this.serviceObject.entities.remove(object);
     };
 
     Gmaps4RailsBing.prototype.centerMapOnUser = function() {
-      return this.map.setView({
+      return this.serviceObject.setView({
         center: this.userLocation
       });
     };

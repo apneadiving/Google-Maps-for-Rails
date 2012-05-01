@@ -29,6 +29,7 @@
 
     function Gmaps4Rails() {
       this.map = null;
+      this.serviceObject = null;
       this.visibleInfoWindow = null;
       this.userLocation = null;
       this.geolocationFailure = function() {
@@ -82,7 +83,8 @@
     }
 
     Gmaps4Rails.prototype.initialize = function() {
-      this.map = this.createMap();
+      this.serviceObject = this.createMap();
+      this.map = this.serviceObject;
       if (this.map_options.detect_location === true || this.map_options.center_on_user === true) {
         this.findUserLocation(this);
       }
@@ -111,7 +113,7 @@
       var directionsDisplay, directionsService, request;
       directionsDisplay = new google.maps.DirectionsRenderer();
       directionsService = new google.maps.DirectionsService();
-      directionsDisplay.setMap(this.map);
+      directionsDisplay.setMap(this.serviceObject);
       if (this.direction_conf.display_panel) {
         directionsDisplay.setPanel(document.getElementById(this.direction_conf.panel_id));
       }
@@ -182,7 +184,7 @@
           radius: circle.radius
         });
         circle.serviceObject = newCircle;
-        return newCircle.setMap(this.map);
+        return newCircle.setMap(this.serviceObject);
       }
     };
 
@@ -228,7 +230,7 @@
     };
 
     Gmaps4Rails.prototype.show_circle = function(circle) {
-      return circle.serviceObject.setMap(this.map);
+      return circle.serviceObject.setMap(this.serviceObject);
     };
 
     Gmaps4Rails.prototype.create_polygons = function() {
@@ -266,7 +268,7 @@
         fillColor: fillColor,
         fillOpacity: fillOpacity,
         clickable: clickable,
-        map: this.map
+        map: this.serviceObject
       });
       return polygon.serviceObject = new_poly;
     };
@@ -333,7 +335,7 @@
         zIndex: zIndex
       });
       polyline.serviceObject = new_poly;
-      return new_poly.setMap(this.map);
+      return new_poly.setMap(this.serviceObject);
     };
 
     Gmaps4Rails.prototype.create_markers = function() {
@@ -475,7 +477,7 @@
           map_center = this.boundsObject.getCenter();
           this.map_options.center_latitude = map_center.lat();
           this.map_options.center_longitude = map_center.lng();
-          return this.map.setCenter(map_center);
+          return this.serviceObject.setCenter(map_center);
         } else {
           return this.fitBounds();
         }

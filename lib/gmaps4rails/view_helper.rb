@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module Gmaps4rails
   
   class ViewHelper
@@ -37,7 +39,7 @@ module Gmaps4rails
     
     # outputs an object containing the basic information to fill the map's dom attributes
     def dom_attributes
-      OpenStruct.new({
+      ::OpenStruct.new({
         :map_id          => map_id,
         :map_class       => map_class,
         :container_class => container_class,

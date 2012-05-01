@@ -88,7 +88,7 @@ module Gmaps4rails
       model_attributes.each do |json_name, method_name|
         if @object.respond_to? method_name
           if json_name == :marker_picture
-            @json_hash.merge!(@object.send(method_name))
+            @json_hash.merge!(@object.send(method_name)) unless @json_hash.has_key? "picture"
           else
             @json_hash[json_name] = @object.send(method_name) unless @json_hash.has_key? json_name
           end

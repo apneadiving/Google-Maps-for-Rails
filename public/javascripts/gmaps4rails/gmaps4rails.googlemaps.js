@@ -108,7 +108,7 @@
       if (args.marker_picture === "" && args.rich_marker === null) {
         defaultOptions = {
           position: markerLatLng,
-          map: this.map,
+          map: this.serviceObject,
           title: args.marker_title,
           draggable: args.marker_draggable,
           zIndex: args.zindex
@@ -119,7 +119,7 @@
       if (args.rich_marker !== null) {
         return new RichMarker({
           position: markerLatLng,
-          map: this.map,
+          map: this.serviceObject,
           draggable: args.marker_draggable,
           content: args.rich_marker,
           flat: args.marker_anchor === null ? false : args.marker_anchor[1],
@@ -133,7 +133,7 @@
       shadowImage = this.createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition);
       defaultOptions = {
         position: markerLatLng,
-        map: this.map,
+        map: this.serviceObject,
         icon: markerImage,
         title: args.marker_title,
         draggable: args.marker_draggable,
@@ -230,7 +230,7 @@
     };
 
     Gmaps4RailsGoogle.prototype.createClusterer = function(markers_array) {
-      return new MarkerClusterer(this.map, markers_array, {
+      return new MarkerClusterer(this.serviceObject, markers_array, {
         maxZoom: this.markers_conf.clusterer_maxZoom,
         gridSize: this.markers_conf.clusterer_gridSize,
         styles: this.customClusterer()
@@ -283,7 +283,7 @@
         if (currentMap.visibleInfoWindow !== null) {
           currentMap.visibleInfoWindow.close();
         }
-        infoWindow.open(currentMap.map, marker);
+        infoWindow.open(currentMap.serviceObject, marker);
         return currentMap.visibleInfoWindow = infoWindow;
       };
     };
@@ -293,18 +293,18 @@
       kml_options = kml.options || {};
       kml_options = this.mergeObjectWithDefault(kml_options, this.kml_options);
       kml = new google.maps.KmlLayer(kml.url, kml_options);
-      kml.setMap(this.map);
+      kml.setMap(this.serviceObject);
       return kml;
     };
 
     Gmaps4RailsGoogle.prototype.fitBounds = function() {
       if (!this.boundsObject.isEmpty()) {
-        return this.map.fitBounds(this.boundsObject);
+        return this.serviceObject.fitBounds(this.boundsObject);
       }
     };
 
     Gmaps4RailsGoogle.prototype.centerMapOnUser = function() {
-      return this.map.setCenter(this.userLocation);
+      return this.serviceObject.setCenter(this.userLocation);
     };
 
     return Gmaps4RailsGoogle;

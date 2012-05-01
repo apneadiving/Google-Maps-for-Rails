@@ -8,6 +8,10 @@ module Gmaps4rails
        ActionView::Base.send :include, Gmaps4railsHelper
      end
      
+     initializer "deprecation warning" do |app|
+       warn "[Gmaps4rails DEPRECATION]: Javascript Gmaps.map.map is now deprecated and will be removed in later version. Please use Gmaps.map.serviceObject instead."
+     end
+     
   end
   
   class Railtie < Rails::Railtie

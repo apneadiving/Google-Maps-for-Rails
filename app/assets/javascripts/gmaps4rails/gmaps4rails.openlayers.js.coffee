@@ -57,12 +57,12 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
     #//creating markers' dedicated layer 
     if (@markersLayer == null) 
       @markersLayer = new OpenLayers.Layer.Vector("Markers", null)
-      @map.addLayer(@markersLayer)
+      @serviceObject.addLayer(@markersLayer)
       #//TODO move?
       @markersLayer.events.register("featureselected", @markersLayer, @onFeatureSelect)
       @markersLayer.events.register("featureunselected", @markersLayer, @onFeatureUnselect)
       @markersControl = new OpenLayers.Control.SelectFeature(@markersLayer)
-      @map.addControl(@markersControl)
+      @serviceObject.addControl(@markersControl)
       @markersControl.activate()
     #//showing default pic if none available
     if args.marker_picture == ""  
@@ -107,7 +107,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
     @boundsObject = new OpenLayers.Bounds()
   
   clearMarkersLayerIfExists: -> 
-    @map.removeLayer(@markersLayer) if @markersLayer != null and @map.getLayer(@markersLayer.id) != null
+    @serviceObject.removeLayer(@markersLayer) if @markersLayer != null and @serviceObject.getLayer(@markersLayer.id) != null
   
   extendBoundsWithMarkers: ->
     for marker in @markers
@@ -148,7 +148,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
             strokeColor: "#32a8a9"
        
      @clearMarkersLayerIfExists()
-     @map.addLayer(clusters)
+     @serviceObject.addLayer(clusters)
      clusters.addFeatures(markers_array)
      return clusters
    
@@ -164,7 +164,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
        @markerClusterer = @createClusterer markers_array
    
    clearClusterer: ->
-     @map.removeLayer @markerClusterer
+     @serviceObject.removeLayer @markerClusterer
 
   #////////////////////////////////////////////////////
   #/////////////////// INFO WINDOW ////////////////////
@@ -187,13 +187,13 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
                                null, true, @onPopupClose)
     feature.popup = popup
     popup.feature = feature
-    @map.addPopup popup
+    @serviceObject.addPopup popup
 
   onFeatureUnselect: (evt) ->
     feature = evt.feature
     if feature.popup
       #//popup.feature = null;
-      @map.removePopup feature.popup
+      @serviceObject.removePopup feature.popup
       feature.popup.destroy()
       feature.popup = null
 
@@ -202,8 +202,8 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
   # #////////////////////////////////////////////////////
  
   fitBounds: ->
-    @map.zoomToExtent(@boundsObject, true)
+    @serviceObject.zoomToExtent(@boundsObject, true)
   
   centerMapOnUser: ->
-    @map.setCenter @userLocation
+    @serviceObject.setCenter @userLocation
     

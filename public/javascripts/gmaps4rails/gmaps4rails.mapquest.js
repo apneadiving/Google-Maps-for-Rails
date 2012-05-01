@@ -139,22 +139,24 @@
     };
 
     Gmaps4RailsMapquest.prototype.fitBounds = function() {
-      if (this.markers.length >= 2) this.map.zoomToRect(this.boundsObject);
+      if (this.markers.length >= 2) {
+        this.serviceObject.zoomToRect(this.boundsObject);
+      }
       if (this.markers.length === 1) {
-        return this.map.setCenter(this.markers[0].serviceObject.latLng);
+        return this.serviceObject.setCenter(this.markers[0].serviceObject.latLng);
       }
     };
 
     Gmaps4RailsMapquest.prototype.centerMapOnUser = function() {
-      return this.map.setCenter(this.userLocation);
+      return this.serviceObject.setCenter(this.userLocation);
     };
 
     Gmaps4RailsMapquest.prototype.addToMap = function(object) {
-      return this.map.addShape(object);
+      return this.serviceObject.addShape(object);
     };
 
     Gmaps4RailsMapquest.prototype.removeFromMap = function(object) {
-      return this.map.removeShape(object);
+      return this.serviceObject.removeShape(object);
     };
 
     return Gmaps4RailsMapquest;

@@ -18,7 +18,8 @@ class @Gmaps4Rails
 
   constructor: ->
     #map config
-    @map =  null               #contains the map we're working on
+    @map =  null               #DEPRECATED: will still contain a copy of serviceObject below as transition
+    @serviceObject = null      #contains the map we're working on
     @visibleInfoWindow = null  #contains the current opened infowindow
     @userLocation = null       #contains user's location if geolocalization was performed and successful
 
@@ -71,7 +72,8 @@ class @Gmaps4Rails
 
   #tnitializes the map
   initialize : ->
-    @map = @createMap()
+    @serviceObject = @createMap()
+    @map = @serviceObject #beware, soon deprecated
     if (@map_options.detect_location == true or @map_options.center_on_user == true)
       @findUserLocation(this)
     #resets sidebar if needed
@@ -102,7 +104,7 @@ class @Gmaps4Rails
     directionsDisplay = new google.maps.DirectionsRenderer()
     directionsService = new google.maps.DirectionsService()
 
-    directionsDisplay.setMap(@map)
+    directionsDisplay.setMap(@serviceObject)
     #display panel only if required
     if @direction_conf.display_panel
       directionsDisplay.setPanel(document.getElementById(@direction_conf.panel_id))
@@ -162,7 +164,7 @@ class @Gmaps4Rails
         radius:        circle.radius
 
       circle.serviceObject = newCircle
-      newCircle.setMap(@map)
+      newCircle.setMap(@serviceObject)
 
   # clear circles
   clear_circles : ->
@@ -184,7 +186,7 @@ class @Gmaps4Rails
       @show_circle @circle
 
   show_circle : (circle) ->
-    circle.serviceObject.setMap(@map)
+    circle.serviceObject.setMap(@serviceObject)
 
   #////////////////////////////////////////////////////
   #///////////////////// POLYGONS /////////////////////
@@ -221,7 +223,7 @@ class @Gmaps4Rails
       fillColor:      fillColor
       fillOpacity:    fillOpacity
       clickable:      clickable
-      map:            @map
+      map:            @serviceObject
 
     #save polygon in list
     polygon.serviceObject = new_poly
@@ -292,7 +294,7 @@ class @Gmaps4Rails
 
     #save polyline
     polyline.serviceObject = new_poly
-    new_poly.setMap(@map)
+    new_poly.setMap(@serviceObject)
 
   #////////////////////////////////////////////////////
   #///////////////////// MARKERS //////////////////////
@@ -450,7 +452,7 @@ class @Gmaps4Rails
         map_center = @boundsObject.getCenter()
         @map_options.center_latitude  = map_center.lat()
         @map_options.center_longitude = map_center.lng()
-        @map.setCenter(map_center)
+        @serviceObject.setCenter(map_center)
       else
         @fitBounds()
 

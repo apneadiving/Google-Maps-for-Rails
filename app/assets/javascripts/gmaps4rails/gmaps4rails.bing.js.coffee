@@ -151,13 +151,13 @@ class @Gmaps4RailsBing extends Gmaps4Rails
   #////////////////////////////////////////////////////
 
   fitBounds: ->
-    @map.setView({bounds: @boundsObject})
+    @serviceObject.setView({bounds: @boundsObject})
 
   addToMap: (object)->
-    @map.entities.push(object)
+    @serviceObject.entities.push(object)
 
   removeFromMap: (object)->
-    @map.entities.remove(object)
+    @serviceObject.entities.remove(object)
 
   centerMapOnUser: ->
-    @map.setView({ center: @userLocation})
+    @serviceObject.setView({ center: @userLocation})

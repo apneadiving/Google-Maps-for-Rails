@@ -9,7 +9,7 @@ DEFAULT_CONFIG_HASH = {
   :checker        => "gmaps",
   :msg            => "Address invalid",
   :validation     => true,
-  :address        => "gmaps4rails_address",
+  :address        => "address",
   :language       => "en",
   :protocol       => "http",
   :process_geocoding => true
@@ -231,7 +231,7 @@ describe Gmaps4rails::ActsAsGmappable do
       it "should display the proper error message when address is invalid" do
         set_gmaps4rails_options!({ :msg => "Custom Address invalid"})
         invalid_user.should_not be_valid
-        invalid_user.errors[:gmaps4rails_address].should include("Custom Address invalid")
+        invalid_user.errors[:address].should include("Custom Address invalid")
       end
 
       it "should not raise an error if validation option is turned off" do
@@ -394,6 +394,26 @@ describe Gmaps4rails::ActsAsGmappable do
       end
       result.should     include "defined in block"
       result.should_not include "defined in model"
+    end
+    
+    it "block info should take precedence over model methods, particular case: picture" do
+      user.instance_eval do 
+        def gmaps4rails_marker_picture
+          {
+           "picture" => "/model.png",
+           "width" =>  32,
+           "height" => 32}
+        end
+      end
+      user.to_gmaps4rails.should include "model.png"
+      result = user.to_gmaps4rails do |u, marker|
+        marker.picture({
+         "picture" => "/block.png",
+         "width" =>  32,
+         "height" => 32})
+      end
+      result.should     include "block.png"
+      result.should_not include "model.png"
     end
     
   end
