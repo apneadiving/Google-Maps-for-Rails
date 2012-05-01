@@ -6,6 +6,4 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'growl'
-gem 'jquery-rails'
-gem 'jasmine'
+#gem 'growl'
