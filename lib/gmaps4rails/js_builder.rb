@@ -1,14 +1,15 @@
 module Gmaps4rails
   
   def Gmaps4rails.create_js_from_hash(hash)
-    ::Gmaps4rails::JsBuilder.new.create_js_from_hash(hash)
+    ::Gmaps4rails::JsBuilder.new(hash).create_js
   end
   
   class JsBuilder
     
-    DEFAULT_MAP_ID     = "map"
-    
-    #the variable 'hash' must have the following structure
+    DEFAULT_MAP_ID = "map"
+    DATA_KEYS      = [:markers, :polylines, :polygons, :circles, :direction, :kml]
+
+    #the 'option_hash' must have the following structure
     #{  
     #   :map_options => hash,
     #   :markers     => { :data => json, :options => hash },
@@ -18,102 +19,142 @@ module Gmaps4rails
     #   :direction   => { :data => hash, :options => hash },
     #   :kml         => { :data => json, :options => hash }
     #}
-    #should be with only symbol keys or with indifferent access
-    def create_js_from_hash(hash)
-      result = Array.new
-      map_id = "Gmaps." + get_map_id(hash[:map_options])
-
-      #means we are creating a new map
-      result << "#{map_id} = new #{get_constructor hash[:map_options] }" + ";"
-      result << "Gmaps.#{js_function_name hash } = function() {"
-      result << create_map_js(hash[:map_options], map_id) unless hash[:map_options].nil?
-      result << "#{map_id}.initialize();"
-
-      hash.each do |category, content| #loop through options hash
-        skipped_categories = [:map_options, :last_map, :scripts]
-        unless skipped_categories.include? category.to_sym
-          if category.to_sym == :direction
-            result << create_direction_js(content, map_id)
-          else  
-            result << create_general_js(content, map_id, category)
-          end
-        end
-      end
-      result << "#{map_id}.adjustMapToBounds();"
-      result << "#{map_id}.callback();"
-
-      result << "};"
-      if hash[:last_map].nil? || hash[:last_map] == true
-        result << "Gmaps.oldOnload = window.onload;\n window.onload = function() { Gmaps.triggerOldOnload(); Gmaps.loadMaps(); };"
-      end
-
-      result * ('
-')
-    end
-    
-    def js_function_name(hash)
-      "load_" + get_map_id(hash[:map_options])
+    #should be with only symbol keys or with indifferent access    
+    def initialize(option_hash)
+      @js   = Array.new
+      @hash = option_hash
     end
 
-    def get_map_id(hash)
-      hash.nil? || hash[:id].nil? ? DEFAULT_MAP_ID : hash[:id]
+    def create_js
+      @js << "#{gmap_id} = new #{ map_constructor };"
+      @js << "Gmaps.#{js_function_name} = function() {"
+      
+      process_map_options
+      
+      @js << "#{gmap_id}.initialize();"
+
+      process_data
+
+      @js << "#{gmap_id}.adjustMapToBounds();"
+      @js << "#{gmap_id}.callback();"
+      @js << "};"
+      @js << "Gmaps.oldOnload = window.onload;\n window.onload = function() { Gmaps.triggerOldOnload(); Gmaps.loadMaps(); };" if load_map?
+      
+      @js * ("\n")
     end
 
-    def get_constructor(hash)
-      hash.nil? || hash[:provider].nil? ? "Gmaps4RailsGoogle()" : "Gmaps4Rails#{hash[:provider].capitalize}()"
-    end
-
-    def create_map_js(map_hash, map_id)
-      output = Array.new
-      skipped_keys = [:class, :container_class]
-      map_hash.each do |option_k, option_v|
-        unless skipped_keys.include? option_k.to_sym
-          case option_k.to_sym 
-          when :bounds, :raw #particular case, render the content unescaped
-            output << "#{map_id}.map_options.#{option_k} = #{option_v};"
-          else
-            output << "#{map_id}.map_options.#{option_k} = #{option_v.to_json};"
-          end
-        end
-      end
-      output
-    end
-
-    def create_general_js(hash, map_id, category)
-      output = Array.new
-      output << "#{map_id}.#{category} = #{hash[:data]};"
-      hash[:options] ||= Array.new
-      hash[:options].each do |option_k, option_v|
-        if option_k.to_sym == :raw
-          output << "#{map_id}.#{category}_conf.#{option_k} = #{option_v};"
+    def process_map_options
+      return unless map_options
+      map_options.each do |option_key, option_value|
+        next if [:class, :container_class].include? option_key.to_sym
+        case option_key.to_sym 
+        when :bounds, :raw #particular case, render the content unescaped
+          @js << "#{gmap_id}.map_options.#{option_key} = #{option_value};"
         else
-          output << "#{map_id}.#{category}_conf.#{option_k} = #{option_v.to_json};"
-        end	
+          @js << "#{gmap_id}.map_options.#{option_key} = #{option_value.to_json};"
+        end
       end
-      output << "#{map_id}.create_#{category}();"
-      output
     end
 
-    def create_direction_js(hash, map_id)
-      output = Array.new
-      output << "#{map_id}.direction_conf.origin = '#{hash["data"]["from"]}';"
-      output << "#{map_id}.direction_conf.destination = '#{hash["data"]["to"]}';"
-      hash[:options] ||= Array.new
-  	  hash[:options].each do |option_k, option_v|
-        if option_k.to_sym == :waypoints
-          waypoints = Array.new
-          option_v.each do |waypoint|
-            waypoints << { "location" => waypoint, "stopover" => true }.to_json
-          end
-          output << "#{map_id}.direction_conf.waypoints = [#{waypoints * (",")}];"
-        else #option_k != "waypoint"
-          output << "#{map_id}.direction_conf.#{option_k} = #{option_v.to_json};"
-        end
-      end #end .each
-      output << "#{map_id}.create_direction();"
-      output
+    def process_data
+      data.each do |name, hash|
+        datum = ::Gmaps4rails::JsBuilder::Datum.new(gmap_id, name, hash)
+        datum_js = if name.to_sym == :direction
+                     datum.create_direction_js
+                   else  
+                     datum.create_js
+                   end
+        @js.concat datum_js
+      end
     end
     
+    def map_options
+      @hash[:map_options]
+    end
+    
+    def data
+      @hash.select{|key, value| DATA_KEYS.include?(key.to_sym) }
+    end
+    
+    def load_map?
+      @hash[:last_map].nil? || @hash[:last_map] == true
+    end
+    
+    def js_function_name
+      "load_" + map_id
+    end
+
+    def gmap_id
+      @gmap_id ||= "Gmaps." + map_id
+    end
+    
+    def map_id
+      @map_id ||= map_options.try(:[],:id) || DEFAULT_MAP_ID
+    end
+    
+    def map_constructor
+      map_options.try(:[],:provider) ? "Gmaps4Rails#{map_options[:provider].capitalize}()" : "Gmaps4RailsGoogle()"
+    end
+    
+    class Datum
+      # example:
+      # - name: :markers
+      # - hash: { :data => json, :options => hash }      
+      def initialize(gmap_id, name, hash)
+        @gmap_id, @hash, @name, @js = gmap_id, hash, name, Array.new
+      end
+
+      def create_js
+        @js << "#{@gmap_id}.#{@name} = #{value};"
+
+        set_configuration_variables
+
+        @js << "#{@gmap_id}.create_#{@name}();"
+      end
+
+      def create_direction_js
+        @js << "#{@gmap_id}.direction_conf.origin = '#{value["from"]}';"
+        @js << "#{@gmap_id}.direction_conf.destination = '#{value["to"]}';"
+
+        set_direction_variables
+
+        @js << "#{@gmap_id}.create_direction();"
+      end
+
+      def set_configuration_variables
+        return unless options
+        options.each do |option_key, option_value|
+          @js << if option_key.to_sym == :raw
+                   "#{@gmap_id}.#{@name}_conf.#{option_key} = #{option_value};"
+                 else
+                   "#{@gmap_id}.#{@name}_conf.#{option_key} = #{option_value.to_json};"
+                 end	
+        end
+      end
+
+      def set_direction_variables
+        return unless options
+        options.each do |option_key, option_value|
+          if option_key.to_sym == :waypoints
+            waypoints = Array.new
+            option_value.each do |waypoint|
+              waypoints << { "location" => waypoint, "stopover" => true }.to_json
+            end
+            @js << "#{@gmap_id}.direction_conf.waypoints = [#{waypoints * (",")}];"
+          else
+            @js << "#{@gmap_id}.direction_conf.#{option_key} = #{option_value.to_json};"
+          end
+        end
+      end
+      
+      def options
+        @hash[:options]
+      end
+      
+      def value
+        @hash[:data]
+      end
+    end
   end
 
 

@@ -1,45 +1,5 @@
 require 'spec_helper'
 
-describe "JS building methods" do
-  
-  subject { ::Gmaps4rails::JsBuilder.new }
-  
-  describe "constructor name retrieval" do
-    it "should render google if nothing passed" do
-      subject.get_constructor(nil).should eq "Gmaps4RailsGoogle()"
-    end
-    
-    it "should render proper provider when provided" do
-      options_hash = { "provider" => "bing" }
-      subject.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsBing()"
-      
-      options_hash = { "provider" => "mapquest" }
-      subject.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsMapquest()"
-      
-      options_hash = { "provider" => "openlayers" }
-      subject.get_constructor(options_hash.with_indifferent_access).should eq "Gmaps4RailsOpenlayers()"
-    end
-  end
-  
-  describe "map ID retrieval" do
-    it "should return the default ID when nothing is passed" do
-      options_hash = nil
-      subject.get_map_id(options_hash).should eq subject.class::DEFAULT_MAP_ID
-    end
-  
-    it "should return the default ID when no id is passed within map_options" do
-      options_hash = { "foo" => "bar" }
-      subject.get_map_id(options_hash).should eq subject.class::DEFAULT_MAP_ID
-    end
-  
-    it "should return the proper ID when id passed" do
-      options_hash = { "id" => "foo" }
-      subject.get_map_id(options_hash.with_indifferent_access).should eq "foo"    
-    end
-  
-  end
-end
-
 describe "to_gmaps4rails for hash" do  
   it "should accept hashes with indifferent access" do
     hash1 = {:markers => {:data => @json, :options => {:do_clustering => true, :draggable => true  } }}
@@ -163,7 +123,7 @@ describe "to_gmaps4rails for hash" do
     
     it "should not call map builder if not last_map" do
       hash = {:last_map => false}
-      hash.to_gmaps4rails.should_not include "window.onload = Gmaps.loadMaps;"
+      hash.to_gmaps4rails.should_not include "window.onload"
     end
 
     it "should call map builder if last_map" do
