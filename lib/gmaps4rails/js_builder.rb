@@ -59,12 +59,7 @@ module Gmaps4rails
     def process_data
       data.each do |name, hash|
         datum = ::Gmaps4rails::JsBuilder::Datum.new(gmap_id, name, hash)
-        datum_js = if name.to_sym == :direction
-                     datum.create_direction_js
-                   else  
-                     datum.create_js
-                   end
-        @js.concat datum_js
+        @js.concat datum.create_js
       end
     end
     
@@ -103,8 +98,16 @@ module Gmaps4rails
       def initialize(gmap_id, name, hash)
         @gmap_id, @hash, @name, @js = gmap_id, hash, name, Array.new
       end
-
+      
       def create_js
+        if @name.to_sym == :direction
+          create_direction_js
+        else  
+          create_standard_js
+        end
+      end
+      
+      def create_standard_js
         @js << "#{@gmap_id}.#{@name} = #{value};"
 
         set_configuration_variables
