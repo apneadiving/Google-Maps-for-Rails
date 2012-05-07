@@ -70,11 +70,21 @@ window.onload =alert('ok');
  <%#= gmaps(:map_options => { :auto_adjust => true }, 
    :markers => {
      :data => @json,
-     #:options => {:do_clustering => true}
+     :options => {:do_clustering => true}
     }) %>
+
+<%#= gmaps("markers" => { "data" => @json, "options" => { 
+  "picture" => "/logo.png", 
+  "width" => 30, "marker_length" => 32 } }) %>
+
 
 <%#= gmaps( {:map_options => { :disableDefaultUI => true, :auto_adjust => true, :center_on_user => true, :detect_location => true,  :center_latitude => 41.574361,
  :center_longitude => -72.949219 }}) %>
+ <%#= gmaps(:map_options => {:type => "ROADMAP"}, 
+           :markers => {:data => @json,
+                        :options => {"list_container" => "markers_list" }
+                       })%>
+<div id="markers_list"></div>
 <%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
@@ -97,11 +107,11 @@ window.onload =alert('ok');
 ]]' },
           :map_options => {:auto_adjust => true, :auto_zoom => false, :zoom => 3, :center_on_user => false, :detect_location => false, :raw => "{styles: pinkParksStyles}" },
           :last_map => true) %>
-<%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
+<%= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :id => "ed" },
           :scripts => "api",
           :last_map => false ) %>
-<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
+<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, :draggable => true  } },
           :map_options => { :auto_adjust => true, :center_on_user => true, :zoom => 5, :provider => "openlayers", :id => "joe" },
           :scripts => "api",
           :last_map => false ) %> 
