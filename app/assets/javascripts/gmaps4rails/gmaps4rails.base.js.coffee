@@ -415,37 +415,36 @@ class @Gmaps4Rails
     if @map_options.auto_adjust or @map_options.bounds isnt null
       @boundsObject = @createLatLngBounds()
 
-    #if autodjust is true, must get bounds from markers polylines etc...
-    if @map_options.auto_adjust
-      #from markers
-      @extendBoundsWithMarkers()
+      #if autodjust is true, must get bounds from markers polylines etc...
+      if @map_options.auto_adjust
+        #from markers
+        @extendBoundsWithMarkers()
 
-      #from polylines:
-      for polyline in @polylines
-        polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-        for point in polyline_points
-          @boundsObject.extend point
+        #from polylines:
+        for polyline in @polylines
+          polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
+          for point in polyline_points
+            @boundsObject.extend point
 
-      #from polygons:
-      for polygon in @polygons
-        polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-        for point in polygon_points
-          @boundsObject.extend point
+        #from polygons:
+        for polygon in @polygons
+          polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
+          for point in polygon_points
+            @boundsObject.extend point
 
-      #from circles
-      for circle in @circles
-        @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-        @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+        #from circles
+        for circle in @circles
+          @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
+          @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
 
-    #in every case, I've to take into account the bounds set up by the user
-    for bound in @map_options.bounds
-      #create points from bounds provided
-      #TODO:only works with google maps
-      bound = @createLatLng(bound.lat, bound.lng)
-      @boundsObject.extend bound
+      #in every case, I've to take into account the bounds set up by the user
+      for bound in @map_options.bounds
+        #create points from bounds provided
+        #TODO:only works with google maps
+        bound = @createLatLng(bound.lat, bound.lng)
+        @boundsObject.extend bound
 
-    #SECOND_STEP: ajust the map to the bounds
-    if @map_options.auto_adjust or @map_options.bounds.length > 0
+      #SECOND_STEP: ajust the map to the bounds
 
       #if autozoom is false, take user info into account
       if !@map_options.auto_zoom
