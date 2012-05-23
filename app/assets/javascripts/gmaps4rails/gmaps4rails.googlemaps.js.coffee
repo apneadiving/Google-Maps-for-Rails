@@ -36,14 +36,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       fillOpacity: 0.35
       clickable: false
 
-    #Polyline Styling
-    @polylines_conf =         #default style for polylines
-      strokeColor: "#FF0000"
-      strokeOpacity: 1
-      strokeWeight: 2
-      clickable: false
-      zIndex: null
-
     #Circle Styling
     @circles_conf =           #default style for circles
       fillColor: "#00AAFF"
@@ -249,6 +241,51 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     kml =  new google.maps.KmlLayer( kml.url, kml_options)
     kml.setMap(@serviceObject)
     return kml
+
+  #////////////////////////////////////////////////////
+  #/////////////////// POLYLINES //////////////////////
+  #////////////////////////////////////////////////////
+
+  #creates a single polyline, triggered by create_polylines
+  create_polyline : (polyline) ->
+    polyline_coordinates = []
+
+    #2 cases here, either we have a coded array of LatLng or we have an Array of LatLng
+    for element in polyline
+      #if we have a coded array
+      if element.coded_array?
+        decoded_array = new google.maps.geometry.encoding.decodePath(element.coded_array)
+        #loop through every point in the array
+        for point in decoded_array
+          polyline_coordinates.push(point)
+
+      #or we have an array of latlng
+      else
+        #by convention, a single polyline could be customized in the first array or it uses default values
+        if element == polyline[0]
+          strokeColor   = element.strokeColor   || @polylines_conf.strokeColor
+          strokeOpacity = element.strokeOpacity || @polylines_conf.strokeOpacity
+          strokeWeight  = element.strokeWeight  || @polylines_conf.strokeWeight
+          clickable     = element.clickable     || @polylines_conf.clickable
+          zIndex        = element.zIndex        || @polylines_conf.zIndex
+
+        #add latlng if positions provided
+        if element.lat? && element.lng?
+          latlng = @createLatLng(element.lat, element.lng)
+          polyline_coordinates.push(latlng)
+
+    # Construct the polyline
+    new_poly = new google.maps.Polyline
+      path:         polyline_coordinates
+      strokeColor:  strokeColor
+      strokeOpacity: strokeOpacity
+      strokeWeight: strokeWeight
+      clickable:    clickable
+      zIndex:       zIndex
+
+    #save polyline
+    polyline.serviceObject = new_poly
+    new_poly.setMap(@serviceObject)
 
 
   #////////////////////////////////////////////////////
