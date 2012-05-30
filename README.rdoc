@@ -1,4 +1,4 @@
-== Google Maps for Rails (gmaps4rails)
+== Google Maps for Rails (gmaps4rails) {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails]
 
 Gmaps4rails is developed to simply create a Google Map:
 
@@ -12,54 +12,43 @@ See (somewhat outdated) screencasts here: http://www.youtube.com/user/TheApneadi
 
 == When Gmaps4rails finally means Global Maps for Rails
 
-I've added support for other map providers:
-
-* openlayers
-
-* mapquest
-
-* bing
+I've added support for other map providers: openlayers, mapquest & bing.
 
 See: https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Map-Apis
 
 Any help would be appreciated to complete this work.
 
-
 == Requirements
 
-Gemfile
+1) Gemfile
+
     gem 'gmaps4rails'
-(followed by 'bundle')
 
-    <%= yield :head %>    (in your header, Rails 3.0.x only) 
-    
-    <%= yield :scripts %> (in your footer)
-
-To make Rails serve the assets (javascripts, stylesheets and marker images) you have several options, depending on your configuration and Rails version:
-- if you are using Rails 3.1 and have asset pipeline enabled ('config.assets.enabled = true' in config/application.rb), include the appropriate manifest:
-
-    * //= require gmaps4rails/bing.js
-                              
-    * //= require gmaps4rails/googlemaps.js
-                              
-    * //= require gmaps4rails/mapquest.js
-                              
-    * //= require gmaps4rails/openlayers.js
-                              
-    * //= require gmaps4rails/all_apis.js
-  
-  Stylesheet:
-  
-   * `require gmaps4rails` (if you use the default)
-  
-- if you are using Rails 3.0:
-  see paragraph below to be sure everything will work in production.
-
-- finally you can just copy assets to your application's public/stylesheets, public/javascripts/gmaps4rails and public/images. It's recommended to do this in production so that you can let your webserver serve them rather than go through Rails each time they are requested. There's a generator to help you with that:
+2) Copy the assets to your app (and be sure to copy the fresh assets when you upgrade the gem):
 
     rails generate gmaps4rails:install
-     
-  This will copy the coffeescript files if you're running Rails 3.1 or the js files for Rails 3.0.x
+
+This will copy all the coffeescript files if you're running Rails >= 3.1 or all the js files for Rails 3.0.x.
+
+Only `gmaps4rails.base` + `gmaps4rails.your_provider` are necessary.
+
+3) Javascript
+  
+    <%= yield :scripts %> (in your footer)
+
+This container will include the js files from map providers, the custom js to display the map, the gem's js code.
+
+4) CSS
+
+`gmaps4rails.css` will be copied to your app after you run the Rails generator. 
+Be sure to require this file in your view for your first steps.
+
+For Rails 3.0.x or without assets pipeline:
+
+    <%= stylesheet_link_tag 'gmaps4rails' %>
+    
+For Rails >= 3.1 with assets pipeline, same principle: add the required file to your manifest.
+
 
 == Basic configuration
 In your model, add:
@@ -73,7 +62,7 @@ In your model, add:
 
 Create a migration and add the following fields to your table (here users):
 
-    add_column :users, :latitude, :float #you can change the name, see wiki
+    add_column :users, :latitude,  :float #you can change the name, see wiki
     add_column :users, :longitude, :float #you can change the name, see wiki
     add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
@@ -114,6 +103,21 @@ Done!
 == Todo?
 
 Feel free to contact us, you have your say.
+
+== Want to help?
+
+This is how you can launch the spec suite (js + ruby):
+
+* Clone the gem repository
+
+* Go to the gem's folder
+
+* run `bundle`
+
+* run `cd spec/dummy; rake db:migrate RAILS_ENV=test; cd ../..`
+
+* run `bundle exec rspec spec`
+
 
 == Copyright
 MIT license. 

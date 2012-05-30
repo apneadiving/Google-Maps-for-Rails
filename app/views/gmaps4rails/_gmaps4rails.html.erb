@@ -1,19 +1,20 @@
-<% #thanks to enable_css, user can avoid this css to be loaded
-if enable_css == true && options[:scripts].nil? %>
-  <% unless gmaps4rails_pipeline_enabled? %>
-    <% content_for :head do %>
-      <%= stylesheet_link_tag 'gmaps4rails' %>
-    <% end %>
-	<% end %>
-<% end %>
-
 <% content_for :scripts do %>
+<%= javascript_include_tag *js_dependencies %>
 
-<%= gmaps4rails_js_files(options[:map_options], options[:scripts], enable_js, options[:markers].try(:[], :options)) %>
 <script type="text/javascript" charset="utf-8">
 <%=raw options.to_gmaps4rails %>
 </script>
-
 <% end %>
 
-<%= gmaps4rails_html(options[:map_options]) %>
+<% case dom.map_provider %>
+<% when "mapquest" %>
+<div id="<%= dom.map_id %>" style="width:750px; height:475px;">
+  <!-- TODO: change this style dynamically -->  
+</div>
+<% when "bing" %>
+  <div id="<%= dom.map_id %>" class="<%= dom.map_class %>"></div>
+<% else %>
+<div class="<%= dom.container_class %>"> 
+  <div id="<%= dom.map_id %>" class="<%= dom.map_class %>"></div>
+</div>
+<% end %>

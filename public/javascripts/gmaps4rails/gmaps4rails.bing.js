@@ -1,14 +1,11 @@
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor;
-    child.__super__ = parent.prototype;
-    return child;
-  };
-  this.Gmaps4RailsBing = (function() {
-    __extends(Gmaps4RailsBing, Gmaps4Rails);
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps4RailsBing = (function(_super) {
+
+    __extends(Gmaps4RailsBing, _super);
+
     function Gmaps4RailsBing() {
       Gmaps4RailsBing.__super__.constructor.apply(this, arguments);
       this.map_options = {
@@ -20,6 +17,7 @@
       this.mergeWithDefault("map_options");
       this.mergeWithDefault("markers_conf");
     }
+
     Gmaps4RailsBing.prototype.getMapType = function() {
       switch (this.map_options.type) {
         case "road":
@@ -40,13 +38,17 @@
           return Microsoft.Maps.MapTypeId.auto;
       }
     };
+
     Gmaps4RailsBing.prototype.createPoint = function(lat, lng) {
       return new Microsoft.Maps.Point(lat, lng);
     };
+
     Gmaps4RailsBing.prototype.createLatLng = function(lat, lng) {
       return new Microsoft.Maps.Location(lat, lng);
     };
+
     Gmaps4RailsBing.prototype.createLatLngBounds = function() {};
+
     Gmaps4RailsBing.prototype.createMap = function() {
       return new Microsoft.Maps.Map(document.getElementById(this.map_options.id), {
         credentials: this.map_options.provider_key,
@@ -55,9 +57,11 @@
         zoom: this.map_options.zoom
       });
     };
+
     Gmaps4RailsBing.prototype.createSize = function(width, height) {
       return new google.maps.Size(width, height);
     };
+
     Gmaps4RailsBing.prototype.createMarker = function(args) {
       var marker, markerLatLng;
       markerLatLng = this.createLatLng(args.Lat, args.Lng);
@@ -81,6 +85,7 @@
       this.addToMap(marker);
       return marker;
     };
+
     Gmaps4RailsBing.prototype.clearMarkers = function() {
       var marker, _i, _len, _ref, _results;
       _ref = this.markers;
@@ -91,9 +96,11 @@
       }
       return _results;
     };
+
     Gmaps4RailsBing.prototype.clearMarker = function(marker) {
       return this.removeFromMap(marker.serviceObject);
     };
+
     Gmaps4RailsBing.prototype.showMarkers = function() {
       var marker, _i, _len, _ref, _results;
       _ref = this.markers;
@@ -104,11 +111,13 @@
       }
       return _results;
     };
+
     Gmaps4RailsBing.prototype.showMarker = function(marker) {
       return marker.serviceObject.setOptions({
         visible: true
       });
     };
+
     Gmaps4RailsBing.prototype.hideMarkers = function() {
       var marker, _i, _len, _ref, _results;
       _ref = this.markers;
@@ -119,11 +128,13 @@
       }
       return _results;
     };
+
     Gmaps4RailsBing.prototype.hideMarker = function(marker) {
       return marker.serviceObject.setOptions({
         visible: false
       });
     };
+
     Gmaps4RailsBing.prototype.extendBoundsWithMarkers = function() {
       var locationsArray, marker, _i, _len, _ref;
       locationsArray = [];
@@ -134,9 +145,13 @@
       }
       return this.boundsObject = Microsoft.Maps.LocationRect.fromLocations(locationsArray);
     };
+
     Gmaps4RailsBing.prototype.createClusterer = function(markers_array) {};
+
     Gmaps4RailsBing.prototype.clearClusterer = function() {};
+
     Gmaps4RailsBing.prototype.clusterize = function() {};
+
     Gmaps4RailsBing.prototype.createInfoWindow = function(marker_container) {
       var currentMap;
       if (marker_container.description != null) {
@@ -157,6 +172,7 @@
         return this.addToMap(marker_container.info_window);
       }
     };
+
     Gmaps4RailsBing.prototype.openInfoWindow = function(currentMap, infoWindow) {
       return function() {
         if (currentMap.visibleInfoWindow) {
@@ -170,22 +186,29 @@
         return currentMap.visibleInfoWindow = infoWindow;
       };
     };
+
     Gmaps4RailsBing.prototype.fitBounds = function() {
-      return this.map.setView({
+      return this.serviceObject.setView({
         bounds: this.boundsObject
       });
     };
+
     Gmaps4RailsBing.prototype.addToMap = function(object) {
-      return this.map.entities.push(object);
+      return this.serviceObject.entities.push(object);
     };
+
     Gmaps4RailsBing.prototype.removeFromMap = function(object) {
-      return this.map.entities.remove(object);
+      return this.serviceObject.entities.remove(object);
     };
+
     Gmaps4RailsBing.prototype.centerMapOnUser = function() {
-      return this.map.setView({
+      return this.serviceObject.setView({
         center: this.userLocation
       });
     };
+
     return Gmaps4RailsBing;
-  })();
+
+  })(Gmaps4Rails);
+
 }).call(this);

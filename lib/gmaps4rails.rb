@@ -8,14 +8,6 @@ module Gmaps4rails
        ActionView::Base.send :include, Gmaps4railsHelper
      end
      
-     initializer "add asset directories to pipeline" do |app|
-       if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
-         app.config.assets.paths << "#{root}/public/stylesheets"
-       else
-         app.middleware.use ::ActionDispatch::Static, "#{root}/public"
-       end
-     end
-     
   end
   
   class Railtie < Rails::Railtie

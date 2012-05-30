@@ -1,6 +1,0 @@
-.bundle
-db/*.sqlite3
-log/*.log
-tmp/
-.sass-cache/
-config/initializers/map_api_keys.rb

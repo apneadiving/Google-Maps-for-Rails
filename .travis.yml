@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+  - 1.8.7
+  - 1.9.2
+  - 1.9.3
+gemfile:
+  - Gemfile
+before_script: 'cd spec/dummy/; rake db:migrate RAILS_ENV=test; cd ../..'
+script: 'rspec spec'
+after_script: 'bundle exec guard-jasmine -u http://localhost:8888/'

@@ -1,1 +1,0 @@
-../../../../../../app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee

@@ -22,7 +22,6 @@ module Gmaps4rails
           copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.mapquest.js',   'public/javascripts/gmaps4rails/gmaps4rails.mapquest.js'
           copy_file '../../../public/stylesheets/gmaps4rails.css',                       'public/stylesheets/gmaps4rails.css'
         end
-        copy_file '../../../public/images/marker.png', 'public/images/marker.png'
       end
 
       def show_readme

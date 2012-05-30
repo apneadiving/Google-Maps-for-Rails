@@ -34,6 +34,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       strokeWeight: 2
       fillColor: "#000000"
       fillOpacity: 0.35
+      clickable: false
 
     #Polyline Styling
     @polylines_conf =         #default style for polylines
@@ -111,18 +112,19 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     markerLatLng = @createLatLng(args.Lat, args.Lng)
     #Marker sizes are expressed as a Size of X,Y
     if args.marker_picture == "" and args.rich_marker == null
-      defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable}
+      defaultOptions = {position: markerLatLng, map: @serviceObject, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
       mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
       return new google.maps.Marker mergedOptions
 
     if (args.rich_marker != null)
       return new RichMarker({
         position: markerLatLng
-        map:       @map
+        map:       @serviceObject
         draggable: args.marker_draggable
         content:   args.rich_marker
         flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
         anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
+        zIndex:    args.zindex
       })
 
     #default behavior
@@ -132,7 +134,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     #create or retrieve existing MarkerImages
     markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
     shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-    defaultOptions = {position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage}
+    defaultOptions = {position: markerLatLng, map: @serviceObject, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
     mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
     return new google.maps.Marker mergedOptions
 
@@ -190,7 +192,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
   #////////////////////////////////////////////////////
 
   createClusterer : (markers_array) ->
-    return new MarkerClusterer( @map, markers_array, {  maxZoom: @markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
+    return new MarkerClusterer( @serviceObject, markers_array, {  maxZoom: @markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
 
   clearClusterer : ->
     @markerClusterer.clearMarkers()
@@ -234,7 +236,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     return ->
       # Close the latest selected marker before opening the current one.
       currentMap.visibleInfoWindow.close() if currentMap.visibleInfoWindow != null
-      infoWindow.open(currentMap.map, marker)
+      infoWindow.open(currentMap.serviceObject, marker)
       currentMap.visibleInfoWindow = infoWindow
 
   #////////////////////////////////////////////////////
@@ -245,7 +247,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     kml_options = kml.options || {}
     kml_options = @mergeObjectWithDefault(kml_options, @kml_options)
     kml =  new google.maps.KmlLayer( kml.url, kml_options)
-    kml.setMap(@map)
+    kml.setMap(@serviceObject)
     return kml
 
 
@@ -254,8 +256,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
   #////////////////////////////////////////////////////
 
   fitBounds : ->
-    @map.fitBounds(@boundsObject) unless @boundsObject.isEmpty()
+    @serviceObject.fitBounds(@boundsObject) unless @boundsObject.isEmpty()
 
   centerMapOnUser : ->
-    @map.setCenter(@userLocation)
+    @serviceObject.setCenter(@userLocation)
 
