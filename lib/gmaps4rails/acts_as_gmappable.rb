@@ -26,8 +26,15 @@ module Gmaps4rails
       
       # saves coordinates according to the various options
       def gmaps4rails_save_data(coordinates)
-        self.send("#{gmaps4rails_options[:lng_column]}=", coordinates.first[:lng])
-        self.send("#{gmaps4rails_options[:lat_column]}=", coordinates.first[:lat])
+        # for use with Mongoid fx mongoid_geospatial and geocoder
+        if gmaps4rails_options[:lat_lng_array]
+          lat_lng_array = [coordinates.first[:lat], coordinates.first[:lng]]
+          self.send("#{gmaps4rails_options[:lat_lng_array]}=", arr_value)  
+        else
+          # Relational DB
+          self.send("#{gmaps4rails_options[:lng_column]}=", coordinates.first[:lng])
+          self.send("#{gmaps4rails_options[:lat_column]}=", coordinates.first[:lat])
+        end
         # save normalized address if required
         self.send("#{gmaps4rails_options[:normalized_address]}=", coordinates.first[:matched_address]) unless gmaps4rails_options[:normalized_address].nil?          
         # Call the callback method to let the user do what he wants with the data
