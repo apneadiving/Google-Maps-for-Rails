@@ -86,7 +86,7 @@ module Gmaps4rails
       if @object.gmaps4rails_options[:lat_lng_array]
         {
          :lat => @object.gmaps4rails_options[:lat_lng_array][0],
-         :lng => @object.gmaps4rails_options[:lat_lng_array][0]
+         :lng => @object.gmaps4rails_options[:lat_lng_array][1]
         }
       else
         {
