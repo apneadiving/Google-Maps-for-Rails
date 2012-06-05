@@ -1,0 +1,18 @@
+CHANGELOG
+=========
+
+March 21, 2012
+--------------
+
+Created vendor/assets folder to make assets available for Rails 3 asset pipeline.
+
+Noticed they are already added to pipeline for Rails 3.1+ via:
+
+module Gmaps4rails
+	...
+  class Engine < Rails::Engine
+  	...
+       if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
+         app.config.assets.paths << "#{root}/public/stylesheets"
+
+But still nice to have them in vendor/assets I think ;)

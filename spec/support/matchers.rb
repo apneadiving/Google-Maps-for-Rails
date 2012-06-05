@@ -27,9 +27,35 @@ def has_same_content_as?(actual, expected)
   end
 end
 
+module PositionMatcherHelper
+  def self.same_pos? object, position_hash
+    lat_lng_arr = extract_lat_lng_arr object
+    same_lat?(lat_lng_arr[0], position_hash) && same_lng?(lat_lng_arr[1], position_hash)
+  end
+
+  def self.extract_lat_lng_arr object
+    if object.gmaps4rails_options[:lat_lng_array]
+      object.send(object.gmaps4rails_options[:lat_lng_array]
+    else
+      [
+        object.send(object.gmaps4rails_options[:lat_column], 
+        object.send(object.gmaps4rails_options[:lng_column]
+      ]
+    end
+  end    
+
+  def self.same_lat? lat, position_hash
+    lat == position_hash[:latitude]
+  end
+
+  def self.same_lng? lng, position_hash
+    lng == position_hash[:longitude]
+  end
+end
+
 RSpec::Matchers.define :have_same_position_as do |position_hash|
   match do |object|
-    object.send(object.gmaps4rails_options[:lat_column]) == position_hash[:latitude] && object.send(object.gmaps4rails_options[:lng_column]) == position_hash[:longitude]
+    PositionMatcherHelper.same_pos? object, position_hash    
   end
 end
 

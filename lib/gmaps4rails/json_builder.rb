@@ -79,9 +79,21 @@ module Gmaps4rails
         :title          => :gmaps4rails_title,
         :sidebar        => :gmaps4rails_sidebar,
         :marker_picture => :gmaps4rails_marker_picture,
-        :lat            => @object.gmaps4rails_options[:lat_column],
-        :lng            => @object.gmaps4rails_options[:lng_column]
-      }
+      }.merge(lat_lng_attributes)
+    end
+
+    def lat_lng_attributes
+      if @object.gmaps4rails_options[:lat_lng_array]
+        {
+         :lat => @object.gmaps4rails_options[:lat_lng_array][0],
+         :lng => @object.gmaps4rails_options[:lat_lng_array][1]
+        }
+      else
+        {
+          :lat            => @object.gmaps4rails_options[:lat_column],
+          :lng            => @object.gmaps4rails_options[:lng_column]          
+        }
+      end
     end
 
     def handle_model_methods
@@ -114,7 +126,15 @@ module Gmaps4rails
     end
 
     def compliant?
-      !(@object.send(@object.gmaps4rails_options[:lat_column]).blank? && @object.send(@object.gmaps4rails_options[:lng_column]).blank?)
+      has_lat_lng_fields? || has_lat_lng_array?
+    end
+
+    def has_lat_lng_fields?
+      !@object.send(@object.gmaps4rails_options[:lat_column]).blank? && @object.send(@object.gmaps4rails_options[:lng_column]).blank?
+    end
+
+    def has_lat_lng_array?
+      !@object.send(@object.gmaps4rails_options[:lat_lng_array]).blank?
     end
 
     def handle_block(&block)
