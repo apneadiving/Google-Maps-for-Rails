@@ -366,6 +366,18 @@ class @Gmaps4Rails
     @markers_conf.offset = 0
     @addMarkers(new_markers)
 
+  replaceMarkerSet : (new_markers) ->
+    #create array with markers ids
+    toClear = []
+    for marker in new_markers
+      toClear.push(marker.id)
+    #clear markers
+    for marker in @markers
+      if marker.id in toClear
+        @clearMarker marker
+    #add markers
+    @addMarkers(new_markers)
+
   #add new markers to on an existing map
   addMarkers : (new_markers) ->
     #update the list of markers to take into account
