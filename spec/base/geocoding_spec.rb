@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Geocode" do
   
   it "should raise an error when address invalid" do
-    lambda { Gmaps4rails.geocode("home")}.should raise_error Gmaps4rails::GeocodeStatus
+    lambda { Gmaps4rails.geocode(".")}.should raise_error Gmaps4rails::GeocodeStatus
   end
   
   it "should return results in the specified language" do
