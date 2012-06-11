@@ -363,47 +363,19 @@ class @Gmaps4Rails
         @extendBoundsWithMarkers()
 
         #from polylines:
-        for polyline in @polylines
-          polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-          for point in polyline_points
-            @boundsObject.extend point
+        @updateBoundsWithPolylines()
 
         #from polygons:
-        for polygon in @polygons
-          polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-          for point in polygon_points
-            @boundsObject.extend point
+        @updateBoundsWithPolygons()
 
         #from circles
-        for circle in @circles
-          @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-          @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+        @updateBoundsWithCircles()
 
       #in every case, I've to take into account the bounds set up by the user
-      for bound in @map_options.bounds
-        #create points from bounds provided
-        #TODO:only works with google maps
-        bound = @createLatLng(bound.lat, bound.lng)
-        @boundsObject.extend bound
+      @extendMapBounds()
 
       #SECOND_STEP: ajust the map to the bounds
-
-      #if autozoom is false, take user info into account
-      if !@map_options.auto_zoom
-        map_center = @boundsObject.getCenter()
-        @map_options.center_latitude  = map_center.lat()
-        @map_options.center_longitude = map_center.lng()
-        @serviceObject.setCenter(map_center)
-      else
-        @fitBounds()
-
-  #////////////////////////////////////////////////////
-  #/////////////////        KML      //////////////////
-  #////////////////////////////////////////////////////
-
-  create_kml : ->
-    for kml in @kml
-      kml.serviceObject = @createKmlLayer kml
+      @adaptMapToBounds()
 
   #////////////////////////////////////////////////////
   #/////////////////// POLYLINES //////////////////////

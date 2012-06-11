@@ -111,6 +111,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
     @serviceObject.removeLayer(@markersLayer) if @markersLayer != null and @serviceObject.getLayer(@markersLayer.id) != null
   
   extendBoundsWithMarkers: ->
+    console.log "here"
     for marker in @markers
       @boundsObject.extend(@createLatLng(marker.lat,marker.lng))        
 
@@ -188,13 +189,13 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
                                null, true, @onPopupClose)
     feature.popup = popup
     popup.feature = feature
-    @serviceObject.addPopup popup
+    @map.addPopup popup
 
   onFeatureUnselect: (evt) ->
     feature = evt.feature
     if feature.popup
       #//popup.feature = null;
-      @serviceObject.removePopup feature.popup
+      @map.removePopup feature.popup
       feature.popup.destroy()
       feature.popup = null
 
@@ -236,8 +237,14 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
 
     @polylinesLayer.addFeatures([polyline])
 
-	return polyline
+    return polyline
 
+  updateBoundsWithPolylines: ()->
+  
+  updateBoundsWithPolygons: ()->
+    
+  updateBoundsWithCircles: ()->
+  
   # #////////////////////////////////////////////////////
   # #/////////////////// Other methods //////////////////
   # #////////////////////////////////////////////////////
@@ -248,3 +255,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
   centerMapOnUser: ->
     @serviceObject.setCenter @userLocation
     
+  extendMapBounds :->
+    
+  adaptMapToBounds: ->
+    @fitBounds()

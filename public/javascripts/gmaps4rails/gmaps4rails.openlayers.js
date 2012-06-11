@@ -15,6 +15,7 @@
       this.openMarkers = null;
       this.markersLayer = null;
       this.markersControl = null;
+      this.polylinesLayer = null;
     }
 
     Gmaps4RailsOpenlayers.prototype.createPoint = function(lat, lng) {};
@@ -99,6 +100,7 @@
 
     Gmaps4RailsOpenlayers.prototype.extendBoundsWithMarkers = function() {
       var marker, _i, _len, _ref, _results;
+      console.log("here");
       _ref = this.markers;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -186,18 +188,61 @@
       popup = new OpenLayers.Popup.FramedCloud("featurePopup", feature.geometry.getBounds().getCenterLonLat(), new OpenLayers.Size(300, 200), feature.infoWindow, null, true, this.onPopupClose);
       feature.popup = popup;
       popup.feature = feature;
-      return this.serviceObject.addPopup(popup);
+      return this.map.addPopup(popup);
     };
 
     Gmaps4RailsOpenlayers.prototype.onFeatureUnselect = function(evt) {
       var feature;
       feature = evt.feature;
       if (feature.popup) {
-        this.serviceObject.removePopup(feature.popup);
+        this.map.removePopup(feature.popup);
         feature.popup.destroy();
         return feature.popup = null;
       }
     };
+
+    Gmaps4RailsOpenlayers.prototype.create_polyline = function(polyline) {
+      var clickable, element, latlng, line_points, line_style, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _len;
+      if (this.polylinesLayer === null) {
+        this.polylinesLayer = new OpenLayers.Layer.Vector("Polylines", null);
+        this.serviceObject.addLayer(this.polylinesLayer);
+        this.polylinesLayer.events.register("featureselected", this.polylinesLayer, this.onFeatureSelect);
+        this.polylinesLayer.events.register("featureunselected", this.polylinesLayer, this.onFeatureUnselect);
+        this.polylinesControl = new OpenLayers.Control.DrawFeature(this.polylinesLayer, OpenLayers.Handler.Path);
+        this.serviceObject.addControl(this.polylinesControl);
+      }
+      polyline_coordinates = [];
+      for (_i = 0, _len = polyline.length; _i < _len; _i++) {
+        element = polyline[_i];
+        if (element === polyline[0]) {
+          strokeColor = element.strokeColor || this.polylines_conf.strokeColor;
+          strokeOpacity = element.strokeOpacity || this.polylines_conf.strokeOpacity;
+          strokeWeight = element.strokeWeight || this.polylines_conf.strokeWeight;
+          clickable = element.clickable || this.polylines_conf.clickable;
+          zIndex = element.zIndex || this.polylines_conf.zIndex;
+        }
+        if ((element.lat != null) && (element.lng != null)) {
+          latlng = new OpenLayers.Geometry.Point(element.lng, element.lat);
+          polyline_coordinates.push(latlng);
+        }
+      }
+      line_points = new OpenLayers.Geometry.LineString(polyline_coordinates);
+      line_style = {
+        strokeColor: strokeColor,
+        strokeOpacity: strokeOpacity,
+        strokeWidth: strokeWeight
+      };
+      polyline = new OpenLayers.Feature.Vector(line_points, null, line_style);
+      polyline.geometry.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
+      this.polylinesLayer.addFeatures([polyline]);
+      return polyline;
+    };
+
+    Gmaps4RailsOpenlayers.prototype.updateBoundsWithPolylines = function() {};
+
+    Gmaps4RailsOpenlayers.prototype.updateBoundsWithPolygons = function() {};
+
+    Gmaps4RailsOpenlayers.prototype.updateBoundsWithCircles = function() {};
 
     Gmaps4RailsOpenlayers.prototype.fitBounds = function() {
       return this.serviceObject.zoomToExtent(this.boundsObject, true);
@@ -205,6 +250,12 @@
 
     Gmaps4RailsOpenlayers.prototype.centerMapOnUser = function() {
       return this.serviceObject.setCenter(this.userLocation);
+    };
+
+    Gmaps4RailsOpenlayers.prototype.extendMapBounds = function() {};
+
+    Gmaps4RailsOpenlayers.prototype.adaptMapToBounds = function() {
+      return this.fitBounds();
     };
 
     return Gmaps4RailsOpenlayers;

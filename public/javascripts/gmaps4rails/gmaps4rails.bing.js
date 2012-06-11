@@ -207,6 +207,18 @@
       });
     };
 
+    Gmaps4RailsBing.prototype.updateBoundsWithPolylines = function() {};
+
+    Gmaps4RailsBing.prototype.updateBoundsWithPolygons = function() {};
+
+    Gmaps4RailsBing.prototype.updateBoundsWithCircles = function() {};
+
+    Gmaps4RailsBing.prototype.extendMapBounds = function() {};
+
+    Gmaps4RailsBing.prototype.adaptMapToBounds = function() {
+      return this.fitBounds();
+    };
+
     return Gmaps4RailsBing;
 
   })(Gmaps4Rails);
