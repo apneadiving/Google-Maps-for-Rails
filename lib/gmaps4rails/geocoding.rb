@@ -29,7 +29,7 @@ module Gmaps4rails
       @protocol = options[:protocol] || "http"
     end
     
-    # returns a hash with the following keys:
+    # returns an array of hashes with the following keys:
     # - lat: mandatory for acts_as_gmappable
     # - lng: mandatory for acts_as_gmappable
     # - matched_address: facultative
