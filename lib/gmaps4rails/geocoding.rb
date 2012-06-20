@@ -18,7 +18,7 @@ module Gmaps4rails
   end
   
   class Geocoder
-    attr_reader :address, :language, :raw, :protocol, :response, :parsed_response
+    attr_reader :address, :language, :raw, :protocol
     
     def initialize(address, options = {})
       raise Gmaps4rails::GeocodeInvalidQuery, "You must provide an address" if address.empty?
