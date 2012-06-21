@@ -45,7 +45,7 @@ module Gmaps4rails
       Gmaps4rails.geocode(object.send(address), language, false, protocol)
     rescue GeocodeStatus, GeocodeInvalidQuery => e  #address was invalid, add error to address.
       Rails.logger.warn(e)
-      object.errors[address] << msg if Gmaps4rails.condition_eval(object, validation)
+      object.errors[address] << msg if condition_eval(object, validation)
       false
     rescue GeocodeNetStatus => e                    #connection error, No need to prevent save.
       Rails.logger.warn(e)
@@ -57,20 +57,24 @@ module Gmaps4rails
     # if process_geocoding is a Proc or a Symbol, 'check_process' and 'checker' are skipped since process_geocoding bears the whole logic
     def prevent_geocoding?
       if process_geocoding.is_a?(TrueClass) || process_geocoding.is_a?(FalseClass)
-        return true if !Gmaps4rails.condition_eval(object, process_geocoding)
-        Gmaps4rails.condition_eval(object, check_process) && object.send(checker)
+        return true if !condition_eval(object, process_geocoding)
+        condition_eval(object, check_process) && object.send(checker)
       else
-        !Gmaps4rails.condition_eval(object, process_geocoding)
+        !condition_eval(object, process_geocoding)
       end
     end
     
     # Do we have to check the geocoding 
     def check_geocoding?
       if process_geocoding.is_a?(TrueClass) || process_geocoding.is_a?(FalseClass)
-        Gmaps4rails.condition_eval(object, check_process)
+        condition_eval(object, check_process)
       else
         false
       end
+    end
+    
+    def condition_eval(*args)
+      Gmaps4rails.condition_eval(*args)
     end
 
   end
