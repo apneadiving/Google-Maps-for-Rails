@@ -151,7 +151,7 @@ describe Gmaps4rails::ActsAsGmappable do
                 DEFAULT_CONFIG_HASH.merge({ :process_geocoding => lambda {|user| true } })
               end
             end
-            user.should_receive :gmaps4rails_save_data
+            Gmaps4rails.should_receive(:geocode)
             user.update_attributes(:address => "Strasbourg, france")
           end
           

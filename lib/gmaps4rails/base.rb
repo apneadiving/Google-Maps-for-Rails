@@ -1,3 +1,4 @@
+require 'gmaps4rails/model_handler'
 require 'gmaps4rails/acts_as_gmappable'
 
 require 'gmaps4rails/js_builder'
