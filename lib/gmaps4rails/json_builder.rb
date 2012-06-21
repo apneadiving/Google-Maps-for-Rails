@@ -1,8 +1,7 @@
 module Gmaps4rails
   
   def Gmaps4rails.create_json(object, &block)
-    json_handler = ::Gmaps4rails::JsonBuilder.new(object, &block)
-    json_handler.process(&block)
+    ::Gmaps4rails::JsonBuilder.new(object).process(&block)
   end
   
   # the to_gmaps4rails method accepts a block to customize:
