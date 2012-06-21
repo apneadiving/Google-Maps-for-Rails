@@ -7,21 +7,37 @@ module Gmaps4rails
 
       def copy_locale
         if Rails::VERSION::MINOR >= 1
-          copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.base.js.coffee',       'app/assets/javascripts/gmaps4rails/gmaps4rails.base.js.coffee'
-          copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.googlemaps.js.coffee', 'app/assets/javascripts/gmaps4rails/gmaps4rails.googlemaps.js.coffee'
-          copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.openlayers.js.coffee', 'app/assets/javascripts/gmaps4rails/gmaps4rails.openlayers.js.coffee'
-          copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.bing.js.coffee',       'app/assets/javascripts/gmaps4rails/gmaps4rails.bing.js.coffee'
-          copy_file '../../../app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee',   'app/assets/javascripts/gmaps4rails/gmaps4rails.mapquest.js.coffee'        
-          copy_file '../../../public/stylesheets/gmaps4rails.css', 'app/assets/stylesheets/gmaps4rails.css'
+          copy_file "#{source_assets_base_path}gmaps4rails.base.js.coffee",       "#{destination_assets_base_path}gmaps4rails.base.js.coffee"
+          copy_file "#{source_assets_base_path}gmaps4rails.googlemaps.js.coffee", "#{destination_assets_base_path}gmaps4rails.googlemaps.js.coffee"
+          copy_file "#{source_assets_base_path}gmaps4rails.openlayers.js.coffee", "#{destination_assets_base_path}gmaps4rails.openlayers.js.coffee"
+          copy_file "#{source_assets_base_path}gmaps4rails.bing.js.coffee",       "#{destination_assets_base_path}gmaps4rails.bing.js.coffee"
+          copy_file "#{source_assets_base_path}gmaps4rails.mapquest.js.coffee",   "#{destination_assets_base_path}gmaps4rails.mapquest.js.coffee"        
+          copy_file "../../../public/stylesheets/gmaps4rails.css", "app/assets/stylesheets/gmaps4rails.css"
         else
         #I don't copy manifests, kind of useless
-          copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.base.js',       'public/javascripts/gmaps4rails/gmaps4rails.base.js'
-          copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js', 'public/javascripts/gmaps4rails/gmaps4rails.googlemaps.js'
-          copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.bing.js',       'public/javascripts/gmaps4rails/gmaps4rails.bing.js'
-          copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.openlayers.js', 'public/javascripts/gmaps4rails/gmaps4rails.openlayers.js'
-          copy_file '../../../public/javascripts/gmaps4rails/gmaps4rails.mapquest.js',   'public/javascripts/gmaps4rails/gmaps4rails.mapquest.js'
-          copy_file '../../../public/stylesheets/gmaps4rails.css',                       'public/stylesheets/gmaps4rails.css'
+          copy_file "#{source_js_base_path}gmaps4rails.base.js",       "#{destination_js_base_path}gmaps4rails.base.js"
+          copy_file "#{source_js_base_path}gmaps4rails.googlemaps.js", "#{destination_js_base_path}gmaps4rails.googlemaps.js"
+          copy_file "#{source_js_base_path}gmaps4rails.bing.js",       "#{destination_js_base_path}gmaps4rails.bing.js"
+          copy_file "#{source_js_base_path}gmaps4rails.openlayers.js", "#{destination_js_base_path}gmaps4rails.openlayers.js"
+          copy_file "#{source_js_base_path}gmaps4rails.mapquest.js",   "#{destination_js_base_path}gmaps4rails.mapquest.js"
+          copy_file "../../../public/stylesheets/gmaps4rails.css",     "public/stylesheets/gmaps4rails.css"
         end
+      end
+      
+      def source_assets_base_path
+        '../../../app/assets/javascripts/gmaps4rails/'
+      end
+      
+      def destination_assets_base_path
+        'app/assets/javascripts/gmaps4rails/'
+      end
+      
+      def source_js_base_path
+        "../../../public/javascripts/gmaps4rails/"
+      end
+      
+      def destination_js_base_path
+        "public/javascripts/gmaps4rails/"
       end
 
       def show_readme
