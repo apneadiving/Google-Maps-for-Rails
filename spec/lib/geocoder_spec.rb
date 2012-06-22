@@ -35,7 +35,6 @@ describe "Geocode" do
     
     it "should raise an error when google server fails" do
       stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=stubbed&language=en&sensor=false").
-        with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
         to_return(:status => 404, :body => "", :headers => {})
       
       lambda { Gmaps4rails.geocode("stubbed")}.should raise_error Gmaps4rails::GeocodeNetStatus
