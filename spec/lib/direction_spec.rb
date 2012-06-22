@@ -7,7 +7,6 @@ describe "Direction" do
   context "valid request" do
     before(:each) do
       stub_request(:get, "http://maps.googleapis.com/maps/api/directions/json?destination=stubbed&language=en&origin=stubbed&sensor=false").
-               with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
                to_return(:status => 200, :body => geocoding, :headers => {})
     end
     

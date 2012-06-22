@@ -9,7 +9,6 @@ describe "Geocode" do
     
     before(:each) do
       stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=stubbed&language=en&sensor=false").
-        with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
         to_return(:status => 200, :body => geocoding, :headers => {})
     end
 
@@ -29,7 +28,6 @@ describe "Geocode" do
     it "should raise an error when geocoding has no answer" do
       wrong_geocoding = File.read "spec/fixtures/google_wrong_geocoding.json"
       stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=stubbed&language=en&sensor=false").
-        with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
         to_return(:status => 200, :body => wrong_geocoding, :headers => {})
         
       lambda { Gmaps4rails.geocode("stubbed")}.should raise_error Gmaps4rails::GeocodeStatus

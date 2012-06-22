@@ -7,7 +7,6 @@ describe "Places" do
   context "valid request" do
     before(:each) do
       stub_request(:get, "https://maps.googleapis.com/maps/api/place/search/json?key=key&language=en&location=0,0&radius=7500&sensor=false").
-               with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
                to_return(:status => 200, :body => places, :headers => {})
     end
     
