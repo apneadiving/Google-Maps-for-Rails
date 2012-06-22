@@ -1,0 +1,58 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "Toulon",
+               "short_name" : "Toulon",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Département Var",
+               "short_name" : "83",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Provence-Alpes-Côte d'Azur",
+               "short_name" : "PACA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "France",
+               "short_name" : "FR",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "Toulon, France",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 43.1716730,
+                  "lng" : 5.987382999999999
+               },
+               "southwest" : {
+                  "lat" : 43.1010490,
+                  "lng" : 5.8794790
+               }
+            },
+            "location" : {
+               "lat" : 43.1242280,
+               "lng" : 5.9280
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 43.1567950,
+                  "lng" : 5.99202970
+               },
+               "southwest" : {
+                  "lat" : 43.09164370,
+                  "lng" : 5.86397030
+               }
+            }
+         },
+         "types" : [ "locality", "political" ]
+      }
+   ],
+   "status" : "OK"
+}

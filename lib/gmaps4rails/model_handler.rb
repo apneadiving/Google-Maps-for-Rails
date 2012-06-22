@@ -1,6 +1,3 @@
-require 'ostruct'
-require 'active_support'
-
 module Gmaps4rails
   
   class ModelHandler
@@ -13,7 +10,7 @@ module Gmaps4rails
   
     def initialize(object, gmaps4rails_options)
       @options = ::OpenStruct.new(gmaps4rails_options)
-      @object = object
+      @object  = object
     end
     
     # saves coordinates according to the various options

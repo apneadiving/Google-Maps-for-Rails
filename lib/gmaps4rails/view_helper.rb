@@ -1,5 +1,3 @@
-require 'ostruct'
-
 module Gmaps4rails
   
   class ViewHelper

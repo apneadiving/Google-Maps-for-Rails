@@ -4,6 +4,10 @@ require 'json'
 
 module Gmaps4rails
   
+  class DirectionStatus       < StandardError; end
+  class DirectionNetStatus    < StandardError; end
+  class DirectionInvalidQuery < StandardError; end
+  
   # This method retrieves destination results provided by GoogleMaps webservice
   # options are:
   # * start_end: Hash { "from" => string, "to" => string}, mandatory

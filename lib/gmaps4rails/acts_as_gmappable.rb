@@ -54,5 +54,5 @@ module Gmaps4rails
       end
     end
 
-  end #ActsAsGmappable
+  end
 end

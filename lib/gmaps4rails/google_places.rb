@@ -1,5 +1,9 @@
 module Gmaps4rails
   
+  class PlacesStatus          < StandardError; end
+  class PlacesNetStatus       < StandardError; end
+  class PlacesInvalidQuery    < StandardError; end
+  
   # does two things... 1) gecode the given address string and 2) triggers a a places query around that geo location
   # optionally a keyword can be given for a filter over all places fields (e.g. "Bungy" to give all Bungy related places)
   # IMPORTANT: Places API calls require an API key (param "key")

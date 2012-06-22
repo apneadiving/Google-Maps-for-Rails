@@ -1,9 +1,4 @@
-module Gmaps4rails
-  
-  def Gmaps4rails.create_json(object, &block)
-    ::Gmaps4rails::JsonBuilder.new(object).process(&block)
-  end
-  
+module Gmaps4rails  
   # the to_gmaps4rails method accepts a block to customize:
   # - infowindow
   # - picture

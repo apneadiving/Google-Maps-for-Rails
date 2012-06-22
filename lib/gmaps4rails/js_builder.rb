@@ -1,9 +1,4 @@
 module Gmaps4rails
-  
-  def Gmaps4rails.create_js_from_hash(hash)
-    ::Gmaps4rails::JsBuilder.new(hash).create_js
-  end
-  
   class JsBuilder
     
     DEFAULT_MAP_ID = "map"
