@@ -19,7 +19,7 @@ module Gmaps4rails
   autoload :BaseNetMethods,   'gmaps4rails/api_wrappers/base_net_methods'
   autoload :Geocoder,         'gmaps4rails/api_wrappers/geocoder'
   autoload :Direction,        'gmaps4rails/api_wrappers/direction'
-  #autoload 'gmaps4rails/google_places'
+  autoload :Places,           'gmaps4rails/api_wrappers/places'
 
   mattr_accessor :http_proxy
   
@@ -54,6 +54,30 @@ module Gmaps4rails
      Gmaps4rails::Direction.new(start_end, options, output).get
   end
   
+  # does two things... 1) gecode the given address string and 2) triggers a a places query around that geo location
+  # optionally a keyword can be given for a filter over all places fields (e.g. "Bungy" to give all Bungy related places)
+  # IMPORTANT: Places API calls require an API key (param "key")
+ 
+  def Gmaps4rails.places_for_address(address, key, keyword = nil, radius = 7500, lang="en", raw = false)
+    raise Gmaps4rails::GeocodeInvalidQuery, "you must provide an address for a places_for_address query" if address.nil?
+    raise "Google Places API requires an API key" if key.nil?
+    res = Gmaps4rails.geocode(address)  # will throw exception if nothing could be geocoded
+    Gmaps4rails.places(res.first[:lat], res.first[:lng], key, keyword, radius, lang, raw)
+  end
+  
+  # does a places query around give geo location (lat/lng)
+  # optionally a keyword can be given for a filter over all places fields (e.g. "Bungy" to give all Bungy related places)
+  # IMPORTANT: Places API calls require an API key (param "key")
+  def Gmaps4rails.places(lat, lng, key, keyword = nil, radius = 7500, lang="en", raw = false, protocol = "https")
+    Gmaps4rails::Places.new(lat, lng, {
+      :key      => key,
+      :keyword  => keyword,
+      :radius   => radius, 
+      :lang     => lang,
+      :raw      => raw,
+      :protocol => protocol
+    }).get
+  end
   
   private
   
@@ -65,19 +89,16 @@ module Gmaps4rails
   class DirectionNetStatus    < StandardError; end
   class DirectionInvalidQuery < StandardError; end
   
+  class PlacesStatus          < StandardError; end
+  class PlacesNetStatus       < StandardError; end
+  class PlacesInvalidQuery    < StandardError; end
+  
   def Gmaps4rails.condition_eval(object, condition)
     case condition
     when Symbol, String        then object.send condition
     when Proc                  then condition.call(object)
     when TrueClass, FalseClass then condition
     end
-  end
-
-  # get the response from the url encoded address string
-  def Gmaps4rails.get_response(url)
-    url = URI.parse(url)
-    http = Gmaps4rails.http_agent
-    http.get_response(url)
   end
   
   # looks for proxy settings and returns a Net::HTTP or Net::HTTP::Proxy class

@@ -15,7 +15,7 @@ module Gmaps4rails
     end
 
     def response
-      @response ||= Gmaps4rails.get_response(base_url)
+      @response ||= get_response
     end
 
     def valid_response?
@@ -28,6 +28,12 @@ module Gmaps4rails
 
     def parsed_response
       @parsed_response ||= JSON.parse(response.body)
+    end
+    
+    def get_response
+      url = URI.parse(base_url)
+      http = Gmaps4rails.http_agent
+      http.get_response(url)
     end
     
   end
