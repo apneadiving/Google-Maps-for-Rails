@@ -14,9 +14,11 @@ module Gmaps4rails
   autoload :JsBuilder,        'gmaps4rails/js_builder'
   autoload :JsonBuilder,      'gmaps4rails/json_builder'
   autoload :ViewHelper,       'gmaps4rails/view_helper'
-  autoload :Geocoder,         'gmaps4rails/geocoder'
   autoload :Gmaps4railsHelper,'gmaps4rails/helper/gmaps4rails_helper'
-  #autoload :Destination       'gmaps4rails/destination'
+  
+  autoload :BaseNetMethods,   'gmaps4rails/api_wrappers/base_net_methods'
+  autoload :Geocoder,         'gmaps4rails/api_wrappers/geocoder'
+  autoload :Direction,        'gmaps4rails/api_wrappers/direction'
   #autoload 'gmaps4rails/google_places'
 
   mattr_accessor :http_proxy
@@ -42,11 +44,26 @@ module Gmaps4rails
     ::Gmaps4rails::JsBuilder.new(hash).create_js
   end
   
+  # This method retrieves destination results provided by GoogleMaps webservice
+  # options are:
+  # * start_end: Hash { "from" => string, "to" => string}, mandatory
+  # * options: details given in the github's wiki
+  # * output: could be "pretty", "raw" or "clean"; filters the output from google
+  #output could be raw, pretty or clean
+  def Gmaps4rails.destination(start_end, options={}, output="pretty")
+     Gmaps4rails::Direction.new(start_end, options, output).get
+  end
+  
+  
   private
   
   class GeocodeStatus         < StandardError; end
   class GeocodeNetStatus      < StandardError; end
   class GeocodeInvalidQuery   < StandardError; end
+  
+  class DirectionStatus       < StandardError; end
+  class DirectionNetStatus    < StandardError; end
+  class DirectionInvalidQuery < StandardError; end
   
   def Gmaps4rails.condition_eval(object, condition)
     case condition
