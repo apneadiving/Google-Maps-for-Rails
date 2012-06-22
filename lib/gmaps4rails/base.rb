@@ -44,6 +44,10 @@ module Gmaps4rails
   
   private
   
+  class GeocodeStatus         < StandardError; end
+  class GeocodeNetStatus      < StandardError; end
+  class GeocodeInvalidQuery   < StandardError; end
+  
   def Gmaps4rails.condition_eval(object, condition)
     case condition
     when Symbol, String        then object.send condition

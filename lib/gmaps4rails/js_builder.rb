@@ -107,7 +107,7 @@ module Gmaps4rails
       end
       
       def create_standard_js
-        @js << "#{@gmap_id}.#{@name} = #{value};"
+        @js << "#{@gmap_id}.#{@name} = #{data};"
 
         set_configuration_variables
 
@@ -115,8 +115,8 @@ module Gmaps4rails
       end
 
       def create_direction_js
-        @js << "#{@gmap_id}.direction_conf.origin = '#{value["from"]}';"
-        @js << "#{@gmap_id}.direction_conf.destination = '#{value["to"]}';"
+        @js << "#{@gmap_id}.direction_conf.origin = '#{data["from"]}';"
+        @js << "#{@gmap_id}.direction_conf.destination = '#{data["to"]}';"
 
         set_direction_variables
 

@@ -1,9 +1,5 @@
 module Gmaps4rails
   
-  class GeocodeStatus         < StandardError; end
-  class GeocodeNetStatus      < StandardError; end
-  class GeocodeInvalidQuery   < StandardError; end
-  
   class Geocoder
     attr_reader :address, :language, :raw, :protocol
     
