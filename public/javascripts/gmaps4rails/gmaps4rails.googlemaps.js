@@ -211,6 +211,19 @@
       return marker.serviceObject.setVisible(false);
     };
 
+    Gmaps4Rails.prototype.bounceMarker = function(marker) {
+      return marker.serviceObject.setAnimation(google.maps.Animation.BOUNCE)
+    };
+
+    Gmaps4Rails.prototype.dropMarker = function(marker) {
+      return marker.serviceObject.setAnimation(google.maps.Animation.DROP)
+    };
+
+    Gmaps4Rails.prototype.freezeMarker = function(marker) {
+      return marker.serviceObject.setAnimation(false)
+    };
+
+
     Gmaps4RailsGoogle.prototype.extendBoundsWithMarkers = function() {
       var marker, _i, _len, _ref, _results;
       _ref = this.markers;
