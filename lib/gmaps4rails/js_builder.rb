@@ -89,9 +89,13 @@ module Gmaps4rails
     class Datum
       # example:
       # - name: :markers
-      # - hash: { :data => json, :options => hash }      
+      # - hash: { :data => json, :options => hash }
+      
+      delegate :options, :data, :to => :@element_info
+      
       def initialize(gmap_id, name, hash)
-        @gmap_id, @hash, @name, @js = gmap_id, hash, name, Array.new
+        @gmap_id, @name, @js = gmap_id, name, Array.new
+        @element_info = OpenStruct.new(hash)
       end
       
       def create_js
@@ -145,13 +149,6 @@ module Gmaps4rails
         end
       end
       
-      def options
-        @hash[:options]
-      end
-      
-      def value
-        @hash[:data]
-      end
     end
   end
 
