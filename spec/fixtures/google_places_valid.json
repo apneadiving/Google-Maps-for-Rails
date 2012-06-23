@@ -1,0 +1,45 @@
+{
+  "html_attributions" : [
+    "Listings by \u003ca href=\"http://www.yellowpages.com.au/\"\u003eYellow Pages\u003c/a\u003e"
+  ],
+  "results" : [
+    {
+      "geometry" : {
+        "location" : {
+          "lat" : -33.8719830,
+          "lng" : 151.1990860
+        }
+      },
+      "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+      "id" : "677679492a58049a7eae079e0890897eb953d79b",
+      "name" : "Zaaffran Restaurant - BBQ and GRILL, Darling Harbour",
+      "rating" : 3.90,
+      "reference" : "CpQBjAAAAHDHuimUQATR6gfoWNmZlk5dKUKq_n46BpSzPQCjk1m9glTKkiAHH_Gs4xGttdOSj35WJJDAV90dAPnNnZK2OaxMgogdeHKQhIedh6UduFrW53wtwXigUfpAzsCgIzYNI0UQtCj38cr_DE56RH4Wi9d2bWbbIuRyDX6tx2Fmk2EQzO_lVJ-oq4ZY5uI6I75RnxIQJ6smWUVVIHup9Jvc517DKhoUidfNPyQZZIgGiXS_SwGQ1wg0gtc",
+      "types" : [ "restaurant", "food", "establishment" ],
+      "vicinity" : "Harbourside Centre 10 Darling Drive, Darling Harbour, Sydney"
+    },
+    {
+      "geometry" : {
+        "location" : {
+          "lat" : -33.8722580,
+          "lng" : 151.1986550
+        }
+      },
+      "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+      "id" : "27ea39c8fed1c0437069066b8dccf958a2d06f19",
+      "name" : "Criniti's Darling Harbour",
+      "rating" : 3.60,
+      "reference" : "CnRwAAAA-5kh5WZ3m1CMTO3LslvhRtAYsrOcQP7wB9AE1bV5R6Bd46NN5wB16MtImXWQ9eS1nWVbV_j-8iXYXRpU13Efp1t_d-Dp4WfEsFcYj-_g6db1SC1vAukyeCyotjS5xrwhzqWWAhgmA4qIliWeev2u1BIQprWzxl_hkj_w3QdTiUBYKxoUDVTjF4RugJdaJWkC4n6w6pSajKw",
+      "types" : [ "restaurant", "food", "establishment" ],
+      "vicinity" : "Shop 461, 2-10 Darling Drive, Harbourside Shopping Centre, DARLING HARBOUR",
+      "events" : [
+        {
+          "event_id" : "7lH_gK1GphU",
+          "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
+          "url" : "https://developers.google.com/maps/documentation/places"
+        }
+      ]
+    }
+  ],
+  "status" : "OK"
+}

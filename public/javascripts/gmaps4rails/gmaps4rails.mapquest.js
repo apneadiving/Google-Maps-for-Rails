@@ -159,6 +159,18 @@
       return this.serviceObject.removeShape(object);
     };
 
+    Gmaps4RailsMapquest.prototype.updateBoundsWithPolylines = function() {};
+
+    Gmaps4RailsMapquest.prototype.updateBoundsWithPolygons = function() {};
+
+    Gmaps4RailsMapquest.prototype.updateBoundsWithCircles = function() {};
+
+    Gmaps4RailsMapquest.prototype.extendMapBounds = function() {};
+
+    Gmaps4RailsMapquest.prototype.adaptMapToBounds = function() {
+      return this.fitBounds();
+    };
+
     return Gmaps4RailsMapquest;
 
   })(Gmaps4Rails);

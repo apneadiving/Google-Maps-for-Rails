@@ -1,9 +1,4 @@
 module Gmaps4rails
-  
-  def Gmaps4rails.create_js_from_hash(hash)
-    ::Gmaps4rails::JsBuilder.new(hash).create_js
-  end
-  
   class JsBuilder
     
     DEFAULT_MAP_ID = "map"
@@ -94,9 +89,13 @@ module Gmaps4rails
     class Datum
       # example:
       # - name: :markers
-      # - hash: { :data => json, :options => hash }      
+      # - hash: { :data => json, :options => hash }
+      
+      delegate :options, :data, :to => :@element_info
+      
       def initialize(gmap_id, name, hash)
-        @gmap_id, @hash, @name, @js = gmap_id, hash, name, Array.new
+        @gmap_id, @name, @js = gmap_id, name, Array.new
+        @element_info = OpenStruct.new(hash)
       end
       
       def create_js
@@ -108,7 +107,7 @@ module Gmaps4rails
       end
       
       def create_standard_js
-        @js << "#{@gmap_id}.#{@name} = #{value};"
+        @js << "#{@gmap_id}.#{@name} = #{data};"
 
         set_configuration_variables
 
@@ -116,8 +115,8 @@ module Gmaps4rails
       end
 
       def create_direction_js
-        @js << "#{@gmap_id}.direction_conf.origin = '#{value["from"]}';"
-        @js << "#{@gmap_id}.direction_conf.destination = '#{value["to"]}';"
+        @js << "#{@gmap_id}.direction_conf.origin = '#{data["from"]}';"
+        @js << "#{@gmap_id}.direction_conf.destination = '#{data["to"]}';"
 
         set_direction_variables
 
@@ -150,13 +149,6 @@ module Gmaps4rails
         end
       end
       
-      def options
-        @hash[:options]
-      end
-      
-      def value
-        @hash[:data]
-      end
     end
   end
 

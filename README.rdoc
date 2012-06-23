@@ -1,4 +1,4 @@
-== Google Maps for Rails (gmaps4rails) {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails]
+== Google Maps for Rails (gmaps4rails) {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails]
 
 Gmaps4rails is developed to simply create a Google Map:
 
@@ -136,4 +136,4 @@ MIT license.
 
 Authors: Benjamin Roth, David Ruyer
 
-Contributors: Mircea Pricop, Kamil Śliwak, Alex Vorobiev
+{Contributors}[https://github.com/apneadiving/Google-Maps-for-Rails/graphs/contributors]

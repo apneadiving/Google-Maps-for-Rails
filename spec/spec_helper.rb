@@ -10,6 +10,7 @@ Spork.prefork do
   require 'factory_girl_rails'
   require 'database_cleaner'
   require "jasmine"
+  require 'webmock/rspec'
   
  Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each   {|f| require f }
  FactoryGirl.definition_file_paths = [ File.join(Rails.root, '../factories') ]

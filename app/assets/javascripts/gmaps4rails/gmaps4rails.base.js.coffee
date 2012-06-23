@@ -70,6 +70,14 @@ class @Gmaps4Rails
     @markerClusterer = null  # contains all marker clusterers
     @markerImages = []
 
+	#Polyline Styling
+    @polylines_conf =         #default style for polylines
+      strokeColor: "#FF0000"
+      strokeOpacity: 1
+      strokeWeight: 2
+      clickable: false
+      zIndex: null
+
   #tnitializes the map
   initialize : ->
     @serviceObject = @createMap()
@@ -228,73 +236,7 @@ class @Gmaps4Rails
     #save polygon in list
     polygon.serviceObject = new_poly
 
-  #////////////////////////////////////////////////////
-  #/////////////////// POLYLINES //////////////////////
-  #////////////////////////////////////////////////////
-
-  #replace old markers with new markers on an existing map
-  replacePolylines : (new_polylines) ->
-    #reset previous polylines and kill them from map
-    @destroy_polylines()
-    #set new polylines
-    @polylines = new_polylines
-    #create
-    @create_polylines()
-    #.... and adjust map boundaries
-    @adjustMapToBounds()
-
-  destroy_polylines : ->
-    for polyline in @polylines
-      #delete polylines from map
-      polyline.serviceObject.setMap(null)
-    #empty array
-    @polylines = []
-
-  #polylines is an array of arrays. It loops.
-  create_polylines : ->
-    for polyline in @polylines
-      @create_polyline polyline
-
-  #creates a single polyline, triggered by create_polylines
-  create_polyline : (polyline) ->
-    polyline_coordinates = []
-
-    #2 cases here, either we have a coded array of LatLng or we have an Array of LatLng
-    for element in polyline
-      #if we have a coded array
-      if element.coded_array?
-        decoded_array = new google.maps.geometry.encoding.decodePath(element.coded_array)
-        #loop through every point in the array
-        for point in decoded_array
-          polyline_coordinates.push(point)
-
-      #or we have an array of latlng
-      else
-        #by convention, a single polyline could be customized in the first array or it uses default values
-        if element == polyline[0]
-          strokeColor   = element.strokeColor   || @polylines_conf.strokeColor
-          strokeOpacity = element.strokeOpacity || @polylines_conf.strokeOpacity
-          strokeWeight  = element.strokeWeight  || @polylines_conf.strokeWeight
-          clickable     = element.clickable     || @polylines_conf.clickable
-          zIndex        = element.zIndex        || @polylines_conf.zIndex
-
-        #add latlng if positions provided
-        if element.lat? && element.lng?
-          latlng = @createLatLng(element.lat, element.lng)
-          polyline_coordinates.push(latlng)
-
-    # Construct the polyline
-    new_poly = new google.maps.Polyline
-      path:         polyline_coordinates
-      strokeColor:  strokeColor
-      strokeOpacity: strokeOpacity
-      strokeWeight: strokeWeight
-      clickable:    clickable
-      zIndex:       zIndex
-
-    #save polyline
-    polyline.serviceObject = new_poly
-    new_poly.setMap(@serviceObject)
+  
 
   #////////////////////////////////////////////////////
   #///////////////////// MARKERS //////////////////////
@@ -421,47 +363,46 @@ class @Gmaps4Rails
         @extendBoundsWithMarkers()
 
         #from polylines:
-        for polyline in @polylines
-          polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-          for point in polyline_points
-            @boundsObject.extend point
+        @updateBoundsWithPolylines()
 
         #from polygons:
-        for polygon in @polygons
-          polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-          for point in polygon_points
-            @boundsObject.extend point
+        @updateBoundsWithPolygons()
 
         #from circles
-        for circle in @circles
-          @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-          @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+        @updateBoundsWithCircles()
 
       #in every case, I've to take into account the bounds set up by the user
-      for bound in @map_options.bounds
-        #create points from bounds provided
-        #TODO:only works with google maps
-        bound = @createLatLng(bound.lat, bound.lng)
-        @boundsObject.extend bound
+      @extendMapBounds()
 
       #SECOND_STEP: ajust the map to the bounds
-
-      #if autozoom is false, take user info into account
-      if !@map_options.auto_zoom
-        map_center = @boundsObject.getCenter()
-        @map_options.center_latitude  = map_center.lat()
-        @map_options.center_longitude = map_center.lng()
-        @serviceObject.setCenter(map_center)
-      else
-        @fitBounds()
+      @adaptMapToBounds()
 
   #////////////////////////////////////////////////////
-  #/////////////////        KML      //////////////////
+  #/////////////////// POLYLINES //////////////////////
   #////////////////////////////////////////////////////
 
-  create_kml : ->
-    for kml in @kml
-      kml.serviceObject = @createKmlLayer kml
+  #replace old markers with new markers on an existing map
+  replacePolylines : (new_polylines) ->
+    #reset previous polylines and kill them from map
+    @destroy_polylines()
+    #set new polylines
+    @polylines = new_polylines
+    #create
+    @create_polylines()
+    #.... and adjust map boundaries
+    @adjustMapToBounds()
+
+  destroy_polylines : ->
+    for polyline in @polylines
+      #delete polylines from map
+      polyline.serviceObject.setMap(null)
+    #empty array
+    @polylines = []
+
+  #polylines is an array of arrays. It loops.
+  create_polylines : ->
+    for polyline in @polylines
+      @create_polyline polyline
 
   #////////////////////////////////////////////////////
   #///////////////// Basic functions //////////////////

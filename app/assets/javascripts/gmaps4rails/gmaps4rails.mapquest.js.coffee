@@ -132,3 +132,14 @@ class @Gmaps4RailsMapquest extends Gmaps4Rails
 
   removeFromMap: (object)->
     @serviceObject.removeShape object
+    
+  updateBoundsWithPolylines: ()->
+
+  updateBoundsWithPolygons: ()->
+
+  updateBoundsWithCircles: ()->
+    
+  extendMapBounds :->
+
+  adaptMapToBounds: ->
+    @fitBounds()

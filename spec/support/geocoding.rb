@@ -1,5 +1,31 @@
 module Geocoding
-  def self.stub_gecoding
+  
+  DEFAULT_CONFIG_HASH = {
+    :lat_column     => "latitude",
+    :lng_column     => "longitude",
+    :check_process  => true,
+    :checker        => "gmaps",
+    :msg            => "Address invalid",
+    :validation     => true,
+    :address        => "address",
+    :language       => "en",
+    :protocol       => "http",
+    :process_geocoding => true
+  }
+
+  PARIS  = { :latitude => 48.856614, :longitude => 2.3522219 }
+  TOULON = { :latitude => 43.124228, :longitude => 5.928 }
+
+  #set model configuration
+  def set_gmaps4rails_options!(change_conf = {})
+    User.class_eval do
+      define_method "gmaps4rails_options" do
+        DEFAULT_CONFIG_HASH.merge(change_conf)
+      end
+    end
+  end
+  
+  def self.stub_geocoding
     Gmaps4rails.stub(:geocode) do |*args|
       case args[0]
       when "Paris, France"

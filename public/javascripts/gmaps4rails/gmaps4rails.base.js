@@ -80,6 +80,13 @@
       this.circles = [];
       this.markerClusterer = null;
       this.markerImages = [];
+      this.polylines_conf = {
+        strokeColor: "#FF0000",
+        strokeOpacity: 1,
+        strokeWeight: 2,
+        clickable: false,
+        zIndex: null
+      };
     }
 
     Gmaps4Rails.prototype.initialize = function() {
@@ -273,71 +280,6 @@
       return polygon.serviceObject = new_poly;
     };
 
-    Gmaps4Rails.prototype.replacePolylines = function(new_polylines) {
-      this.destroy_polylines();
-      this.polylines = new_polylines;
-      this.create_polylines();
-      return this.adjustMapToBounds();
-    };
-
-    Gmaps4Rails.prototype.destroy_polylines = function() {
-      var polyline, _i, _len, _ref;
-      _ref = this.polylines;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        polyline = _ref[_i];
-        polyline.serviceObject.setMap(null);
-      }
-      return this.polylines = [];
-    };
-
-    Gmaps4Rails.prototype.create_polylines = function() {
-      var polyline, _i, _len, _ref, _results;
-      _ref = this.polylines;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        polyline = _ref[_i];
-        _results.push(this.create_polyline(polyline));
-      }
-      return _results;
-    };
-
-    Gmaps4Rails.prototype.create_polyline = function(polyline) {
-      var clickable, decoded_array, element, latlng, new_poly, point, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _j, _len, _len2;
-      polyline_coordinates = [];
-      for (_i = 0, _len = polyline.length; _i < _len; _i++) {
-        element = polyline[_i];
-        if (element.coded_array != null) {
-          decoded_array = new google.maps.geometry.encoding.decodePath(element.coded_array);
-          for (_j = 0, _len2 = decoded_array.length; _j < _len2; _j++) {
-            point = decoded_array[_j];
-            polyline_coordinates.push(point);
-          }
-        } else {
-          if (element === polyline[0]) {
-            strokeColor = element.strokeColor || this.polylines_conf.strokeColor;
-            strokeOpacity = element.strokeOpacity || this.polylines_conf.strokeOpacity;
-            strokeWeight = element.strokeWeight || this.polylines_conf.strokeWeight;
-            clickable = element.clickable || this.polylines_conf.clickable;
-            zIndex = element.zIndex || this.polylines_conf.zIndex;
-          }
-          if ((element.lat != null) && (element.lng != null)) {
-            latlng = this.createLatLng(element.lat, element.lng);
-            polyline_coordinates.push(latlng);
-          }
-        }
-      }
-      new_poly = new google.maps.Polyline({
-        path: polyline_coordinates,
-        strokeColor: strokeColor,
-        strokeOpacity: strokeOpacity,
-        strokeWeight: strokeWeight,
-        clickable: clickable,
-        zIndex: zIndex
-      });
-      polyline.serviceObject = new_poly;
-      return new_poly.setMap(this.serviceObject);
-    };
-
     Gmaps4Rails.prototype.create_markers = function() {
       this.createServiceMarkersFromMarkers();
       return this.clusterize();
@@ -435,62 +377,43 @@
     };
 
     Gmaps4Rails.prototype.adjustMapToBounds = function() {
-      var bound, circle, map_center, point, polygon, polygon_points, polyline, polyline_points, _i, _j, _k, _l, _len, _len2, _len3, _len4, _len5, _len6, _m, _n, _ref, _ref2, _ref3, _ref4;
       if (this.map_options.auto_adjust || this.map_options.bounds !== null) {
         this.boundsObject = this.createLatLngBounds();
-      }
-      if (this.map_options.auto_adjust) {
-        this.extendBoundsWithMarkers();
-        _ref = this.polylines;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          polyline = _ref[_i];
-          polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray();
-          for (_j = 0, _len2 = polyline_points.length; _j < _len2; _j++) {
-            point = polyline_points[_j];
-            this.boundsObject.extend(point);
-          }
+        if (this.map_options.auto_adjust) {
+          this.extendBoundsWithMarkers();
+          this.updateBoundsWithPolylines();
+          this.updateBoundsWithPolygons();
+          this.updateBoundsWithCircles();
         }
-        _ref2 = this.polygons;
-        for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
-          polygon = _ref2[_k];
-          polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray();
-          for (_l = 0, _len4 = polygon_points.length; _l < _len4; _l++) {
-            point = polygon_points[_l];
-            this.boundsObject.extend(point);
-          }
-        }
-        _ref3 = this.circles;
-        for (_m = 0, _len5 = _ref3.length; _m < _len5; _m++) {
-          circle = _ref3[_m];
-          this.boundsObject.extend(circle.serviceObject.getBounds().getNorthEast());
-          this.boundsObject.extend(circle.serviceObject.getBounds().getSouthWest());
-        }
-      }
-      _ref4 = this.map_options.bounds;
-      for (_n = 0, _len6 = _ref4.length; _n < _len6; _n++) {
-        bound = _ref4[_n];
-        bound = this.createLatLng(bound.lat, bound.lng);
-        this.boundsObject.extend(bound);
-      }
-      if (this.map_options.auto_adjust || this.map_options.bounds.length > 0) {
-        if (!this.map_options.auto_zoom) {
-          map_center = this.boundsObject.getCenter();
-          this.map_options.center_latitude = map_center.lat();
-          this.map_options.center_longitude = map_center.lng();
-          return this.serviceObject.setCenter(map_center);
-        } else {
-          return this.fitBounds();
-        }
+        this.extendMapBounds();
+        return this.adaptMapToBounds();
       }
     };
 
-    Gmaps4Rails.prototype.create_kml = function() {
-      var kml, _i, _len, _ref, _results;
-      _ref = this.kml;
+    Gmaps4Rails.prototype.replacePolylines = function(new_polylines) {
+      this.destroy_polylines();
+      this.polylines = new_polylines;
+      this.create_polylines();
+      return this.adjustMapToBounds();
+    };
+
+    Gmaps4Rails.prototype.destroy_polylines = function() {
+      var polyline, _i, _len, _ref;
+      _ref = this.polylines;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        polyline = _ref[_i];
+        polyline.serviceObject.setMap(null);
+      }
+      return this.polylines = [];
+    };
+
+    Gmaps4Rails.prototype.create_polylines = function() {
+      var polyline, _i, _len, _ref, _results;
+      _ref = this.polylines;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        kml = _ref[_i];
-        _results.push(kml.serviceObject = this.createKmlLayer(kml));
+        polyline = _ref[_i];
+        _results.push(this.create_polyline(polyline));
       }
       return _results;
     };

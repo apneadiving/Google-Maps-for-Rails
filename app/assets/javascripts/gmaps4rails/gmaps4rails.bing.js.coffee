@@ -161,3 +161,14 @@ class @Gmaps4RailsBing extends Gmaps4Rails
 
   centerMapOnUser: ->
     @serviceObject.setView({ center: @userLocation})
+
+  updateBoundsWithPolylines: ()->
+
+  updateBoundsWithPolygons: ()->
+
+  updateBoundsWithCircles: ()->
+  
+  extendMapBounds :->
+
+  adaptMapToBounds: ->
+    @fitBounds()
