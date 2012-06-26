@@ -5,7 +5,7 @@ require 'ostruct'
 
 module Gmaps4rails
   
-  require 'gmaps4rails/extensions/array'
+  require 'gmaps4rails/extensions/enumerable'
   require 'gmaps4rails/extensions/hash'
   
   autoload :ModelHandler,     'gmaps4rails/model_handler'
