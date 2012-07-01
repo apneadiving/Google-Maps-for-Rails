@@ -7,7 +7,7 @@ set_gmaps4rails_options!
 describe Gmaps4rails::ActsAsGmappable do
 
   let(:user)         { Factory(:user) }
-  let(:invalid_user) { Factory.build(:invalid_user) }
+  let(:invalid_user) { FactoryGirl.build(:invalid_user) }
   
   before(:each) do
     Geocoding.stub_geocoding

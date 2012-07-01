@@ -9,3 +9,4 @@ test/dummy/log/**/*
 test/dummy/.rvmrc
 pkg
 .idea
+.redcar
