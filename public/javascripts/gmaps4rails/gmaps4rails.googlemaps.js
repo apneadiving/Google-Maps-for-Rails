@@ -199,6 +199,39 @@
       return _results;
     };
 
+    Gmaps4RailsGoogle.prototype.bounceMarkers = function() {
+      var marker, _i, _len, _ref, _results;
+      _ref = this.markers;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        marker = _ref[_i];
+        _results.push(this.bounceMarker(marker));
+      }
+      return _results;
+    };
+
+    Gmaps4RailsGoogle.prototype.dropMarkers = function() {
+      var marker, _i, _len, _ref, _results;
+      _ref = this.markers;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        marker = _ref[_i];
+        _results.push(this.dropMarker(marker));
+      }
+      return _results;
+    };
+
+    Gmaps4RailsGoogle.prototype.freezeMarkers = function() {
+      var marker, _i, _len, _ref, _results;
+      _ref = this.markers;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        marker = _ref[_i];
+        _results.push(this.freezeMarker(marker));
+      }
+      return _results;
+    };
+
     Gmaps4RailsGoogle.prototype.clearMarker = function(marker) {
       return marker.serviceObject.setMap(null);
     };
