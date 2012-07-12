@@ -66,10 +66,10 @@ module Gmaps4rails
       when "mapquest"    then @js_array << "#{MAPQUEST}?key=#{provider_key}"
       when "bing"        then @js_array << BING
       else #case googlemaps which is the default
-        @js_array << "#{GOOGLE}&sensor=false&key=#{provider_key}&libraries=geometry#{google_libraries}&#{google_map_i18n}".html_safe)
-        @js_array << "#{GOOGLE_EXT}tags/infobox/1.1.9/src/infobox_packed.js"                     if custom_infowindow_class
-        @js_array << "#{GOOGLE_EXT}tags/markerclustererplus/2.0.9/src/markerclusterer_packed.js" if do_clustering
-        @js_array << "#{GOOGLE_EXT}trunk/richmarker/src/richmarker-compiled.js"                  if rich_marker
+        @js_array << "#{GOOGLE}&sensor=false&key=#{provider_key}&libraries=geometry#{google_libraries}&#{google_map_i18n}".html_safe
+        @js_array << "#{GOOGLE_EXT}tags/infobox/1.1.9/src/infobox_packed.js".html_safe                      if custom_infowindow_class
+        @js_array << "#{GOOGLE_EXT}tags/markerclustererplus/2.0.9/src/markerclusterer_packed.js".html_safe  if do_clustering
+        @js_array << "#{GOOGLE_EXT}trunk/richmarker/src/richmarker-compiled.js".html_safe                   if rich_marker
       end
     end
     
