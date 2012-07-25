@@ -85,10 +85,10 @@
                         :options => {"list_container" => "markers_list" }
                        })%>
 <div id="markers_list"></div>
-<%#= gmaps(:map_options => { :auto_adjust => true },
+<%= gmaps(:map_options => { :auto_adjust => false },
       :markers => { :data => '[{"lat":42.3124,"lng":71.1712}]', :options => {:do_clustering => true} }) %>
 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
   {"lng": 7.118292, "lat": 45.466465},

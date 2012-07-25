@@ -2,17 +2,17 @@
 ##############################################  Google maps  ##########################################
 #######################################################################################################
 
-class @Gmaps4RailsGoogle extends Gmaps4Rails
+class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
+
+  @include Gmaps4Rails.MapBase
 
   constructor: ->
-    super
     #Map settings
     @map_options =
       disableDefaultUI:       false
       disableDoubleClickZoom: false
       type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
 
-    #markers + info styling
     @markers_conf =
       clusterer_gridSize:      50
       clusterer_maxZoom:       5
@@ -64,15 +64,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
   #/////////////// Basic Objects         //////////////
   #////////////////////////////////////////////////////
 
-  createPoint : (lat, lng) ->
-    return new google.maps.Point(lat, lng)
-
-  createLatLng : (lat, lng) ->
-    return new google.maps.LatLng(lat, lng)
-
-  createLatLngBounds : ->
-    return new google.maps.LatLngBounds()
-
   createMap : ->
     defaultOptions =
       maxZoom:                @map_options.maxZoom
@@ -90,94 +81,20 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
     return new google.maps.Map document.getElementById(@map_options.id), mergedOptions
 
 
-  createMarkerImage : (markerPicture, markerSize, origin, anchor, scaledSize) ->
-    return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize)
+  #create google.maps Markers from data provided by user
+  createServiceMarkersFromMarkers : ->
+    tempArray = []
+    for marker, index in @markers
+      tempArray.push new Gmaps4Rails.GoogleMarker(marker, @serviceObject)
+    @markers = tempArray
 
-  createSize : (width, height) ->
-    return new google.maps.Size(width, height)
+  createLatLng : (lat, lng) ->
+    return new google.maps.LatLng(lat, lng)
 
   #////////////////////////////////////////////////////
   #////////////////////// Markers /////////////////////
   #////////////////////////////////////////////////////
 
-  createMarker : (args) ->
-    markerLatLng = @createLatLng(args.Lat, args.Lng)
-    #Marker sizes are expressed as a Size of X,Y
-    if args.marker_picture == "" and args.rich_marker == null
-      defaultOptions = {position: markerLatLng, map: @serviceObject, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
-      mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
-      return new google.maps.Marker mergedOptions
-
-    if (args.rich_marker != null)
-      return new RichMarker({
-        position: markerLatLng
-        map:       @serviceObject
-        draggable: args.marker_draggable
-        content:   args.rich_marker
-        flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
-        anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
-        zIndex:    args.zindex
-      })
-
-    #default behavior
-    #calculate MarkerImage anchor location
-    imageAnchorPosition  = @createImageAnchorPosition args.marker_anchor
-    shadowAnchorPosition = @createImageAnchorPosition args.shadow_anchor
-    #create or retrieve existing MarkerImages
-    markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
-    shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-    defaultOptions = {position: markerLatLng, map: @serviceObject, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
-    mergedOptions  = @mergeObjectWithDefault @markers_conf.raw, defaultOptions
-    return new google.maps.Marker mergedOptions
-
-  #checks if obj is included in arr Array and returns the position or false
-  includeMarkerImage : (arr, obj) ->
-    for object, index in arr
-      return index if object.url == obj
-    return false
-
-  #checks if MarkerImage exists before creating a new one
-  #returns a MarkerImage or false if ever something wrong is passed as argument
-  createOrRetrieveImage : (currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition) ->
-    return null if (currentMarkerPicture == "" or currentMarkerPicture == null )
-
-    test_image_index = @includeMarkerImage(@markerImages, currentMarkerPicture)
-    switch test_image_index
-      when false
-        markerImage = @createMarkerImage(currentMarkerPicture, @createSize(markerWidth, markerHeight), null, imageAnchorPosition, null )
-        @markerImages.push(markerImage)
-        return markerImage
-        break
-      else
-        return @markerImages[test_image_index] if typeof test_image_index == 'number'
-        return false
-
-  #clear markers
-  clearMarkers : ->
-    for marker in @markers
-      @clearMarker marker
-
-  #show and hide markers
-  showMarkers : ->
-    for marker in @markers
-      @showMarker marker
-
-  hideMarkers : ->
-    for marker in @markers
-      @hideMarker marker
-
-  clearMarker : (marker) ->
-    marker.serviceObject.setMap(null)
-
-  showMarker : (marker) ->
-    marker.serviceObject.setVisible(true)
-
-  hideMarker : (marker) ->
-    marker.serviceObject.setVisible(false)
-
-  extendBoundsWithMarkers : ->
-    for marker in @markers
-      @boundsObject.extend(marker.serviceObject.position)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////
@@ -201,35 +118,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
 
       @markerClusterer = @createClusterer(markers_array)
 
-  #////////////////////////////////////////////////////
-  #/////////////////// INFO WINDOW ////////////////////
-  #////////////////////////////////////////////////////
-
-  #// creates infowindows
-  createInfoWindow : (marker_container) ->
-    if typeof(@jsTemplate) == "function" or marker_container.description?
-      marker_container.description = @jsTemplate(marker_container) if typeof(@jsTemplate) == "function"
-      if @markers_conf.custom_infowindow_class != null
-        #creating custom infowindow
-        boxText = document.createElement("div")
-        boxText.setAttribute("class", @markers_conf.custom_infowindow_class) #to customize
-        boxText.innerHTML = marker_container.description
-        marker_container.infowindow = new InfoBox(@infobox(boxText))
-        currentMap = this
-        google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject))
-      else
-        #create default infowindow
-        marker_container.infowindow = new google.maps.InfoWindow({content: marker_container.description })
-        #add the listener associated
-        currentMap = this
-        google.maps.event.addListener(marker_container.serviceObject, 'click', @openInfoWindow(currentMap, marker_container.infowindow, marker_container.serviceObject))
-
-  openInfoWindow : (currentMap, infoWindow, marker) ->
-    return ->
-      # Close the latest selected marker before opening the current one.
-      currentMap.visibleInfoWindow.close() if currentMap.visibleInfoWindow != null
-      infoWindow.open(currentMap.serviceObject, marker)
-      currentMap.visibleInfoWindow = infoWindow
 
   #////////////////////////////////////////////////////
   #/////////////////        KML      //////////////////
@@ -337,3 +225,20 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails
       @serviceObject.setCenter(map_center)
     else
       @fitBounds()
+
+  #clear markers
+  clearMarkers : ->
+    for marker in @markers
+      marker.clear()
+
+  #show and hide markers
+  showMarkers : ->
+    for marker in @markers
+      marker.show()
+
+  hideMarkers : ->
+    for marker in @markers
+      marker.hide()
+
+  createLatLngBounds : ->
+    return new google.maps.LatLngBounds()

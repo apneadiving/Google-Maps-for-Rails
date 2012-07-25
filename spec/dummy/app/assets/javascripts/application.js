@@ -12,4 +12,5 @@
 //
 // require jquery
 // require jquery_ujs
-//= require_tree ./gmaps4rails
+//
+//= require gmaps4rails/gmaps4rails
