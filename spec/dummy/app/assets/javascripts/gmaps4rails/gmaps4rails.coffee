@@ -1,7 +1,11 @@
-#= require './base/base'
+#= require './base/common'
 #= require './base/gmaps'
+#= require './base/base_methods'
+#= require './base/base'
 #= require './base/map'
+#= require './base/marker'
 
-#= require './google/base'
+#= require './google/shared'
 #= require './google/map'
+#= require './google/base'
 #= require './google/marker'

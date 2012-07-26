@@ -1,7 +1,7 @@
-class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Base
+class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.GoogleBase
-
+  @include Gmaps4Rails.GoogleShared
+  @extend  Gmaps4Rails.Marker
   #markers + info styling
   CONF =
     clusterer_gridSize:      50
@@ -9,6 +9,12 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Base
     custom_cluster_pictures: null
     custom_infowindow_class: null
     raw:                     {}
+
+
+  @setMarkersConf: ->
+    @mergeObjectWithDefault(@CONF, @DEFAULT_MAP_OPTIONS)
+  #  @mergeWithDefault("markers_conf")
+
     
   constructor: (args, map)->
 
