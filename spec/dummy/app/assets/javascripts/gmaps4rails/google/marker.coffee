@@ -1,7 +1,8 @@
 class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
 
   @include Gmaps4Rails.GoogleShared
-  @extend  Gmaps4Rails.Marker
+  @extend  Gmaps4Rails.Marker.Class
+
   #markers + info styling
   CONF =
     clusterer_gridSize:      50
@@ -9,24 +10,16 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
     custom_cluster_pictures: null
     custom_infowindow_class: null
     raw:                     {}
-
-
-  @setMarkersConf: ->
-    @mergeObjectWithDefault(@CONF, @DEFAULT_MAP_OPTIONS)
-  #  @mergeWithDefault("markers_conf")
-
     
-  constructor: (args, map)->
+  constructor: (args, controller)->
+    @map = controller.getMapObject()
+    @controller = controller
 
-    for name, value in args
-      @[name] = value
-    
     markerLatLng = @createLatLng(args.lat, args.lng)
     #Marker sizes are expressed as a Size of X,Y
     #if args.marker_picture == "" and args.rich_marker == null
-    defaultOptions = {position: markerLatLng, map: map, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
+    defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
     #mergedOptions  = @mergeObjectWithDefault CONF.raw, defaultOptions
-    #return new google.maps.Marker mergedOptions
     @serviceObject = new google.maps.Marker defaultOptions
 
     # if (args.rich_marker != null)
@@ -104,7 +97,6 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
 
   #checks if obj is included in arr Array and returns the position or false
   includeMarkerImage : (arr, obj) ->
-    console.log arr, obj
     for object, index in arr
       return index if object.url == obj
     return false
@@ -134,10 +126,6 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
   hide: () ->
     @serviceObject.setVisible(false)
 
-  extendBoundsWithMarkers : ->
-    for marker in @markers
-      @boundsObject.extend(marker.serviceObject.position)
-
   
   createMarkerImage : (markerPicture, markerSize, origin, anchor, scaledSize) ->
     return new google.maps.MarkerImage(markerPicture, markerSize, origin, anchor, scaledSize)
@@ -148,47 +136,32 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
 
   #// creates infowindows
   createInfoWindow : () ->
-    # if typeof(@jsTemplate) == "function" or @description?
-    #   @description = @jsTemplate(@) if typeof(@jsTemplate) == "function"
-    #   if CONF.custom_infowindow_class != null
-    #     #creating custom infowindow
-    #     boxText = document.createElement("div")
-    #     boxText.setAttribute("class", CONF.custom_infowindow_class) #to customize
-    #     boxText.innerHTML = @description
-    #     @infowindow = new InfoBox(@infobox(boxText))
-    #     google.maps.event.addListener(@serviceObject, 'click', @openInfoWindow(@map, @infowindow, @serviceObject))
-    #   else
-    #     #create default infowindow
-    #     @infowindow = new google.maps.InfoWindow({content: @description })
-    #     #add the listener associated
-    #     google.maps.event.addListener(@serviceObject, 'click', @openInfoWindow(@map, @infowindow, @serviceObject))
+    if typeof(@jsTemplate) == "function" or @description?
+      @description = @jsTemplate(@) if typeof(@jsTemplate) == "function"
+      if CONF.custom_infowindow_class?
+        #creating custom infowindow
+        boxText = document.createElement("div")
+        boxText.setAttribute("class", CONF.custom_infowindow_class) #to customize
+        boxText.innerHTML = @description
+        @infowindow = new InfoBox(@infobox(boxText))
+        google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
+      else
+        #create default infowindow
+        @infowindow = new google.maps.InfoWindow({content: @description })
+        #add the listener associated
+        google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
 
-  openInfoWindow : () ->
+  _openInfowindow : () ->
+    that = @
     return ->
       # Close the latest selected marker before opening the current one.
-      @map.visibleInfoWindow.close() if @map.visibleInfoWindow != null
-      @infowindow.open(@map.serviceObject, @serviceObject)
-      @map.visibleInfoWindow = @infowindow
+      that.controller._closeVisibleInfoWindow()
+      that.infowindow.open(that.map, that.serviceObject)
+      that.controller._setVisibleInfoWindow that.infowindow
 
   createImageAnchorPosition : (anchorLocation) ->
-    if (typeof(anchorLocation) == "undefined" or anchorLocation == null)
-      return null
-    else
+    if anchorLocation?
       return @createPoint(anchorLocation[0], anchorLocation[1])
-
-  mergeObjectWithDefault : (object1, object2) ->
-    copy_object1 = {}
-    for key, value of object1
-      copy_object1[key] = value
-
-    for key, value of object2
-      unless copy_object1[key]?
-        copy_object1[key] = value
-    return copy_object1
-
-  mergeWithDefault : (objectName) ->
-    default_object = @["default_" + objectName]
-    object = @[objectName]
-    @[objectName] = @mergeObjectWithDefault(object, default_object)
-    return true
+    else
+      return null
   

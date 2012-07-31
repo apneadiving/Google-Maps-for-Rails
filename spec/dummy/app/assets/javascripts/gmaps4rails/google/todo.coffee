@@ -43,7 +43,7 @@
 
   createKmlLayer : (kml) ->
     kml_options = kml.options || {}
-    kml_options = @mergeObjectWithDefault(kml_options, @kml_options)
+    kml_options = @mergeObjects(kml_options, @kml_options)
     kml =  new google.maps.KmlLayer( kml.url, kml_options)
     kml.setMap(@serviceObject)
     return kml

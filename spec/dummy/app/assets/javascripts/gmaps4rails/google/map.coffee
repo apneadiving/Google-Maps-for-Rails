@@ -7,9 +7,6 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
     disableDefaultUI:       false
     disableDoubleClickZoom: false
     type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
-
-  @setMapOptions: ->
-    @mergeObjectWithDefault(@MAP_OPTIONS, @DEFAULT_MAP_OPTIONS)
     
   @createMap:(map_options) ->
     defaultOptions =
@@ -23,6 +20,6 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
       disableDoubleClickZoom: map_options.disableDoubleClickZoom
       draggable:              map_options.draggable
 
-    mergedOptions = @mergeObjectWithDefault map_options.raw, defaultOptions
+    mergedOptions = @mergeObjects map_options.raw, defaultOptions
 
     return new google.maps.Map document.getElementById(map_options.id), mergedOptions

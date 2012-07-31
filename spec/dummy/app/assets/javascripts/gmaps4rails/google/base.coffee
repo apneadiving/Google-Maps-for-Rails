@@ -17,13 +17,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   createMap : ->
     @serviceObject = Gmaps4Rails.GoogleMap.createMap(@map_options)
 
-
-  #create google.maps Markers from data provided by user
-  createServiceMarkersFromMarkers : ->
-    tempArray = []
-    for marker, index in @markers
-      tempArray.push new Gmaps4Rails.GoogleMarker(marker, @serviceObject)
-    @markers = tempArray
+  createMarker: (args)->
+    return new Gmaps4Rails.GoogleMarker(args, @)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////
@@ -69,6 +64,10 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
       @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
       @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
 
+  extendBoundsWithMarkers : ->
+    for marker in @markers
+      @boundsObject.extend(marker.serviceObject.position)
+
   extendMapBounds: ()->
     for bound in @map_options.bounds
       #create points from bounds provided
@@ -98,3 +97,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
     for marker in @markers
       marker.hide()
 
+  _closeVisibleInfoWindow: ->
+    @visibleInfowindow.close() if @visibleInfowindow?
+
+  _setVisibleInfoWindow: (infowindow)->
+    @visibleInfowindow = infowindow

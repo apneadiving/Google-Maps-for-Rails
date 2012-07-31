@@ -67,7 +67,7 @@
   %>
   <%#= gmaps4rails(@json) %>
   <%#= gmaps(:markers => {:data => @json}, :map_options => { :detect_location => true, :auto_zoom => false, :zoom => 15, :auto_adjust => true, :center_on_user => true}) %>
- <%#= gmaps(:map_options => { :auto_adjust => true }, 
+ <%= gmaps(:map_options => { :auto_adjust => true }, 
    :markers => {
      :data => @json,
      :options => {:do_clustering => true}
@@ -85,7 +85,7 @@
                         :options => {"list_container" => "markers_list" }
                        })%>
 <div id="markers_list"></div>
-<%= gmaps(:map_options => { :auto_adjust => false },
+<%#= gmaps(:map_options => { :auto_adjust => true  },
       :markers => { :data => '[{"lat":42.3124,"lng":71.1712}]', :options => {:do_clustering => true} }) %>
 
 <%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },

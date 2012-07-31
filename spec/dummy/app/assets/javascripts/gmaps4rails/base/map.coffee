@@ -14,3 +14,10 @@
     auto_zoom: true         # zoom given by auto-adjust
     bounds: []              # adjust map to these limits. Should be [{"lat": , "lng": }]
     raw: {}                  # raw json to pass additional options
+
+
+  setMapOptions: ->
+    if @MAP_OPTIONS?
+      @mergeObjects(@MAP_OPTIONS, @DEFAULT_MAP_OPTIONS)
+    else
+      @DEFAULT_MAP_OPTIONS

@@ -193,48 +193,6 @@
   #///////////////////// MARKERS //////////////////////
   #////////////////////////////////////////////////////
 
-  #creates, clusterizes and adjusts map
-  create_markers : ->
-    @createServiceMarkersFromMarkers()
-    #@clusterize()
-
-
-    #   if not @markers[index].serviceObject?
-    #     #extract options, test if value passed or use default
-    #     Lat = @markers[index].lat
-    #     Lng = @markers[index].lng
-    # 
-    #     #alter coordinates if randomize is true
-    #     if @markers_conf.randomize
-    #       LatLng = @randomize(Lat, Lng)
-    #       #retrieve coordinates from the array
-    #       Lat = LatLng[0]
-    #       Lng = LatLng[1]
-    # 
-    #     #save object
-    #     @markers[index].serviceObject = @createMarker
-    #       "marker_picture":   if @markers[index].picture  then @markers[index].picture else @markers_conf.picture
-    #       "marker_width":     if @markers[index].width    then @markers[index].width   else @markers_conf.width
-    #       "marker_height":    if @markers[index].height   then @markers[index].height  else @markers_conf.length
-    #       "marker_title":     if @markers[index].title    then @markers[index].title   else null
-    #       "marker_anchor":    if @markers[index].marker_anchor  then @markers[index].marker_anchor  else null
-    #       "shadow_anchor":    if @markers[index].shadow_anchor  then @markers[index].shadow_anchor  else null
-    #       "shadow_picture":   if @markers[index].shadow_picture then @markers[index].shadow_picture else null
-    #       "shadow_width":     if @markers[index].shadow_width   then @markers[index].shadow_width   else null
-    #       "shadow_height":    if @markers[index].shadow_height  then @markers[index].shadow_height  else null
-    #       "marker_draggable": if @markers[index].draggable      then @markers[index].draggable      else @markers_conf.draggable
-    #       "rich_marker":      if @markers[index].rich_marker    then @markers[index].rich_marker    else null
-    #       "zindex":           if @markers[index].zindex         then @markers[index].zindex         else null
-    #       "Lat":              Lat
-    #       "Lng":              Lng
-    #       "index":            index
-    # 
-    #     #add infowindowstuff if enabled
-    #     @createInfoWindow(@markers[index])
-    #     #create sidebar if enabled
-    #     @createSidebar(@markers[index])
-    # 
-    # @markers_conf.offset = @markers.length
 
   #creates Image Anchor Position or return null if nothing passed
   createImageAnchorPosition : (anchorLocation) ->
@@ -257,13 +215,6 @@
     @markers_conf.offset = 0
     @addMarkers(new_markers)
 
-  #add new markers to on an existing map
-  addMarkers : (new_markers) ->
-    #update the list of markers to take into account
-    @markers = @markers.concat(new_markers)
-    #put markers on the map
-    @create_markers()
-    @adjustMapToBounds()
 
   #////////////////////////////////////////////////////
   #///////////////////// SIDEBAR //////////////////////
@@ -303,7 +254,7 @@
   adjustMapToBounds : ->
     #FIRST_STEP: retrieve all bounds
     #create the bounds object only if necessary
-    if @map_options.auto_adjust or @map_options.bounds isnt null
+    if @map_options.auto_adjust or @map_options.bounds?
       @boundsObject = @createLatLngBounds()
 
       #if autodjust is true, must get bounds from markers polylines etc...
@@ -312,13 +263,13 @@
         @extendBoundsWithMarkers()
 
         #from polylines:
-        @updateBoundsWithPolylines()
+        #@updateBoundsWithPolylines()
 
         #from polygons:
-        @updateBoundsWithPolygons()
+        #@updateBoundsWithPolygons()
 
         #from circles
-        @updateBoundsWithCircles()
+        #@updateBoundsWithCircles()
 
       #in every case, I've to take into account the bounds set up by the user
       @extendMapBounds()

@@ -21,6 +21,11 @@ class @Gmaps4Rails.Common
     obj.included?.apply(@)
     this
 
+  cloneObject: (obj) ->
+    copy = {}
+    copy[attr] = obj[attr] for attr in obj
+    copy
+
   #//basic function to check existence of a variable
   exists : (var_name) ->
     return (var_name  != "" and typeof var_name != "undefined")
@@ -34,30 +39,18 @@ class @Gmaps4Rails.Common
     Lng = parseFloat(Lng0) + ( 90/Math.PI)*(dx/6378137)/Math.cos(Lat0)
     return [Lat, Lng]
 
-  mergeObjectWithDefault : (object1, defaultObject) ->
-    copy_object1 = {}
-    for key, value of object1
-      copy_object1[key] = value
+  mergeObjects: (object, defaultObject) ->
+    @.constructor.mergeObjects(object, defaultObject)
 
+  @mergeObjects: (object, defaultObject) ->
     for key, value of defaultObject
-      unless copy_object1[key]?
-        copy_object1[key] = value
-    return copy_object1
-
-  @mergeObjectWithDefault: (object1, defaultObject) ->
-    copy_object1 = {}
-    for key, value of object1
-      copy_object1[key] = value
-
-    for key, value of defaultObject
-      unless copy_object1[key]?
-        copy_object1[key] = value
-    return copy_object1
+        object[key] = value unless object[key]?
+    return object
 
   mergeWithDefault : (objectName) ->
     default_object = @["default_" + objectName]
     object = @[objectName]
-    @[objectName] = @mergeObjectWithDefault(object, default_object)
+    @[objectName] = @mergeObjects(object, default_object)
     return true
 
   #gives a value between -1 and 1
