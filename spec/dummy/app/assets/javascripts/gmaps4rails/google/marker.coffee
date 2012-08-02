@@ -10,40 +10,44 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
     custom_cluster_pictures: null
     custom_infowindow_class: null
     raw:                     {}
-    
+  
+  isBasicMarker: (args)->
+    !args.marker_picture? and !args.rich_marker?
+
   constructor: (args, controller)->
     @map = controller.getMapObject()
     @controller = controller
+    @markerImages = []
 
     markerLatLng = @createLatLng(args.lat, args.lng)
     #Marker sizes are expressed as a Size of X,Y
-    #if args.marker_picture == "" and args.rich_marker == null
-    defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
-    #mergedOptions  = @mergeObjectWithDefault CONF.raw, defaultOptions
-    @serviceObject = new google.maps.Marker defaultOptions
+    if @isBasicMarker(args)
+      defaultOptions = {position: markerLatLng, map: @map, title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
+      mergedOptions  = @mergeObjects CONF.raw, defaultOptions
+      @serviceObject = new google.maps.Marker defaultOptions
+      return
 
-    # if (args.rich_marker != null)
-    #   console.log args
-    #   return new RichMarker({
-    #     position: markerLatLng
-    #     map:       @serviceObject
-    #     draggable: args.marker_draggable
-    #     content:   args.rich_marker
-    #     flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
-    #     anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
-    #     zIndex:    args.zindex
-    #   })
+    if args.rich_marker?    
+      return new RichMarker({
+        position: markerLatLng
+        map:       @serviceObject
+        draggable: args.marker_draggable
+        content:   args.rich_marker
+        flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
+        anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
+        zIndex:    args.zindex
+      })
 
     #default behavior
     #calculate MarkerImage anchor location
-    # imageAnchorPosition  = @createImageAnchorPosition args.marker_anchor
-    # shadowAnchorPosition = @createImageAnchorPosition args.shadow_anchor
-    # #create or retrieve existing MarkerImages
-    # markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
-    # shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-    # defaultOptions = {position: markerLatLng, map: @serviceObject, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
-    # mergedOptions  = @mergeObjectWithDefault CONF.raw, defaultOptions
-    # return new google.maps.Marker mergedOptions
+    imageAnchorPosition  = @createImageAnchorPosition args.marker_anchor
+    shadowAnchorPosition = @createImageAnchorPosition args.shadow_anchor
+    #create or retrieve existing MarkerImages
+    markerImage = @createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
+    shadowImage = @createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
+    defaultOptions = {position: markerLatLng, map: @map, icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
+    mergedOptions  = @mergeObjects CONF.raw, defaultOptions
+    @serviceObject = new google.maps.Marker mergedOptions
     
     # @latLng = @createLatLng(args.Lat, args.Lng)
     #     @map = args.map
@@ -96,8 +100,8 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
   #   return new google.maps.Marker mergedOptions
 
   #checks if obj is included in arr Array and returns the position or false
-  includeMarkerImage : (arr, obj) ->
-    for object, index in arr
+  includeMarkerImage : (obj) ->
+    for object, index in @controller.markerImages
       return index if object.url == obj
     return false
 
@@ -106,16 +110,13 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
   createOrRetrieveImage : (currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition) ->
     return null if (typeof(currentMarkerPicture) == "undefined" or currentMarkerPicture == "" or currentMarkerPicture == null )
 
-    test_image_index = @includeMarkerImage(@markerImages, currentMarkerPicture)
-    switch test_image_index
-      when false
-        markerImage = @createMarkerImage(currentMarkerPicture, @createSize(markerWidth, markerHeight), null, imageAnchorPosition, null )
-        @markerImages.push(markerImage)
-        return markerImage
-        break
-      else
-        return @markerImages[test_image_index] if typeof test_image_index == 'number'
-        return false
+    if !(test_image_index = @includeMarkerImage(currentMarkerPicture))
+      markerImage = @createMarkerImage(currentMarkerPicture, @createSize(markerWidth, markerHeight), null, imageAnchorPosition, null )
+      @controller.markerImages.push(markerImage)
+      return markerImage
+    else
+      return @controller.markerImages[test_image_index] if typeof test_image_index == 'number'
+      return false
 
   clear: () ->
     @serviceObject.setMap(null)
@@ -136,8 +137,8 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
 
   #// creates infowindows
   createInfoWindow : () ->
-    if typeof(@jsTemplate) == "function" or @description?
-      @description = @jsTemplate(@) if typeof(@jsTemplate) == "function"
+    if typeof(@controller.jsTemplate) == "function" or @description?
+      @description = @controller.jsTemplate(@) if typeof(@controller.jsTemplate) == "function"
       if CONF.custom_infowindow_class?
         #creating custom infowindow
         boxText = document.createElement("div")

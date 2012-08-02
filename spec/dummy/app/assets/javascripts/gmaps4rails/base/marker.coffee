@@ -59,21 +59,28 @@
         "index":            index
 
 
-      @mergeObjects(newMarker, markerData)
+      Gmaps4Rails.Common.mergeWith.call(newMarker, markerData)
       #add infowindowstuff if enabled
       newMarker.createInfoWindow()
       
       #create sidebar if enabled
       #@createSidebar(@markers[index])
+      #@clusterize()
+      #     #add infowindowstuff if enabled
+      #     @createInfoWindow(@markers[index])
+      #     #create sidebar if enabled
+      #     @createSidebar(@markers[index])
+      # 
+      # @markers_conf.offset = @markers.length
+
       @markers.push newMarker
 
 
-    #@clusterize()
+  randomize : (Lat0, Lng0) ->
+    #distance in meters between 0 and max_random_distance (positive or negative)
+    dx = @markers_conf.max_random_distance * @random()
+    dy = @markers_conf.max_random_distance * @random()
+    Lat = parseFloat(Lat0) + (180/Math.PI)*(dy/6378137)
+    Lng = parseFloat(Lng0) + ( 90/Math.PI)*(dx/6378137)/Math.cos(Lat0)
+    return [Lat, Lng]
 
-
-    #     #add infowindowstuff if enabled
-    #     @createInfoWindow(@markers[index])
-    #     #create sidebar if enabled
-    #     @createSidebar(@markers[index])
-    # 
-    # @markers_conf.offset = @markers.length

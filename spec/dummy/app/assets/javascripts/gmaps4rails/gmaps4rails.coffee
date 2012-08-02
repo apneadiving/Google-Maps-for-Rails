@@ -8,5 +8,5 @@
 
 #= require './google/shared'
 #= require './google/map'
-#= require './google/base'
+#= require './google/controller'
 #= require './google/marker'
