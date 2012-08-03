@@ -1,3 +1,8 @@
+#= require './shared'
+#= require './map'
+#= require './controller'
+#= require './marker'
+
 #######################################################################################################
 ##############################################  Google maps  ##########################################
 #######################################################################################################
@@ -15,10 +20,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   #////////////////////////////////////////////////////
 
   createMap : ->
-    #@map_options = Gmaps4Rails.GoogleMap.setMapOptions()
     @map = new Gmaps4Rails.GoogleMap(@map_options, @)
     delete @map_options
-    #@serviceObject = Gmaps4Rails.GoogleMap.createMap(@map_options)
 
   createMarker: (args)->
     return new Gmaps4Rails.GoogleMarker(args, @)
@@ -35,7 +38,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
   #creates clusters
   clusterize : ->
-    if @markers_conf.do_clustering == true
+    if @markers_conf.do_clustering
       #first clear the existing clusterer if any
       @clearClusterer() if @markerClusterer?
 
@@ -44,8 +47,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
         markers_array.push(marker.serviceObject)
 
       @markerClusterer = @createClusterer(markers_array)
-
-
 
   findUserLocation : (controller, center_on_user) ->
     if !!navigator.geolocation
@@ -69,16 +70,4 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
   _setVisibleInfoWindow: (infowindow)->
     @visibleInfowindow = infowindow
-
-
-  # updateBoundsWithPolygons: ()->
-  #   for polygon in @polygons
-  #     polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-  #     for point in polygon_points
-  #       @boundsObject.extend point
-
-  # updateBoundsWithCircles: ()->
-  #   for circle in @circles
-  #     @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-  #     @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
-  
+ 

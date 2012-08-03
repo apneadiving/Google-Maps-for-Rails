@@ -1,5 +1,15 @@
 #@Gmaps4Rails.BaseMethods =
 
+  # updateBoundsWithPolygons: ()->
+  #   for polygon in @polygons
+  #     polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
+  #     for point in polygon_points
+  #       @boundsObject.extend point
+
+  # updateBoundsWithCircles: ()->
+  #   for circle in @circles
+  #     @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
+  #     @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
 
   #////////////////////////////////////////////////////
   #//////////////////// DIRECTIONS ////////////////////

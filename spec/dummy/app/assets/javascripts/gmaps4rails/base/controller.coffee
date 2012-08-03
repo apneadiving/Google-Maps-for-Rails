@@ -1,6 +1,12 @@
+#= require './common'
+#= require './gmaps'
+#= require './map'
+#= require './marker'
+#= require './controller/marker_controller'
+
 class @Gmaps4Rails.Base extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.Marker.Instance
+  @include Gmaps4Rails.Marker.Controller
 
   visibleInfoWindow: null  #contains the current opened infowindow
   userLocation:      null       #contains user's location if geolocalization was performed and successful
