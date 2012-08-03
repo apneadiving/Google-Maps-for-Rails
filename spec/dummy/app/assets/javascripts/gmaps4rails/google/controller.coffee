@@ -35,7 +35,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   clusterize : ->
     if @markers_conf.do_clustering == true
       #first clear the existing clusterer if any
-      @clearClusterer() if @markerClusterer != null
+      @clearClusterer() if @markerClusterer?
 
       markers_array = new Array
       for marker in @markers

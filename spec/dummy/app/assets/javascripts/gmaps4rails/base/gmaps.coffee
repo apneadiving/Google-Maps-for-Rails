@@ -6,9 +6,8 @@
     #loop through all variable names.
     #there should only be maps inside so it trigger their load function
     for key, value of window.Gmaps
-      searchLoadIncluded = key.search(/^load_/)
       #console.log key, searchLoadIncluded
-      if searchLoadIncluded != -1
+      if /^load_/.test(key)
         #load_function_name = "load_" + key
         window.Gmaps[key]()
 

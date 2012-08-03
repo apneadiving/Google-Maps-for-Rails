@@ -21,11 +21,6 @@ class @Gmaps4Rails.Common
     obj.included?.apply(@)
     this
 
-  # cloneObject: (obj) ->
-  #   copy = {}
-  #   copy[attr] = obj[attr] for attr in obj
-  #   copy
-
   #//basic function to check existence of a variable
   exists : (var_name) ->
     return (var_name  != "" and typeof var_name != "undefined")
@@ -42,12 +37,6 @@ class @Gmaps4Rails.Common
         copy_object[key] = value unless copy_object[key]?
     return copy_object
 
-  # mergeWithDefault : (objectName) ->
-  #   default_object = @["default_" + objectName]
-  #   object = @[objectName]
-  #   @[objectName] = @mergeObjects(object, default_object)
-  #   return true
-
   @mergeWith : (object) ->
     for key, value of object
         @[key] = value unless @[key]?
@@ -55,4 +44,14 @@ class @Gmaps4Rails.Common
   #gives a value between -1 and 1
   random : -> return(Math.random() * 2 -1)
 
-#window.Gmaps4Rails = Gmaps4Rails
+
+  # cloneObject: (obj) ->
+  #   copy = {}
+  #   copy[attr] = obj[attr] for attr in obj
+  #   copy
+
+  # mergeWithDefault : (objectName) ->
+  #   default_object = @["default_" + objectName]
+  #   object = @[objectName]
+  #   @[objectName] = @mergeObjects(object, default_object)
+  #   return true
