@@ -26,7 +26,7 @@
   adjustToBounds : ->
     #FIRST_STEP: retrieve all bounds
     #create the bounds object only if necessary
-    if @options.auto_adjust or @options.bounds?
+    if @options.auto_adjust or @options.bounds.length > 0
       @boundsObject = @createLatLngBounds()
 
       #if autodjust is true, must get bounds from markers polylines etc...
@@ -44,7 +44,7 @@
         #@updateBoundsWithCircles()
 
       #in every case, I've to take into account the bounds set up by the user
-      @extendMapBounds()
+      @extendBounds()
 
       #SECOND_STEP: ajust the map to the bounds
-      @adaptMapToBounds()
+      @adaptToBounds()

@@ -34,12 +34,12 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
     for marker in @controller.markers
       @boundsObject.extend(marker.serviceObject.position)
 
-  extendMapBounds: ()->
+  extendBounds: ()->
     for bound in @options.bounds
       #create points from bounds provided
       @boundsObject.extend @createLatLng(bound.lat, bound.lng)
 
-  adaptMapToBounds:()->
+  adaptToBounds:()->
     #if autozoom is false, take user info into account
     if !@options.auto_zoom
       map_center = @boundsObject.getCenter()
@@ -51,3 +51,6 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
 
   fitBounds : ->
     @serviceObject.fitBounds(@boundsObject) unless @boundsObject.isEmpty()
+
+  centerMapOnUser : ->
+    @serviceObject.setCenter(@controller.userLocation)

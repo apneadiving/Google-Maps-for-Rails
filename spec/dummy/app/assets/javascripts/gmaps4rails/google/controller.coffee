@@ -28,7 +28,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   #////////////////////////////////////////////////////
 
   createClusterer : (markers_array) ->
-    return new MarkerClusterer( @serviceObject, markers_array, {  maxZoom: @markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
+    return new MarkerClusterer( @getMapObject(), markers_array, {  maxZoom: @markers_conf.clusterer_maxZoom, gridSize: @markers_conf.clusterer_gridSize, styles: @customClusterer() })
 
   clearClusterer : ->
     @markerClusterer.clearMarkers()
@@ -39,32 +39,11 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
       #first clear the existing clusterer if any
       @clearClusterer() if @markerClusterer?
 
-      markers_array = new Array
+      markers_array = []
       for marker in @markers
         markers_array.push(marker.serviceObject)
 
       @markerClusterer = @createClusterer(markers_array)
-
-            
-  #////////////////////////////////////////////////////
-  #/////////////////// Other methods //////////////////
-  #////////////////////////////////////////////////////
-
-  centerMapOnUser : ->
-    @serviceObject.setCenter(@userLocation)
-  
-  updateBoundsWithPolygons: ()->
-    for polygon in @polygons
-      polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-      for point in polygon_points
-        @boundsObject.extend point
-
-  updateBoundsWithCircles: ()->
-    for circle in @circles
-      @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-      @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
-  
-
 
   #clear markers
   clearMarkers : ->
@@ -85,3 +64,16 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
   _setVisibleInfoWindow: (infowindow)->
     @visibleInfowindow = infowindow
+
+
+  # updateBoundsWithPolygons: ()->
+  #   for polygon in @polygons
+  #     polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
+  #     for point in polygon_points
+  #       @boundsObject.extend point
+
+  # updateBoundsWithCircles: ()->
+  #   for circle in @circles
+  #     @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
+  #     @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+  

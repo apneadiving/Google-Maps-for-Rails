@@ -9,7 +9,7 @@
     picture : null
     width: 22
     length: 32
-    draggable: false         # how to modify: <%= gmaps( "markers" => { "data" => @object.to_gmaps4rails, "options" => { "draggable" => true }}) %>
+    draggable: false
     #clustering config
     do_clustering: false     # do clustering if set to true
     randomize: false         # Google maps can't display two markers which have the same coordinates. This randomizer enables to prevent this situation from happening.
@@ -66,15 +66,12 @@
       #create sidebar if enabled
       #@createSidebar(@markers[index])
       #@clusterize()
-      #     #add infowindowstuff if enabled
-      #     @createInfoWindow(@markers[index])
-      #     #create sidebar if enabled
-      #     @createSidebar(@markers[index])
+      #create sidebar if enabled
+      #@createSidebar(@markers[index])
       # 
-      # @markers_conf.offset = @markers.length
-
       @markers.push newMarker
 
+    @clusterize()
 
   randomize : (Lat0, Lng0) ->
     #distance in meters between 0 and max_random_distance (positive or negative)

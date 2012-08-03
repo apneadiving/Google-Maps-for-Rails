@@ -105,6 +105,13 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
         #add the listener associated
         google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
 
+  #creates Image Anchor Position or return null if nothing passed
+  createImageAnchorPosition : (anchorLocation) ->
+    if (anchorLocation == null)
+      return null
+    else
+      return @createPoint(anchorLocation[0], anchorLocation[1])
+
   _openInfowindow : () ->
     that = @
     return ->
@@ -112,10 +119,4 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
       that.controller._closeVisibleInfoWindow()
       that.infowindow.open(that.getMap(), that.serviceObject)
       that.controller._setVisibleInfoWindow that.infowindow
-
-  createImageAnchorPosition : (anchorLocation) ->
-    if anchorLocation?
-      return @createPoint(anchorLocation[0], anchorLocation[1])
-    else
-      return null
   
