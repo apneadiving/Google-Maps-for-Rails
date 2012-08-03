@@ -1,25 +1,53 @@
 class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
 
-  @extend  Gmaps4Rails.Map
-  @extend  Gmaps4Rails.GoogleShared
+  @include  Gmaps4Rails.Map
+  @include  Gmaps4Rails.GoogleShared
 
-  @MAP_OPTIONS:
+  MAP_OPTIONS:
     disableDefaultUI:       false
     disableDoubleClickZoom: false
     type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
+    mapTypeControl:         null
+
+  constructor:(map_options, controller) ->
+    @controller    = controller
+
+    defaultOptions = @getDefaultMapOptions()
+    @options  = @mergeObjects map_options, defaultOptions
+
+    googleOptions =
+      maxZoom:                @options.maxZoom
+      minZoom:                @options.minZoom
+      zoom:                   @options.zoom
+      center:                 @createLatLng(@options.center_latitude, @options.center_longitude)
+      mapTypeId:              google.maps.MapTypeId[@options.type]
+      mapTypeControl:         @options.mapTypeControl
+      disableDefaultUI:       @options.disableDefaultUI
+      disableDoubleClickZoom: @options.disableDoubleClickZoom
+      draggable:              @options.draggable
     
-  @createMap:(map_options) ->
-    defaultOptions =
-      maxZoom:                map_options.maxZoom
-      minZoom:                map_options.minZoom
-      zoom:                   map_options.zoom
-      center:                 @createLatLng(map_options.center_latitude, map_options.center_longitude)
-      mapTypeId:              google.maps.MapTypeId[map_options.type]
-      mapTypeControl:         map_options.mapTypeControl
-      disableDefaultUI:       map_options.disableDefaultUI
-      disableDoubleClickZoom: map_options.disableDoubleClickZoom
-      draggable:              map_options.draggable
+    mergedGoogleOptions = @mergeObjects map_options.raw, googleOptions
 
-    mergedOptions = @mergeObjects map_options.raw, defaultOptions
+    @serviceObject = new google.maps.Map document.getElementById(@options.id), mergedGoogleOptions
 
-    return new google.maps.Map document.getElementById(map_options.id), mergedOptions
+  extendBoundsWithMarkers : ->
+    for marker in @controller.markers
+      @boundsObject.extend(marker.serviceObject.position)
+
+  extendMapBounds: ()->
+    for bound in @options.bounds
+      #create points from bounds provided
+      @boundsObject.extend @createLatLng(bound.lat, bound.lng)
+
+  adaptMapToBounds:()->
+    #if autozoom is false, take user info into account
+    if !@options.auto_zoom
+      map_center = @boundsObject.getCenter()
+      @options.center_latitude  = map_center.lat()
+      @options.center_longitude = map_center.lng()
+      @serviceObject.setCenter(map_center)
+    else
+      @fitBounds()
+
+  fitBounds : ->
+    @serviceObject.fitBounds(@boundsObject) unless @boundsObject.isEmpty()

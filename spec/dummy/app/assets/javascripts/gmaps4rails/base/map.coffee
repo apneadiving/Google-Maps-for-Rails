@@ -16,8 +16,35 @@
     raw: {}                  # raw json to pass additional options
 
 
-  setMapOptions: ->
+  getDefaultMapOptions: ->
     if @MAP_OPTIONS?
       @mergeObjects(@MAP_OPTIONS, @DEFAULT_MAP_OPTIONS)
     else
       @DEFAULT_MAP_OPTIONS
+
+  #to make the map fit the different LatLng points
+  adjustToBounds : ->
+    #FIRST_STEP: retrieve all bounds
+    #create the bounds object only if necessary
+    if @options.auto_adjust or @options.bounds?
+      @boundsObject = @createLatLngBounds()
+
+      #if autodjust is true, must get bounds from markers polylines etc...
+      if @options.auto_adjust
+        #from markers
+        @extendBoundsWithMarkers()
+
+        #from polylines:
+        #@updateBoundsWithPolylines()
+
+        #from polygons:
+        #@updateBoundsWithPolygons()
+
+        #from circles
+        #@updateBoundsWithCircles()
+
+      #in every case, I've to take into account the bounds set up by the user
+      @extendMapBounds()
+
+      #SECOND_STEP: ajust the map to the bounds
+      @adaptMapToBounds()

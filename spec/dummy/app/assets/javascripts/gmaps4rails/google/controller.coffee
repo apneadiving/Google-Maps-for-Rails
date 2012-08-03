@@ -7,7 +7,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   @include Gmaps4Rails.GoogleShared
   
   constructor: ->
-    @map_options = Gmaps4Rails.GoogleMap.setMapOptions()
     @markers_conf = Gmaps4Rails.GoogleMarker.setMarkersConf()
     @markerImages = []
 
@@ -16,7 +15,10 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   #////////////////////////////////////////////////////
 
   createMap : ->
-    @serviceObject = Gmaps4Rails.GoogleMap.createMap(@map_options)
+    #@map_options = Gmaps4Rails.GoogleMap.setMapOptions()
+    @map = new Gmaps4Rails.GoogleMap(@map_options, @)
+    delete @map_options
+    #@serviceObject = Gmaps4Rails.GoogleMap.createMap(@map_options)
 
   createMarker: (args)->
     return new Gmaps4Rails.GoogleMarker(args, @)
@@ -48,9 +50,6 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   #/////////////////// Other methods //////////////////
   #////////////////////////////////////////////////////
 
-  fitBounds : ->
-    @serviceObject.fitBounds(@boundsObject) unless @boundsObject.isEmpty()
-
   centerMapOnUser : ->
     @serviceObject.setCenter(@userLocation)
   
@@ -64,25 +63,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
     for circle in @circles
       @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
       @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
-
-  extendBoundsWithMarkers : ->
-    for marker in @markers
-      @boundsObject.extend(marker.serviceObject.position)
-
-  extendMapBounds: ()->
-    for bound in @map_options.bounds
-      #create points from bounds provided
-      @boundsObject.extend @createLatLng(bound.lat, bound.lng)
   
-  adaptMapToBounds:()->
-    #if autozoom is false, take user info into account
-    if !@map_options.auto_zoom
-      map_center = @boundsObject.getCenter()
-      @map_options.center_latitude  = map_center.lat()
-      @map_options.center_longitude = map_center.lng()
-      @serviceObject.setCenter(map_center)
-    else
-      @fitBounds()
+
 
   #clear markers
   clearMarkers : ->

@@ -14,6 +14,7 @@
   
 
   #Stored variables
+  map_options:  {}
   markers:      []            # contains all markers. A marker contains the following: {"description": , "longitude": , "title":, "latitude":, "picture": "", "width": "", "length": "", "sidebar": "", "serviceObject": google_marker}
   boundsObject: null     # contains current bounds from markers, polylines etc...
   polygons:     []           # contains raw data, array of arrays (first element could be a hash containing options)
@@ -31,8 +32,8 @@
     zIndex: null
 
   initialize : ->
-    @serviceObject = @createMap()
-    @map = @serviceObject #beware, soon deprecated
+    @createMap()
+    #@map = @serviceObject #beware, soon deprecated
     if (@map_options.detect_location == true or @map_options.center_on_user == true)
       @findUserLocation(this)
     #resets sidebar if needed
