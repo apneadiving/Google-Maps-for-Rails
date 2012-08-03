@@ -45,19 +45,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
       @markerClusterer = @createClusterer(markers_array)
 
-  #clear markers
-  clearMarkers : ->
-    for marker in @markers
-      marker.clear()
 
-  #show and hide markers
-  showMarkers : ->
-    for marker in @markers
-      marker.show()
-
-  hideMarkers : ->
-    for marker in @markers
-      marker.hide()
 
   findUserLocation : (controller, center_on_user) ->
     if !!navigator.geolocation

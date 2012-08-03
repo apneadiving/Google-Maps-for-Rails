@@ -25,7 +25,6 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
   markerImages: []
 
   initialize : ->
-    console.log @map_options
     detectUserLocation = @map_options.detect_location or @map_options.center_on_user
     center_on_user     = @map_options.center_on_user
     @createMap()
@@ -37,20 +36,6 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
 
   getMapObject: ->
     return @map.serviceObject
-
-  #replace old markers with new markers on an existing map
-  replaceMarkers : (new_markers) ->
-    @clearMarkers()
-    #reset previous markers
-    @markers = new Array
-    #reset current bounds
-    @boundsObject = @createLatLngBounds()
-    #reset sidebar content if exists
-    @resetSidebarContent()
-    #add new markers
-    @markers_conf.offset = 0
-    @addMarkers(new_markers)
-
 
   #////////////////////////////////////////////////////
   #///////////////////// SIDEBAR //////////////////////

@@ -28,7 +28,8 @@
 @Gmaps4Rails.Marker.Instance =
 
   addMarkers: (markersData)->
-
+    @clearClusterer() if @markerClusterer?
+    
     for markerData, index in markersData
       #unless markerData.serviceObject?
 
@@ -72,6 +73,33 @@
       @markers.push newMarker
 
     @clusterize()
+
+    #replace old markers with new markers on an existing map
+  replaceMarkers : (new_markers) ->
+    @clearMarkers()
+    #reset previous markers
+    @markers = []
+    #reset current bounds
+    @boundsObject = @createLatLngBounds()
+    #reset sidebar content if exists
+    @resetSidebarContent()
+    #add new markers
+    @addMarkers(new_markers)
+
+  #clear markers
+  clearMarkers : ->
+    @clearClusterer() if @markerClusterer?
+    for marker in @markers
+      marker.clear()
+
+  #show and hide markers
+  showMarkers : ->
+    for marker in @markers
+      marker.show()
+
+  hideMarkers : ->
+    for marker in @markers
+      marker.hide()
 
   randomize : (Lat0, Lng0) ->
     #distance in meters between 0 and max_random_distance (positive or negative)

@@ -43,15 +43,3 @@ class @Gmaps4Rails.Common
 
   #gives a value between -1 and 1
   random : -> return(Math.random() * 2 -1)
-
-
-  # cloneObject: (obj) ->
-  #   copy = {}
-  #   copy[attr] = obj[attr] for attr in obj
-  #   copy
-
-  # mergeWithDefault : (objectName) ->
-  #   default_object = @["default_" + objectName]
-  #   object = @[objectName]
-  #   @[objectName] = @mergeObjects(object, default_object)
-  #   return true
