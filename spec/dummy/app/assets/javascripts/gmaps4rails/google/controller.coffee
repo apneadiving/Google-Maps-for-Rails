@@ -59,6 +59,23 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
     for marker in @markers
       marker.hide()
 
+  findUserLocation : (controller, center_on_user) ->
+    if !!navigator.geolocation
+      #try to retrieve user's position
+      positionSuccessful = (position) ->
+        controller.userLocation = controller.createLatLng(position.coords.latitude, position.coords.longitude)
+        #change map's center to focus on user's geoloc if asked
+        controller.geolocationSuccess()
+        if center_on_user
+          controller.map.centerMapOnUser(controller.userLocation)
+      positionFailure = (error)->
+        controller.geolocationFailure(true)
+
+      navigator.geolocation.getCurrentPosition( positionSuccessful, positionFailure)
+    else
+      #failure but the navigator doesn't handle geolocation
+      controller.geolocationFailure(false)
+
   _closeVisibleInfoWindow: ->
     @visibleInfowindow.close() if @visibleInfowindow?
 

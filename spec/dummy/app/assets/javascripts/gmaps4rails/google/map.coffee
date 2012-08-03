@@ -52,5 +52,5 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
   fitBounds : ->
     @serviceObject.fitBounds(@boundsObject) unless @boundsObject.isEmpty()
 
-  centerMapOnUser : ->
-    @serviceObject.setCenter(@controller.userLocation)
+  centerMapOnUser : (position)->
+    @serviceObject.setCenter(position)
