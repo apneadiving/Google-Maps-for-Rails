@@ -33,8 +33,9 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
   initialize : ->
     detectUserLocation = @map_options.detect_location or @map_options.center_on_user
     center_on_user     = @map_options.center_on_user
-    @createMap()
-    #@map = @serviceObject #beware, soon deprecated
+    @map = @createMap()
+    delete @map_options
+
     if detectUserLocation
       @findUserLocation(this, center_on_user)
 
@@ -43,3 +44,20 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
 
   adjustMapToBounds: ->
     @map.adjustToBounds()
+
+  findUserLocation : (controller, center_on_user) ->
+    if navigator.geolocation
+      #try to retrieve user's position
+      positionSuccessful = (position) ->
+        controller.userLocation = controller.createLatLng(position.coords.latitude, position.coords.longitude)
+        #change map's center to focus on user's geoloc if asked
+        controller.geolocationSuccess()
+        if center_on_user
+          controller.map.centerMapOnUser(controller.userLocation)
+      positionFailure = (error)->
+        controller.geolocationFailure(true)
+
+      navigator.geolocation.getCurrentPosition( positionSuccessful, positionFailure)
+    else
+      #failure but the navigator doesn't handle geolocation
+      controller.geolocationFailure(false)

@@ -23,3 +23,8 @@
       @mergeObjects(@CONF, @DEFAULT_MARKER_CONF)
     else
       @DEFAULT_MARKER_CONF
+
+@Gmaps4Rails.Marker.Instance =
+
+  getMap: ->
+    @controller.getMapObject()
