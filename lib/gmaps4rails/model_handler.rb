@@ -17,7 +17,7 @@ module Gmaps4rails
     def retrieve_coordinates
       return if prevent_geocoding?
       checked_coordinates do
-        position? set_position : set_lat_lng
+        position? ? set_position : set_lat_lng
         set_normalized_address if normalized_address
         # Call the callback method to let the user do what he wants with the data
         do_callback if callback
@@ -29,20 +29,20 @@ module Gmaps4rails
     private
 
     def do_callback
-      object.send(callback, coordinates.first[:full_data])
+      object.send callback, coordinates.first[:full_data]
     end
 
     def set_checker
-      object.send("#{checker}=", true)
+      obj_set checker, true
     end
 
     def set_normalized_address
       # save normalized address if required
-      object.send("#{normalized_address}=", coordinates.first[:matched_address])
+      obj_set normalized_address, coordinates.first[:matched_address]
     end      
 
-    def set_position
-      object.send("#{position}=", coordinates)
+    def set_position      
+      obj_set position, [coord(:lat), coord(:lng)]
     end
 
     def set_lat_lng
@@ -52,7 +52,15 @@ module Gmaps4rails
 
     def set_coordinate name
       column = send("#{name}_column")
-      object.send("#{column}=", coordinates.first[name.to_sym])
+      obj_set column, coord(name)
+    end
+
+    def obj_set name, value
+      object.send("#{name}=", value)
+    end
+
+    def coord name
+      coordinates.first[name.to_sym]
     end
 
     def position?

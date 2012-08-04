@@ -4,10 +4,12 @@ include Geocoding
 
 set_gmaps4rails_options!
 
+# Mongoid 3.x only
 require 'mongoid'
+require 'moped'
 
 Mongoid.configure do |config|
-  Mongoid::VersionSetup.configure config
+  config.connect_to('mongoid_geo_test')
 end
 
 RSpec.configure do |config|
@@ -15,11 +17,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Mongoid.purge!
-    # Mongoid.database.collections.each do |collection|
-    #   unless collection.name =~ /^system\./
-    #     collection.remove
-    #   end
-    # end
   end
 end
 
@@ -34,9 +31,9 @@ describe Gmaps4rails::ActsAsGmappable do
   end
   
   context "standard configuration, valid place" do
-    it "should save longitude and latitude to the customized array" do
-      set_gmaps4rails_options!(:lat_lng_array  => 'location')
-      place.location.should_not be_nil
+    it "should save longitude and latitude to the customized position array" do
+      # set_gmaps4rails_options!(:position  => 'location')
+      place.pos.should_not be_nil
       place.should have_same_position_as TOULON
     end
   end

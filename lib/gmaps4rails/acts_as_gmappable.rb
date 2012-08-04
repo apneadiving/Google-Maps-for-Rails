@@ -1,26 +1,18 @@
 module Gmaps4rails
   module ActsAsGmappable
-    
-    def self.included base
-      base.send :include, InstanceMethods
-      base.send :extend, ClassMethods
+    extend ActiveSupport::Concern
+          
+    # This is a validation method which triggers the geocoding and save its results
+    def process_geocoding
+      Gmaps4rails::ModelHandler.new(self, gmaps4rails_options).retrieve_coordinates
     end
     
-    module InstanceMethods
-      
-      # This is a validation method which triggers the geocoding and save its results
-      def process_geocoding
-        Gmaps4rails::ModelHandler.new(self, gmaps4rails_options).retrieve_coordinates
-      end
-      
-      # creates json for one instance 
-      def to_gmaps4rails(&block)
-        json = "["
-        object_json = Gmaps4rails.create_json(self, &block)
-        json << object_json.to_s unless object_json.nil?
-        json << "]"
-      end
-
+    # creates json for one instance 
+    def to_gmaps4rails(&block)
+      json = "["
+      object_json = Gmaps4rails.create_json(self, &block)
+      json << object_json.to_s unless object_json.nil?
+      json << "]"
     end
 
     module ClassMethods

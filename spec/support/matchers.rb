@@ -28,23 +28,22 @@ def has_same_content_as?(actual, expected)
 end
 
 class PositionMatcher
-  attr_reader :object, :position
+  attr_reader :object, :position_hash
 
-  def initialize object
-    @object = object
-    @position = extract_position object
+  def initialize position_hash
+    @position_hash = position_hash    
   end
 
-  def same_pos? position_hash    
-    same_lat?(position[0], position_hash) && same_lng?(position[1], position_hash)
+  def same_pos? object
+    @object = object
+    same_lat?(position[0]) && same_lng?(position[1])
   end
 
   protected
 
-  def extract_position object
-    position? obj_position : 
-    if       
-  end    
+  def position 
+    @position = position? ? obj_position : obj_create_position
+  end
 
   def obj_create_position
     [obj_coord(:lat), obj_coord(:lng)]
@@ -70,11 +69,11 @@ class PositionMatcher
     object.gmaps4rails_options[name.to_sym]
   end
 
-  def self.same_lat? lat, position_hash
+  def same_lat? lat
     lat == position_hash[:latitude]
   end
 
-  def self.same_lng? lng, position_hash
+  def same_lng? lng
     lng == position_hash[:longitude]
   end
 end
@@ -85,13 +84,13 @@ end
 
 RSpec::Matchers.define :have_same_position_as do |position_hash|
   match do |object|
-    position_matcher(object).same_pos? position_hash    
+    position_matcher(position_hash).same_pos? object
   end
 end
 
 RSpec::Matchers.define :have_same_position_as do |position_hash|
   match do |object|
-    PositionMatcher.same_pos? object, position_hash
+    position_matcher(position_hash).same_pos? object
   end
 end
 
