@@ -1,6 +1,6 @@
 #= require './shared'
 #= require './map'
-#= require './controller'
+#= require './polyline'
 #= require './marker'
 
 #######################################################################################################
@@ -12,7 +12,8 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   @include Gmaps4Rails.GoogleShared
   
   constructor: ->
-    @markers_conf = Gmaps4Rails.GoogleMarker.setMarkersConf()
+    @markers_conf  = Gmaps4Rails.GoogleMarker.setConf()
+    @polylines_conf = Gmaps4Rails.GooglePolyline.setConf()
     @markerImages = []
 
   #////////////////////////////////////////////////////
@@ -24,6 +25,9 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
   createMarker: (args)->
     new Gmaps4Rails.GoogleMarker(args, @)
+
+  createPolyline: (args)->
+    new Gmaps4Rails.GooglePolyline(args, @)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////

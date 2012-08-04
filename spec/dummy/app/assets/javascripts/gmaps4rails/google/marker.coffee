@@ -3,7 +3,8 @@ class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
   @include Gmaps4Rails.GoogleShared
   @include Gmaps4Rails.Marker.Instance
   @extend  Gmaps4Rails.Marker.Class
-
+  @extend  Gmaps4Rails.Configuration
+  
   #markers + info styling
   CONF =
     clusterer_gridSize:      50

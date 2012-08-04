@@ -1,6 +1,6 @@
 @Gmaps4Rails.Map =
 
-  DEFAULT_MAP_OPTIONS:
+  DEFAULT_CONF:
     id: 'map'
     draggable: true
     detect_location: false  # should the browser attempt to use geolocation detection features of HTML5?
@@ -15,13 +15,6 @@
     bounds: []              # adjust map to these limits. Should be [{"lat": , "lng": }]
     raw: {}                  # raw json to pass additional options
 
-
-  getDefaultMapOptions: ->
-    if @MAP_OPTIONS?
-      @mergeObjects(@MAP_OPTIONS, @DEFAULT_MAP_OPTIONS)
-    else
-      @DEFAULT_MAP_OPTIONS
-
   #to make the map fit the different LatLng points
   adjustToBounds : ->
     #FIRST_STEP: retrieve all bounds
@@ -35,7 +28,7 @@
         @extendBoundsWithMarkers()
 
         #from polylines:
-        #@updateBoundsWithPolylines()
+        @extendBoundsWithPolylines()
 
         #from polygons:
         #@updateBoundsWithPolygons()

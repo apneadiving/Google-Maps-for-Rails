@@ -2,8 +2,9 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
 
   @include  Gmaps4Rails.Map
   @include  Gmaps4Rails.GoogleShared
+  @include  Gmaps4Rails.Configuration
 
-  MAP_OPTIONS:
+  CONF:
     disableDefaultUI:       false
     disableDoubleClickZoom: false
     type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
@@ -12,7 +13,7 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
   constructor:(map_options, controller) ->
     @controller    = controller
 
-    defaultOptions = @getDefaultMapOptions()
+    defaultOptions = @setConf()
     @options  = @mergeObjects map_options, defaultOptions
 
     googleOptions =
@@ -34,6 +35,12 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
     for marker in @controller.markers
       @boundsObject.extend(marker.serviceObject.position)
 
+  extendBoundsWithPolylines: ()->
+    for polyline in @controller.polylines
+      polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
+      for point in polyline_points
+        @boundsObject.extend point
+
   extendBounds: ()->
     for bound in @options.bounds
       #create points from bounds provided
@@ -41,7 +48,7 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
 
   adaptToBounds:()->
     #if autozoom is false, take user info into account
-    if !@options.auto_zoom
+    unless @options.auto_zoom
       map_center = @boundsObject.getCenter()
       @options.center_latitude  = map_center.lat()
       @options.center_longitude = map_center.lng()

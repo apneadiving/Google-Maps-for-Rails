@@ -2,7 +2,7 @@
 
 @Gmaps4Rails.Marker.Class =
 
-  DEFAULT_MARKER_CONF:
+  DEFAULT_CONF:
     #Marker config
     title: null
     #MarkerImage config
@@ -17,12 +17,6 @@
     list_container: null     # id of the ul that will host links to all markers
     offset: 0                # used when adding_markers to an existing map. Because new markers are concated with previous one, offset is here to prevent the existing from being re-created.
     raw: {}                  # raw json to pass additional options
-
-  setMarkersConf: ->
-    if @CONF
-      @mergeObjects(@CONF, @DEFAULT_MARKER_CONF)
-    else
-      @DEFAULT_MARKER_CONF
 
 @Gmaps4Rails.Marker.Instance =
 

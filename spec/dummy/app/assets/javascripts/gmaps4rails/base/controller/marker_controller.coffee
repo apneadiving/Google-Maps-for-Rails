@@ -1,4 +1,4 @@
-@Gmaps4Rails.Marker.Controller =
+@Gmaps4Rails.MarkerController =
 
   addMarkers: (markersData)->
     @clearClusterer() if @markerClusterer?
