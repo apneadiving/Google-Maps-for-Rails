@@ -37,40 +37,9 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
     #@map = @serviceObject #beware, soon deprecated
     if detectUserLocation
       @findUserLocation(this, center_on_user)
-    #resets sidebar if needed
-    @resetSidebarContent()
 
   getMapObject: ->
     return @map.serviceObject
 
-  #////////////////////////////////////////////////////
-  #///////////////////// SIDEBAR //////////////////////
-  #////////////////////////////////////////////////////
-
-  #//creates sidebar
-  createSidebar : (marker_container) ->
-    if (@markers_conf.list_container)
-      ul = document.getElementById(@markers_conf.list_container)
-      li = document.createElement('li')
-      aSel = document.createElement('a')
-      aSel.href = 'javascript:void(0);'
-      html = if marker_container.sidebar? then marker_container.sidebar else "Marker"
-      aSel.innerHTML = html
-      currentMap = @
-      aSel.onclick = @sidebar_element_handler(currentMap, marker_container.serviceObject, 'click')
-      li.appendChild(aSel)
-      ul.appendChild(li)
-
-  #moves map to marker clicked + open infowindow
-  sidebar_element_handler : (currentMap, marker, eventType) ->
-    return () ->
-      currentMap.map.panTo(marker.position)
-      google.maps.event.trigger(marker, eventType)
-
-
-  resetSidebarContent : ->
-    # if @markers_conf.list_container isnt null
-    #   ul = document.getElementById(@markers_conf.list_container)
-    #   ul.innerHTML = ""
   adjustMapToBounds: ->
     @map.adjustToBounds()

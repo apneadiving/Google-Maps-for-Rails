@@ -54,8 +54,6 @@
     @markers = []
     #reset current bounds
     @boundsObject = @createLatLngBounds()
-    #reset sidebar content if exists
-    @resetSidebarContent()
     #add new markers
     @addMarkers(new_markers)
 
