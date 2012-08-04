@@ -73,18 +73,42 @@ module Gmaps4rails
         :title          => :gmaps4rails_title,
         :sidebar        => :gmaps4rails_sidebar,
         :marker_picture => :gmaps4rails_marker_picture,
-        :lat            => @object.gmaps4rails_options[:lat_column],
-        :lng            => @object.gmaps4rails_options[:lng_column]
-      }
+      }.merge(position_attributes)
+    end
+
+    def position_attributes
+      obj_option(:position) ? {:position => opt_value(:position)} : {:lat => opt_option(:lat_column), :lng => opt_option(:lng_column)}
+    end
+
+    def obj_option name
+      @object.gmaps4rails_options[:lng_column]
+    end
+
+    def opt_value name
+      @object.send(obj_option name)
+    end
+
+    def obj_value name
+      @object.send(name)
+    end
+
+    def obj_method? name
+      @object.respond_to?
+    end
+
+    def json_merge! hash
+      @json_hash.merge! hash
     end
 
     def handle_model_methods
       model_attributes.each do |json_name, method_name|
-        if @object.respond_to? method_name
+        if obj_method? method_name
           if json_name == :marker_picture
-            @json_hash.merge!(@object.send(method_name)) unless @json_hash.has_key? "picture"
+            json_merge!(obj_value(method_name)) unless @json_hash.has_key? "picture"
+          elsif json_name == :position
+            json_merge!(:lat => obj_value(method_name)[0], :lng => obj_value(:position)[0])
           else
-            @json_hash[json_name] = @object.send(method_name) unless @json_hash.has_key? json_name
+            @json_hash[json_name] = obj_value(method_name) unless @json_hash.has_key? json_name
           end
         end
       end
@@ -99,7 +123,7 @@ module Gmaps4rails
       return @json_hash.to_json if @custom_json.nil?
       case @custom_json
       when Hash
-        @json_hash.merge! @custom_json
+        json_merge! @custom_json
         return @json_hash.to_json
       when String
         output = @json_hash.to_json
@@ -108,7 +132,15 @@ module Gmaps4rails
     end
 
     def compliant?
-      !(@object.send(@object.gmaps4rails_options[:lat_column]).blank? && @object.send(@object.gmaps4rails_options[:lng_column]).blank?)
+      obj_lat_lng? || obj_position?
+    end
+
+    def obj_lat_lng?
+      !obj_value(:lat_column).blank? && !obj_value(:lng_column).blank?
+    end
+
+    def obj_position?
+      !obj_value(:position).blank?
     end
 
     def handle_block(&block)
