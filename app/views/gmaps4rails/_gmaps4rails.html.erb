@@ -1,5 +1,5 @@
 <% content_for :scripts do %>
-<%= javascript_include_tag *js_dependencies %>
+<%= javascript_include_tag *(js_dependencies.map(&:html_safe)) %>
 
 <script type="text/javascript" charset="utf-8">
 <%=raw options.to_gmaps4rails %>

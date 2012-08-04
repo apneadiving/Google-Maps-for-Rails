@@ -8,9 +8,9 @@ module Gmaps4rails
     delegate :key, :keyword, :radius, :lang, :raw, :protocol, :to => :@options
         
     def initialize(lat, lng, options = {})
-      raise_invalid     if valid_position?
-      raise_missing_key unless options[:key]
       @lat, @lng = lat, lng
+      raise_invalid     unless valid_position?
+      raise_missing_key unless options[:key]
       options[:radius]  ||= 7500
       options[:lang]    ||= "en"
       options[:raw]     ||= false
