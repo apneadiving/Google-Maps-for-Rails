@@ -56,7 +56,7 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
       aSel.href = 'javascript:void(0);'
       html = if marker_container.sidebar? then marker_container.sidebar else "Marker"
       aSel.innerHTML = html
-      currentMap = this
+      currentMap = @
       aSel.onclick = @sidebar_element_handler(currentMap, marker_container.serviceObject, 'click')
       li.appendChild(aSel)
       ul.appendChild(li)

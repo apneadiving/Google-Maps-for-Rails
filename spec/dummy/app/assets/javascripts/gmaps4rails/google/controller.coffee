@@ -49,7 +49,7 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
       @markerClusterer = @createClusterer(markers_array)
 
   findUserLocation : (controller, center_on_user) ->
-    if !!navigator.geolocation
+    if navigator.geolocation
       #try to retrieve user's position
       positionSuccessful = (position) ->
         controller.userLocation = controller.createLatLng(position.coords.latitude, position.coords.longitude)
