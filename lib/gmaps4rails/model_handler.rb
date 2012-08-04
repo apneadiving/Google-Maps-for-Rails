@@ -4,8 +4,8 @@ module Gmaps4rails
     
     attr_accessor :options, :object 
     
-    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :msg, :validation,
-             :language, :protocol, :address, :callback, :normalized_address,
+    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :lat_lng_array
+             :msg, :validation,  :language, :protocol, :address, :callback, :normalized_address,
              :to => :@options
   
     def initialize(object, gmaps4rails_options)
@@ -17,23 +17,60 @@ module Gmaps4rails
     def retrieve_coordinates
       return if prevent_geocoding?
       checked_coordinates do 
-        object.send("#{lng_column}=", coordinates.first[:lng])
-        object.send("#{lat_column}=", coordinates.first[:lat])
+        set_lat_lng
+
         # save normalized address if required
-        object.send("#{normalized_address}=", coordinates.first[:matched_address]) if normalized_address
+        set_normalized_address if normalized_address?
         # Call the callback method to let the user do what he wants with the data
-        object.send(callback, coordinates.first[:full_data]) if callback
+        set_callback if callback?
         # update checker if required
-        object.send("#{checker}=", true) if check_geocoding?
+        set_checker if check_geocoding?        
       end
     end
     
     private
+
+    alias_method :normalized_address?, :normalized_address
+    alias_method :callback?, :callback
+
+    def set_lat_lng
+      if lat_lng_array?
+        object.send("#{lat_lng_array}=", [lat, lng])
+      else
+        object.send("#{lng_column}=", lng)
+        object.send("#{lat_column}=", lat)
+      end
+    end
+
+    def set_checker
+      object.send("#{checker}=", true)
+    end
+
+    def set_callback
+      object.send(callback, coordinates.first[:full_data]) if callback
+    end
+
+    def set_normalized_address
+      object.send("#{normalized_address}=", coordinates.first[:matched_address]) 
+    end
+
+    def lat_lng_array
+      gmaps4rails_options[:lat_lng_array]
+    end
+    alias_method :lat_lng_array?, :lat_lng_array
     
     def checked_coordinates(&block)
       yield if coordinates
     end
     
+    def lng
+      coordinates.first[:lng]
+    end
+
+    def lat
+      coordinates.first[:lat]
+    end
+
     def coordinates
       @coordinates ||= get_coordinates
     end
