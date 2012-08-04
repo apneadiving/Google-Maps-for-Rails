@@ -28,6 +28,8 @@ module Gmaps4rails
     
     private
 
+    include Gmaps4rails::ObjectAccessor
+
     def do_callback
       object.send callback, coordinates.first[:full_data]
     end
@@ -53,10 +55,6 @@ module Gmaps4rails
     def set_coordinate name
       column = send("#{name}_column")
       obj_set column, coord(name)
-    end
-
-    def obj_set name, value
-      object.send("#{name}=", value)
     end
 
     def coord name
