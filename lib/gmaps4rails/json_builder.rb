@@ -128,11 +128,11 @@ module Gmaps4rails
     end
 
     def lat
-      position_from_array? ? position_array_value[0] : @object.send("#{lat_column}")
+      position_from_array? ? @object.send("#{position}")[0] : @object.send("#{lat_column}")
     end
 
     def lng
-      position_from_array? ? position_array_value[1] : @object.send("#{lng_column}")
+      position_from_array? ? @object.send("#{position}")[1] : @object.send("#{lng_column}")
     end
 
   end  
