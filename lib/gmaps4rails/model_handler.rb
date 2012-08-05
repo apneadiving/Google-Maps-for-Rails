@@ -18,47 +18,34 @@ module Gmaps4rails
       return if prevent_geocoding?
       checked_coordinates do
         position? ? set_position : set_lat_lng
-        set_normalized_address if normalized_address
+        # save normalized address if required
+        object.send("#{normalized_address}=", coordinates.first[:matched_address]) if normalized_address
         # Call the callback method to let the user do what he wants with the data
-        do_callback if callback
+        object.send callback, coordinates.first[:full_data] if callback
         # update checker if required
-        set_checker if check_geocoding?
+        object.send("#{checker}=", true) if check_geocoding?
       end
     end
     
     private
 
-    include Gmaps4rails::ObjectAccessor
-
-    def do_callback
-      object.send callback, coordinates.first[:full_data]
+    # sets array for non relationnal db
+    def set_position
+      object.send("#{position}=", [lat, lng])
     end
 
-    def set_checker
-      obj_set checker, true
-    end
-
-    def set_normalized_address
-      # save normalized address if required
-      obj_set normalized_address, coordinates.first[:matched_address]
-    end      
-
-    def set_position      
-      obj_set position, [coord(:lat), coord(:lng)]
-    end
-
+    #sets regular columns
     def set_lat_lng
-      set_coordinate :lng
-      set_coordinate :lat
+      object.send("#{lng_column}=", lng)
+      object.send("#{lat_column}=", lat)
     end
 
-    def set_coordinate name
-      column = send("#{name}_column")
-      obj_set column, coord(name)
+    def lat
+      coordinates.first[:lat]
     end
 
-    def coord name
-      coordinates.first[name.to_sym]
+    def lng
+      coordinates.first[:lng]
     end
 
     def position?

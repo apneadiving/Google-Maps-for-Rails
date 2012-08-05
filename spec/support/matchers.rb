@@ -1,4 +1,5 @@
 require 'rspec/expectations'
+require 'ostruct'
 
 def has_same_content_as?(actual, expected)
   case actual
@@ -29,45 +30,31 @@ end
 
 class PositionMatcher
   attr_reader :object, :position_hash
+  delegate :position, :lat_column, :lng_column, to: :@options
 
   def initialize object, position_hash
-    @object = object
-    @position_hash = position_hash    
+    @object, @position_hash = object, position_hash
+    @options = ::OpenStruct.new object.gmaps4rails_options
   end
 
   def same_pos?    
-    same?(:latitude, position[0]) && same?(:longitude, position[1])
+    position_hash[:latitude] == lat && position_hash[:longitude] == lng
   end
 
   protected
 
-  include Gmaps4rails::ObjectAccessor
-
-  def position 
-    @position = obj_option(:position) ? opt_value(:position) : obj_create_position
+  def lat
+    position ? object.send("#{position}")[0] : object.send("#{lat_column}")
   end
 
-  def obj_create_position
-    [obj_coord(:lat), obj_coord(:lng)]
+  def lng
+    position ? object.send("#{position}")[1] : object.send("#{lng_column}")
   end
 
-  def obj_coord name
-    obj_value :"#{name}_column"
-  end
-
-  def same? name, value
-    value == position_hash[name.to_sym]
-  end
 end
 
 def position_matcher object, position_hash
   PositionMatcher.new object, position_hash
-end
-
-RSpec::Matchers.define :have_same_position_as do |position_hash|
-  match do |object|
-    position_matcher(object, position_hash).same_pos?
-  end
 end
 
 RSpec::Matchers.define :have_same_position_as do |position_hash|

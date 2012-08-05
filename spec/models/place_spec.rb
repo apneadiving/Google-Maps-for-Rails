@@ -16,7 +16,7 @@ RSpec.configure do |config|
   # config.mock_with(:mocha)
 
   config.before(:each) do
-    Mongoid.purge!
+   # Mongoid.purge!
   end
 end
 
@@ -33,6 +33,7 @@ describe Gmaps4rails::ActsAsGmappable do
   context "standard configuration, valid place" do
     it "should save longitude and latitude to the customized position array" do
       # set_gmaps4rails_options!(:position  => 'location')
+      binding.pry
       place.pos.should_not be_nil
       place.should have_same_position_as TOULON
     end
