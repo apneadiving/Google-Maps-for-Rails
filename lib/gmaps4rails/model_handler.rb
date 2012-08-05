@@ -4,9 +4,9 @@ module Gmaps4rails
     
     attr_accessor :options, :object 
     
-    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :msg, :validation,
+    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :position, :msg, :validation,
              :language, :protocol, :address, :callback, :normalized_address,
-             :to => :@options
+             :to => :options
   
     def initialize(object, gmaps4rails_options)
       @options = ::OpenStruct.new(gmaps4rails_options)
@@ -16,19 +16,54 @@ module Gmaps4rails
     # saves coordinates according to the various options
     def retrieve_coordinates
       return if prevent_geocoding?
-      checked_coordinates do 
-        object.send("#{lng_column}=", coordinates.first[:lng])
-        object.send("#{lat_column}=", coordinates.first[:lat])
-        # save normalized address if required
-        object.send("#{normalized_address}=", coordinates.first[:matched_address]) if normalized_address
+      checked_coordinates do
+        position? ? set_position : set_lat_lng
+        set_normalized_address if normalized_address
         # Call the callback method to let the user do what he wants with the data
-        object.send(callback, coordinates.first[:full_data]) if callback
+        do_callback if callback
         # update checker if required
-        object.send("#{checker}=", true) if check_geocoding?
+        set_checker if check_geocoding?
       end
     end
     
     private
+
+    include Gmaps4rails::ObjectAccessor
+
+    def do_callback
+      object.send callback, coordinates.first[:full_data]
+    end
+
+    def set_checker
+      obj_set checker, true
+    end
+
+    def set_normalized_address
+      # save normalized address if required
+      obj_set normalized_address, coordinates.first[:matched_address]
+    end      
+
+    def set_position      
+      obj_set position, [coord(:lat), coord(:lng)]
+    end
+
+    def set_lat_lng
+      set_coordinate :lng
+      set_coordinate :lat
+    end
+
+    def set_coordinate name
+      column = send("#{name}_column")
+      obj_set column, coord(name)
+    end
+
+    def coord name
+      coordinates.first[name.to_sym]
+    end
+
+    def position?
+      position
+    end
     
     def checked_coordinates(&block)
       yield if coordinates

@@ -27,9 +27,52 @@ def has_same_content_as?(actual, expected)
   end
 end
 
+class PositionMatcher
+  attr_reader :object, :position_hash
+
+  def initialize object, position_hash
+    @object = object
+    @position_hash = position_hash    
+  end
+
+  def same_pos?    
+    same?(:latitude, position[0]) && same?(:longitude, position[1])
+  end
+
+  protected
+
+  include Gmaps4rails::ObjectAccessor
+
+  def position 
+    @position = obj_option(:position) ? opt_value(:position) : obj_create_position
+  end
+
+  def obj_create_position
+    [obj_coord(:lat), obj_coord(:lng)]
+  end
+
+  def obj_coord name
+    obj_value :"#{name}_column"
+  end
+
+  def same? name, value
+    value == position_hash[name.to_sym]
+  end
+end
+
+def position_matcher object, position_hash
+  PositionMatcher.new object, position_hash
+end
+
 RSpec::Matchers.define :have_same_position_as do |position_hash|
   match do |object|
-    object.send(object.gmaps4rails_options[:lat_column]) == position_hash[:latitude] && object.send(object.gmaps4rails_options[:lng_column]) == position_hash[:longitude]
+    position_matcher(object, position_hash).same_pos?
+  end
+end
+
+RSpec::Matchers.define :have_same_position_as do |position_hash|
+  match do |object|
+    position_matcher(object, position_hash).same_pos?
   end
 end
 
