@@ -4,7 +4,12 @@ rvm:
   - 1.9.2
   - 1.9.3
 gemfile:
-  - Gemfile
+  - gemfiles/Mongoid-2-4.gemfile
+  - gemfiles/Mongoid-3-0.gemfile
+  - gemfiles/Rails-3-0.gemfile
+  - gemfiles/Rails-3-1.gemfile
+  - gemfiles/Rails-3-2.gemfile
+
 before_script: 'cd spec/dummy/; rake db:migrate RAILS_ENV=test; cd ../..'
 script: 'rspec spec'
 after_script: 'bundle exec guard-jasmine -u http://localhost:8888/'
