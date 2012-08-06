@@ -30,7 +30,7 @@ end
 
 class PositionMatcher
   attr_reader :object, :position_hash
-  delegate :position, :lat_column, :lng_column, to: :@options
+  delegate :position, :lat_column, :lng_column, :to => :@options
 
   def initialize object, position_hash
     @object, @position_hash = object, position_hash
