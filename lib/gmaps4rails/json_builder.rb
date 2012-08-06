@@ -26,7 +26,7 @@ module Gmaps4rails
   #
   class JsonBuilder
 
-    delegate :position, :lat_column, :lng_column, to: :@options
+    delegate :position, :lat_column, :lng_column, :to => :@options
     
     def initialize(object)
       @object, @json_hash, @custom_json = object, Hash.new, nil
