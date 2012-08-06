@@ -66,6 +66,14 @@ Create a migration and add the following fields to your table (here users):
     add_column :users, :longitude, :float #you can change the name, see wiki
     add_column :users, :gmaps, :boolean #not mandatory, see wiki
 
+== Basic configuration: Non-relational DB
+
+Mongoid example:
+
+    acts_as_gmappable :position => :location
+
+    field :location, :type => Array
+
 == How to?
 === QuickStart!
 In your controller:
