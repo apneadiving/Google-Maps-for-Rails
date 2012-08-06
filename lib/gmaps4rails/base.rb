@@ -20,6 +20,7 @@ module Gmaps4rails
   autoload :Geocoder,         'gmaps4rails/api_wrappers/geocoder'
   autoload :Direction,        'gmaps4rails/api_wrappers/direction'
   autoload :Places,           'gmaps4rails/api_wrappers/places'
+  autoload :ObjectAccessor,   'gmaps4rails/object_accessor'
 
   mattr_accessor :http_proxy
   

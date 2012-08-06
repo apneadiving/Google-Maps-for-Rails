@@ -4,9 +4,9 @@ module Gmaps4rails
     
     attr_accessor :options, :object 
     
-    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :msg, :validation,
+    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :position, :msg, :validation,
              :language, :protocol, :address, :callback, :normalized_address,
-             :to => :@options
+             :to => :options
   
     def initialize(object, gmaps4rails_options)
       @options = ::OpenStruct.new(gmaps4rails_options)
@@ -16,19 +16,41 @@ module Gmaps4rails
     # saves coordinates according to the various options
     def retrieve_coordinates
       return if prevent_geocoding?
-      checked_coordinates do 
-        object.send("#{lng_column}=", coordinates.first[:lng])
-        object.send("#{lat_column}=", coordinates.first[:lat])
+      checked_coordinates do
+        position? ? set_position : set_lat_lng
         # save normalized address if required
         object.send("#{normalized_address}=", coordinates.first[:matched_address]) if normalized_address
         # Call the callback method to let the user do what he wants with the data
-        object.send(callback, coordinates.first[:full_data]) if callback
+        object.send callback, coordinates.first[:full_data] if callback
         # update checker if required
         object.send("#{checker}=", true) if check_geocoding?
       end
     end
     
     private
+
+    # sets array for non relationnal db
+    def set_position
+      object.send("#{position}=", [lat, lng])
+    end
+
+    #sets regular columns
+    def set_lat_lng
+      object.send("#{lng_column}=", lng)
+      object.send("#{lat_column}=", lat)
+    end
+
+    def lat
+      coordinates.first[:lat]
+    end
+
+    def lng
+      coordinates.first[:lng]
+    end
+
+    def position?
+      position
+    end
     
     def checked_coordinates(&block)
       yield if coordinates
