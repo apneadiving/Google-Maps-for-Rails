@@ -25,9 +25,12 @@ module Gmaps4rails
   #   end
   #
   class JsonBuilder
+
+    delegate :position, :lat_column, :lng_column, :to => :@options
     
     def initialize(object)
       @object, @json_hash, @custom_json = object, Hash.new, nil
+      @options = OpenStruct.new @object.gmaps4rails_options
     end
     
     def process(&block)
@@ -72,10 +75,12 @@ module Gmaps4rails
         :description    => :gmaps4rails_infowindow,
         :title          => :gmaps4rails_title,
         :sidebar        => :gmaps4rails_sidebar,
-        :marker_picture => :gmaps4rails_marker_picture,
-        :lat            => @object.gmaps4rails_options[:lat_column],
-        :lng            => @object.gmaps4rails_options[:lng_column]
-      }
+        :marker_picture => :gmaps4rails_marker_picture
+      }.merge(coordinates_attributes)
+    end
+
+    def coordinates_attributes
+      position_from_array? ? {:position => position } : {:lat => lat_column, :lng => lng_column}
     end
 
     def handle_model_methods
@@ -83,6 +88,8 @@ module Gmaps4rails
         if @object.respond_to? method_name
           if json_name == :marker_picture
             @json_hash.merge!(@object.send(method_name)) unless @json_hash.has_key? "picture"
+          elsif json_name == :position
+            @json_hash.merge!(:lat => lat, :lng => lng)
           else
             @json_hash[json_name] = @object.send(method_name) unless @json_hash.has_key? json_name
           end
@@ -108,12 +115,24 @@ module Gmaps4rails
     end
 
     def compliant?
-      !(@object.send(@object.gmaps4rails_options[:lat_column]).blank? && @object.send(@object.gmaps4rails_options[:lng_column]).blank?)
+      !(lat.blank? && lng.blank?)
     end
 
     def handle_block(&block)
       block_result = yield(@object, self)
       @custom_json = block_result unless block_result == true
+    end
+
+    def position_from_array?
+      position #if gmaps4rails_options[:position] is filled, means user is indicating an array
+    end
+
+    def lat
+      position_from_array? ? @object.send("#{position}")[0] : @object.send("#{lat_column}")
+    end
+
+    def lng
+      position_from_array? ? @object.send("#{position}")[1] : @object.send("#{lng_column}")
     end
 
   end  
