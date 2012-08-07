@@ -22,7 +22,9 @@ module Gmaps4rails
   autoload :Places,           'gmaps4rails/api_wrappers/places'
   autoload :ObjectAccessor,   'gmaps4rails/object_accessor'
 
-  mattr_accessor :http_proxy
+  mattr_accessor :http_proxy, :escape_js_url
+
+  self.escape_js_url = true
   
   # This method geocodes an address using the GoogleMaps webservice
   # options are:
