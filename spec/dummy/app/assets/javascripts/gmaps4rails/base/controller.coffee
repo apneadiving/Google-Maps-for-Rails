@@ -44,6 +44,7 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
   circles:      []            # contains raw data, array of hash
   markerClusterer: null  # contains all marker clusterers
   markerImages: []
+  kmls:         []
 
   initialize : ->
     detectUserLocation = @map_options.detect_location or @map_options.center_on_user

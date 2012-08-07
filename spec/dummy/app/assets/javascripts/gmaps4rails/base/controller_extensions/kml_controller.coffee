@@ -2,4 +2,4 @@
 
   addKml : (kmlData) ->
     for kml in kmlData
-      @createKml kml
+      @kmls.push @createKml kml
