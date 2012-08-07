@@ -42,13 +42,3 @@ class @Gmaps4Rails.GooglePolyline extends Gmaps4Rails.Common
     #save polyline
     @serviceObject = new_poly
     new_poly.setMap(controller.getMapObject())
-
-  clear: ()->
-    @serviceObject.setMap(null)
-
-  
-  updateBoundsWithPolylines: ()->
-    for polyline in @polylines
-      polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-      for point in polyline_points
-        @boundsObject.extend point

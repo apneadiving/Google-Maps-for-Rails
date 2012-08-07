@@ -2,6 +2,8 @@
 #= require './map'
 #= require './polyline'
 #= require './marker'
+#= require './polygon'
+#= require './circle'
 
 #######################################################################################################
 ##############################################  Google maps  ##########################################
@@ -12,8 +14,11 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
   @include Gmaps4Rails.GoogleShared
   
   constructor: ->
-    @markers_conf  = Gmaps4Rails.GoogleMarker.setConf()
+    @markers_conf   = Gmaps4Rails.GoogleMarker.setConf()
     @polylines_conf = Gmaps4Rails.GooglePolyline.setConf()
+    @polygons_conf  = Gmaps4Rails.GooglePolygon.setConf()
+    @circles_conf   = Gmaps4Rails.GoogleCircle.setConf()
+
     @markerImages = []
 
   #////////////////////////////////////////////////////
@@ -28,6 +33,12 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
 
   createPolyline: (args)->
     new Gmaps4Rails.GooglePolyline(args, @)
+
+  createPolygon: (args)->
+    new Gmaps4Rails.GooglePolygon(args, @)
+
+  createCircle: (args)->
+    new Gmaps4Rails.GoogleCircle(args, @)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////

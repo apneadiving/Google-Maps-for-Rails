@@ -11,3 +11,12 @@ Gmaps4Rails.GoogleShared =
 
   createLatLngBounds : ->
     return new google.maps.LatLngBounds()
+
+  clear: ()->
+    @serviceObject.setMap(null)
+
+  show: () ->
+    @serviceObject.setVisible(true)
+
+  hide: () ->
+    @serviceObject.setVisible(false)

@@ -19,3 +19,11 @@
   addPolylines: (polylineData)->
     for polylineArgs in polylineData
       @polylines.push @createPolyline(polylineArgs)
+
+  showPolylines : ->
+    for polyline in @polylines
+      polyline.show()
+
+  hidePolylines : ->
+    for polyline in @polylines
+      polyline.hide()

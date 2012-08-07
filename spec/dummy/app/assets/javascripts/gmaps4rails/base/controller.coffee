@@ -4,14 +4,20 @@
 #= require './map'
 #= require './marker'
 #= require './polyline'
+#= require './polygon'
+#= require './circle'
 
 #= require './controller/marker_controller'
 #= require './controller/polyline_controller'
+#= require './controller/polygon_controller'
+#= require './controller/circle_controller'
 
 class @Gmaps4Rails.Base extends Gmaps4Rails.Common
 
   @include Gmaps4Rails.MarkerController
   @include Gmaps4Rails.PolylineController
+  @include Gmaps4Rails.PolygonController
+  @include Gmaps4Rails.CircleController
 
   visibleInfoWindow: null  #contains the current opened infowindow
   userLocation:      null       #contains user's location if geolocalization was performed and successful

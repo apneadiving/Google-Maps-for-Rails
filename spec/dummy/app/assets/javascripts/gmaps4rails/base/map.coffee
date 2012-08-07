@@ -31,10 +31,10 @@
         @extendBoundsWithPolylines()
 
         #from polygons:
-        #@updateBoundsWithPolygons()
+        @extendBoundsWithPolygons()
 
         #from circles
-        #@updateBoundsWithCircles()
+        @extendBoundsWithCircles()
 
       #in every case, I've to take into account the bounds set up by the user
       @extendBounds()

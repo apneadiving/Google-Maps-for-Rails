@@ -41,6 +41,17 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
       for point in polyline_points
         @boundsObject.extend point
 
+  extendBoundsWithPolygons: ()->
+    for polygon in @controller.polygons
+      polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
+      for point in polygon_points
+        @boundsObject.extend point
+
+  extendBoundsWithCircles: ()->
+    for circle in @controller.circles
+      @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
+      @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+
   extendBounds: ()->
     for bound in @options.bounds
       #create points from bounds provided
