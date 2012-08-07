@@ -108,6 +108,10 @@
 {"lng": -120.214897, "lat": 30.772323, "strokeColor": "#000", "strokeWeight" : 2 },
 {"lng": -10.821856, "lat": 50.291982}
 ]]' },
+:kml => { :data => '[{ url: "http://www.searcharoo.net/SearchKml/newyork.kml"}, 
+                              { url: "http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml",
+                                options: {clickable: false } }]' },
+
           :map_options => {:auto_adjust => true, :zoom => 3, :center_on_user => false, :detect_location => false, :raw => "{styles: pinkParksStyles}" },
           :last_map => true) %>
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },

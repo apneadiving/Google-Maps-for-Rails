@@ -17,7 +17,6 @@ class @Gmaps4Rails.Common
       # Assign properties to the prototype
       @::[key] = value
 
-    #console.log obj, this
     obj.included?.apply(@)
     this
 
