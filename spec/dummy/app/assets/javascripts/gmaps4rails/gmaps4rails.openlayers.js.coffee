@@ -102,10 +102,10 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
   #   return marker
 
   #//clear markers
-  clearMarkers: ->
-    @clearMarkersLayerIfExists()
-    @markersLayer = null
-    @boundsObject = new OpenLayers.Bounds()
+  # clearMarkers: ->
+  #   @clearMarkersLayerIfExists()
+  #   @markersLayer = null
+  #   @boundsObject = new OpenLayers.Bounds()
   
   # clearMarkersLayerIfExists: -> 
   #   @serviceObject.removeLayer(@markersLayer) if @markersLayer != null and @serviceObject.getLayer(@markersLayer.id) != null

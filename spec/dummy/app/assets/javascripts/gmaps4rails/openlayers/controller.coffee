@@ -2,7 +2,7 @@
 
 #= require './objects/map'
 
-# require './objects/polyline'
+#= require './objects/polyline'
 #= require './objects/marker'
 # require './objects/polygon'
 
@@ -22,6 +22,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
     @polylinesLayer = null
 
     @markers_conf   = Gmaps4Rails.OpenlayersMarker.setConf()
+    @polylines_conf = Gmaps4Rails.OpenlayersPolyline.setConf()
 
   #////////////////////////////////////////////////////
   #/////////////// Basic Objects         //////////////
@@ -32,6 +33,9 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
 
   createMarker: (args)->
     new Gmaps4Rails.OpenlayersMarker(args, @)
+
+  createPolyline: (args)->
+    new Gmaps4Rails.OpenlayersPolyline(args, @)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////
@@ -45,6 +49,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
       markers_array = []
       for marker in @markers
         markers_array.push(marker.serviceObject)
+
       @markerClusterer = @_createClusterer markers_array
    
   clearClusterer: ->
@@ -61,6 +66,16 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
 
 
   #### Private methods
+  _createPolylinesLayer: ->  
+
+    return if @polylinesLayer?
+    @polylinesLayer = new OpenLayers.Layer.Vector("Polylines", null)
+    @polylinesLayer.events.register("featureselected", @polylinesLayer, @_onFeatureSelect)
+    @polylinesLayer.events.register("featureunselected", @polylinesLayer, @_onFeatureUnselect)
+    @polylinesControl = new OpenLayers.Control.DrawFeature(@polylinesLayer, OpenLayers.Handler.Path)
+    @getMapObject().addLayer(@polylinesLayer)
+
+    @getMapObject().addControl(@polylinesControl)
 
   _createMarkersLayer: ->  
     return if @markersLayer?
@@ -113,7 +128,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
     return ->
       controller.markersControl.unselect feature
 
- _createClusterer: (marker_serviceObject_array)->
+  _createClusterer: (marker_serviceObject_array)->
     options = 
       pointRadius:   "${radius}"
       fillColor:     "#ffcc66"
