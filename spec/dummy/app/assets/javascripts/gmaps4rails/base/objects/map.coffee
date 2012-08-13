@@ -41,3 +41,23 @@
 
       #SECOND_STEP: ajust the map to the bounds
       @adaptToBounds()
+
+  extendBoundsWithMarkers : ->
+    for marker in @controller.markers
+      @extendBoundsWithMarker marker
+
+  extendBoundsWithPolylines: ()->
+    for polyline in @controller.polylines
+      @extendBoundsWithPolyline polyline
+
+  extendBoundsWithPolygons: ()->
+    for polygon in @controller.polygons
+      @extendBoundsWithPolygon polygon
+
+  extendBoundsWithCircles: ()->
+    for circle in @controller.circles
+      @extendBoundsWithCircle circle
+
+  extendBounds: ()->
+    for bound in @options.bounds
+      @extendBound bound

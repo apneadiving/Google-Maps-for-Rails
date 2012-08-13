@@ -37,12 +37,6 @@
       #add infowindowstuff if enabled
       newMarker.createInfoWindow()
       
-      #create sidebar if enabled
-      #@createSidebar(@markers[index])
-      #@clusterize()
-      #create sidebar if enabled
-      #@createSidebar(@markers[index])
-      # 
       @markers.push newMarker
 
     @clusterize()
@@ -62,6 +56,7 @@
     @clearClusterer() if @markerClusterer?
     for marker in @markers
       marker.clear()
+    @markers = []
 
   #show and hide markers
   showMarkers : ->

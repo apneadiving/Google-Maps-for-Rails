@@ -31,31 +31,26 @@ class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
 
     @serviceObject = new google.maps.Map document.getElementById(@options.id), mergedGoogleOptions
 
-  extendBoundsWithMarkers : ->
-    for marker in @controller.markers
-      @boundsObject.extend(marker.serviceObject.position)
+  extendBoundsWithMarker : (marker) ->
+    @boundsObject.extend(marker.serviceObject.position)
 
-  extendBoundsWithPolylines: ()->
-    for polyline in @controller.polylines
-      polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-      for point in polyline_points
-        @boundsObject.extend point
+  extendBoundsWithPolyline: (polyline)->
+    polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
+    for point in polyline_points
+      @boundsObject.extend point
 
-  extendBoundsWithPolygons: ()->
-    for polygon in @controller.polygons
-      polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-      for point in polygon_points
-        @boundsObject.extend point
+  extendBoundsWithPolygon: (polygon)->
+    polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
+    for point in polygon_points
+      @boundsObject.extend point
 
-  extendBoundsWithCircles: ()->
-    for circle in @controller.circles
-      @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
-      @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
+  extendBoundsWithCircle: (circle)->
+    @boundsObject.extend(circle.serviceObject.getBounds().getNorthEast())
+    @boundsObject.extend(circle.serviceObject.getBounds().getSouthWest())
 
-  extendBounds: ()->
-    for bound in @options.bounds
-      #create points from bounds provided
-      @boundsObject.extend @createLatLng(bound.lat, bound.lng)
+  extendBound: (bound)->
+    #create points from bounds provided
+    @boundsObject.extend @createLatLng(bound.lat, bound.lng)
 
   adaptToBounds:()->
     #if autozoom is false, take user info into account
