@@ -44,15 +44,15 @@
         
   extendBoundsWithPolylines: ()->
     for polyline in @controller.polylines
-      @extendBoundsWithPolyline(polyline) if polyline.isVisible()
+      @extendBoundsWithPolyline(polyline) #if polyline.isVisible()
 
   extendBoundsWithPolygons: ()->
     for polygon in @controller.polygons
-      @extendBoundsWithPolygon(polygon) if polygon.isVisible()
+      @extendBoundsWithPolygon(polygon) #if polygon.isVisible()
 
   extendBoundsWithCircles: ()->
     for circle in @controller.circles
-      @extendBoundsWithCircle(circle) if circle.isVisible()
+      @extendBoundsWithCircle(circle) #if circle.isVisible()
 
   extendBoundsWithLatLng: ()->
     for bound in @options.bounds

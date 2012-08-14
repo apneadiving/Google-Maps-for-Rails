@@ -32,8 +32,7 @@ class @Gmaps4Rails.Google.Polyline extends Gmaps4Rails.Common
         if element.lat? && element.lng?
           polyline_coordinates.push @createLatLng(element.lat, element.lng)
 
-    # Construct the polyline
-    new_poly = new google.maps.Polyline
+    polyOptions = 
       path:          polyline_coordinates
       strokeColor:   strokeColor
       strokeOpacity: strokeOpacity
@@ -41,6 +40,8 @@ class @Gmaps4Rails.Google.Polyline extends Gmaps4Rails.Common
       clickable:     clickable
       zIndex:        zIndex
 
-    #save polyline
-    @serviceObject = new_poly
-    new_poly.setMap(controller.getMapObject())
+    mergedOptions = @mergeObjects controller.polylines_conf.raw, polyOptions
+
+    # Construct the polyline
+    @serviceObject = new google.maps.Polyline mergedOptions
+    @serviceObject.setMap(controller.getMapObject())
