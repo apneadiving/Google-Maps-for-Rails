@@ -6,11 +6,6 @@
 #= require './objects/marker'
 # require './objects/polygon'
 
-
-#######################################################################################################
-##############################################  Google maps  ##########################################
-#######################################################################################################
-
 class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
 
   @include Gmaps4Rails.OpenlayersShared
@@ -56,7 +51,6 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
     @getMapObject().removeLayer @markerClusterer if @clusterLayer? and @getMapObject().getLayer(@clusterLayer.id)?
     @clusterLayer = null
 
-  ##############################
 
   clearMarkers: ->
     @_clearMarkersLayer()
@@ -64,8 +58,10 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
     @markers = []
     @boundsObject = new OpenLayers.Bounds()
 
+  #////////////////////////////////////////////////////
+  #/////////////// Private methods ////////////////////
+  #////////////////////////////////////////////////////
 
-  #### Private methods
   _createPolylinesLayer: ->  
 
     return if @polylinesLayer?

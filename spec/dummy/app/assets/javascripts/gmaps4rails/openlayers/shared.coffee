@@ -1,5 +1,8 @@
 Gmaps4Rails.OpenlayersShared = 
 
+  createPoint:(lat, lng) ->
+    new OpenLayers.Geometry.Point(lng, lat)
+ 
   createLatLng: (lat, lng)->
     new OpenLayers.LonLat(lng, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913")) # transform from WGS 1984 to Spherical Mercator Projection
               
@@ -12,7 +15,7 @@ Gmaps4Rails.OpenlayersShared =
 
   createLatLngBounds: ->
     new OpenLayers.Bounds()
-    
+
 
   # clear: ()->
   #   @serviceObject.setMap(null)
