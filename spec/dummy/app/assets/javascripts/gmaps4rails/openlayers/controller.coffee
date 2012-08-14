@@ -1,62 +1,53 @@
 #= require './shared'
 
-#= require './objects/map'
+#= require_tree './objects'
 
-#= require './objects/polyline'
-#= require './objects/marker'
-# require './objects/polygon'
+class @Gmaps4RailsOpenlayers extends Gmaps4Rails.BaseController
 
-class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
-
-  @include Gmaps4Rails.OpenlayersShared
+  @include Gmaps4Rails.Openlayers.Shared
   
   constructor: ->
+    super
+
     @markersControl = null
     @markersLayer   = null
 
     @polylinesLayer = null
 
-    @markers_conf   = Gmaps4Rails.OpenlayersMarker.setConf()
-    @polylines_conf = Gmaps4Rails.OpenlayersPolyline.setConf()
-
-  #////////////////////////////////////////////////////
-  #/////////////// Basic Objects         //////////////
-  #////////////////////////////////////////////////////
-
-  createMap : ->
-    new Gmaps4Rails.OpenlayersMap(@map_options, @)
-
-  createMarker: (args)->
-    new Gmaps4Rails.OpenlayersMarker(args, @)
-
-  createPolyline: (args)->
-    new Gmaps4Rails.OpenlayersPolyline(args, @)
+  getModule: ->
+    Gmaps4Rails.Openlayers
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////
   #////////////////////////////////////////////////////
+  
+  createClusterer: (marker_serviceObject_array)->
+    style    = new OpenLayers.Style @_clustererOptions, @_clustererFunctions
 
-  clusterize: ->
-    if @markers_conf.do_clustering
-      #//first clear the existing clusterer if any
-      if @markerClusterer?
-        @clearClusterer()
-      markers_array = []
-      for marker in @markers
-        markers_array.push(marker.serviceObject)
+    strategy = new OpenLayers.Strategy.Cluster
+    @_clearMarkersLayer()
 
-      @markerClusterer = @_createClusterer markers_array
-   
+    @clusterLayer = new OpenLayers.Layer.Vector "Clusters", 
+      strategies: [strategy]
+      styleMap: new OpenLayers.StyleMap
+        "default": style
+        "select": 
+            fillColor: "#8aeeef"
+            strokeColor: "#32a8a9"
+      
+    @getMapObject().addLayer @clusterLayer
+    @clusterLayer.addFeatures marker_serviceObject_array
+    @clusterLayer
+
   clearClusterer: ->
     @getMapObject().removeLayer @markerClusterer if @clusterLayer? and @getMapObject().getLayer(@clusterLayer.id)?
     @clusterLayer = null
 
-
+  #overwriting method from base controller since it doesn't fit here
   clearMarkers: ->
     @_clearMarkersLayer()
     @clearClusterer()
     @markers = []
-    @boundsObject = new OpenLayers.Bounds()
 
   #////////////////////////////////////////////////////
   #/////////////// Private methods ////////////////////
@@ -124,45 +115,24 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails.Base
     return ->
       controller.markersControl.unselect feature
 
-  _createClusterer: (marker_serviceObject_array)->
-    options = 
-      pointRadius:   "${radius}"
-      fillColor:     "#ffcc66"
-      fillOpacity:   0.8
-      strokeColor:   "#cc6633"
-      strokeWidth:   "${width}"
-      strokeOpacity: 0.8
-      label:         "${label}"
+  _clustererFunctions:
+    context:
+      width:  (feature) ->
+        return (feature.cluster) ? 2 : 1
+      radius: (feature) ->
+        pix = 2
+        pix = feature.cluster.length + 10 if feature.cluster
+        return pix
+      label: (feature) ->
+        if feature.cluster 
+          return feature.cluster.length
+        else
+          return ""
 
-    funcs =
-      context:
-        width:  (feature) ->
-          return (feature.cluster) ? 2 : 1
-        radius: (feature) ->
-          pix = 2
-          pix = feature.cluster.length + 10 if feature.cluster
-          return pix
-        label: (feature) ->
-          if feature.cluster 
-            return feature.cluster.length
-          else
-            return ""
-
-    style    = new OpenLayers.Style options, funcs
-   
-    strategy = new OpenLayers.Strategy.Cluster(
-      threshold: 1
-    )
-    @_clearMarkersLayer()
-
-    @clusterLayer = new OpenLayers.Layer.Vector "Clusters", 
-      strategies: [strategy]
-      styleMap: new OpenLayers.StyleMap
-        "default": style
-        "select": 
-            fillColor: "#8aeeef"
-            strokeColor: "#32a8a9"
-      
-    @getMapObject().addLayer @clusterLayer
-    @clusterLayer.addFeatures marker_serviceObject_array
-    @clusterLayer
+  _clustererOptions:  
+    pointRadius:   "${radius}"
+    fillColor:     "#ffcc66"
+    fillOpacity:   0.8
+    strokeColor:   "#cc6633"
+    strokeWidth:   "${width}"
+    label:         "${label}"

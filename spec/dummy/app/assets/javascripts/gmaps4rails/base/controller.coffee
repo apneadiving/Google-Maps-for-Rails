@@ -2,26 +2,19 @@
 #= require './configuration'
 #= require './gmaps'
 
-#= require './objects/map'
-#= require './objects/marker'
-#= require './objects/polyline'
-#= require './objects/polygon'
-#= require './objects/circle'
-#= require './objects/kml'
+#= require_tree './objects'
+#= require_tree './controller_extensions'
+#= require_tree './interfaces'
 
-#= require './controller_extensions/marker_controller'
-#= require './controller_extensions/polyline_controller'
-#= require './controller_extensions/polygon_controller'
-#= require './controller_extensions/circle_controller'
-#= require './controller_extensions/kml_controller'
-
-class @Gmaps4Rails.Base extends Gmaps4Rails.Common
+class @Gmaps4Rails.BaseController extends Gmaps4Rails.Common
 
   @include Gmaps4Rails.MarkerController
   @include Gmaps4Rails.PolylineController
   @include Gmaps4Rails.PolygonController
   @include Gmaps4Rails.CircleController
   @include Gmaps4Rails.KmlController
+
+  @include Gmaps4Rails.Interfaces.Controller
 
   visibleInfoWindow: null  #contains the current opened infowindow
   userLocation:      null       #contains user's location if geolocalization was performed and successful
@@ -45,6 +38,40 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
   markerClusterer: null  # contains all marker clusterers
   markerImages: []
   kmls:         []
+  rootModule:   null
+
+  constructor: ->
+    @rootModule = @getModule()
+    @markers_conf   = @rootModule.Marker.setConf()   if @rootModule.Marker? 
+    @polylines_conf = @rootModule.Polyline.setConf() if @rootModule.Polyline? 
+    @polygons_conf  = @rootModule.Polygon.setConf()  if @rootModule.Polygon? 
+    @circles_conf   = @rootModule.Circle.setConf()   if @rootModule.Circle? 
+ 
+  #////////////////////////////////////////////////////
+  #/////////////// Basic Objects         //////////////
+  #////////////////////////////////////////////////////
+
+  createMap : ->
+    new @rootModule.Map(@map_options, @)
+
+  createMarker: (args)->
+    new @rootModule.Marker(args, @)
+
+  createPolyline: (args)->
+    new @rootModule.Polyline(args, @)
+
+  createPolygon: (args)->
+    new @rootModule.Polygon(args, @)
+
+  createCircle: (args)->
+    new @rootModule.Circle(args, @)
+
+  createKml: (args)->
+    new @rootModule.Kml(args, @)
+
+  #///////////////////////////////////
+  #/////////////// Map  //////////////
+  #///////////////////////////////////
 
   initialize : ->
     detectUserLocation = @map_options.detect_location or @map_options.center_on_user
@@ -60,6 +87,21 @@ class @Gmaps4Rails.Base extends Gmaps4Rails.Common
 
   adjustMapToBounds: ->
     @map.adjustToBounds()
+
+  #////////////////////////////////////////////////////
+  #/////////////// Miscellaneous         //////////////
+  #////////////////////////////////////////////////////
+
+  clusterize : ->
+    if @markers_conf.do_clustering
+      #first clear the existing clusterer if any
+      @clearClusterer() if @markerClusterer?
+
+      markers_array = []
+      for marker in @markers
+        markers_array.push(marker.serviceObject)
+
+      @markerClusterer = @createClusterer(markers_array)
 
   findUserLocation : (controller, center_on_user) ->
     if navigator.geolocation

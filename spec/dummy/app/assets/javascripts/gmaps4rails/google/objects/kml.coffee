@@ -1,6 +1,8 @@
-class @Gmaps4Rails.GoogleKml extends Gmaps4Rails.Common
+class @Gmaps4Rails.Google.Kml extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.GoogleShared
+  @include Gmaps4Rails.Interfaces.Basic
+
+  @include Gmaps4Rails.Google.Shared
   @include Gmaps4Rails.Kml.Instance
 
  #creates a single polyline, triggered by create_polylines

@@ -1,4 +1,6 @@
-Gmaps4Rails.GoogleShared = 
+Gmaps4Rails.Google = {}
+
+Gmaps4Rails.Google.Shared = 
   
   createPoint : (lat, lng) ->
     new google.maps.Point(lat, lng)

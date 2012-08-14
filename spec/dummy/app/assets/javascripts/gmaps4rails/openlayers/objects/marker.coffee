@@ -1,6 +1,8 @@
-class @Gmaps4Rails.OpenlayersMarker extends Gmaps4Rails.Common
+class @Gmaps4Rails.Openlayers.Marker extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.OpenlayersShared
+  @include Gmaps4Rails.Interfaces.Marker
+
+  @include Gmaps4Rails.Openlayers.Shared
   @include Gmaps4Rails.Marker.Instance
   @extend  Gmaps4Rails.Marker.Class
   @extend  Gmaps4Rails.Configuration

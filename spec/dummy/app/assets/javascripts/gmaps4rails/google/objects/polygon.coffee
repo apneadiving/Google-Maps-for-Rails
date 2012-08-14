@@ -1,6 +1,8 @@
-class @Gmaps4Rails.GooglePolygon extends Gmaps4Rails.Common
+class @Gmaps4Rails.Google.Polygon extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.GoogleShared
+  @include Gmaps4Rails.Interfaces.Basic
+
+  @include Gmaps4Rails.Google.Shared
   @extend  Gmaps4Rails.Polygon.Class
   @extend  Gmaps4Rails.Configuration
 

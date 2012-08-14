@@ -1,6 +1,8 @@
-class @Gmaps4Rails.GooglePolyline extends Gmaps4Rails.Common
+class @Gmaps4Rails.Google.Polyline extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.GoogleShared
+  @include Gmaps4Rails.Interfaces.Basic
+
+  @include Gmaps4Rails.Google.Shared
   @extend  Gmaps4Rails.Polyline.Class
   @extend  Gmaps4Rails.Configuration
 

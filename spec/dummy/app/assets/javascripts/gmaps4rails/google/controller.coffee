@@ -1,49 +1,21 @@
 #= require './shared'
 
-#= require './objects/map'
-#= require './objects/polyline'
-#= require './objects/marker'
-#= require './objects/polygon'
-#= require './objects/circle'
-#= require './objects/kml'
+#= require_tree './objects'
 
 #######################################################################################################
 ##############################################  Google maps  ##########################################
 #######################################################################################################
 
-class @Gmaps4RailsGoogle extends Gmaps4Rails.Base
+class @Gmaps4RailsGoogle extends Gmaps4Rails.BaseController
 
-  @include Gmaps4Rails.GoogleShared
+  @include Gmaps4Rails.Google.Shared
   
+  getModule: ->
+    Gmaps4Rails.Google
+
   constructor: ->
-    @markers_conf   = Gmaps4Rails.GoogleMarker.setConf()
-    @polylines_conf = Gmaps4Rails.GooglePolyline.setConf()
-    @polygons_conf  = Gmaps4Rails.GooglePolygon.setConf()
-    @circles_conf   = Gmaps4Rails.GoogleCircle.setConf()
- 
+    super
     @markerImages = []
-
-  #////////////////////////////////////////////////////
-  #/////////////// Basic Objects         //////////////
-  #////////////////////////////////////////////////////
-
-  createMap : ->
-    new Gmaps4Rails.GoogleMap(@map_options, @)
-
-  createMarker: (args)->
-    new Gmaps4Rails.GoogleMarker(args, @)
-
-  createPolyline: (args)->
-    new Gmaps4Rails.GooglePolyline(args, @)
-
-  createPolygon: (args)->
-    new Gmaps4Rails.GooglePolygon(args, @)
-
-  createCircle: (args)->
-    new Gmaps4Rails.GoogleCircle(args, @)
-
-  createKml: (args)->
-    new Gmaps4Rails.GoogleKml(args, @)
 
   #////////////////////////////////////////////////////
   #/////////////////// Clusterer //////////////////////

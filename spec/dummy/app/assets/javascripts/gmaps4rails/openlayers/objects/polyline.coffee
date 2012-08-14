@@ -1,6 +1,8 @@
-class @Gmaps4Rails.OpenlayersPolyline extends Gmaps4Rails.Common
+class @Gmaps4Rails.Openlayers.Polyline extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.OpenlayersShared
+  @include Gmaps4Rails.Interfaces.Basic
+
+  @include Gmaps4Rails.Openlayers.Shared
   @extend  Gmaps4Rails.Polyline.Class
   @extend  Gmaps4Rails.Configuration
 

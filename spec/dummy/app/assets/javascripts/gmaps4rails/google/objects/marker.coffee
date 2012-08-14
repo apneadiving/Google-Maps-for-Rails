@@ -1,6 +1,8 @@
-class @Gmaps4Rails.GoogleMarker extends Gmaps4Rails.Common
+class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.GoogleShared
+  @include Gmaps4Rails.Interfaces.Marker
+  
+  @include Gmaps4Rails.Google.Shared
   @include Gmaps4Rails.Marker.Instance
   @extend  Gmaps4Rails.Marker.Class
   @extend  Gmaps4Rails.Configuration

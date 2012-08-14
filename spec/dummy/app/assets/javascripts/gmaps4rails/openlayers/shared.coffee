@@ -1,4 +1,6 @@
-Gmaps4Rails.OpenlayersShared = 
+Gmaps4Rails.Openlayers = {}
+
+Gmaps4Rails.Openlayers.Shared = 
 
   createPoint:(lat, lng) ->
     new OpenLayers.Geometry.Point(lng, lat)

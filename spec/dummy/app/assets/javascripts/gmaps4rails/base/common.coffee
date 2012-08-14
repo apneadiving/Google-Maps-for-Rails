@@ -16,7 +16,6 @@ class @Gmaps4Rails.Common
     for key, value of obj when key not in moduleKeywords
       # Assign properties to the prototype
       @::[key] = value
-
     obj.included?.apply(@)
     this
 

@@ -1,7 +1,9 @@
-class @Gmaps4Rails.GoogleMap extends Gmaps4Rails.Common
+class Gmaps4Rails.Google.Map extends Gmaps4Rails.Common
+
+  @include Gmaps4Rails.Interfaces.Map
 
   @include  Gmaps4Rails.Map
-  @include  Gmaps4Rails.GoogleShared
+  @include  Gmaps4Rails.Google.Shared
   @include  Gmaps4Rails.Configuration
 
   CONF:

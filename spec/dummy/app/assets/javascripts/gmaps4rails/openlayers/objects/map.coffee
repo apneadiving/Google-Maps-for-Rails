@@ -1,7 +1,9 @@
-class @Gmaps4Rails.OpenlayersMap extends Gmaps4Rails.Common
+class @Gmaps4Rails.Openlayers.Map extends Gmaps4Rails.Common
+
+  @include Gmaps4Rails.Interfaces.Map
 
   @include  Gmaps4Rails.Map
-  @include  Gmaps4Rails.OpenlayersShared
+  @include  Gmaps4Rails.Openlayers.Shared
   @include  Gmaps4Rails.Configuration
 
   CONF:
