@@ -17,13 +17,16 @@ class @Gmaps4Rails.Openlayers.Map extends Gmaps4Rails.Common
 
     defaultOptions = @setConf()
     @options  = @mergeObjects map_options, defaultOptions
+    
+    openlayersOptions = 
+      center: @createLatLng(@options.center_latitude, @options.center_longitude)
+      zoom:   @options.zoom
 
-    @serviceObject = new OpenLayers.Map(@options.id)
+    mergedOpenlayersOptions = @mergeObjects map_options.raw, openlayersOptions
+
+    @serviceObject = new OpenLayers.Map(@options.id, mergedOpenlayersOptions)
+    
     @serviceObject.addLayer(new OpenLayers.Layer.OSM())
-    @serviceObject.setCenter(
-      @createLatLng(@options.center_latitude, @options.center_longitude), # Center of the map
-      @options.zoom # Zoom level
-    )
 
   extendBoundsWithMarker : (marker)->
     @boundsObject.extend(@createLatLng(marker.lat,marker.lng))
