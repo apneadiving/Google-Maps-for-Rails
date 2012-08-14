@@ -22,3 +22,6 @@ Gmaps4Rails.Google.Shared =
 
   hide: () ->
     @serviceObject.setVisible(false)
+
+  isVisible: ->
+    @serviceObject.getVisible()

@@ -33,6 +33,10 @@ class @Gmaps4Rails.Openlayers.Marker extends Gmaps4Rails.Common
   createInfoWindow : () ->
     @serviceObject.infoWindow = @description if @description?
 
+  #cheap integration, I admit
+  isVisible: ->
+    true
+
   _isBasicMarker: (args)->
     !args.marker_picture?
 

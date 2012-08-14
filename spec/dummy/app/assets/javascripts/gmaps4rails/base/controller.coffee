@@ -86,7 +86,7 @@ class @Gmaps4Rails.BaseController extends Gmaps4Rails.Common
     @map.serviceObject
 
   adjustMapToBounds: ->
-    @map.adjustToBounds()
+    @map.adjustToBounds() if @map.autoAdjustRequested()
 
   #////////////////////////////////////////////////////
   #/////////////// Miscellaneous         //////////////

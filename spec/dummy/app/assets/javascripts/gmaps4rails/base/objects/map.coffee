@@ -17,47 +17,46 @@
 
   #to make the map fit the different LatLng points
   adjustToBounds : ->
-    #FIRST_STEP: retrieve all bounds
-    #create the bounds object only if necessary
-    if @options.auto_adjust or @options.bounds.length > 0
-      @boundsObject = @createLatLngBounds()
+    #reset previous bounds
+    @boundsObject = @createLatLngBounds()
 
-      #if autodjust is true, must get bounds from markers polylines etc...
-      if @options.auto_adjust
-        #from markers
-        @extendBoundsWithMarkers()
+    #from markers
+    @extendBoundsWithMarkers()
 
-        #from polylines:
-        @extendBoundsWithPolylines()
+    #from polylines:
+    @extendBoundsWithPolylines()
 
-        #from polygons:
-        @extendBoundsWithPolygons()
+    #from polygons:
+    @extendBoundsWithPolygons()
 
-        #from circles
-        @extendBoundsWithCircles()
+    #from circles
+    @extendBoundsWithCircles()
 
-      #in every case, I've to take into account the bounds set up by the user
-      @extendBounds()
+    #in every case, I've to take into account the bounds set up by the user
+    @extendBoundsWithLatLng()
 
-      #SECOND_STEP: ajust the map to the bounds
-      @adaptToBounds()
+    #SECOND_STEP: ajust the map to the bounds
+    @adaptToBounds()
 
   extendBoundsWithMarkers : ->
     for marker in @controller.markers
-      @extendBoundsWithMarker marker
-
+      @extendBoundsWithMarker(marker) if marker.isVisible()
+        
   extendBoundsWithPolylines: ()->
     for polyline in @controller.polylines
-      @extendBoundsWithPolyline polyline
+      @extendBoundsWithPolyline(polyline) if polyline.isVisible()
 
   extendBoundsWithPolygons: ()->
     for polygon in @controller.polygons
-      @extendBoundsWithPolygon polygon
+      @extendBoundsWithPolygon(polygon) if polygon.isVisible()
 
   extendBoundsWithCircles: ()->
     for circle in @controller.circles
-      @extendBoundsWithCircle circle
+      @extendBoundsWithCircle(circle) if circle.isVisible()
 
-  extendBounds: ()->
+  extendBoundsWithLatLng: ()->
     for bound in @options.bounds
       @extendBound bound
+
+  autoAdjustRequested: ->
+    @options.auto_adjust or @options.bounds.length > 0

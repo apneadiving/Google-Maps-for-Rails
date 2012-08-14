@@ -1,6 +1,6 @@
 class @Gmaps4Rails.Openlayers.Polyline extends Gmaps4Rails.Common
 
-  @include Gmaps4Rails.Interfaces.Basic
+  #@include Gmaps4Rails.Interfaces.Basic
 
   @include Gmaps4Rails.Openlayers.Shared
   @extend  Gmaps4Rails.Polyline.Class
@@ -34,3 +34,6 @@ class @Gmaps4Rails.Openlayers.Polyline extends Gmaps4Rails.Common
     @serviceObject.geometry.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"))
 
     @controller.polylinesLayer.addFeatures([@serviceObject])
+
+  isVisible: ->
+    true
