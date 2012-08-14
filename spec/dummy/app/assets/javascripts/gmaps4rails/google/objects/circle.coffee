@@ -21,7 +21,7 @@ class @Gmaps4Rails.Google.Circle extends Gmaps4Rails.Common
     if circle.lat? and circle.lng?
       # always check if a config is given, if not, use defaults
       # NOTE: is there a cleaner way to do this? Maybe a hash merge of some sort?
-      newCircle = new google.maps.Circle
+      circleOptions = 
         center:        @createLatLng(circle.lat, circle.lng)
         strokeColor:   circle.strokeColor   || @controller.circles_conf.strokeColor
         strokeOpacity: circle.strokeOpacity || @controller.circles_conf.strokeOpacity
@@ -32,5 +32,7 @@ class @Gmaps4Rails.Google.Circle extends Gmaps4Rails.Common
         zIndex:        circle.zIndex        || @controller.circles_conf.zIndex
         radius:        circle.radius
 
-      @serviceObject = newCircle
-      newCircle.setMap @controller.getMapObject()
+      mergedOptions = @mergeObjects @controller.circles_conf.raw, circleOptions
+
+      @serviceObject = new google.maps.Circle mergedOptions
+      @serviceObject.setMap @controller.getMapObject()

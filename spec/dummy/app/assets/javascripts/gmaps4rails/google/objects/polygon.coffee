@@ -22,18 +22,15 @@ class @Gmaps4Rails.Google.Polygon extends Gmaps4Rails.Common
         fillColor     = point.fillColor     || @controller.polygons_conf.fillColor
         fillOpacity   = point.fillOpacity   || @controller.polygons_conf.fillOpacity
         clickable     = point.clickable     || @controller.polygons_conf.clickable
-        
-    #Construct the polygon
-    new_poly = new google.maps.Polygon
-      paths:          polygon_coordinates
-      strokeColor:    strokeColor
-      strokeOpacity:  strokeOpacity
-      strokeWeight:   strokeWeight
-      fillColor:      fillColor
-      fillOpacity:    fillOpacity
-      clickable:      clickable
-      map:            @controller.getMapObject()
+    
+    polyOptions = 
+      path:          polyline_coordinates
+      strokeColor:   strokeColor
+      strokeOpacity: strokeOpacity
+      strokeWeight:  strokeWeight
+      clickable:     clickable
+      zIndex:        zIndex
 
-    #save polygon in list
-    @serviceObject = new_poly
+    mergedOptions = @mergeObjects controller.polygons_conf.raw, polyOptions
 
+    @serviceObject = new google.maps.Polygon mergedOptions
