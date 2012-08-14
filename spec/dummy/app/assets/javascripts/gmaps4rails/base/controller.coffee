@@ -20,6 +20,7 @@ class @Gmaps4Rails.BaseController extends Gmaps4Rails.Common
   userLocation:      null       #contains user's location if geolocalization was performed and successful
 
   #empty slots
+  afterMapInitialization: -> false
   geolocationSuccess: -> false
   geolocationFailure: -> false  #triggered when geolocation fails. If customized, must be like= function(navigator_handles_geolocation){} where 'navigator_handles_geolocation' is a boolean
   callback:           -> false  #to let user set a custom callback function
@@ -77,6 +78,8 @@ class @Gmaps4Rails.BaseController extends Gmaps4Rails.Common
     detectUserLocation = @map_options.detect_location or @map_options.center_on_user
     center_on_user     = @map_options.center_on_user
     @map = @createMap()
+    @afterMapInitialization()
+    
     delete @map_options
 
     if detectUserLocation
