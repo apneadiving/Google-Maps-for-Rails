@@ -12,6 +12,7 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
     clusterer_maxZoom:       5
     custom_cluster_pictures: null
     custom_infowindow_class: null
+    raw:                     {}
 
   constructor: (args, controller)->
     @controller = controller
