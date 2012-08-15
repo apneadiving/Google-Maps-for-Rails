@@ -8,8 +8,6 @@ Gmaps4rails is developed to simply create a Google Map:
 
 It's based on Ruby on Rails 3 Engines and uses Google Maps API V3.
 
-See (somewhat outdated) screencasts here: http://www.youtube.com/user/TheApneadiving
-
 == When Gmaps4rails finally means Global Maps for Rails
 
 I've added support for other map providers: openlayers, mapquest & bing.
@@ -90,13 +88,9 @@ Done!
 
 * Markers with Info window, Custom Picture, RichMarkers (make your own markers with custom html)
 
-* Automatic sidebar with list of markers
-
 * Circles, Polylines, Polygons
 
 * Geocode directly your address and retrieve coordinates. 
-
-* Wrapper for 'Direction', giving instructions to go from point A to point B
 
 * Auto-adjust the map to your markers
 

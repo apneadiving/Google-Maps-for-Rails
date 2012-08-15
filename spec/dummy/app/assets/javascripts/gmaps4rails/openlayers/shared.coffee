@@ -17,13 +17,3 @@ Gmaps4Rails.Openlayers.Shared =
 
   createLatLngBounds: ->
     new OpenLayers.Bounds()
-
-
-  # clear: ()->
-  #   @serviceObject.setMap(null)
-
-  # show: () ->
-  #   @serviceObject.setVisible(true)
-
-  # hide: () ->
-  #   @serviceObject.setVisible(false)
