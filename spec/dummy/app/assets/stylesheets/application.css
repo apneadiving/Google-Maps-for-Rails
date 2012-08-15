@@ -9,7 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- * require_tree .
+ *= require_tree .
 */
 
 .yellow { border: 1px solid black; margin-top: 8px; background: yellow; padding: 5px; }

@@ -8,6 +8,7 @@ class UsersController < ApplicationController
     @users = User.all
     @json = @users.to_gmaps4rails do |user, marker|
       marker.json({:id => user.id })
+      # marker.title "titre"
       # marker.picture({
       #  "picture" => "/logo.png",
       #  "width" =>  32,
