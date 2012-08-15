@@ -6,7 +6,7 @@ module Gmaps4rails
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
       def copy_locale
-        if false #Rails::VERSION::MINOR >= 1
+        if Rails::VERSION::MINOR >= 1
           directory assets_source_path, assets_destination_path
           copy_file "../../../public/stylesheets/gmaps4rails.css", "app/assets/stylesheets/gmaps4rails.css"
         else
