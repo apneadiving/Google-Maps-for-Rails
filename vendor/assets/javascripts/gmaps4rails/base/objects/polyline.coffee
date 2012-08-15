@@ -9,5 +9,3 @@
     clickable: false
     zIndex: null
 
-#@Gmaps4Rails.Polyline.Instance =
-

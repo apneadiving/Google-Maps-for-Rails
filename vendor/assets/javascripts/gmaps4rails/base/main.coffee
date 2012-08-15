@@ -3,7 +3,7 @@
 #= require './gmaps'
 
 #= require_tree './objects'
-#= require_tree './controller_extensions'
+#= require_tree './main_controller_extensions'
 #= require_tree './interfaces'
 
 class @Gmaps4Rails.BaseController extends Gmaps4Rails.Common
