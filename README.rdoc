@@ -28,7 +28,7 @@ Any help would be appreciated to complete this work.
 
 This will copy all the coffeescript files if you're running Rails >= 3.1 or all the js files for Rails 3.0.x.
 
-Only `gmaps4rails.base` + `gmaps4rails.your_provider` are necessary.
+Only `base` + `your_provider` are necessary.
 
 3) Javascript
   
