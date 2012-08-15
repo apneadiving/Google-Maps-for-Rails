@@ -92,9 +92,9 @@
 :markers => {
   :data => @json, 
   :options => {
-    :do_clustering => false
+    :do_clustering => false,
     # "custom_infowindow_class" => "yellow", 
-    # :raw => "{ flat: true, draggable: true}" 
+    :raw => "{ flat: true, draggable: true}" 
   } },
 #  :polygons => {:data =>  '[[
 #   {"lng": 5.190262, "lat": 25.774252},
@@ -123,7 +123,7 @@
 :map_options => {
   :auto_adjust => true, :zoom => 3, :center_on_user => false, :detect_location => false, 
   # :raw => "{styles: pinkParksStyles}", 
-  :provider => "bing", :provider_key => BING_KEY  
+  # :provider => "bing", :provider_key => BING_KEY  
   },
 :last_map => true) %>
 <%#= gmaps(:markers => {:data => '[{ "lng": "5.9311119", "lat": "43.1251606"} ,{ "lng": "2.3509871", "lat": "48.8566667" },{ "lng": "0", "lat": "0" } ]', "options" => {"do_clustering" => true, "draggable" => true  } },
@@ -157,9 +157,9 @@
 <% content_for :scripts do -%>
 <script type="text/javascript" charset="utf-8">
 
-Gmaps.map.jsTemplate = function(marker_container){
-  return "ok";
-}
+// Gmaps.map.jsTemplate = function(marker_container){
+//   return "ok";
+// }
 
  //    function HomeControl(controlDiv, map) {
  //        var chicago = new google.maps.LatLng(41.850033, -87.6500523);

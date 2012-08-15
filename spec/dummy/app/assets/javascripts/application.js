@@ -13,6 +13,6 @@
 // require jquery
 // require jquery_ujs
 //
-//= require 'gmaps4rails/base'
+//= require 'gmaps4rails/all'
 // require 'gmaps4rails/google'
-//= require 'gmaps4rails/bing'
+// require 'gmaps4rails/bing'

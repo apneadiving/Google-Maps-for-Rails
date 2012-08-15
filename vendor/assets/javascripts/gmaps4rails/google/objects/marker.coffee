@@ -48,7 +48,7 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
   _createBasicMarker:(markerLatLng, args)->
     defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
     mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
-    @serviceObject = new google.maps.Marker defaultOptions
+    @serviceObject = new google.maps.Marker mergedOptions
 
   _createRichMarker: (markerLatLng, args)->
     new RichMarker({
