@@ -18,10 +18,9 @@ describe "to_gmaps4rails for hash" do
         :polygons    => { :data => expected_polygons }
       }
       result = options_hash.to_gmaps4rails
-      actual_polygons = result.scan(/Gmaps\.map\.polygons = (.*?);/m).first.first
+      actual_polygons = result.scan(/Gmaps\.map\.addPolygons\((.*?)\);/m).first.first
       
       actual_polygons.should be_same_json_as expected_polygons
-      result.should          include "Gmaps.map.create_polygons();"
     end
 
     it "should format polylines" do
@@ -39,10 +38,9 @@ describe "to_gmaps4rails for hash" do
         :polylines    => { :data => expected_polylines }
       }
       result = options_hash.to_gmaps4rails
-      actual_polylines = result.scan(/Gmaps\.map\.polylines = (.*?);/m).first.first
+      actual_polylines = result.scan(/Gmaps\.map\.addPolylines\((.*?)\);/m).first.first
       
       actual_polylines.should be_same_json_as expected_polylines
-      result.should          include "Gmaps.map.create_polylines();"
     end
     
     it "should format circles" do
@@ -54,10 +52,9 @@ describe "to_gmaps4rails for hash" do
         :circles    => { :data => expected_circles }
       }
       result = options_hash.to_gmaps4rails
-      actual_circles = result.scan(/Gmaps\.map\.circles = (.*?);/m).first.first
+      actual_circles = result.scan(/Gmaps\.map\.addCircles\((.*?)\);/m).first.first
       
       actual_circles.should be_same_json_as expected_circles
-      result.should         include "Gmaps.map.create_circles();"
     end
     
     it "should format markers" do
@@ -66,10 +63,9 @@ describe "to_gmaps4rails for hash" do
         :markers    => { :data => expected_markers }
       }
       result = options_hash.to_gmaps4rails
-      actual_markers = result.scan(/Gmaps\.map\.markers = (.*?);/m).first.first
+      actual_markers = result.scan(/Gmaps\.map\.addMarkers\((.*?)\);/m).first.first
       
       actual_markers.should be_same_json_as expected_markers
-      result.should         include "Gmaps.map.create_markers();"
     end
     
     it "should format map" do
@@ -97,10 +93,9 @@ describe "to_gmaps4rails for hash" do
         :kml          => {:data => expected_kml }
       }
       result = options_hash.to_gmaps4rails
-      actual_kml = result.scan(/Gmaps\.map\.kml = (.*?);/m).first.first
+      actual_kml = result.scan(/Gmaps\.map\.addKml\((.*?)\);/m).first.first
       
       actual_kml.should eq expected_kml
-      result.should     include "Gmaps.map.create_kml();"
     end
     
     it "should format directions" do
