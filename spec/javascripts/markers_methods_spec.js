@@ -264,6 +264,32 @@ describe("generic markers methods", function() {
       expect(gmap.clearMarker.callCount).toEqual(gmap.markers.length);
     });
   });
+
+  describe("bounceMarkers", function() {
+    it("should call animate bounce with all markers", function() {
+      spyOn(gmap, "bounceMarker");
+      gmap.bounceMarkers();
+      expect(gmap.bounceMarker.callCount).toEqual(gmap.markers.length);
+    });
+  });
+
+  describe("dropMarkers", function() {
+    it("should call animate drop with all markers", function() {
+      spyOn(gmap, "dropMarker");
+      gmap.dropMarkers();
+      expect(gmap.dropMarker.callCount).toEqual(gmap.markers.length);
+    });
+  });
+
+  describe("freezeMarkers", function() {
+    it("should call animation false for all markers", function() {
+      spyOn(gmap, "freezeMarker");
+      gmap.freezeMarkers();
+      expect(gmap.freezeMarker.callCount).toEqual(gmap.markers.length);
+    });
+  });
+
+
 });
 
 describe("replaceMarkers", function() {
