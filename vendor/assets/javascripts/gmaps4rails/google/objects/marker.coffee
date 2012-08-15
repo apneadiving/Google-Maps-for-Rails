@@ -7,13 +7,11 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
   @extend  Gmaps4Rails.Marker.Class
   @extend  Gmaps4Rails.Configuration
   
-  #markers + info styling
-  CONF =
+  @CONF:
     clusterer_gridSize:      50
     clusterer_maxZoom:       5
     custom_cluster_pictures: null
     custom_infowindow_class: null
-    raw:                     {}
 
   constructor: (args, controller)->
     @controller = controller
@@ -33,10 +31,10 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
   createInfoWindow : () ->
     if typeof(@controller.jsTemplate) == "function" or @description?
       @description = @controller.jsTemplate(@) if typeof(@controller.jsTemplate) == "function"
-      if CONF.custom_infowindow_class?
+      if @controller.markers_conf.custom_infowindow_class?
         #creating custom infowindow
         boxText = document.createElement("div")
-        boxText.setAttribute("class", CONF.custom_infowindow_class) #to customize
+        boxText.setAttribute("class", @controller.markers_conf.custom_infowindow_class) #to customize
         boxText.innerHTML = @description
         @infowindow = new InfoBox(@infobox(boxText))
         google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
@@ -48,7 +46,7 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
 
   _createBasicMarker:(markerLatLng, args)->
     defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
-    mergedOptions  = @mergeObjects CONF.raw, defaultOptions
+    mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
     @serviceObject = new google.maps.Marker defaultOptions
 
   _createRichMarker: (markerLatLng, args)->
@@ -70,7 +68,7 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
     markerImage = @_createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
     shadowImage = @_createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
     defaultOptions = {position: markerLatLng, map: @getMap(), icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
-    mergedOptions  = @mergeObjects CONF.raw, defaultOptions
+    mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
     @serviceObject = new google.maps.Marker mergedOptions
 
   #checks if obj is included in arr Array and returns the position or false
