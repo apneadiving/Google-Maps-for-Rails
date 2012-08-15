@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   # s.add_development_dependency "jasmine"
   
   # s.add_development_dependency "guard", "~> 1.0.1"
-  # s.add_development_dependency 'guard-coffeescript'
+  s.add_development_dependency 'coffee-script'
   # s.add_development_dependency 'guard-jasmine'
   # s.add_development_dependency "guard-rspec"
   
