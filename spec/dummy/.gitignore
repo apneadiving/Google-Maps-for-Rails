@@ -1,2 +1,3 @@
 tmp
 db/*.sqlite3
+config/initializers/api_keys.rb
