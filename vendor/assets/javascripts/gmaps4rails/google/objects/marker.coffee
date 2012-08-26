@@ -51,13 +51,13 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
     @serviceObject = new google.maps.Marker mergedOptions
 
   _createRichMarker: (markerLatLng, args)->
-    new RichMarker({
-      position: markerLatLng
-      map:       @serviceObject
+    @serviceObject = new RichMarker({
+      position:  markerLatLng
+      map:       @getMap()
       draggable: args.marker_draggable
       content:   args.rich_marker
-      flat:      if args.marker_anchor == null then false else args.marker_anchor[1]
-      anchor:    if args.marker_anchor == null then 0     else args.marker_anchor[0]
+      flat:      if args.marker_anchor? ? args.marker_anchor[1] else false
+      anchor:    if args.marker_anchor? ? args.marker_anchor[0] else null
       zIndex:    args.zindex
     })
 

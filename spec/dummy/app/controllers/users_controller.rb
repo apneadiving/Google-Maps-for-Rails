@@ -13,6 +13,9 @@ class UsersController < ApplicationController
       #  "picture" => "/logo.png",
       #  "width" =>  32,
       #  "height" => 32})
+      # marker.picture({
+      #   :rich_marker =>  "<div class='my-marker'>It works!<img height='30' width='30' src='http://farm4.static.flickr.com/3212/3012579547_097e27ced9_m.jpg'/></div>"
+      # })
       marker.infowindow user.name
     end
     respond_with @json
