@@ -22,9 +22,10 @@ class @Gmaps4Rails.Google.Polygon extends Gmaps4Rails.Common
         fillColor     = point.fillColor     || @controller.polygons_conf.fillColor
         fillOpacity   = point.fillOpacity   || @controller.polygons_conf.fillOpacity
         clickable     = point.clickable     || @controller.polygons_conf.clickable
-    
+        zIndex        = point.zIndex        || @controller.polygons_conf.zIndex
+
     polyOptions = 
-      path:          polyline_coordinates
+      path:          polygon_coordinates
       strokeColor:   strokeColor
       strokeOpacity: strokeOpacity
       strokeWeight:  strokeWeight
@@ -34,3 +35,4 @@ class @Gmaps4Rails.Google.Polygon extends Gmaps4Rails.Common
     mergedOptions = @mergeObjects controller.polygons_conf.raw, polyOptions
 
     @serviceObject = new google.maps.Polygon mergedOptions
+    @serviceObject.setMap(controller.getMapObject())

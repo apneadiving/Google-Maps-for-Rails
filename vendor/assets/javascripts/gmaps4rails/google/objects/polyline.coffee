@@ -27,6 +27,7 @@ class @Gmaps4Rails.Google.Polyline extends Gmaps4Rails.Common
           strokeWeight  = element.strokeWeight  || controller.polylines_conf.strokeWeight
           clickable     = element.clickable     || controller.polylines_conf.clickable
           zIndex        = element.zIndex        || controller.polylines_conf.zIndex
+          icons         = element.icons         || controller.polylines_conf.icons
 
         #add latlng if positions provided
         if element.lat? && element.lng?
@@ -39,6 +40,7 @@ class @Gmaps4Rails.Google.Polyline extends Gmaps4Rails.Common
       strokeWeight:  strokeWeight
       clickable:     clickable
       zIndex:        zIndex
+      icons:         icons
 
     mergedOptions = @mergeObjects controller.polylines_conf.raw, polyOptions
 

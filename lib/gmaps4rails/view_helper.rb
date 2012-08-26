@@ -5,7 +5,7 @@ module Gmaps4rails
     OPENLAYERS = "http://www.openlayers.org/api/OpenLayers.js"
     MAPQUEST   = "http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js"                  
     BING       = "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"
-    GOOGLE     = "//maps.google.com/maps/api/js?v=3.8"
+    GOOGLE     = "//maps.google.com/maps/api/js?v=3.9"
     GOOGLE_EXT = "//google-maps-utility-library-v3.googlecode.com/svn/"    
     
     # options is the hash passed to the 'gmaps' helper

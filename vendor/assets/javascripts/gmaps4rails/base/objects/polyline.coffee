@@ -8,4 +8,4 @@
     strokeWeight: 2
     clickable: false
     zIndex: null
-
+    icons: null
