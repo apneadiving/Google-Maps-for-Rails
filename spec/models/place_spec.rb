@@ -24,6 +24,10 @@ if RUBY_VERSION == "1.9.3"
     end
     
     context "standard configuration, valid place" do
+      after(:each) do
+        set_gmaps4rails_options!({})
+      end
+
       it "should save longitude and latitude to the customized position array" do
         set_gmaps4rails_options!(:position  => 'location')
         place.pos.should_not be_nil
