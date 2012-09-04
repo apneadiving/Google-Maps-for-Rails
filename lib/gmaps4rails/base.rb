@@ -115,5 +115,12 @@ module Gmaps4rails
     end
     http_agent
   end
+
+  # checks whether or not the app has pipeline enabled
+  # works for Rails 3.0.x and above
+  # @return [Boolean]
+  def Gmaps4rails.pipeline_enabled?
+    Rails.configuration.respond_to?('assets') && Rails.configuration.assets.enabled
+  end
   
 end

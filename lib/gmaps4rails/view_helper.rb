@@ -75,11 +75,8 @@ module Gmaps4rails
     
     private
     
-    # checks whether or not the app has pipeline enabled
-    # works for Rails 3.0.x and above
-    # @return [Boolean]
     def gmaps4rails_pipeline_enabled?
-      Rails.configuration.respond_to?('assets') && Rails.configuration.assets.enabled
+      Gmaps4rails.pipeline_enabled?
     end
     
     def map_options
