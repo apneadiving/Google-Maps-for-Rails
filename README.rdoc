@@ -74,6 +74,12 @@ Mongoid example:
 
     field :location, :type => Array
 
+By default this uses the [lng, lat] position format. You can reverse this format, by specifying `:pos_order => [:lng, :lat]`
+
+From [geocoder](https://github.com/alexreisner/geocoder) - Latitude/Longitude Order.
+
+_"Coordinates are generally printed and spoken as latitude, then longitude ([lat,lon]).Geocoder respects this convention and always expects method arguments to be given in [lat,lon] order. However, MongoDB requires that coordinates be stored in [lon,lat] order as per the GeoJSON spec (geojson.org/geojson-spec.html#positions), so internally they are stored “backwards.” However, this does not affect order of arguments to methods when using Mongoid or MongoMapper."_
+
 == How to?
 === QuickStart!
 In your controller:

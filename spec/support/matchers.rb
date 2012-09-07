@@ -30,7 +30,7 @@ end
 
 class PositionMatcher
   attr_reader :object, :position_hash
-  delegate :position, :lat_column, :lng_column, :to => :@options
+  delegate :position, :lat_column, :lng_column, :pos_order, :to => :@options
 
   def initialize object, position_hash
     @object, @position_hash = object, position_hash
@@ -43,12 +43,20 @@ class PositionMatcher
 
   protected
 
+  def lat_index
+    pos_order.first == :lat ? 0 : 1
+  end
+
+  def lng_index
+    pos_order.first == :lng ? 0 : 1
+  end  
+
   def lat
-    position ? object.send("#{position}")[0] : object.send("#{lat_column}")
+    position ? object.send("#{position}")[lat_index] : object.send("#{lat_column}")
   end
 
   def lng
-    position ? object.send("#{position}")[1] : object.send("#{lng_column}")
+    position ? object.send("#{position}")[lng_index] : object.send("#{lng_column}")
   end
 
 end

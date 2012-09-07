@@ -26,7 +26,7 @@ module Gmaps4rails
   #
   class JsonBuilder
 
-    delegate :position, :lat_column, :lng_column, :to => :@options
+    delegate :position, :lat_column, :lng_column, :pos_order, :to => :@options
     
     def initialize(object)
       @object, @json_hash, @custom_json = object, Hash.new, nil
@@ -127,12 +127,20 @@ module Gmaps4rails
       position #if gmaps4rails_options[:position] is filled, means user is indicating an array
     end
 
+    def lat_index
+      pos_order.first == :lat ? 0 : 1
+    end
+
+    def lng_index
+      pos_order.first == :lng ? 0 : 1
+    end
+
     def lat
-      position_from_array? ? @object.send("#{position}")[0] : @object.send("#{lat_column}")
+      position_from_array? ? @object.send("#{position}")[lat_index] : @object.send("#{lat_column}")
     end
 
     def lng
-      position_from_array? ? @object.send("#{position}")[1] : @object.send("#{lng_column}")
+      position_from_array? ? @object.send("#{position}")[lng_index] : @object.send("#{lng_column}")
     end
 
   end  

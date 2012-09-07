@@ -33,7 +33,8 @@ module Gmaps4rails
 
             # purposefully no default. 
             # Leaving out the :position arg means we are using the default lat/lng to store coordinates
-            :position           => args[:position], 
+            :position           => args[:position],
+            :pos_order          => args[:pos_order]              || [:lat, :lng],
                                                                  
             :msg                => args[:msg]                    || "Address invalid",
             :validation         => args[:validation].nil?        ?   true  : args[:validation],
