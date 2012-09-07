@@ -5,6 +5,8 @@ module Gmaps4rails
 
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
+      class_option :views, :type => :boolean, :default => false, :desc => 'copy partials to app/views of Rails app'
+
       def copy_locale
         if Rails::VERSION::MINOR >= 1
           copy_file "#{source_assets_base_path}gmaps4rails.base.js.coffee",       "#{destination_assets_base_path}gmaps4rails.base.js.coffee"
@@ -23,6 +25,27 @@ module Gmaps4rails
           copy_file "../../../public/stylesheets/gmaps4rails.css",     "public/stylesheets/gmaps4rails.css"
         end
       end
+
+      def copy_views
+        return unless copy_views?
+        copy_file File.join(source_views_path, "_gmaps4rails_libs.html.erb"), File.join(destination_views_path, "_gmaps4rails_lib.html.erb")
+        copy_file File.join(source_views_path, "_gmaps4rails.html.erb"), File.join(destination_views_path, "_gmaps4rails.html.erb")
+      end
+
+      protected
+
+      def copy_views?
+        options[:views]
+      end
+
+      def source_views_path
+        '../../../app/views/gmaps4rails'
+      end
+
+      def destination_views_path
+        'app/views/gmaps4rails'
+      end
+
       
       def source_assets_base_path
         '../../../app/assets/javascripts/gmaps4rails/'

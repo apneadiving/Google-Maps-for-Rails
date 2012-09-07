@@ -13,6 +13,15 @@ module Gmaps4railsHelper
   # full helper to pass all variables and their options
   # @params [Hash] options is a Hash containing data and options. Example: { markers:{ data: @json, options: { do_clustering: true } } }
   def gmaps(options)
+    gmaps_libs(options)
+    render :partial => '/gmaps4rails/gmaps4rails', 
+           :locals  => { 
+             :options         => options_with_indifferent_access,
+             :dom             => view_helper.dom_attributes
+            }
+  end
+
+  def gmaps_libs(options)
     options_with_indifferent_access = options.with_indifferent_access
     view_helper                     = Gmaps4rails::ViewHelper.new(options_with_indifferent_access)
     
@@ -22,11 +31,9 @@ module Gmaps4railsHelper
                         view_helper.js_dependencies_array.map(&:html_safe)
                       end
 
-    render :partial => '/gmaps4rails/gmaps4rails', 
+    render 'gmaps4rails/gmaps4rails_libs', 
            :locals  => { 
-             :options         => options_with_indifferent_access, 
-             :js_dependencies => js_dependencies,
-             :dom             => view_helper.dom_attributes
+             :js_dependencies => js_dependencies
             }
   end
 
