@@ -21,6 +21,7 @@ module Gmaps4rails
     end
 
     def create_js
+      # @js << "$(function() {"
       @js << "#{gmap_id} = new #{ map_constructor };"
       @js << "Gmaps.#{js_function_name} = function() {"
       
@@ -34,7 +35,7 @@ module Gmaps4rails
       @js << "#{gmap_id}.callback();"
       @js << "};"
       @js << "Gmaps.oldOnload = window.onload;\n window.onload = function() { Gmaps.triggerOldOnload(); Gmaps.loadMaps(); };" if load_map?
-      
+      # @js << "}); // ready"
       @js * ("\n")
     end
 

@@ -5,7 +5,7 @@ module Gmaps4rails
 
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
-      class_option :views, :type => :boolean, :default => false, :desc => 'copy partials to app/views of Rails app'
+      class_option :views, :type => :string, :default => nil, :desc => 'copy partials to app/views of Rails app'
 
       def copy_locale
         if Rails::VERSION::MINOR >= 1
@@ -27,15 +27,18 @@ module Gmaps4rails
       end
 
       def copy_views
-        return unless copy_views?
-        copy_file File.join(source_views_path, "_gmaps4rails_libs.html.erb"), File.join(destination_views_path, "_gmaps4rails_lib.html.erb")
-        copy_file File.join(source_views_path, "_gmaps4rails.html.erb"), File.join(destination_views_path, "_gmaps4rails.html.erb")
+        return unless valid_template_type?
+        copy_file File.join(source_views_path, "_gmaps4rails_libs.html.#{template_type}"), File.join(destination_views_path, "_gmaps4rails_lib.html.#{template_type}")
       end
 
       protected
 
-      def copy_views?
-        options[:views]
+      def template_type
+        options[:views].to_s.to_sym        
+      end
+
+      def valid_template_type?
+        [:erb, :haml].include? template_type
       end
 
       def source_views_path
