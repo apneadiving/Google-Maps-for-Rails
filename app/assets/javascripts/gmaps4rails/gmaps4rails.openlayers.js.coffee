@@ -89,7 +89,7 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
           style_mark.backgroundXOffset = args.shadow_anchor[0]
           style_mark.backgroundYOffset = args.shadow_anchor[1]
       
-    style_mark.graphicTitle = args.title
+    style_mark.graphicTitle = args.marker_title
     marker = new OpenLayers.Feature.Vector(
                new OpenLayers.Geometry.Point(args.Lng, args.Lat),
                null,
