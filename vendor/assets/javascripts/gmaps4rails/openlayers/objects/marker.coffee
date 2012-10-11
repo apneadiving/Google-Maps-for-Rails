@@ -43,7 +43,7 @@ class @Gmaps4Rails.Openlayers.Marker extends Gmaps4Rails.Common
   _createMarkerStyle: (args) ->
     @style_mark = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default'])
     @style_mark.fillOpacity = 1
-    @style_mark.graphicTitle = args.title
+    @style_mark.graphicTitle = args.marker_title
 
   _styleForBasicMarker: (args)->
     @style_mark.graphicHeight = 30
