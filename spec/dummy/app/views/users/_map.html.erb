@@ -1,0 +1,5 @@
+<%#= gmaps(:markers => {:data => json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow"}}, 
+          :map_options => {:auto_adjust => true, :raw => "{styles: styles}" },
+          :last_map => true) %>
+
+<%= gmaps4rails json %>

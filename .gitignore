@@ -6,7 +6,7 @@
 .DS_Store
 test/dummy/tmp/**/*
 test/dummy/log/**/*
-test/dummy/.rvmrc
 pkg
 .idea
 .redcar
+.rvmrc

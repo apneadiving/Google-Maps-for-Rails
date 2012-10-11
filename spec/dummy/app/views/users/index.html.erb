@@ -85,10 +85,10 @@
                         :options => {"list_container" => "markers_list" }
                        })%>
 <div id="markers_list"></div>
-<%#= gmaps(:map_options => { :auto_adjust => true },
-      :markers => { :data => '[{"lat":42.3124,"lng":71.1712}]', :options => {:do_clustering => true} }) %>
 
-<%= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
+<%= render :partial => 'map', :locals => {:json => @json} %>
+
+<%#= gmaps(:markers => {:data => @json, :options => {:do_clustering => false, "custom_infowindow_class" => "yellow", :raw => "{ flat: true, draggable: true}" } },
           :polygons => {:data =>  '[[
   {"lng": 5.190262, "lat": 25.774252},
   {"lng": 7.118292, "lat": 45.466465},
@@ -178,18 +178,26 @@
  //        });
  //      }
  //      
-      Gmaps.map.callback = function(){
-        // Create the DIV to hold the control and call the HomeControl() constructor
-        // passing in this DIV.
-        // var homeControlDiv = document.createElement('DIV');
-        // var homeControl = new HomeControl(homeControlDiv, Gmaps.map.map);
-        //       
-        // homeControlDiv.index = 1;
-        // Gmaps.map.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
-        //Gmaps.map.serviceObject.setZoom(1);
-      };
+      // Gmaps.map.callback = function(){
+      //   // Create the DIV to hold the control and call the HomeControl() constructor
+      //   // passing in this DIV.
+      //   // var homeControlDiv = document.createElement('DIV');
+      //   // var homeControl = new HomeControl(homeControlDiv, Gmaps.map.map);
+      //   //       
+      //   // homeControlDiv.index = 1;
+      //   // Gmaps.map.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+      //   //Gmaps.map.serviceObject.setZoom(1);
+      // };
  //      
  //      
+ var styles = [
+        {
+          featureType: "all",
+          stylers: [
+            { "hue": "#ff1a00" }
+          ]
+        }
+      ];
       var pinkParksStyles = [
         {
           featureType: "all",
