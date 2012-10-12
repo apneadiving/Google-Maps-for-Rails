@@ -8,6 +8,7 @@ module Gmaps4rails
   require 'gmaps4rails/extensions/enumerable'
   require 'gmaps4rails/extensions/hash'
   
+  autoload :Config,           'gmaps4rails/config'
   autoload :ModelHandler,     'gmaps4rails/model_handler'
   autoload :ActsAsGmappable,  'gmaps4rails/acts_as_gmappable'
 
