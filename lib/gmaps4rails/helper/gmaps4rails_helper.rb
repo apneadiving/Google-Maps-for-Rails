@@ -13,6 +13,8 @@ module Gmaps4railsHelper
   # full helper to pass all variables and their options
   # @params [Hash] options is a Hash containing data and options. Example: { markers:{ data: @json, options: { do_clustering: true } } }
   def gmaps(options = {})
+    options = Gmaps4rails.config.load.merge(options)
+
     gmaps_libs(options) if options[:with_libs]
 
     options_with_indifferent_access = options.with_indifferent_access
