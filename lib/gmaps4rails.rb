@@ -3,7 +3,6 @@ module Gmaps4rails
   require 'gmaps4rails/base'
   
   class Engine < Rails::Engine
-     
      initializer "gmaps4rails view helpers" do |app|
        ActionView::Base.send :include, Gmaps4railsHelper
      end

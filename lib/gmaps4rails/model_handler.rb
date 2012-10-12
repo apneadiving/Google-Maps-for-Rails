@@ -4,7 +4,7 @@ module Gmaps4rails
     
     attr_accessor :options, :object 
     
-    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :position, :msg, :validation,
+    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :position, :pos_order, :msg, :validation,
              :language, :protocol, :address, :callback, :normalized_address,
              :to => :options
   
@@ -31,7 +31,11 @@ module Gmaps4rails
 
     # sets array for non relationnal db
     def set_position
-      object.send("#{position}=", [lat, lng])
+      if pos_order.first == :lat
+        object.send("#{position}=", [lat, lng])
+      else
+        object.send("#{position}=", [lng, lat])
+      end
     end
 
     #sets regular columns

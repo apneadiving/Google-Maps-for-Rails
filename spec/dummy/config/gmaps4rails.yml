@@ -1,0 +1,6 @@
+map_options:
+  provider: mapquest
+  provider_key: 12345
+  auto_adjust: true
+  center_on_user: true
+  zoom: 5
