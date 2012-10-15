@@ -296,25 +296,25 @@ class @Gmaps4Rails
 
 
   #replace old markers with new markers on an existing map
-  replaceMarkers : (new_markers) ->
+  replaceMarkers : (new_markers, adjustBounds = true) ->
     @clearMarkers()
     #reset previous markers
     @markers = new Array
     #reset current bounds
-    @boundsObject = @createLatLngBounds()
+    @boundsObject = @createLatLngBounds() if adjustBounds
     #reset sidebar content if exists
     @resetSidebarContent()
     #add new markers
     @markers_conf.offset = 0
-    @addMarkers(new_markers)
+    @addMarkers(new_markers, adjustBounds)
 
   #add new markers to on an existing map
-  addMarkers : (new_markers) ->
+  addMarkers : (new_markers, adjustBounds = true) ->
     #update the list of markers to take into account
     @markers = @markers.concat(new_markers)
     #put markers on the map
     @create_markers()
-    @adjustMapToBounds()
+    @adjustMapToBounds() if adjustBounds
 
   #////////////////////////////////////////////////////
   #///////////////////// SIDEBAR //////////////////////
