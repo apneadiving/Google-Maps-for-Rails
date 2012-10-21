@@ -2,12 +2,14 @@ require 'spec_helper'
 
 include Geocoding
 
-set_gmaps4rails_options!
-
 describe Gmaps4rails::ActsAsGmappable do
 
   let(:user)         { Factory(:user) }
   let(:invalid_user) { FactoryGirl.build(:invalid_user) }
+  
+  before(:all) do
+    set_gmaps4rails_options!    
+  end
   
   before(:each) do
     Geocoding.stub_geocoding
