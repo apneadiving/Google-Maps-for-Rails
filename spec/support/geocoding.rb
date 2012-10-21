@@ -10,7 +10,8 @@ module Geocoding
     :address        => "address",
     :language       => "en",
     :protocol       => "http",
-    :process_geocoding => true
+    :process_geocoding => true,
+    :position       => nil
   }
 
   PARIS  = { :latitude => 48.856614, :longitude => 2.3522219 }

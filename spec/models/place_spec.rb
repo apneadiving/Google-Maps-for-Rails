@@ -25,7 +25,7 @@ if RUBY_VERSION == "1.9.3"
     
     context "standard configuration, valid place" do
       it "should save longitude and latitude to the customized position array" do
-        set_gmaps4rails_options!(:position  => 'location')
+        set_gmaps4rails_options!(:position  => 'pos')
         place.pos.should_not be_nil
         place.should have_same_position_as TOULON
       end
