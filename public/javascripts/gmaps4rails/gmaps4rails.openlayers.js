@@ -100,7 +100,6 @@
 
     Gmaps4RailsOpenlayers.prototype.extendBoundsWithMarkers = function() {
       var marker, _i, _len, _ref, _results;
-      console.log("here");
       _ref = this.markers;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
