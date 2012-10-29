@@ -111,7 +111,6 @@ class @Gmaps4RailsOpenlayers extends Gmaps4Rails
     @serviceObject.removeLayer(@markersLayer) if @markersLayer != null and @serviceObject.getLayer(@markersLayer.id) != null
   
   extendBoundsWithMarkers: ->
-    console.log "here"
     for marker in @markers
       @boundsObject.extend(@createLatLng(marker.lat,marker.lng))        
 
