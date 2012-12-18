@@ -2,7 +2,18 @@
 <%= javascript_include_tag *js_dependencies %>
 
 <script type="text/javascript">
-<%=raw options.to_gmaps4rails %>
+(function(window){
+  var gmaps4railsInit = function() {
+    <%=raw options.to_gmaps4rails %>
+  };
+  if (window.require && window.define && window.define.amd) {
+    window.require(['gmaps4rails'], function(Gmaps){
+      gmaps4railsInit();
+    });
+  } else {
+    gmaps4railsInit();
+  }
+})(this);
 </script>
 <% end %>
 
