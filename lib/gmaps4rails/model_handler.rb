@@ -4,10 +4,10 @@ module Gmaps4rails
     
     attr_accessor :options, :object 
     
-    delegate :process_geocoding, :check_process, :checker, :lat_column, :lng_column, :position, :msg, :validation,
-             :language, :protocol, :address, :callback, :normalized_address,
-             :to => :options
-  
+    extend Forwardable
+    def_delegators :@options, :process_geocoding, :check_process, :checker, :lat_column, :lng_column, 
+                   :position, :msg, :validation, :language, :protocol, :address, :callback, :normalized_address
+      
     def initialize(object, gmaps4rails_options)
       @options = ::OpenStruct.new(gmaps4rails_options)
       @object  = object

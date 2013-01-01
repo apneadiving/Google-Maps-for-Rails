@@ -90,8 +90,8 @@ module Gmaps4rails
       # example:
       # - name: :markers
       # - hash: { :data => json, :options => hash }
-      
-      delegate :options, :data, :to => :@element_info
+      extend Forwardable
+      def_delegators :@element_info, :options, :data
       
       def initialize(gmap_id, name, hash)
         @gmap_id, @name, @js = gmap_id, name, Array.new

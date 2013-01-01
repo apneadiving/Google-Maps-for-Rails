@@ -3,9 +3,10 @@ module Gmaps4rails
   class Places
     
     include BaseNetMethods
-    
+    extend Forwardable
+    def_delegators :@options, :key, :keyword, :radius, :lang, :raw, :protocol
+
     attr_reader :lat, :lng
-    delegate :key, :keyword, :radius, :lang, :raw, :protocol, :to => :@options
         
     def initialize(lat, lng, options = {})
       @lat, @lng = lat, lng

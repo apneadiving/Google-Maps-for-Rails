@@ -30,8 +30,9 @@ end
 
 class PositionMatcher
   attr_reader :object, :position_hash
-  delegate :position, :lat_column, :lng_column, :to => :@options
-
+  extend Forwardable
+  def_delegators :@options, :position, :lat_column, :lng_column
+  
   def initialize object, position_hash
     @object, @position_hash = object, position_hash
     @options = ::OpenStruct.new object.gmaps4rails_options
