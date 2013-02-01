@@ -56,8 +56,8 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
       map:       @getMap()
       draggable: args.marker_draggable
       content:   args.rich_marker
-      flat:      if args.marker_anchor? ? args.marker_anchor[1] else false
-      anchor:    if args.marker_anchor? ? args.marker_anchor[0] else null
+      flat:      if args.marker_anchor? then args.marker_anchor[1] else false
+      anchor:    if args.marker_anchor? then args.marker_anchor[0] else null
       zIndex:    args.zindex
     })
 
