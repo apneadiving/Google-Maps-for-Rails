@@ -7,18 +7,14 @@ class @Gmaps4Rails.Yandex.Marker extends Gmaps4Rails.Common
   @extend  Gmaps4Rails.Marker.Class
   @extend  Gmaps4Rails.Configuration
   
-  @CONF:
-    infobox:  "description" #description or htmlContent
-
   constructor: (args, controller)->
     @controller = controller
 
     markerLatLng = @createLatLng(args.lat, args.lng)
 
-    #// Marker sizes are expressed as a Size of X,Y
     @serviceObject = new ymaps.Placemark(markerLatLng, {
-        balloonContent: @description,
-        iconContent: "TEST"
+        balloonContent: '"' + @description + '"',
+        iconContent: "ICON!!!"
         }
     );
     
@@ -39,4 +35,4 @@ class @Gmaps4Rails.Yandex.Marker extends Gmaps4Rails.Common
     @serviceObject.setOptions({ visible: false })
 
   createInfoWindow : () ->
-    @serviceObject.infoWindow = @description if @description?
+    @serviceObject.properties.set("balloonContent", @description) if @description?
