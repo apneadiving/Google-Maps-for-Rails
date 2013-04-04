@@ -14,7 +14,7 @@ Gmaps4Rails.Yandex.Shared =
     new google.maps.Size(width, height)
 
   _addToMap: (object)->
-    @controller.getMapObject().entities.push(object)
+    @controller.getMapObject().geoObjects.add(object)
 
   _removeFromMap: (object)->
-    @controller.getMapObject().entities.remove(object)
+    @controller.getMapObject().geoObjects.remove(object)
