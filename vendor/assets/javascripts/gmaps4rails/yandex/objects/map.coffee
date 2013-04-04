@@ -21,6 +21,7 @@ class @Gmaps4Rails.Yandex.Map extends Gmaps4Rails.Common
     yandexOptions = 
       center: @createLatLng(@options.center_latitude, @options.center_longitude)
       zoom:   @options.zoom
+      behaviors: @options.behaviors
 
     mergedYandexOptions = @mergeObjects map_options.raw, yandexOptions
 
