@@ -14,7 +14,7 @@ class @Gmaps4Rails.Yandex.Marker extends Gmaps4Rails.Common
 
     @serviceObject = new ymaps.Placemark(markerLatLng, {
         balloonContent: '"' + @description + '"',
-        iconContent: "ICON!!!"
+        iconContent: @iconContent
         }
     );
     
@@ -29,10 +29,10 @@ class @Gmaps4Rails.Yandex.Marker extends Gmaps4Rails.Common
     @_removeFromMap(@serviceObject)
 
   show: ->
-    @serviceObject.setOptions({ visible: true })
+    @serviceObject.options.set("visible", true)
 
   hide: ->
-    @serviceObject.setOptions({ visible: false })
+    @serviceObject.options.set("visible", false)
 
   createInfoWindow : () ->
     @serviceObject.properties.set("balloonContent", @description) if @description?
