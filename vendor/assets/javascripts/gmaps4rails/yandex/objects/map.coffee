@@ -39,7 +39,7 @@ class @Gmaps4Rails.Yandex.Map extends Gmaps4Rails.Common
   extendBound: (bound)->
 
   fitBounds: ->
-    @serviceObject.setBounds(@boundsObject)
+    @serviceObject.setBounds(@boundsObject) if @boundsObject?
   
   adaptToBounds: ->
     @fitBounds()
