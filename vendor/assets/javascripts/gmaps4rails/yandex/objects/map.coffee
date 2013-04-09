@@ -27,8 +27,8 @@ class @Gmaps4Rails.Yandex.Map extends Gmaps4Rails.Common
 
     @serviceObject = new ymaps.Map(@options.id, mergedYandexOptions)
     
-  extendBoundsWithMarker : (marker)->
-    @boundsObject.extend(@createLatLng(marker.lat,marker.lng))
+  extendBoundsWithMarkers : (marker)->
+    @controller.getMapObject().setBounds(@controller.getMapObject().geoObjects.getBounds());
 
   extendBoundsWithPolyline: (polyline)->
 
