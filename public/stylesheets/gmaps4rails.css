@@ -14,6 +14,19 @@
   height: 400px;
 }
 
+/*for MarkerWithLabel from the google maps utility library*/
+.marker_labels {
+  color: red;
+  background-color: white;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 40px;
+  border: 2px solid black;
+  white-space: nowrap;
+}
+
 .bing_map {
    position: absolute;
    top: 20;

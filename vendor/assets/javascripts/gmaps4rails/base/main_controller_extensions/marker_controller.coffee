@@ -20,6 +20,7 @@
         "marker_width":     if markerData.width    then markerData.width   else @markers_conf.width
         "marker_height":    if markerData.height   then markerData.height  else @markers_conf.length
         "marker_title":     if markerData.title    then markerData.title   else null
+        "marker_labelContent":  if markerData.labelContent   then markerData.labelContent   else null
         "marker_anchor":    if markerData.marker_anchor  then markerData.marker_anchor  else null
         "shadow_anchor":    if markerData.shadow_anchor  then markerData.shadow_anchor  else null
         "shadow_picture":   if markerData.shadow_picture then markerData.shadow_picture else null
