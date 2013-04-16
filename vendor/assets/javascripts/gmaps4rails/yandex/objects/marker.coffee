@@ -12,9 +12,11 @@ class @Gmaps4Rails.Yandex.Marker extends Gmaps4Rails.Common
 
     markerLatLng = @createLatLng(args.lat, args.lng)
 
+
+
     @serviceObject = new ymaps.Placemark(markerLatLng, {
         balloonContent: @description,
-        iconContent: @iconContent
+        iconContent: args.marker_title
         },
         {
             iconImageHref: args.marker_picture,
