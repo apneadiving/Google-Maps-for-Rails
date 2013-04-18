@@ -9,7 +9,7 @@ class @Gmaps4Rails.Yandex.Map extends Gmaps4Rails.Common
   CONF:
     disableDefaultUI:       false
     disableDoubleClickZoom: false
-    type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
+    type:                   "yandex#map"   # "yandex#satellite", "yandex#hybrid", "yandex#publicMap", "yandex#publicMapHybrid"
     mapTypeControl:         null
 
   constructor:(map_options, controller) ->
@@ -19,9 +19,10 @@ class @Gmaps4Rails.Yandex.Map extends Gmaps4Rails.Common
     @options  = @mergeObjects map_options, defaultOptions
     
     yandexOptions = 
-      center: @createLatLng(@options.center_latitude, @options.center_longitude)
-      zoom:   @options.zoom
+      center:    @createLatLng(@options.center_latitude, @options.center_longitude)
+      zoom:      @options.zoom
       behaviors: @options.behaviors
+      type:      @options.type
 
     mergedYandexOptions = @mergeObjects map_options.raw, yandexOptions
 
