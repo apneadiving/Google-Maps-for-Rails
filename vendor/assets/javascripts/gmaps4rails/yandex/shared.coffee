@@ -11,7 +11,7 @@ Gmaps4Rails.Yandex.Shared =
   createLatLngBounds: ->
 
   createSize: (width, height) ->
-    new google.maps.Size(width, height)
+    [width, height]
 
   _addToMap: (object)->
     @controller.getMapObject().geoObjects.add(object)
