@@ -21,8 +21,10 @@ class @Gmaps4RailsYandex extends Gmaps4Rails.BaseController
 
   clearClusterer: ->
 
-  #overwriting method from base controller since it doesn't fit here
-  #clearMarkers: ->
+  findUserLocation : (controller, center_on_user) ->
+    controller.userLocation = [ymaps.geolocation.latitude, ymaps.geolocation.longitude]
+    if center_on_user
+      controller.map.centerMapOnUser(controller.userLocation)
 
   #////////////////////////////////////////////////////
   #/////////////// Private methods ////////////////////
