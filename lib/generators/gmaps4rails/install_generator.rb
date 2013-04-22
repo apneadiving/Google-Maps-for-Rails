@@ -9,9 +9,12 @@ module Gmaps4rails
         if Gmaps4rails.pipeline_enabled?
           directory assets_source_path, assets_destination_path
           remove_file File.join(assets_destination_path, 'all.js')
+          remove_file File.join(assets_destination_path, 'all.coffee')
           copy_file "../../../public/stylesheets/gmaps4rails.css", "vendor/assets/stylesheets/gmaps4rails.css"
         else
-          copy_file js_source_path('all'), js_destination_path(filename)
+          %w( base google openlayers all ).each do |filename|
+            copy_file js_source_path(filename), js_destination_path(filename)
+          end
           copy_file "../../../public/stylesheets/gmaps4rails.css", "public/stylesheets/gmaps4rails.css"
         end
       end

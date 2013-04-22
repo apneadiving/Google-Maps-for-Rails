@@ -6,7 +6,7 @@ app_path = File.expand_path('../..',  __FILE__)
 folder_path = (app_path + "/vendor/assets/javascripts/gmaps4rails/")
 
 #main source file:
-main_source_file_name = "base.coffee"
+main_source_file_name = "all.coffee"
 
 #desired output file
 compiled_file_path = (folder_path + "all.js")
