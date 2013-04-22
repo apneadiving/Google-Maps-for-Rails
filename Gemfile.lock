@@ -137,5 +137,6 @@ DEPENDENCIES
   pry
   rails (~> 3.2.1)
   rspec-rails
+  sprockets
   sqlite3
   webmock
