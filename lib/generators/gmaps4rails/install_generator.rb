@@ -8,11 +8,10 @@ module Gmaps4rails
       def copy_locale
         if Gmaps4rails.pipeline_enabled?
           directory assets_source_path, assets_destination_path
+          remove_file File.join(assets_destination_path, 'all.js')
           copy_file "../../../public/stylesheets/gmaps4rails.css", "vendor/assets/stylesheets/gmaps4rails.css"
         else
-          %w( base google openlayers all ).each do |filename|
-            copy_file js_source_path(filename), js_destination_path(filename)
-          end
+          copy_file js_source_path('all'), js_destination_path(filename)
           copy_file "../../../public/stylesheets/gmaps4rails.css", "public/stylesheets/gmaps4rails.css"
         end
       end
@@ -26,15 +25,15 @@ module Gmaps4rails
       def assets_source_path
         '../../../vendor/assets/javascripts/gmaps4rails/'
       end
-      
+
       def assets_destination_path
         'vendor/assets/javascripts/gmaps4rails'
       end
-      
+
       def js_source_path(filename)
         "../../../public/javascripts/gmaps4rails/#{filename}.js"
       end
-      
+
       def js_destination_path(filename)
         "public/javascripts/gmaps4rails/#{filename}.js"
       end
