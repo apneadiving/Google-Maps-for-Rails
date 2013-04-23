@@ -6,13 +6,12 @@ module Gmaps4rails
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
       def copy_locale
-        if Gmaps4rails.pipeline_enabled?
+        # if Gmaps4rails.pipeline_enabled?
+        if false
           directory assets_source_path, assets_destination_path
-          remove_file File.join(assets_destination_path, 'all.js')
-          remove_file File.join(assets_destination_path, 'all.coffee')
           copy_file "../../../public/stylesheets/gmaps4rails.css", "vendor/assets/stylesheets/gmaps4rails.css"
         else
-          %w( base google openlayers all ).each do |filename|
+          %w( base google openlayers bing ).each do |filename|
             copy_file js_source_path(filename), js_destination_path(filename)
           end
           copy_file "../../../public/stylesheets/gmaps4rails.css", "public/stylesheets/gmaps4rails.css"
@@ -34,7 +33,7 @@ module Gmaps4rails
       end
 
       def js_source_path(filename)
-        "../../../public/javascripts/gmaps4rails/#{filename}.js"
+        "../../../js_compilation/#{filename}.js"
       end
 
       def js_destination_path(filename)
