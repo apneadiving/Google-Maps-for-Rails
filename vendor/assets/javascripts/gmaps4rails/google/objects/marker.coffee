@@ -46,7 +46,7 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
         google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
 
   _createBasicMarker:(markerLatLng, args)->
-    defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
+    defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, labelContent: args.marker_labelContent, labelClass: args.marker_labelClass, draggable: args.marker_draggable, zIndex: args.zindex}
     mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
     @serviceObject = new MarkerWithLabel mergedOptions
 
