@@ -1,5 +1,4 @@
 (function() {
-
   Gmaps4Rails.Bing = {};
 
   Gmaps4Rails.Bing.Shared = {
@@ -27,7 +26,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Bing.Map = (function(_super) {
-
     __extends(Map, _super);
 
     Map.include(Gmaps4Rails.Interfaces.Map);
@@ -44,6 +42,7 @@
 
     function Map(map_options, controller) {
       var bingOptions, defaultOptions, mergedBingOptions;
+
       this.controller = controller;
       defaultOptions = this.setConf();
       this.options = this.mergeObjects(map_options, defaultOptions);
@@ -59,6 +58,7 @@
 
     Map.prototype.extendBoundsWithMarkers = function() {
       var locationsArray, marker, _i, _len, _ref;
+
       locationsArray = [];
       _ref = this.controller.markers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -123,7 +123,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Bing.Marker = (function(_super) {
-
     __extends(Marker, _super);
 
     Marker.include(Gmaps4Rails.Interfaces.Marker);
@@ -142,6 +141,7 @@
 
     function Marker(args, controller) {
       var anchorLatLng, markerLatLng;
+
       this.controller = controller;
       markerLatLng = this.createLatLng(args.lat, args.lng);
       anchorLatLng = this._createImageAnchorPosition([args.lat, args.lng]);
@@ -234,7 +234,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4RailsBing = (function(_super) {
-
     __extends(Gmaps4RailsBing, _super);
 
     Gmaps4RailsBing.include(Gmaps4Rails.Bing.Shared);
@@ -259,7 +258,6 @@
 
 }).call(this);
 (function() {
-
 
 
 }).call(this);

@@ -7,11 +7,11 @@
   this.Gmaps4Rails = {};
 
   this.Gmaps4Rails.Common = (function() {
-
     function Common() {}
 
     Common.extend = function(obj) {
       var key, value, _ref;
+
       for (key in obj) {
         value = obj[key];
         if (__indexOf.call(moduleKeywords, key) < 0) {
@@ -26,6 +26,7 @@
 
     Common.include = function(obj) {
       var key, value, _ref;
+
       for (key in obj) {
         value = obj[key];
         if (__indexOf.call(moduleKeywords, key) < 0) {
@@ -48,6 +49,7 @@
 
     Common.mergeObjects = function(object, defaultObject) {
       var copy_object, key, value;
+
       copy_object = {};
       for (key in object) {
         value = object[key];
@@ -64,6 +66,7 @@
 
     Common.mergeWith = function(object) {
       var key, value, _results;
+
       _results = [];
       for (key in object) {
         value = object[key];
@@ -86,7 +89,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Configuration = {
     setConf: function() {
       if (this.CONF != null) {
@@ -99,7 +101,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps = {
     triggerOldOnload: function() {
       if (typeof window.Gmaps.oldOnload === 'function') {
@@ -108,6 +109,7 @@
     },
     loadMaps: function() {
       var key, value, _ref, _results;
+
       _ref = window.Gmaps;
       _results = [];
       for (key in _ref) {
@@ -124,7 +126,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Circle = {};
 
   this.Gmaps4Rails.Circle.Class = {
@@ -141,7 +142,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Kml = {};
 
   this.Gmaps4Rails.Kml.Instance = {
@@ -154,7 +154,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Map = {
     DEFAULT_CONF: {
       id: 'map',
@@ -182,6 +181,7 @@
     },
     extendBoundsWithMarkers: function() {
       var marker, _i, _len, _ref, _results;
+
       _ref = this.controller.markers;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -196,6 +196,7 @@
     },
     extendBoundsWithPolylines: function() {
       var polyline, _i, _len, _ref, _results;
+
       _ref = this.controller.polylines;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -206,6 +207,7 @@
     },
     extendBoundsWithPolygons: function() {
       var polygon, _i, _len, _ref, _results;
+
       _ref = this.controller.polygons;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -216,6 +218,7 @@
     },
     extendBoundsWithCircles: function() {
       var circle, _i, _len, _ref, _results;
+
       _ref = this.controller.circles;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -226,6 +229,7 @@
     },
     extendBoundsWithLatLng: function() {
       var bound, _i, _len, _ref, _results;
+
       _ref = this.options.bounds;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -241,7 +245,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Marker = {};
 
   this.Gmaps4Rails.Marker.Class = {
@@ -268,7 +271,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Polygon = {};
 
   this.Gmaps4Rails.Polygon.Class = {
@@ -284,7 +286,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.Polyline = {};
 
   this.Gmaps4Rails.Polyline.Class = {
@@ -300,10 +301,10 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.CircleController = {
     addCircles: function(circleData) {
       var circleArgs, _i, _len, _results;
+
       _results = [];
       for (_i = 0, _len = circleData.length; _i < _len; _i++) {
         circleArgs = circleData[_i];
@@ -318,6 +319,7 @@
     },
     clearCircles: function() {
       var circle, _i, _len, _ref;
+
       _ref = this.circles;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         circle = _ref[_i];
@@ -327,6 +329,7 @@
     },
     showCircles: function() {
       var circle, _i, _len, _ref, _results;
+
       _ref = this.circles;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -337,6 +340,7 @@
     },
     hideCircles: function() {
       var circle, _i, _len, _ref, _results;
+
       _ref = this.circles;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -349,10 +353,10 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.KmlController = {
     addKml: function(kmlData) {
       var kml, _i, _len, _results;
+
       _results = [];
       for (_i = 0, _len = kmlData.length; _i < _len; _i++) {
         kml = kmlData[_i];
@@ -364,10 +368,10 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.MarkerController = {
     addMarkers: function(markersData) {
       var index, lat, latLng, lng, markerData, newMarker, _i, _len;
+
       if (this.markerClusterer != null) {
         this.clearClusterer();
       }
@@ -385,6 +389,8 @@
           "marker_width": markerData.width ? markerData.width : this.markers_conf.width,
           "marker_height": markerData.height ? markerData.height : this.markers_conf.length,
           "marker_title": markerData.title ? markerData.title : null,
+          "marker_labelContent": markerData.labelContent ? markerData.labelContent : null,
+          "marker_labelClass": markerData.labelClass ? markerData.labelClass : null,
           "marker_anchor": markerData.marker_anchor ? markerData.marker_anchor : null,
           "shadow_anchor": markerData.shadow_anchor ? markerData.shadow_anchor : null,
           "shadow_picture": markerData.shadow_picture ? markerData.shadow_picture : null,
@@ -411,6 +417,7 @@
     },
     clearMarkers: function() {
       var marker, _i, _len, _ref;
+
       if (this.markerClusterer != null) {
         this.clearClusterer();
       }
@@ -423,6 +430,7 @@
     },
     showMarkers: function() {
       var marker, _i, _len, _ref, _results;
+
       _ref = this.markers;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -433,6 +441,7 @@
     },
     hideMarkers: function() {
       var marker, _i, _len, _ref, _results;
+
       _ref = this.markers;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -443,6 +452,7 @@
     },
     randomize: function(Lat0, Lng0) {
       var Lat, Lng, dx, dy;
+
       dx = this.markers_conf.max_random_distance * this.random();
       dy = this.markers_conf.max_random_distance * this.random();
       Lat = parseFloat(Lat0) + (180 / Math.PI) * (dy / 6378137);
@@ -453,10 +463,10 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.PolygonController = {
     addPolygons: function(polygonData) {
       var polygonArgs, _i, _len, _results;
+
       _results = [];
       for (_i = 0, _len = polygonData.length; _i < _len; _i++) {
         polygonArgs = polygonData[_i];
@@ -471,6 +481,7 @@
     },
     clearPolygons: function() {
       var polygon, _i, _len, _ref;
+
       _ref = this.polygons;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         polygon = _ref[_i];
@@ -480,6 +491,7 @@
     },
     showPolygons: function() {
       var polygon, _i, _len, _ref, _results;
+
       _ref = this.polygons;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -490,6 +502,7 @@
     },
     hidePolygons: function() {
       var polygon, _i, _len, _ref, _results;
+
       _ref = this.polygons;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -502,7 +515,6 @@
 
 }).call(this);
 (function() {
-
   this.Gmaps4Rails.PolylineController = {
     replacePolylines: function(polylineData) {
       this.clearPolylines();
@@ -511,6 +523,7 @@
     },
     clearPolylines: function() {
       var polyline, _i, _len, _ref;
+
       _ref = this.polylines;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         polyline = _ref[_i];
@@ -520,6 +533,7 @@
     },
     addPolylines: function(polylineData) {
       var polylineArgs, _i, _len, _results;
+
       _results = [];
       for (_i = 0, _len = polylineData.length; _i < _len; _i++) {
         polylineArgs = polylineData[_i];
@@ -529,6 +543,7 @@
     },
     showPolylines: function() {
       var polyline, _i, _len, _ref, _results;
+
       _ref = this.polylines;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -539,6 +554,7 @@
     },
     hidePolylines: function() {
       var polyline, _i, _len, _ref, _results;
+
       _ref = this.polylines;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -551,7 +567,6 @@
 
 }).call(this);
 (function() {
-
   Gmaps4Rails.Interfaces || (Gmaps4Rails.Interfaces = {});
 
   Gmaps4Rails.Interfaces.Basic = {
@@ -571,7 +586,6 @@
 
 }).call(this);
 (function() {
-
   Gmaps4Rails.Interfaces || (Gmaps4Rails.Interfaces = {});
 
   Gmaps4Rails.Interfaces.Controller = {
@@ -588,7 +602,6 @@
 
 }).call(this);
 (function() {
-
   Gmaps4Rails.Interfaces || (Gmaps4Rails.Interfaces = {});
 
   Gmaps4Rails.Interfaces.Map = {
@@ -620,7 +633,6 @@
 
 }).call(this);
 (function() {
-
   Gmaps4Rails.Interfaces || (Gmaps4Rails.Interfaces = {});
 
   Gmaps4Rails.Interfaces.Marker = {
@@ -644,7 +656,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.BaseController = (function(_super) {
-
     __extends(BaseController, _super);
 
     BaseController.include(Gmaps4Rails.MarkerController);
@@ -751,6 +762,7 @@
 
     BaseController.prototype.initialize = function() {
       var center_on_user, detectUserLocation;
+
       detectUserLocation = this.map_options.detect_location || this.map_options.center_on_user;
       center_on_user = this.map_options.center_on_user;
       this.map = this.createMap();
@@ -773,6 +785,7 @@
 
     BaseController.prototype.clusterize = function() {
       var marker, markers_array, _i, _len, _ref;
+
       if (this.markers_conf.do_clustering) {
         if (this.markerClusterer != null) {
           this.clearClusterer();
@@ -789,6 +802,7 @@
 
     BaseController.prototype.findUserLocation = function(controller, center_on_user) {
       var positionFailure, positionSuccessful;
+
       if (navigator.geolocation) {
         positionSuccessful = function(position) {
           controller.userLocation = controller.createLatLng(position.coords.latitude, position.coords.longitude);
@@ -812,7 +826,6 @@
 
 }).call(this);
 (function() {
-
 
 
 }).call(this);

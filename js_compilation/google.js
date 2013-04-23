@@ -1,5 +1,4 @@
 (function() {
-
   Gmaps4Rails.Google = {};
 
   Gmaps4Rails.Google.Shared = {
@@ -35,7 +34,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Google.Circle = (function(_super) {
-
     __extends(Circle, _super);
 
     Circle.include(Gmaps4Rails.Interfaces.Basic);
@@ -48,6 +46,7 @@
 
     function Circle(circle, controller) {
       var circleOptions, mergedOptions;
+
       this.controller = controller;
       if (circle === this.controller.circles[0]) {
         if (circle.strokeColor != null) {
@@ -94,7 +93,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Google.Kml = (function(_super) {
-
     __extends(Kml, _super);
 
     Kml.include(Gmaps4Rails.Interfaces.Basic);
@@ -105,6 +103,7 @@
 
     function Kml(kmlData, controller) {
       var kml;
+
       this.controller = controller;
       this.options = kmlData.options || {};
       this.options = this.mergeObjects(this.options, this.DEFAULT_CONF);
@@ -123,7 +122,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Gmaps4Rails.Google.Map = (function(_super) {
-
     __extends(Map, _super);
 
     Map.include(Gmaps4Rails.Interfaces.Map);
@@ -143,6 +141,7 @@
 
     function Map(map_options, controller) {
       var defaultOptions, googleOptions, mergedGoogleOptions;
+
       this.controller = controller;
       defaultOptions = this.setConf();
       this.options = this.mergeObjects(map_options, defaultOptions);
@@ -167,6 +166,7 @@
 
     Map.prototype.extendBoundsWithPolyline = function(polyline) {
       var point, polyline_points, _i, _len, _results;
+
       polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray();
       _results = [];
       for (_i = 0, _len = polyline_points.length; _i < _len; _i++) {
@@ -178,6 +178,7 @@
 
     Map.prototype.extendBoundsWithPolygon = function(polygon) {
       var point, polygon_points, _i, _len, _results;
+
       polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray();
       _results = [];
       for (_i = 0, _len = polygon_points.length; _i < _len; _i++) {
@@ -198,6 +199,7 @@
 
     Map.prototype.adaptToBounds = function() {
       var map_center;
+
       if (!this.options.auto_zoom) {
         map_center = this.boundsObject.getCenter();
         this.options.center_latitude = map_center.lat();
@@ -228,7 +230,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Gmaps4Rails.Google.Marker = (function(_super) {
-
     __extends(Marker, _super);
 
     Marker.include(Gmaps4Rails.Interfaces.Marker);
@@ -251,6 +252,7 @@
 
     function Marker(args, controller) {
       var markerLatLng;
+
       this.controller = controller;
       markerLatLng = this.createLatLng(args.lat, args.lng);
       if (this._isBasicMarker(args)) {
@@ -266,6 +268,7 @@
 
     Marker.prototype.createInfoWindow = function() {
       var boxText;
+
       if (typeof this.controller.jsTemplate === "function" || (this.description != null)) {
         if (typeof this.controller.jsTemplate === "function") {
           this.description = this.controller.jsTemplate(this);
@@ -287,19 +290,23 @@
 
     Marker.prototype._createBasicMarker = function(markerLatLng, args) {
       var defaultOptions, mergedOptions;
+
       defaultOptions = {
         position: markerLatLng,
         map: this.getMap(),
         title: args.marker_title,
+        labelContent: args.marker_labelContent,
+        labelClass: args.marker_labelClass,
         draggable: args.marker_draggable,
         zIndex: args.zindex
       };
       mergedOptions = this.mergeObjects(this.controller.markers_conf.raw, defaultOptions);
-      return this.serviceObject = new google.maps.Marker(mergedOptions);
+      return this.serviceObject = new MarkerWithLabel(mergedOptions);
     };
 
     Marker.prototype._createRichMarker = function(markerLatLng, args) {
       var _ref, _ref1;
+
       return this.serviceObject = new RichMarker({
         position: markerLatLng,
         map: this.getMap(),
@@ -313,6 +320,7 @@
 
     Marker.prototype._createMarker = function(markerLatLng, args) {
       var defaultOptions, imageAnchorPosition, markerImage, mergedOptions, shadowAnchorPosition, shadowImage;
+
       imageAnchorPosition = this._createImageAnchorPosition(args.marker_anchor);
       shadowAnchorPosition = this._createImageAnchorPosition(args.shadow_anchor);
       markerImage = this._createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition);
@@ -322,16 +330,19 @@
         map: this.getMap(),
         icon: markerImage,
         title: args.marker_title,
+        labelContent: args.marker_labelContent,
+        labelClass: args.marker_labelClass,
         draggable: args.marker_draggable,
         shadow: shadowImage,
         zIndex: args.zindex
       };
       mergedOptions = this.mergeObjects(this.controller.markers_conf.raw, defaultOptions);
-      return this.serviceObject = new google.maps.Marker(mergedOptions);
+      return this.serviceObject = new MarkerWithLabel(mergedOptions);
     };
 
     Marker.prototype._includeMarkerImage = function(obj) {
       var index, object, _i, _len, _ref;
+
       _ref = this.controller.markerImages;
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
         object = _ref[index];
@@ -344,6 +355,7 @@
 
     Marker.prototype._createOrRetrieveImage = function(currentMarkerPicture, markerWidth, markerHeight, imageAnchorPosition) {
       var markerImage, test_image_index;
+
       if (typeof currentMarkerPicture === "undefined" || currentMarkerPicture === "" || currentMarkerPicture === null) {
         return null;
       }
@@ -360,7 +372,7 @@
     };
 
     Marker.prototype._isBasicMarker = function(args) {
-      return !(args.marker_picture != null) && !(args.rich_marker != null);
+      return (args.marker_picture == null) && (args.rich_marker == null);
     };
 
     Marker.prototype._createMarkerImage = function(markerPicture, markerSize, origin, anchor, scaledSize) {
@@ -377,6 +389,7 @@
 
     Marker.prototype._openInfowindow = function() {
       var that;
+
       that = this;
       return function() {
         that.controller._closeVisibleInfoWindow();
@@ -395,7 +408,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Google.Polygon = (function(_super) {
-
     __extends(Polygon, _super);
 
     Polygon.include(Gmaps4Rails.Interfaces.Basic);
@@ -408,6 +420,7 @@
 
     function Polygon(polygon, controller) {
       var clickable, fillColor, fillOpacity, latlng, mergedOptions, point, polyOptions, polygon_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _len;
+
       this.controller = controller;
       polygon_coordinates = [];
       for (_i = 0, _len = polygon.length; _i < _len; _i++) {
@@ -447,7 +460,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Google.Polyline = (function(_super) {
-
     __extends(Polyline, _super);
 
     Polyline.include(Gmaps4Rails.Interfaces.Basic);
@@ -460,6 +472,7 @@
 
     function Polyline(polyline, controller) {
       var clickable, decoded_array, element, icons, mergedOptions, point, polyOptions, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _j, _len, _len1;
+
       polyline_coordinates = [];
       for (_i = 0, _len = polyline.length; _i < _len; _i++) {
         element = polyline[_i];
@@ -507,7 +520,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4RailsGoogle = (function(_super) {
-
     __extends(Gmaps4RailsGoogle, _super);
 
     Gmaps4RailsGoogle.include(Gmaps4Rails.Google.Shared);
@@ -535,6 +547,7 @@
 
     Gmaps4RailsGoogle.prototype.clusterize = function() {
       var marker, markers_array, _i, _len, _ref;
+
       if (this.markers_conf.do_clustering) {
         if (this.markerClusterer != null) {
           this.clearClusterer();
@@ -565,7 +578,6 @@
 
 }).call(this);
 (function() {
-
 
 
 }).call(this);
