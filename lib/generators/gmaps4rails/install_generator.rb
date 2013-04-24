@@ -6,8 +6,7 @@ module Gmaps4rails
       desc 'Creates a Gmaps4rails initializer and copies the assets to the public folder.'
 
       def copy_locale
-        # if Gmaps4rails.pipeline_enabled?
-        if false
+        if Gmaps4rails.pipeline_enabled?
           directory assets_source_path, assets_destination_path
           copy_file "../../../public/stylesheets/gmaps4rails.css", "vendor/assets/stylesheets/gmaps4rails.css"
         else
