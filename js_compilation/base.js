@@ -407,7 +407,8 @@
         newMarker.createInfoWindow();
         this.markers.push(newMarker);
       }
-      return this.clusterize();
+      this.clusterize();
+      return this.adjustMapToBounds();
     },
     replaceMarkers: function(new_markers) {
       this.clearMarkers();
