@@ -2,7 +2,7 @@
 
 Gmaps4rails is developed to simply create a Google Map:
 
-- directly from your model,
+- directly from your model
 
 - from your own json
 
