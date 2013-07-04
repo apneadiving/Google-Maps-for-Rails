@@ -1,4 +1,4 @@
-<% content_for :scripts do %>
+<% content_for Gmaps4rails::script_block.to_sym do %>
 <%= javascript_include_tag *js_dependencies %>
 
 <script type="text/javascript">
