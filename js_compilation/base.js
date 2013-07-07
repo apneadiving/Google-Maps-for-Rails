@@ -1,6 +1,6 @@
 (function() {
   var moduleKeywords,
-    __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   moduleKeywords = ['extended', 'included'];
 
@@ -14,9 +14,13 @@
       var key, value, _ref;
       for (key in obj) {
         value = obj[key];
-        if (__indexOf.call(moduleKeywords, key) < 0) this[key] = value;
+        if (__indexOf.call(moduleKeywords, key) < 0) {
+          this[key] = value;
+        }
       }
-      if ((_ref = obj.extended) != null) _ref.apply(this);
+      if ((_ref = obj.extended) != null) {
+        _ref.apply(this);
+      }
       return this;
     };
 
@@ -24,9 +28,13 @@
       var key, value, _ref;
       for (key in obj) {
         value = obj[key];
-        if (__indexOf.call(moduleKeywords, key) < 0) this.prototype[key] = value;
+        if (__indexOf.call(moduleKeywords, key) < 0) {
+          this.prototype[key] = value;
+        }
       }
-      if ((_ref = obj.included) != null) _ref.apply(this);
+      if ((_ref = obj.included) != null) {
+        _ref.apply(this);
+      }
       return this;
     };
 
@@ -47,7 +55,9 @@
       }
       for (key in defaultObject) {
         value = defaultObject[key];
-        if (copy_object[key] == null) copy_object[key] = value;
+        if (copy_object[key] == null) {
+          copy_object[key] = value;
+        }
       }
       return copy_object;
     };
@@ -79,7 +89,7 @@
 
   this.Gmaps4Rails.Configuration = {
     setConf: function() {
-      if (this.CONF) {
+      if (this.CONF != null) {
         return this.mergeObjects(this.CONF, this.DEFAULT_CONF);
       } else {
         return this.DEFAULT_CONF;
@@ -283,7 +293,8 @@
       strokeOpacity: 1,
       strokeWeight: 2,
       clickable: false,
-      zIndex: null
+      zIndex: null,
+      icons: null
     }
   };
 
@@ -356,9 +367,11 @@
 
   this.Gmaps4Rails.MarkerController = {
     addMarkers: function(markersData) {
-      var index, lat, latLng, lng, markerData, newMarker, _len;
-      if (this.markerClusterer != null) this.clearClusterer();
-      for (index = 0, _len = markersData.length; index < _len; index++) {
+      var index, lat, latLng, lng, markerData, newMarker, _i, _len;
+      if (this.markerClusterer != null) {
+        this.clearClusterer();
+      }
+      for (index = _i = 0, _len = markersData.length; _i < _len; index = ++_i) {
         markerData = markersData[index];
         lat = markerData.lat;
         lng = markerData.lng;
@@ -398,7 +411,9 @@
     },
     clearMarkers: function() {
       var marker, _i, _len, _ref;
-      if (this.markerClusterer != null) this.clearClusterer();
+      if (this.markerClusterer != null) {
+        this.clearClusterer();
+      }
       _ref = this.markers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         marker = _ref[_i];
@@ -625,8 +640,8 @@
 
 }).call(this);
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.BaseController = (function(_super) {
 
@@ -741,7 +756,9 @@
       this.map = this.createMap();
       this.afterMapInitialization();
       delete this.map_options;
-      if (detectUserLocation) return this.findUserLocation(this, center_on_user);
+      if (detectUserLocation) {
+        return this.findUserLocation(this, center_on_user);
+      }
     };
 
     BaseController.prototype.getMapObject = function() {
@@ -749,13 +766,17 @@
     };
 
     BaseController.prototype.adjustMapToBounds = function() {
-      if (this.map.autoAdjustRequested()) return this.map.adjustToBounds();
+      if (this.map.autoAdjustRequested()) {
+        return this.map.adjustToBounds();
+      }
     };
 
     BaseController.prototype.clusterize = function() {
       var marker, markers_array, _i, _len, _ref;
       if (this.markers_conf.do_clustering) {
-        if (this.markerClusterer != null) this.clearClusterer();
+        if (this.markerClusterer != null) {
+          this.clearClusterer();
+        }
         markers_array = [];
         _ref = this.markers;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -788,5 +809,10 @@
     return BaseController;
 
   })(Gmaps4Rails.Common);
+
+}).call(this);
+(function() {
+
+
 
 }).call(this);

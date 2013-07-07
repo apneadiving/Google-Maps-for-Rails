@@ -10,7 +10,9 @@
       return new OpenLayers.LonLat(lng, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
     },
     createAnchor: function(offset) {
-      if (offset === null) return null;
+      if (offset === null) {
+        return null;
+      }
       return new OpenLayers.Pixel(offset[0], offset[1]);
     },
     createSize: function(width, height) {
@@ -23,8 +25,8 @@
 
 }).call(this);
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Map = (function(_super) {
 
@@ -89,8 +91,8 @@
 
 }).call(this);
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Marker = (function(_super) {
 
@@ -137,7 +139,7 @@
     Marker.prototype._createMarkerStyle = function(args) {
       this.style_mark = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
       this.style_mark.fillOpacity = 1;
-      return this.style_mark.graphicTitle = args.title;
+      return this.style_mark.graphicTitle = args.marker_title;
     };
 
     Marker.prototype._styleForBasicMarker = function(args) {
@@ -170,12 +172,14 @@
 
 }).call(this);
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Polyline = (function(_super) {
 
     __extends(Polyline, _super);
+
+    Polyline.include(Gmaps4Rails.Interfaces.Basic);
 
     Polyline.include(Gmaps4Rails.Openlayers.Shared);
 
@@ -223,8 +227,8 @@
 
 }).call(this);
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4RailsOpenlayers = (function(_super) {
 
@@ -277,7 +281,9 @@
     };
 
     Gmaps4RailsOpenlayers.prototype._createPolylinesLayer = function() {
-      if (this.polylinesLayer != null) return;
+      if (this.polylinesLayer != null) {
+        return;
+      }
       this.polylinesLayer = new OpenLayers.Layer.Vector("Polylines", null);
       this.polylinesLayer.events.register("featureselected", this.polylinesLayer, this._onFeatureSelect);
       this.polylinesLayer.events.register("featureunselected", this.polylinesLayer, this._onFeatureUnselect);
@@ -287,7 +293,9 @@
     };
 
     Gmaps4RailsOpenlayers.prototype._createMarkersLayer = function() {
-      if (this.markersLayer != null) return;
+      if (this.markersLayer != null) {
+        return;
+      }
       this.markersLayer = new OpenLayers.Layer.Vector("Markers", null);
       this.getMapObject().addLayer(this.markersLayer);
       this.markersLayer.events.register("featureselected", this.markersLayer, this._onFeatureSelect());
@@ -348,7 +356,9 @@
         radius: function(feature) {
           var pix;
           pix = 2;
-          if (feature.cluster) pix = feature.cluster.length + 10;
+          if (feature.cluster) {
+            pix = feature.cluster.length + 10;
+          }
           return pix;
         },
         label: function(feature) {
@@ -373,5 +383,10 @@
     return Gmaps4RailsOpenlayers;
 
   })(Gmaps4Rails.BaseController);
+
+}).call(this);
+(function() {
+
+
 
 }).call(this);

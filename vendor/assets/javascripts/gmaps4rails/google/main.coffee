@@ -9,7 +9,7 @@
 class @Gmaps4RailsGoogle extends Gmaps4Rails.BaseController
 
   @include Gmaps4Rails.Google.Shared
-  
+
   getModule: ->
     Gmaps4Rails.Google
 
@@ -44,4 +44,4 @@ class @Gmaps4RailsGoogle extends Gmaps4Rails.BaseController
 
   _setVisibleInfoWindow: (infowindow)->
     @visibleInfowindow = infowindow
- 
+
