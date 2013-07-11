@@ -70,7 +70,7 @@ module Gmaps4rails
         @js_array << "#{GOOGLE_EXT}tags/infobox/1.1.9/src/infobox_packed.js"                      if custom_infowindow_class
         @js_array << "#{GOOGLE_EXT}tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js" if do_clustering
         @js_array << "#{GOOGLE_EXT}trunk/richmarker/src/richmarker-compiled.js"                   if rich_marker
-        @js_array << "#{GOOGLE_EXT}tags/markerwithlabel/1.1.8/src/markerwithlabel_packed.js"
+        @js_array << "#{GOOGLE_EXT}tags/markerwithlabel/1.1.8/src/markerwithlabel_packed.js"      if marker_with_label
       end
     end
     
@@ -119,6 +119,11 @@ module Gmaps4rails
     # do_clustering tells whether or not the js marker clustering library should be loaded
     def do_clustering
       marker_options.try(:[], :do_clustering)
+    end
+
+    # marker_with_label tells whether or not the js marker_with_label library should be loaded
+    def marker_with_label
+      marker_options.try(:[], :marker_with_label)
     end
 
     # libraries should be an array of string containing the additional js library the user
