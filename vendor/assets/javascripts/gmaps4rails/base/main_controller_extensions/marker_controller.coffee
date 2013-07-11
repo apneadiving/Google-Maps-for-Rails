@@ -42,7 +42,6 @@
       @markers.push newMarker
 
     @clusterize()
-    @adjustMapToBounds()
 
     #replace old markers with new markers on an existing map
   replaceMarkers : (new_markers) ->
