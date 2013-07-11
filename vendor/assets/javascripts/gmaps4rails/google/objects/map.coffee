@@ -10,7 +10,7 @@ class Gmaps4Rails.Google.Map extends Gmaps4Rails.Common
     disableDefaultUI:       false
     disableDoubleClickZoom: false
     type:                   "ROADMAP" # HYBRID, ROADMAP, SATELLITE, TERRAIN
-#    mapTypeControl:         null
+    mapTypeControl:         null
 
   constructor:(map_options, controller) ->
     @controller    = controller
