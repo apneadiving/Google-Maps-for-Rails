@@ -6,6 +6,6 @@ source "http://rubygems.org"
 
 gemspec
 
-group :development do
+group :development, :test do
   gem 'mongoid', "~> 3", :require => false
 end
