@@ -10,8 +10,7 @@ module Gmaps4rails
           directory assets_source_path, assets_destination_path
           copy_file "../../../public/stylesheets/gmaps4rails.css", "vendor/assets/stylesheets/gmaps4rails.css"
         else
-          %w( base google openlayers bing ).each do |filename|
-            copy_file js_source_path(filename), js_destination_path(filename)
+          %w( base google openlayers bing yandex ).each do |filename|
           end
           copy_file "../../../public/stylesheets/gmaps4rails.css", "public/stylesheets/gmaps4rails.css"
         end

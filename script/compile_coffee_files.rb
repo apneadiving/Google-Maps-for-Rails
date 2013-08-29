@@ -6,7 +6,7 @@ app_path = File.expand_path('../..',  __FILE__)
 source_path      = (app_path + "/vendor/assets/javascripts/gmaps4rails/")
 destination_path = (app_path + "/js_compilation/")
 
-%w(base bing google openlayers).each do |name|
+%w(base bing google openlayers yandex).each do |name|
   #main source file:
   main_source_file_name = "#{name}.coffee"
   #desired output file
