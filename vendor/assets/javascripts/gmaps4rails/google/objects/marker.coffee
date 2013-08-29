@@ -46,9 +46,12 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
         google.maps.event.addListener(@serviceObject, 'click', @_openInfowindow())
 
   _createBasicMarker:(markerLatLng, args)->
-    defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, draggable: args.marker_draggable, zIndex: args.zindex}
+    defaultOptions = {position: markerLatLng, map: @getMap(), title: args.marker_title, labelContent: args.marker_labelContent, labelClass: args.marker_labelClass, draggable: args.marker_draggable, zIndex: args.zindex}
     mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
-    @serviceObject = new google.maps.Marker mergedOptions
+    if @controller.markers_conf.marker_with_label
+      @serviceObject = new MarkerWithLabel mergedOptions
+    else
+      @serviceObject = new google.maps.Marker mergedOptions
 
   _createRichMarker: (markerLatLng, args)->
     @serviceObject = new RichMarker({
@@ -68,9 +71,12 @@ class Gmaps4Rails.Google.Marker extends Gmaps4Rails.Common
     #create or retrieve existing MarkerImages
     markerImage = @_createOrRetrieveImage(args.marker_picture, args.marker_width, args.marker_height, imageAnchorPosition)
     shadowImage = @_createOrRetrieveImage(args.shadow_picture, args.shadow_width, args.shadow_height, shadowAnchorPosition)
-    defaultOptions = {position: markerLatLng, map: @getMap(), icon: markerImage, title: args.marker_title, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
+    defaultOptions = {position: markerLatLng, map: @getMap(), icon: markerImage, title: args.marker_title, labelContent: args.marker_labelContent, labelClass: args.marker_labelClass, draggable: args.marker_draggable, shadow: shadowImage,  zIndex: args.zindex}
     mergedOptions  = @mergeObjects @controller.markers_conf.raw, defaultOptions
-    @serviceObject = new google.maps.Marker mergedOptions
+    if @controller.markers_conf.marker_with_label
+      @serviceObject = new MarkerWithLabel mergedOptions
+    else
+      @serviceObject = new google.maps.Marker mergedOptions
 
   #checks if obj is included in arr Array and returns the position or false
   _includeMarkerImage : (obj) ->

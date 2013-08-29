@@ -1,5 +1,4 @@
 (function() {
-
   Gmaps4Rails.Openlayers = {};
 
   Gmaps4Rails.Openlayers.Shared = {
@@ -29,7 +28,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Map = (function(_super) {
-
     __extends(Map, _super);
 
     Map.include(Gmaps4Rails.Interfaces.Map);
@@ -49,6 +47,7 @@
 
     function Map(map_options, controller) {
       var defaultOptions, mergedOpenlayersOptions, openlayersOptions;
+
       this.controller = controller;
       defaultOptions = this.setConf();
       this.options = this.mergeObjects(map_options, defaultOptions);
@@ -95,7 +94,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Marker = (function(_super) {
-
     __extends(Marker, _super);
 
     Marker.include(Gmaps4Rails.Interfaces.Marker);
@@ -133,7 +131,7 @@
     };
 
     Marker.prototype._isBasicMarker = function(args) {
-      return !(args.marker_picture != null);
+      return args.marker_picture == null;
     };
 
     Marker.prototype._createMarkerStyle = function(args) {
@@ -176,7 +174,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4Rails.Openlayers.Polyline = (function(_super) {
-
     __extends(Polyline, _super);
 
     Polyline.include(Gmaps4Rails.Interfaces.Basic);
@@ -189,6 +186,7 @@
 
     function Polyline(polyline, controller) {
       var clickable, element, latlng, line_points, line_style, polyline_coordinates, strokeColor, strokeOpacity, strokeWeight, zIndex, _i, _len;
+
       this.controller = controller;
       this.controller._createPolylinesLayer();
       polyline_coordinates = [];
@@ -231,7 +229,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.Gmaps4RailsOpenlayers = (function(_super) {
-
     __extends(Gmaps4RailsOpenlayers, _super);
 
     Gmaps4RailsOpenlayers.include(Gmaps4Rails.Openlayers.Shared);
@@ -249,6 +246,7 @@
 
     Gmaps4RailsOpenlayers.prototype.createClusterer = function(marker_serviceObject_array) {
       var strategy, style;
+
       style = new OpenLayers.Style(this._clustererOptions, this._clustererFunctions);
       strategy = new OpenLayers.Strategy.Cluster;
       this._clearMarkersLayer();
@@ -314,9 +312,11 @@
 
     Gmaps4RailsOpenlayers.prototype._onFeatureSelect = function() {
       var controller;
+
       controller = this;
       return function(evt) {
         var feature, popup;
+
         feature = evt.feature;
         popup = new OpenLayers.Popup.FramedCloud("featurePopup", feature.geometry.getBounds().getCenterLonLat(), new OpenLayers.Size(300, 200), feature.infoWindow, null, true, controller._onPopupClose(controller, feature));
         feature.popup = popup;
@@ -327,9 +327,11 @@
 
     Gmaps4RailsOpenlayers.prototype._onFeatureUnselect = function() {
       var controller;
+
       controller = this;
       return function(evt) {
         var feature;
+
         feature = evt.feature;
         if (feature.popup != null) {
           controller.getMapObject().removePopup(feature.popup);
@@ -349,12 +351,14 @@
       context: {
         width: function(feature) {
           var _ref;
+
           return (_ref = feature.cluster) != null ? _ref : {
             2: 1
           };
         },
         radius: function(feature) {
           var pix;
+
           pix = 2;
           if (feature.cluster) {
             pix = feature.cluster.length + 10;
@@ -386,7 +390,6 @@
 
 }).call(this);
 (function() {
-
 
 
 }).call(this);
