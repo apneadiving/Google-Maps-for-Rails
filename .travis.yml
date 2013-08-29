@@ -5,6 +5,6 @@ rvm:
   - 1.9.3
 services:
   - mongodb
-before_script: 'cd spec/dummy/; rake db:migrate RAILS_ENV=test; cd ../..'
+before_script: "sh -c 'cd spec/dummy/; bundle exec rake db:migrate RAILS_ENV=test; cd ../..' "
 script: 'bundle exec rspec spec'
 # after_script: 'bundle exec guard-jasmine -u http://localhost:8888/'
