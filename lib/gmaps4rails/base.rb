@@ -22,9 +22,10 @@ module Gmaps4rails
   autoload :Places,           'gmaps4rails/api_wrappers/places'
   autoload :ObjectAccessor,   'gmaps4rails/object_accessor'
 
-  mattr_accessor :http_proxy, :escape_js_url
+  mattr_accessor :http_proxy, :escape_js_url, :script_block
 
   self.escape_js_url = true
+  self.script_block = :scripts
   
   # This method geocodes an address using the GoogleMaps webservice
   # options are:
@@ -120,7 +121,9 @@ module Gmaps4rails
   # works for Rails 3.0.x and above
   # @return [Boolean]
   def Gmaps4rails.pipeline_enabled?
-    Rails.configuration.respond_to?('assets') && Rails.configuration.assets.enabled
+    return false unless Rails.configuration.respond_to?('assets')
+    assets = Rails.configuration.assets
+    assets.enabled.nil? || assets.enabled
   end
-  
+
 end

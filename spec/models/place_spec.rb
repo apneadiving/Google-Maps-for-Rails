@@ -1,4 +1,4 @@
-if RUBY_VERSION == "1.9.3"
+if RUBY_VERSION == "2.0.0"
 
   require 'spec_helper'
 
@@ -18,11 +18,11 @@ if RUBY_VERSION == "1.9.3"
 
     let(:place)         { Factory(:place) }
     let(:invalid_place) { Factory.build(:invalid_place) }
-    
+
     before(:each) do
       Geocoding.stub_geocoding
     end
-    
+
     context "standard configuration, valid place" do
       after(:each) do
         set_gmaps4rails_options!({})

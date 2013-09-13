@@ -5,3 +5,7 @@ source "http://rubygems.org"
 # development dependencies will be added by default to the :development group.
 
 gemspec
+
+group :development, :test do
+  gem 'mongoid', "~> 3", :platform => :ruby_20
+end

@@ -2,12 +2,12 @@ module Gmaps4rails
   
   class ViewHelper
     
+    YANDEX     = "http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU"
     OPENLAYERS = "http://www.openlayers.org/api/OpenLayers.js"
     MAPQUEST   = "http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js"                  
     BING       = "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"
-    GOOGLE     = "//maps.google.com/maps/api/js?v=3.9"
-    GOOGLE_EXT = "//google-maps-utility-library-v3.googlecode.com/svn/"    
-    
+    GOOGLE     = "//maps.google.com/maps/api/js?v=3.12"
+    GOOGLE_EXT = "//google-maps-utility-library-v3.googlecode.com/svn/"
     # options is the hash passed to the 'gmaps' helper
     # looks like:
     #{  
@@ -51,6 +51,7 @@ module Gmaps4rails
       unless gmaps4rails_pipeline_enabled?
         @js_array << '/javascripts/gmaps4rails/gmaps4rails.base.js' unless scripts == :api
         @js_array << case map_provider
+                     when "yandex"     then '/javascripts/gmaps4rails/gmaps4rails.yandex.js'
                      when "openlayers" then '/javascripts/gmaps4rails/gmaps4rails.openlayers.js'
                      when "mapquest"   then '/javascripts/gmaps4rails/gmaps4rails.mapquest.js'
                      when "bing"       then '/javascripts/gmaps4rails/gmaps4rails.bing.js'
@@ -62,6 +63,7 @@ module Gmaps4rails
     # vendor_scripts are the js libraries from the map providers
     def get_vendor_scripts
       case map_provider
+      when "yandex"      then @js_array << YANDEX
       when "openlayers"  then @js_array << OPENLAYERS
       when "mapquest"    then @js_array << "#{MAPQUEST}?key=#{provider_key}"
       when "bing"        then @js_array << BING
@@ -101,6 +103,7 @@ module Gmaps4rails
     end
     
     # could be one of the following:
+    # - "yandex"
     # - "openlayers"
     # - "mapquest"  
     # - "bing"      
