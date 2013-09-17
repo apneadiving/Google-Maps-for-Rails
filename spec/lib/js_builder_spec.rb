@@ -122,7 +122,7 @@ describe "to_gmaps4rails for hash" do
     end
 
     it "should call map builder if last_map" do
-      trigger_script = "Gmaps.oldOnload = window.onload;\n window.onload = function() { Gmaps.triggerOldOnload(); Gmaps.loadMaps(); };"
+      trigger_script = "Gmaps.loadMapsIfNeeded"
       hash = {:last_map => true}
       hash.to_gmaps4rails.should include trigger_script
       hash = {}

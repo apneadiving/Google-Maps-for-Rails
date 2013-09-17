@@ -84,6 +84,19 @@ In your view:
 
 Done!
 
+=== Using Turbolinks
+
+In order to use {turbolinks}[https://github.com/rails/turbolinks/], the maps api has to be included on
+the initial page load. 
+
+Therefore, include the `gmaps4rails_api_script_tags` helper call in your layout file:
+
+    <!-- app/layouts/default.html.erb -->
+    <html><head>
+      ...
+      <%= gmaps4rails_api_script_tags %>
+    </head> ... </html>
+
 == Options
 
 * Markers with Info window, Custom Picture, RichMarkers (make your own markers with custom html)

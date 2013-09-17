@@ -33,7 +33,11 @@ module Gmaps4rails
       @js << "#{gmap_id}.adjustMapToBounds();"
       @js << "#{gmap_id}.callback();"
       @js << "};"
-      @js << "Gmaps.oldOnload = window.onload;\n window.onload = function() { Gmaps.triggerOldOnload(); Gmaps.loadMaps(); };" if load_map?
+      if load_map?
+        @js << "Gmaps.loadMapsIfNeeded = function() { if( $('.gmaps4rails_map').length > 0 ) { Gmaps.loadMaps(); } }; 
+                  $(document).on('page:load', Gmaps.loadMapsIfNeeded);
+                  $(document).ready(Gmaps.loadMapsIfNeeded);"
+      end
       
       @js * ("\n")
     end
