@@ -384,7 +384,7 @@ class @Gmaps4Rails
   #////////////////////////////////////////////////////
 
   #replace old markers with new markers on an existing map
-  replacePolylines : (new_polylines) ->
+  replacePolylines : (new_polylines, adjustBounds = true) ->
     #reset previous polylines and kill them from map
     @destroy_polylines()
     #set new polylines
@@ -392,7 +392,7 @@ class @Gmaps4Rails
     #create
     @create_polylines()
     #.... and adjust map boundaries
-    @adjustMapToBounds()
+    @adjustMapToBounds() if adjustBounds
 
   destroy_polylines : ->
     for polyline in @polylines
