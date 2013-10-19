@@ -1,7 +1,7 @@
 
 moduleKeywords = ['extended', 'included']
 
-class @Gmaps.Common
+class @Gmaps.Base
 
   @extend: (obj) ->
     for key, value of obj when key not in moduleKeywords
@@ -16,6 +16,3 @@ class @Gmaps.Common
       @::[key] = value
     obj.included?.apply(@)
     this
-
-  #gives a value between -1 and 1
-  random : -> return(Math.random() * 2 -1)

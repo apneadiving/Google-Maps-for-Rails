@@ -1,4 +1,6 @@
-class @Gmaps.Google.Objects.Marker
+class @Gmaps.Google.Objects.Marker extends Gmaps.Base
+
+  @include Gmaps.Google.Objects.Common
 
   @CURRENT_INFOWINDOW: null
 
