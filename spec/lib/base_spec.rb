@@ -6,7 +6,7 @@ describe Gmaps4rails do
     let(:proc)           { lambda {} }
     let(:marker_builder) { double 'marker_builder' }
 
-    it "delegate" do
+    it "delegates" do
       ::Gmaps4rails::MarkersBuilder.should_receive(:new).with(collection).and_return marker_builder
       marker_builder.should_receive(:call)
 
