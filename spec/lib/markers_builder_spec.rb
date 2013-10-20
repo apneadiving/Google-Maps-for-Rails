@@ -1,4 +1,5 @@
 require 'spec_helper'
+require './lib/gmaps4rails/markers_builder'
 
 describe Gmaps4rails::MarkersBuilder do
 
