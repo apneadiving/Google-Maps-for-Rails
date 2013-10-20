@@ -6,6 +6,9 @@ class @Gmaps.Google.Objects.Map extends Gmaps.Base
     @serviceObject    = new @PRIMITIVES.map document.getElementById(@internal_options.id), provider_options
     @on_map_load onMapLoad
 
+  getServiceObject: ->
+    @serviceObject
+
   # position can be:
   # - [ lat, lng]
   # - { lat: , lng: }

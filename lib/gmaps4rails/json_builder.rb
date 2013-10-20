@@ -2,6 +2,7 @@ module Gmaps4rails
   # the to_gmaps4rails method accepts a block to customize:
   # - infowindow
   # - picture
+  # - shadow
   # - title
   # - sidebar
   # - json
