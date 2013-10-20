@@ -1,4 +1,3 @@
-
 moduleKeywords = ['extended', 'included']
 
 class @Gmaps.Base

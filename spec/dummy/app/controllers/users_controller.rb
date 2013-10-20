@@ -2,28 +2,24 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   respond_to :html, :json
-  
-  
+
+
   def index
-    @users = User.all
+    @users = User.all.take 1
     @json = @users.to_gmaps4rails do |user, marker|
       marker.json({:id => user.id })
-      # marker.title "titre"
-      # marker.picture({
-      #  "picture" => "/logo.png",
-      #  "width" =>  32,
-      #  "height" => 32})
-      # marker.picture({
-      #   :rich_marker =>  "<div class='my-marker'>It works!<img height='30' width='30' src='http://farm4.static.flickr.com/3212/3012579547_097e27ced9_m.jpg'/></div>"
-      # })
+      marker.picture({
+       "url" => "/logo.png",
+       "width" =>  32,
+       "height" => 32})
       marker.infowindow user.name
     end
     respond_with @json
   end
-  
+
   def ajax_test
   end
-  
+
   def ajax_data
      @json = User.all.to_gmaps4rails
      render :json => @json and return
@@ -31,7 +27,7 @@ class UsersController < ApplicationController
 
   def json(string)
     string
-  end 
+  end
   # GET /users/1
   # GET /users/1.json
   def show

@@ -21,6 +21,9 @@
     map: ->
       delegator(primitives.map, arguments)
 
+    circle: ->
+      delegator(primitives.circle, arguments)
+
     mapTypes: (type)->
       primitives.mapTypes[type]
 

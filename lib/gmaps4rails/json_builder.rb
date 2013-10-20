@@ -1,4 +1,4 @@
-module Gmaps4rails  
+module Gmaps4rails
   # the to_gmaps4rails method accepts a block to customize:
   # - infowindow
   # - picture
@@ -28,12 +28,12 @@ module Gmaps4rails
 
     extend Forwardable
     def_delegators :@options, :position, :lat_column, :lng_column
-    
+
     def initialize(object)
       @object, @json_hash, @custom_json = object, Hash.new, nil
       @options = OpenStruct.new @object.gmaps4rails_options
     end
-    
+
     def process(&block)
       if compliant?
         handle_block(&block) if block_given?
@@ -43,7 +43,7 @@ module Gmaps4rails
         nil
       end
     end
-    
+
     def infowindow(string)
       @json_hash[:description] = string
       true
@@ -65,14 +65,14 @@ module Gmaps4rails
     end
 
     def picture(hash)
-      @json_hash.merge! hash
+      @json_hash[:marker] = hash
       true
     end
 
     private
 
     def model_attributes
-      { 
+      {
         :description    => :gmaps4rails_infowindow,
         :title          => :gmaps4rails_title,
         :sidebar        => :gmaps4rails_sidebar,
@@ -136,6 +136,6 @@ module Gmaps4rails
       position_from_array? ? @object.send("#{position}")[1] : @object.send("#{lng_column}")
     end
 
-  end  
-  
+  end
+
 end
