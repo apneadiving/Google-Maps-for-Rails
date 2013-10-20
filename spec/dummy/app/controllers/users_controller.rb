@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
 
   def index
-    @users = User.all.take 1
+    @users = User.all
     @json = @users.to_gmaps4rails do |user, marker|
       marker.json({:id => user.id })
       marker.picture({

@@ -1,5 +1,7 @@
 @Gmaps.Google.Objects.Common =
 
+  after_create: ->
+
   getServiceObject: ->
     @serviceObject
 
@@ -11,6 +13,7 @@
 
   clear: ->
     @serviceObject.setMap(null)
+    @serviceObject = null
 
   show: ->
     @serviceObject.setVisible(true)

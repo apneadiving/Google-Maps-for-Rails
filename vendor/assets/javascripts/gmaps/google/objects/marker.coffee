@@ -3,6 +3,7 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
   @include Gmaps.Google.Objects.Common
 
   @CURRENT_INFOWINDOW: null
+  CACHE_STORE: []
 
    # args:
   #   lat
@@ -54,9 +55,6 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
       infowindow.open( @getServiceObject().getMap(), @getServiceObject())
       @constructor.CURRENT_INFOWINDOW = infowindow
 
-  after_create: ->
-
-
   updateBounds: (bounds)->
     bounds.extend(@getServiceObject().position)
 
@@ -95,7 +93,7 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
     return [@args.lat, @args.lng] unless _.isNumber(@internal_options.maxRandomDistance)
 
     #gives a value between -1 and 1
-    random = -> (Math.random() * 2 -1)
+    random = -> (Math.random() * 2 - 1)
     dx  = @internal_options.maxRandomDistance * random()
     dy  = @internal_options.maxRandomDistance * random()
     Lat = parseFloat(@args.lat) + (180/Math.PI)*(dy/6378137)

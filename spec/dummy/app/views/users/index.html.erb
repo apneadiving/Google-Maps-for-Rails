@@ -172,16 +172,40 @@
 
 handler = Gmaps.build('Google');
 markers = null;
+polylines = null;
+polygons  = null;
+kmls = null;
 handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
   markers = handler.addMarkers(<%=raw @json %>);
   circles = handler.addCircles([
-    {lat: 0, lng: 0, radius: 50000},
+    {lat: 0, lng: 0,   radius: 50000},
     {lat: 0, lng: 180, radius: 5000000}
   ]);
+  polylines = handler.addPolylines([
+    [
+      {lat: 37.772323,   lng: -122.214897},
+      {lat: 21.291982,   lng: -157.821856},
+      {lat: -18.142599,  lng: 178.431},
+      {lat: -27.46758,   lng: 153.027892}
+    ]
+  ]);
+  polygons = handler.addPolygons([
+    [
+      {lat:   0, lng: 0},
+      {lat:  45, lng: 50},
+      {lat: -45, lng: 50},
+    ]
+  ]);
+
+  // kmls = handler.addKml(
+  //   { url: "http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml" }
+  // );
+
+
   handler.bounds.extendWith(markers);
   handler.bounds.extendWith(circles);
   handler.fitMapToBounds();
-})
+});
 
 // Gmaps.map.jsTemplate = function(marker_container){
 //   return "ok";

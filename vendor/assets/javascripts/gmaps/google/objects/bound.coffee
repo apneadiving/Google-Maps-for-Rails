@@ -12,13 +12,3 @@ class @Gmaps.Google.Objects.Bound extends Gmaps.Base
 
   extend: (value)->
     @getServiceObject().extend value
-
-  # extendBoundsWithPolyline: (polyline)->
-  #   polyline_points = polyline.serviceObject.latLngs.getArray()[0].getArray()
-  #   for point in polyline_points
-  #     @boundsObject.extend point
-
-  # extendBoundsWithPolygon: (polygon)->
-  #   polygon_points = polygon.serviceObject.latLngs.getArray()[0].getArray()
-  #   for point in polygon_points
-  #     @boundsObject.extend point

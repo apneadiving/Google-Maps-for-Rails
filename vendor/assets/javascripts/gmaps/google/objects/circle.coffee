@@ -12,8 +12,6 @@ class @Gmaps.Google.Objects.Circle extends Gmaps.Base
     @serviceObject = @create_circle()
     @after_create()
 
-  after_create: ->
-
   create_circle: ->
     new @PRIMITIVES.circle @circle_options()
 

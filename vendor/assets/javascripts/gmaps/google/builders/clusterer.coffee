@@ -4,6 +4,6 @@
     PRIMITIVES:  primitivesProvider
 
   return {
-    build: (args, options)->
-      new Clusterer(args, options)
+    build: (args, provider_options)->
+      new Clusterer(args, provider_options)
   }

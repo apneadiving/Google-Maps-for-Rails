@@ -1,10 +1,7 @@
-@Gmaps.Google.Builders.Marker = (markerClass, primitivesProvider, cacheStore)->
-
-  cacheStore.markerImages = []
+@Gmaps.Google.Builders.Marker = (markerClass, primitivesProvider)->
 
   class Marker extends markerClass
     PRIMITIVES:  primitivesProvider
-    CACHE_STORE: cacheStore
 
   return {
     build: (args, provider_options, internal_options)->

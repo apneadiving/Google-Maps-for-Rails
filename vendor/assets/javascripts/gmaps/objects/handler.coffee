@@ -1,17 +1,16 @@
 class @Gmaps.Objects.Handler
 
-
-  # markers:
-  #   maxRandomDistance: false / int in meters
-  #   singleInfowindow:  true/false
-  #   clusterer:         null or object with options if you want clusters
-  # models:   custom models   if you have some
-  # builders: custom builders if you have some
+  # options:
+  #   markers:
+  #     maxRandomDistance: null / int in meters
+  #     singleInfowindow:  true/false
+  #     clusterer:         null or object with options if you want clusters
+  #   models:   custom models   if you have some
+  #   builders: custom builders if you have some
   constructor: (@type, options = {})->
     @primitives = Gmaps.Primitives( @_rootModule().Primitives() )
     @setOptions options
-    @cache      = {}
-    @bounds     = @_createBounds()
+    @resetBounds()
 
   buildMap: (options, onMapLoad = ->)=>
     @map = @_map_builder().build(options, onMapLoad)
@@ -36,6 +35,33 @@ class @Gmaps.Objects.Handler
     circle.associate_to_map(@getMap())
     circle
 
+  addPolylines: (polylines_data, provider_options)=>
+    _.map polylines_data, (polyline_data)=>
+      @addPolyline polyline_data, provider_options
+
+  addPolyline: (polyline_data, provider_options)=>
+    polyline = @_polyline_builder().build(polyline_data, provider_options)
+    polyline.associate_to_map(@getMap())
+    polyline
+
+  addPolygons: (polygons_data, provider_options)=>
+    _.map polygons_data, (polygon_data)=>
+      @addPolygon polygon_data, provider_options
+
+  addPolygon: (polygon_data, provider_options)=>
+    polygon = @_polygon_builder().build(polygon_data, provider_options)
+    polygon.associate_to_map(@getMap())
+    polygon
+
+  addKmls: (kmls_data, provider_options)=>
+    _.map kmls_data, (kml_data)=>
+      @addKml kml_data, provider_options
+
+  addKml: (kml_data, provider_options)=>
+    kml = @_kml_builder().build(kml_data, provider_options)
+    kml.associate_to_map(@getMap())
+    kml
+
   fitMapToBounds: ->
     @map.fitToBounds @bounds.getServiceObject()
 
@@ -47,14 +73,14 @@ class @Gmaps.Objects.Handler
     @builders       = _.extend @_default_builders(),       options.builders
     @models         = _.extend @_default_models(),         options.models
 
+  resetBounds: ->
+    @bounds = @_bound_builder().build()
+
   _clusterize: ->
     _.isObject @marker_options.clusterer
 
   _createClusterer: =>
     @clusterer = @_clusterer_builder().build({ map: @getMap() }, @marker_options.clusterer )
-
-  _createBounds: ->
-    @bounds = @_bound_builder().build()
 
   _default_marker_options: ->
     {
@@ -72,16 +98,26 @@ class @Gmaps.Objects.Handler
     @_builder('Clusterer')
 
   _marker_builder: ->
-    @_builder('Marker')
+    @__builderMarker ?= @builders.Marker(@models.Marker, @primitives, @marker_options)
+    @__builderMarker
 
   _map_builder: ->
     @_builder('Map')
 
+  _kml_builder: ->
+    @_builder('Kml')
+
   _circle_builder: ->
     @_builder('Circle')
 
+  _polyline_builder: ->
+    @_builder('Polyline')
+
+  _polygon_builder: ->
+    @_builder('Polygon')
+
   _builder: (name)->
-    @["__builder#{name}"] ?= @builders[name](@models[name], @primitives, @cache)
+    @["__builder#{name}"] ?= @builders[name](@models[name], @primitives)
     @["__builder#{name}"]
 
   _default_models: ->

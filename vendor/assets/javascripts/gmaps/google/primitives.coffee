@@ -13,3 +13,6 @@
     addListener:  google.maps.event.addListener
     clusterer:    MarkerClusterer
     addListenerOnce:  google.maps.event.addListenerOnce
+    polyline:     google.maps.Polyline
+    polygon:      google.maps.Polygon
+    kml:          google.maps.KmlLayer

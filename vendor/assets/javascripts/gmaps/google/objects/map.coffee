@@ -1,19 +1,17 @@
 class @Gmaps.Google.Objects.Map extends Gmaps.Base
 
-  @include Gmaps.Google.Objects.Common
-
   constructor: (options, onMapLoad)->
     provider_options  = _.extend @default_options(), options.provider
     @internal_options = options.internal
     @serviceObject    = new @PRIMITIVES.map document.getElementById(@internal_options.id), provider_options
     @on_map_load onMapLoad
 
+  # position can be:
+  # - [ lat, lng]
+  # - { lat: , lng: }
+  # - a google.maps.LatLng
   centerOn: (position)->
-    if _.isArray(position)
-      point = new @PRIMITIVES.latLng position[0], position[1]
-      @getServiceObject().setCenter(point)
-    else
-      @getServiceObject().setCenter(position)
+    @getServiceObject().setCenter @PRIMITIVES.latLngFromPosition(position)
 
   fitToBounds: (boundsObject)->
     @getServiceObject().fitBounds(boundsObject) unless boundsObject.isEmpty()
