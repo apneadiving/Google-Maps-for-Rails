@@ -1,13 +1,13 @@
 class User < ActiveRecord::Base
-  acts_as_gmappable :address => :address
+  # acts_as_gmappable :address => :address
   # geocoded_by :address
-  
+
   attr_accessor :lat_test, :long_test, :bool_test
-  
+
   after_initialize :set_lat_test
-  
+
   def set_lat_test
-    self.lat_test = address 
+    self.lat_test = address
   end
-  
+
 end

@@ -8,7 +8,8 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
    # args:
   #   lat
   #   lng
-  #   description
+  #   infowindow
+  #   marker_title
   #   marker
   #     anchor: [x,y]
   #     picture
@@ -36,16 +37,17 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
     new @PRIMITIVES.marker @marker_options()
 
   create_infowindow: ->
-    return null unless _.isString @args.description
-    infowindow = new @PRIMITIVES.infowindow({content: @args.description })
+    return null unless _.isString @args.infowindow
+    infowindow = new @PRIMITIVES.infowindow({content: @args.infowindow })
     @bind_infowindow infowindow
     infowindow
 
   marker_options: ->
     coords = @_randomized_coordinates()
     base_options =
+      title:    @args.marker_title
       position: new @PRIMITIVES.latLng(coords[0], coords[1])
-      icon:     @_get_picture('marker')
+      icon:     @_get_picture('picture')
       shadow:   @_get_picture('shadow')
     _.extend base_options, @provider_options
 

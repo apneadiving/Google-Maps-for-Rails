@@ -6,14 +6,17 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    @json = @users.to_gmaps4rails do |user, marker|
+    @json = Gmaps4rails.build_markers @users do |user, marker|
+      marker.lat user.latitude
+      marker.lng user.longitude
       marker.json({:id => user.id })
       marker.picture({
        "url" => "/logo.png",
        "width" =>  32,
        "height" => 32})
       marker.infowindow user.name
-    end
+    end.to_json
+
     respond_with @json
   end
 
