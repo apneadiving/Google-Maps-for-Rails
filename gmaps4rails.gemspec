@@ -18,5 +18,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", '2.14.0'
   s.add_development_dependency 'coffee-script'
   s.add_development_dependency 'sprockets'
+  s.add_development_dependency 'jasmine'
   s.add_development_dependency 'pry'
 end

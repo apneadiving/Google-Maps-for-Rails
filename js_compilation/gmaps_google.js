@@ -156,17 +156,20 @@
       this.addMarker = __bind(this.addMarker, this);
       this.addMarkers = __bind(this.addMarkers, this);
       this.buildMap = __bind(this.buildMap, this);
-      this.primitives = Gmaps.Primitives(this._rootModule().Primitives());
+      this.setPrimitives(options);
       this.setOptions(options);
       this.resetBounds();
     }
 
     Handler.prototype.buildMap = function(options, onMapLoad) {
+      var _this = this;
       if (onMapLoad == null) {
         onMapLoad = function() {};
       }
-      this.map = this._map_builder().build(options, onMapLoad);
-      return this._createClusterer();
+      return this.map = this._map_builder().build(options, function() {
+        _this._createClusterer();
+        return onMapLoad();
+      });
     };
 
     Handler.prototype.addMarkers = function(markers_data, provider_options) {
@@ -258,6 +261,12 @@
       return this.bounds = this._bound_builder().build();
     };
 
+    Handler.prototype.setPrimitives = function(options) {
+      var source;
+      source = options.primitives === void 0 ? this._rootModule().Primitives() : _.isFunction(options.primitives) ? options.primitives() : options.primitives;
+      return this.primitives = Gmaps.Primitives(source);
+    };
+
     Handler.prototype._clusterize = function() {
       return _.isObject(this.marker_options.clusterer);
     };
@@ -288,10 +297,7 @@
     };
 
     Handler.prototype._marker_builder = function() {
-      if (this.__builderMarker == null) {
-        this.__builderMarker = this.builders.Marker(this.models.Marker, this.primitives, this.marker_options);
-      }
-      return this.__builderMarker;
+      return this._builder('Marker');
     };
 
     Handler.prototype._map_builder = function() {
@@ -650,7 +656,7 @@
 
     function Circle(args, provider_options) {
       this.args = args;
-      this.provider_options = provider_options;
+      this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_circle();
       this.after_create();
     }
@@ -665,7 +671,7 @@
         center: new this.PRIMITIVES.latLng(this.args.lat, this.args.lng),
         radius: this.args.radius
       };
-      return _.extend(base_options, this.provider_options);
+      return _.defaults(this.provider_options, base_options);
     };
 
     Circle.prototype.updateBounds = function(bounds) {
@@ -720,7 +726,7 @@
 
     function Kml(args, provider_options) {
       this.args = args;
-      this.provider_options = provider_options;
+      this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_kml();
       this.after_create();
     }
@@ -732,7 +738,7 @@
     Kml.prototype.kml_options = function() {
       var base_options;
       base_options = {};
-      return _.extend(base_options, this.provider_options);
+      return _.defaults(this.provider_options, base_options);
     };
 
     Kml.prototype.updateBounds = function(bounds) {};
@@ -804,7 +810,7 @@
 
     function Marker(args, provider_options, internal_options) {
       this.args = args;
-      this.provider_options = provider_options;
+      this.provider_options = provider_options != null ? provider_options : {};
       this.internal_options = internal_options != null ? internal_options : {};
       this.addInfowindowListener = __bind(this.addInfowindowListener, this);
       this.serviceObject = this.create_marker();
@@ -841,7 +847,7 @@
         icon: this._get_picture('picture'),
         shadow: this._get_picture('shadow')
       };
-      return _.extend(base_options, this.provider_options);
+      return _.defaults(this.provider_options, base_options);
     };
 
     Marker.prototype.bind_infowindow = function(infowindow) {
@@ -933,7 +939,7 @@
 
     function Polygon(args, provider_options) {
       this.args = args;
-      this.provider_options = provider_options;
+      this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_polygon();
       this.after_create();
     }
@@ -947,7 +953,7 @@
       base_options = {
         path: this._build_path()
       };
-      return _.extend(base_options, this.provider_options);
+      return _.defaults(this.provider_options, base_options);
     };
 
     Polygon.prototype._build_path = function() {
@@ -975,7 +981,7 @@
 
     function Polyline(args, provider_options) {
       this.args = args;
-      this.provider_options = provider_options;
+      this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_polyline();
       this.after_create();
     }
@@ -989,7 +995,7 @@
       base_options = {
         path: this._build_path()
       };
-      return _.extend(base_options, this.provider_options);
+      return _.defaults(this.provider_options, base_options);
     };
 
     Polyline.prototype._build_path = function() {

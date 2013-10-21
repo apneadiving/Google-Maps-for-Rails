@@ -1,5 +1,5 @@
 @Gmaps.Google.Primitives = ->
-
+  return {
     point:        google.maps.Point
     size:         google.maps.Size
     circle:       google.maps.Circle
@@ -16,3 +16,4 @@
     polyline:     google.maps.Polyline
     polygon:      google.maps.Polygon
     kml:          google.maps.KmlLayer
+  }

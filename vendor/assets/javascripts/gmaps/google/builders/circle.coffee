@@ -1,9 +1,19 @@
-@Gmaps.Google.Builders.Circle = (circleClass, primitivesProvider)->
+class @Gmaps.Google.Builders.Circle extends Gmaps.Objects.BaseBuilder
 
-  class Circle extends circleClass
-    PRIMITIVES:  primitivesProvider
+  # args:
+  #   lat
+  #   lng
+  #   radius
+  # provider options:
+  #   https://developers.google.com/maps/documentation/javascript/reference?hl=fr#CircleOptions
+  constructor: (@args, @provider_options = {})->
+    @serviceObject = @create_circle()
 
-  return {
-    build: (args, provider_options)->
-      new Circle(args, provider_options)
-  }
+  create_circle: ->
+    new @PRIMITIVES.circle @circle_options()
+
+  circle_options: ->
+    base_options =
+      center:   new @PRIMITIVES.latLng(@args.lat, @args.lng)
+      radius:   @args.radius
+    _.defaults @provider_options, base_options

@@ -5,16 +5,18 @@ class @Gmaps.Objects.Handler
   #     maxRandomDistance: null / int in meters
   #     singleInfowindow:  true/false
   #     clusterer:         null or object with options if you want clusters
-  #   models:   custom models   if you have some
-  #   builders: custom builders if you have some
+  #   models:   object, custom models   if you have some
+  #   builders: object, custom builders if you have some
+  #
   constructor: (@type, options = {})->
-    @primitives = Gmaps.Primitives( @_rootModule().Primitives() )
+    @setPrimitives options
     @setOptions options
     @resetBounds()
 
   buildMap: (options, onMapLoad = ->)=>
-    @map = @_map_builder().build(options, onMapLoad)
-    @_createClusterer()
+    @map = @_map_builder().build options, =>
+      @_createClusterer()
+      onMapLoad()
 
   addMarkers: (markers_data, provider_options)=>
     _.map markers_data, (marker_data)=>
@@ -76,6 +78,14 @@ class @Gmaps.Objects.Handler
   resetBounds: ->
     @bounds = @_bound_builder().build()
 
+  setPrimitives: (options)->
+    source =  if options.primitives is undefined
+                @_rootModule().Primitives()
+              else
+                if _.isFunction(options.primitives) then options.primitives() else options.primitives
+
+    @primitives = Gmaps.Primitives source
+
   _clusterize: ->
     _.isObject @marker_options.clusterer
 
@@ -98,8 +108,7 @@ class @Gmaps.Objects.Handler
     @_builder('Clusterer')
 
   _marker_builder: ->
-    @__builderMarker ?= @builders.Marker(@models.Marker, @primitives, @marker_options)
-    @__builderMarker
+    @_builder('Marker')
 
   _map_builder: ->
     @_builder('Map')
@@ -117,7 +126,7 @@ class @Gmaps.Objects.Handler
     @_builder('Polygon')
 
   _builder: (name)->
-    @["__builder#{name}"] ?= @builders[name](@models[name], @primitives)
+    @["__builder#{name}"] ?= Gmaps.Objects.Builders(@builders[name], @models[name], @primitives)
     @["__builder#{name}"]
 
   _default_models: ->

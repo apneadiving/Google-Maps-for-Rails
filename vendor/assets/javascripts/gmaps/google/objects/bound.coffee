@@ -2,8 +2,7 @@ class @Gmaps.Google.Objects.Bound extends Gmaps.Base
 
   @include Gmaps.Google.Objects.Common
 
-  constructor: (options)->
-    @serviceObject = new @PRIMITIVES.latLngBounds()
+  constructor: (@serviceObject)->
 
   extendWith: (array_or_object)->
     collection = if _.isArray(array_or_object) then array_or_object else [ array_or_object ]

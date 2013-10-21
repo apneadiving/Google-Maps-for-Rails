@@ -1,7 +1,6 @@
 class @Gmaps.Google.Objects.Clusterer
 
-  constructor: (@args, @options)->
-    @serviceObject = new @PRIMITIVES.clusterer(@args.map, [], @options)
+  constructor: (@serviceObject)->
 
   addMarkers: (markers)=>
     _.each markers, (marker)=>
