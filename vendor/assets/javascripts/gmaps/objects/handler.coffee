@@ -33,36 +33,28 @@ class @Gmaps.Objects.Handler
       @addCircle circle_data, provider_options
 
   addCircle: (circle_data, provider_options)=>
-    circle = @_circle_builder().build(circle_data, provider_options)
-    circle.associate_to_map(@getMap())
-    circle
+    @_addResource('circle', circle_data, provider_options)
 
   addPolylines: (polylines_data, provider_options)=>
     _.map polylines_data, (polyline_data)=>
       @addPolyline polyline_data, provider_options
 
   addPolyline: (polyline_data, provider_options)=>
-    polyline = @_polyline_builder().build(polyline_data, provider_options)
-    polyline.associate_to_map(@getMap())
-    polyline
+    @_addResource('polyline', polyline_data, provider_options)
 
   addPolygons: (polygons_data, provider_options)=>
     _.map polygons_data, (polygon_data)=>
       @addPolygon polygon_data, provider_options
 
   addPolygon: (polygon_data, provider_options)=>
-    polygon = @_polygon_builder().build(polygon_data, provider_options)
-    polygon.associate_to_map(@getMap())
-    polygon
+    @_addResource('polygon', polygon_data, provider_options)
 
   addKmls: (kmls_data, provider_options)=>
     _.map kmls_data, (kml_data)=>
       @addKml kml_data, provider_options
 
   addKml: (kml_data, provider_options)=>
-    kml = @_kml_builder().build(kml_data, provider_options)
-    kml.associate_to_map(@getMap())
-    kml
+    @_addResource('kml', kml_data, provider_options)
 
   fitMapToBounds: ->
     @map.fitToBounds @bounds.getServiceObject()
@@ -85,6 +77,12 @@ class @Gmaps.Objects.Handler
                 if _.isFunction(options.primitives) then options.primitives() else options.primitives
 
     @primitives = Gmaps.Primitives source
+
+
+  _addResource: (resource_name, resource_data, provider_options)->
+    resource = @["_#{ resource_name }_builder"]().build(resource_data, provider_options)
+    resource.associate_to_map(@getMap())
+    resource
 
   _clusterize: ->
     _.isObject @marker_options.clusterer

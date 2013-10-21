@@ -1,31 +1,28 @@
 window.createSpies = function(){
 
   Gmaps.Specs = {
+    spies:    {
+      Builders: {}
+    },
     Objects:  {},
-    spies: {
-      Builders: {
-        Bound:     jasmine.createSpy('bound build'),
-        Circle:    jasmine.createSpy('circle build'),
-        Map:       jasmine.createSpy('map build'),
-        Kml:       jasmine.createSpy('kml build'),
-        Marker:    jasmine.createSpy('marker build'),
-        Polyline:  jasmine.createSpy('polyline build'),
-        Polygon:   jasmine.createSpy('polygon build'),
-        Clusterer: jasmine.createSpy('clusterer build')
-      }
-    }
+    Builders: {}
   };
 
-  Gmaps.Specs.Builders = {
-    Bound:     function() { return { build: Gmaps.Specs.spies.Builders.Bound     }; },
-    Circle:    function() { return { build: Gmaps.Specs.spies.Builders.Circle    }; },
-    Map:       function() { return { build: Gmaps.Specs.spies.Builders.Map       }; },
-    Marker:    function() { return { build: Gmaps.Specs.spies.Builders.Marker    }; },
-    Polyline:  function() { return { build: Gmaps.Specs.spies.Builders.Polyline  }; },
-    Polygon:   function() { return { build: Gmaps.Specs.spies.Builders.Polygon   }; },
-    Kml:       function() { return { build: Gmaps.Specs.spies.Builders.Kml       }; },
-    Clusterer: function() { return { build: Gmaps.Specs.spies.Builders.Clusterer }; }
-  };
+  classes = ['Bound', 'Circle', 'Map', 'Marker', 'Polyline', 'Polygon', 'Kml', 'Clusterer' ];
+
+  _.each(classes, function(klass_name){
+    Gmaps.Specs.spies.Builders[klass_name] = jasmine.createSpy(klass_name + ' build');
+
+    Gmaps.Specs.Builders[klass_name] = function(){
+      return {
+        build: function() {
+         return Gmaps.Specs.spies.Builders[klass_name];
+        }
+      }
+    };
+
+    spyOn(Gmaps.Specs.Builders, klass_name).andCallThrough();
+  });
 
   Specs = {
 

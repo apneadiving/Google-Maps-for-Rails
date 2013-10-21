@@ -2,8 +2,10 @@ describe("Gmaps.Objects.Handler", function() {
 
   var subjectClass = Gmaps.Objects.Handler;
   var subject      = null;
-  var builders_path  = function()    { return Gmaps.Specs.spies.Builders; };
+  var builders_path  = function()    { return Gmaps.Specs.Builders; };
   var builders       = function(name){ return builders_path()[name]; };
+  var stubbed_path   = function(name){ return Gmaps.Specs.spies.Builders; };
+  var stubbed        = function(name){ return stubbed_path()[name]; };
 
   var build_subject = function() {
     subject = new subjectClass('Specs', { primitives: Specs.override_primitives });
@@ -71,7 +73,7 @@ describe("Gmaps.Objects.Handler", function() {
       });
 
       it("creates bounds", function() {
-        expect(builders('Bound')).toHaveBeenCalled();
+        expect(subject.bounds).toBe(stubbed('Bound'));
       });
     });
   });
@@ -85,8 +87,8 @@ describe("Gmaps.Objects.Handler", function() {
       var options   = jasmine.createSpy('options');
       var onMapLoad = function(){};
       subject.buildMap(options, onMapLoad);
-
-      expect(builders('Map')).toHaveBeenCalledWith(options, jasmine.any(Function));
+      expect(Gmaps.Specs.Builders.Map).toHaveBeenCalledWith(options, jasmine.any(Function), undefined)
+      expect(subject.map).toBe(stubbed('Map'));
     });
   });
 
@@ -155,8 +157,8 @@ describe("Gmaps.Objects.Handler", function() {
       var object, object_data, provider_options, builder_spy;
 
       var create_context = function(name){
-        builders(name).isSpy = false;
-        builder_spy          = spyOn(builders_path(), name).andReturn(object);
+        stubbed_path()[name] = object;
+        builder_spy          = builders(name);
 
         build_subject();
         assign_stubbed_map();
@@ -169,7 +171,7 @@ describe("Gmaps.Objects.Handler", function() {
       });
 
       describe("addMarker", function() {
-        var marker, clusterer;
+        var clusterer;
 
         beforeEach(function() {
           clusterer = jasmine.createSpyObj('clusterer', ['addMarker']);
@@ -178,8 +180,7 @@ describe("Gmaps.Objects.Handler", function() {
         });
 
         it("delegates marker creation to builder", function() {
-          subject.addMarker(object_data, provider_options);
-
+          var result = subject.addMarker(object_data, provider_options);
           expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, subject.marker_options);
         });
 
@@ -210,7 +211,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("delegates circle creation to builder", function() {
           subject.addCircle(object_data, provider_options);
 
-          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, undefined);
         });
 
         it("associate map to circle", function() {
@@ -234,7 +235,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("delegates polyline creation to builder", function() {
           subject.addPolyline(object_data, provider_options);
 
-          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, undefined);
         });
 
         it("associate map to polyline", function() {
@@ -258,7 +259,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("delegates polygon creation to builder", function() {
           subject.addPolygon(object_data, provider_options);
 
-          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, undefined);
         });
 
         it("associate map to polygon", function() {
@@ -282,7 +283,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("delegates kml creation to builder", function() {
           subject.addKml(object_data, provider_options);
 
-          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, undefined);
         });
 
         it("associate map to kml", function() {

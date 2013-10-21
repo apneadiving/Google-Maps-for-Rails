@@ -135,6 +135,56 @@
 
 }).call(this);
 (function() {
+  this.Gmaps.Objects.BaseBuilder = (function() {
+    function BaseBuilder() {}
+
+    BaseBuilder.prototype.build = function() {
+      return new this.OBJECT(this.serviceObject);
+    };
+
+    BaseBuilder.prototype.addListener = function(action, fn) {
+      return this.PRIMITIVES.addListener(this.getServiceObject(), action, fn);
+    };
+
+    BaseBuilder.prototype.getServiceObject = function() {
+      return this.serviceObject;
+    };
+
+    return BaseBuilder;
+
+  })();
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Objects.Builders = function(builderClass, objectClass, primitivesProvider) {
+    var Builder, _ref;
+    Builder = (function(_super) {
+      __extends(Builder, _super);
+
+      function Builder() {
+        _ref = Builder.__super__.constructor.apply(this, arguments);
+        return _ref;
+      }
+
+      Builder.prototype.OBJECT = objectClass;
+
+      Builder.prototype.PRIMITIVES = primitivesProvider;
+
+      return Builder;
+
+    })(builderClass);
+    return {
+      build: function(args, provider_options, internal_options) {
+        return new Builder(args, provider_options, internal_options).build();
+      }
+    };
+  };
+
+}).call(this);
+(function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.Gmaps.Objects.Handler = (function() {
@@ -195,10 +245,7 @@
     };
 
     Handler.prototype.addCircle = function(circle_data, provider_options) {
-      var circle;
-      circle = this._circle_builder().build(circle_data, provider_options);
-      circle.associate_to_map(this.getMap());
-      return circle;
+      return this._addResource('circle', circle_data, provider_options);
     };
 
     Handler.prototype.addPolylines = function(polylines_data, provider_options) {
@@ -209,10 +256,7 @@
     };
 
     Handler.prototype.addPolyline = function(polyline_data, provider_options) {
-      var polyline;
-      polyline = this._polyline_builder().build(polyline_data, provider_options);
-      polyline.associate_to_map(this.getMap());
-      return polyline;
+      return this._addResource('polyline', polyline_data, provider_options);
     };
 
     Handler.prototype.addPolygons = function(polygons_data, provider_options) {
@@ -223,10 +267,7 @@
     };
 
     Handler.prototype.addPolygon = function(polygon_data, provider_options) {
-      var polygon;
-      polygon = this._polygon_builder().build(polygon_data, provider_options);
-      polygon.associate_to_map(this.getMap());
-      return polygon;
+      return this._addResource('polygon', polygon_data, provider_options);
     };
 
     Handler.prototype.addKmls = function(kmls_data, provider_options) {
@@ -237,10 +278,7 @@
     };
 
     Handler.prototype.addKml = function(kml_data, provider_options) {
-      var kml;
-      kml = this._kml_builder().build(kml_data, provider_options);
-      kml.associate_to_map(this.getMap());
-      return kml;
+      return this._addResource('kml', kml_data, provider_options);
     };
 
     Handler.prototype.fitMapToBounds = function() {
@@ -265,6 +303,13 @@
       var source;
       source = options.primitives === void 0 ? this._rootModule().Primitives() : _.isFunction(options.primitives) ? options.primitives() : options.primitives;
       return this.primitives = Gmaps.Primitives(source);
+    };
+
+    Handler.prototype._addResource = function(resource_name, resource_data, provider_options) {
+      var resource;
+      resource = this["_" + resource_name + "_builder"]().build(resource_data, provider_options);
+      resource.associate_to_map(this.getMap());
+      return resource;
     };
 
     Handler.prototype._clusterize = function() {
@@ -323,7 +368,7 @@
     Handler.prototype._builder = function(name) {
       var _name;
       if (this[_name = "__builder" + name] == null) {
-        this[_name] = this.builders[name](this.models[name], this.primitives);
+        this[_name] = Gmaps.Objects.Builders(this.builders[name], this.models[name], this.primitives);
       }
       return this["__builder" + name];
     };
@@ -372,15 +417,11 @@
 }).call(this);
 (function() {
   this.Gmaps.Google.Objects.Common = {
-    after_create: function() {},
     getServiceObject: function() {
       return this.serviceObject;
     },
     associate_to_map: function(map) {
       return this.getServiceObject().setMap(map);
-    },
-    addListener: function(action, fn) {
-      return this.PRIMITIVES.addListener(this.getServiceObject(), action, fn);
     },
     clear: function() {
       this.serviceObject.setMap(null);
@@ -402,263 +443,29 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Builders.Bound = function(boundClass, primitivesProvider) {
-    var Bound, _ref;
-    Bound = (function(_super) {
-      __extends(Bound, _super);
-
-      function Bound() {
-        _ref = Bound.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Bound.prototype.PRIMITIVES = primitivesProvider;
-
-      return Bound;
-
-    })(boundClass);
-    return {
-      build: function(args) {
-        return new Bound(args);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Circle = function(circleClass, primitivesProvider) {
-    var Circle, _ref;
-    Circle = (function(_super) {
-      __extends(Circle, _super);
-
-      function Circle() {
-        _ref = Circle.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Circle.prototype.PRIMITIVES = primitivesProvider;
-
-      return Circle;
-
-    })(circleClass);
-    return {
-      build: function(args, provider_options) {
-        return new Circle(args, provider_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Clusterer = function(clustererClass, primitivesProvider) {
-    var Clusterer, _ref;
-    Clusterer = (function(_super) {
-      __extends(Clusterer, _super);
-
-      function Clusterer() {
-        _ref = Clusterer.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Clusterer.prototype.PRIMITIVES = primitivesProvider;
-
-      return Clusterer;
-
-    })(clustererClass);
-    return {
-      build: function(args, provider_options) {
-        return new Clusterer(args, provider_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Kml = function(kmlClass, primitivesProvider) {
-    var Kml, _ref;
-    Kml = (function(_super) {
-      __extends(Kml, _super);
-
-      function Kml() {
-        _ref = Kml.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Kml.prototype.PRIMITIVES = primitivesProvider;
-
-      return Kml;
-
-    })(kmlClass);
-    return {
-      build: function(args, provider_options) {
-        return new Kml(args, provider_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Map = function(mapClass, primitivesProvider) {
-    var Map, _ref;
-    Map = (function(_super) {
-      __extends(Map, _super);
-
-      function Map() {
-        _ref = Map.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Map.prototype.PRIMITIVES = primitivesProvider;
-
-      return Map;
-
-    })(mapClass);
-    return {
-      build: function(options, onMapLoad) {
-        return new Map(options, onMapLoad);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Marker = function(markerClass, primitivesProvider) {
-    var Marker, _ref;
-    Marker = (function(_super) {
-      __extends(Marker, _super);
-
-      function Marker() {
-        _ref = Marker.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Marker.prototype.PRIMITIVES = primitivesProvider;
-
-      return Marker;
-
-    })(markerClass);
-    return {
-      build: function(args, provider_options, internal_options) {
-        return new Marker(args, provider_options, internal_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Polygon = function(polygonClass, primitivesProvider) {
-    var Polygon, _ref;
-    Polygon = (function(_super) {
-      __extends(Polygon, _super);
-
-      function Polygon() {
-        _ref = Polygon.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Polygon.prototype.PRIMITIVES = primitivesProvider;
-
-      return Polygon;
-
-    })(polygonClass);
-    return {
-      build: function(args, provider_options) {
-        return new Polygon(args, provider_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Builders.Polyline = function(polylineClass, primitivesProvider) {
-    var Polyline, _ref;
-    Polyline = (function(_super) {
-      __extends(Polyline, _super);
-
-      function Polyline() {
-        _ref = Polyline.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Polyline.prototype.PRIMITIVES = primitivesProvider;
-
-      return Polyline;
-
-    })(polylineClass);
-    return {
-      build: function(args, provider_options) {
-        return new Polyline(args, provider_options);
-      }
-    };
-  };
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.Gmaps.Google.Objects.Bound = (function(_super) {
+  this.Gmaps.Google.Builders.Bound = (function(_super) {
     __extends(Bound, _super);
-
-    Bound.include(Gmaps.Google.Objects.Common);
 
     function Bound(options) {
       this.serviceObject = new this.PRIMITIVES.latLngBounds();
     }
 
-    Bound.prototype.extendWith = function(array_or_object) {
-      var collection,
-        _this = this;
-      collection = _.isArray(array_or_object) ? array_or_object : [array_or_object];
-      return _.each(collection, function(object) {
-        return object.updateBounds(_this);
-      });
-    };
-
-    Bound.prototype.extend = function(value) {
-      return this.getServiceObject().extend(value);
-    };
-
     return Bound;
 
-  })(Gmaps.Base);
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Circle = (function(_super) {
+  this.Gmaps.Google.Builders.Circle = (function(_super) {
     __extends(Circle, _super);
-
-    Circle.include(Gmaps.Google.Objects.Common);
 
     function Circle(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_circle();
-      this.after_create();
     }
 
     Circle.prototype.create_circle = function() {
@@ -674,61 +481,40 @@
       return _.defaults(this.provider_options, base_options);
     };
 
-    Circle.prototype.updateBounds = function(bounds) {
-      bounds.extend(this.getServiceObject().getBounds().getNorthEast());
-      return bounds.extend(this.getServiceObject().getBounds().getSouthWest());
-    };
-
     return Circle;
 
-  })(Gmaps.Base);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  this.Gmaps.Google.Objects.Clusterer = (function() {
-    function Clusterer(args, options) {
-      this.args = args;
-      this.options = options;
-      this.clear = __bind(this.clear, this);
-      this.addMarker = __bind(this.addMarker, this);
-      this.addMarkers = __bind(this.addMarkers, this);
-      this.serviceObject = new this.PRIMITIVES.clusterer(this.args.map, [], this.options);
-    }
-
-    Clusterer.prototype.addMarkers = function(markers) {
-      var _this = this;
-      return _.each(markers, function(marker) {
-        return _this.addMarker(marker);
-      });
-    };
-
-    Clusterer.prototype.addMarker = function(marker) {
-      return this.serviceObject.addMarker(marker.serviceObject);
-    };
-
-    Clusterer.prototype.clear = function() {
-      return this.serviceObject.clearMarkers();
-    };
-
-    return Clusterer;
-
-  })();
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Kml = (function(_super) {
+  this.Gmaps.Google.Builders.Clusterer = (function(_super) {
+    __extends(Clusterer, _super);
+
+    function Clusterer(args, options) {
+      this.args = args;
+      this.options = options;
+      this.serviceObject = new this.PRIMITIVES.clusterer(this.args.map, [], this.options);
+    }
+
+    return Clusterer;
+
+  })(Gmaps.Objects.BaseBuilder);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Builders.Kml = (function(_super) {
     __extends(Kml, _super);
 
     function Kml(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_kml();
-      this.after_create();
     }
 
     Kml.prototype.create_kml = function() {
@@ -741,18 +527,16 @@
       return _.defaults(this.provider_options, base_options);
     };
 
-    Kml.prototype.updateBounds = function(bounds) {};
-
     return Kml;
 
-  })(Gmaps.Base);
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Map = (function(_super) {
+  this.Gmaps.Google.Builders.Map = (function(_super) {
     __extends(Map, _super);
 
     function Map(options, onMapLoad) {
@@ -763,22 +547,8 @@
       this.on_map_load(onMapLoad);
     }
 
-    Map.prototype.getServiceObject = function() {
-      return this.serviceObject;
-    };
-
-    Map.prototype.centerOn = function(position) {
-      return this.getServiceObject().setCenter(this.PRIMITIVES.latLngFromPosition(position));
-    };
-
-    Map.prototype.fitToBounds = function(boundsObject) {
-      if (!boundsObject.isEmpty()) {
-        return this.getServiceObject().fitBounds(boundsObject);
-      }
-    };
-
     Map.prototype.on_map_load = function(onMapLoad) {
-      return this.PRIMITIVES.addListenerOnce(this.getServiceObject(), 'idle', onMapLoad);
+      return this.PRIMITIVES.addListenerOnce(this.serviceObject, 'idle', onMapLoad);
     };
 
     Map.prototype.default_options = function() {
@@ -791,7 +561,7 @@
 
     return Map;
 
-  })(Gmaps.Base);
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
@@ -799,10 +569,8 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Marker = (function(_super) {
+  this.Gmaps.Google.Builders.Marker = (function(_super) {
     __extends(Marker, _super);
-
-    Marker.include(Gmaps.Google.Objects.Common);
 
     Marker.CURRENT_INFOWINDOW = null;
 
@@ -815,8 +583,11 @@
       this.addInfowindowListener = __bind(this.addInfowindowListener, this);
       this.serviceObject = this.create_marker();
       this.infowindow = this.create_infowindow();
-      this.after_create();
     }
+
+    Marker.prototype.build = function() {
+      return new this.OBJECT(this.serviceObject, this.infowindow);
+    };
 
     Marker.prototype.addInfowindowListener = function(action, fn) {
       return this.PRIMITIVES.addListener(this.infowindow, action, fn);
@@ -925,23 +696,20 @@
 
     return Marker;
 
-  })(Gmaps.Base);
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Polygon = (function(_super) {
+  this.Gmaps.Google.Builders.Polygon = (function(_super) {
     __extends(Polygon, _super);
-
-    Polygon.include(Gmaps.Google.Objects.Common);
 
     function Polygon(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_polygon();
-      this.after_create();
     }
 
     Polygon.prototype.create_polygon = function() {
@@ -963,27 +731,22 @@
       });
     };
 
-    Polygon.prototype.updateBounds = function(bounds) {};
-
     return Polygon;
 
-  })(Gmaps.Base);
+  })(Gmaps.Objects.BaseBuilder);
 
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Gmaps.Google.Objects.Polyline = (function(_super) {
+  this.Gmaps.Google.Builders.Polyline = (function(_super) {
     __extends(Polyline, _super);
-
-    Polyline.include(Gmaps.Google.Objects.Common);
 
     function Polyline(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.serviceObject = this.create_polyline();
-      this.after_create();
     }
 
     Polyline.prototype.create_polyline = function() {
@@ -1004,6 +767,200 @@
         return new _this.PRIMITIVES.latLng(arg.lat, arg.lng);
       });
     };
+
+    return Polyline;
+
+  })(Gmaps.Objects.BaseBuilder);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Bound = (function(_super) {
+    __extends(Bound, _super);
+
+    Bound.include(Gmaps.Google.Objects.Common);
+
+    function Bound(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
+
+    Bound.prototype.extendWith = function(array_or_object) {
+      var collection,
+        _this = this;
+      collection = _.isArray(array_or_object) ? array_or_object : [array_or_object];
+      return _.each(collection, function(object) {
+        return object.updateBounds(_this);
+      });
+    };
+
+    Bound.prototype.extend = function(value) {
+      return this.getServiceObject().extend(value);
+    };
+
+    return Bound;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Circle = (function(_super) {
+    __extends(Circle, _super);
+
+    Circle.include(Gmaps.Google.Objects.Common);
+
+    function Circle(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
+
+    Circle.prototype.updateBounds = function(bounds) {
+      bounds.extend(this.getServiceObject().getBounds().getNorthEast());
+      return bounds.extend(this.getServiceObject().getBounds().getSouthWest());
+    };
+
+    return Circle;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.Gmaps.Google.Objects.Clusterer = (function() {
+    function Clusterer(serviceObject) {
+      this.serviceObject = serviceObject;
+      this.clear = __bind(this.clear, this);
+      this.addMarker = __bind(this.addMarker, this);
+      this.addMarkers = __bind(this.addMarkers, this);
+    }
+
+    Clusterer.prototype.addMarkers = function(markers) {
+      var _this = this;
+      return _.each(markers, function(marker) {
+        return _this.addMarker(marker);
+      });
+    };
+
+    Clusterer.prototype.addMarker = function(marker) {
+      return this.serviceObject.addMarker(marker.serviceObject);
+    };
+
+    Clusterer.prototype.clear = function() {
+      return this.serviceObject.clearMarkers();
+    };
+
+    return Clusterer;
+
+  })();
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Kml = (function(_super) {
+    __extends(Kml, _super);
+
+    function Kml(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
+
+    Kml.prototype.updateBounds = function(bounds) {};
+
+    return Kml;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Map = (function(_super) {
+    __extends(Map, _super);
+
+    function Map(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
+
+    Map.prototype.getServiceObject = function() {
+      return this.serviceObject;
+    };
+
+    Map.prototype.centerOn = function(position) {
+      return this.getServiceObject().setCenter(this.PRIMITIVES.latLngFromPosition(position));
+    };
+
+    Map.prototype.fitToBounds = function(boundsObject) {
+      if (!boundsObject.isEmpty()) {
+        return this.getServiceObject().fitBounds(boundsObject);
+      }
+    };
+
+    return Map;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Marker = (function(_super) {
+    __extends(Marker, _super);
+
+    Marker.include(Gmaps.Google.Objects.Common);
+
+    function Marker(serviceObject, infowindow) {
+      this.serviceObject = serviceObject;
+      this.infowindow = infowindow;
+    }
+
+    Marker.prototype.updateBounds = function(bounds) {
+      return bounds.extend(this.getServiceObject().position);
+    };
+
+    return Marker;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Polygon = (function(_super) {
+    __extends(Polygon, _super);
+
+    Polygon.include(Gmaps.Google.Objects.Common);
+
+    function Polygon(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
+
+    Polygon.prototype.updateBounds = function(bounds) {};
+
+    return Polygon;
+
+  })(Gmaps.Base);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.Gmaps.Google.Objects.Polyline = (function(_super) {
+    __extends(Polyline, _super);
+
+    Polyline.include(Gmaps.Google.Objects.Common);
+
+    function Polyline(serviceObject) {
+      this.serviceObject = serviceObject;
+    }
 
     Polyline.prototype.updateBounds = function(bounds) {};
 
