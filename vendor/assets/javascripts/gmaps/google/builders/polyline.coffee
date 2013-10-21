@@ -15,7 +15,7 @@ class @Gmaps.Google.Builders.Polyline extends Gmaps.Objects.BaseBuilder
   polyline_options: ->
     base_options =
       path:  @_build_path()
-    _.defaults @provider_options, base_options
+    _.defaults base_options, @provider_options
 
   _build_path: ->
     _.map @args, (arg)=>

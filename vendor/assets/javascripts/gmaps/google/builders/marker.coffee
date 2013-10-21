@@ -24,8 +24,8 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
   #   singleInfowindow: true/false
   #   maxRandomDistance: null / int in meters
   constructor: (@args, @provider_options = {}, @internal_options = {})->
-    @serviceObject = @create_marker()
-    @infowindow    = @create_infowindow()
+    @create_marker()
+    @create_infowindow()
 
   build: ->
     new @OBJECT(@serviceObject, @infowindow)
@@ -34,13 +34,12 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
     @PRIMITIVES.addListener @infowindow, action, fn
 
   create_marker: ->
-    new @PRIMITIVES.marker @marker_options()
+    @serviceObject = new @PRIMITIVES.marker @marker_options()
 
   create_infowindow: ->
     return null unless _.isString @args.infowindow
-    infowindow = new @PRIMITIVES.infowindow({content: @args.infowindow })
-    @bind_infowindow infowindow
-    infowindow
+    @infowindow = new @PRIMITIVES.infowindow({content: @args.infowindow })
+    @bind_infowindow()
 
   marker_options: ->
     coords = @_randomized_coordinates()
@@ -49,16 +48,15 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
       position: new @PRIMITIVES.latLng(coords[0], coords[1])
       icon:     @_get_picture('picture')
       shadow:   @_get_picture('shadow')
-    _.defaults @provider_options, base_options
+    _.defaults base_options, @provider_options
 
-  bind_infowindow: (infowindow)->
-    @addListener 'click', =>
-      @constructor.CURRENT_INFOWINDOW.close() if @_should_close_infowindow()
-      infowindow.open( @getServiceObject().getMap(), @getServiceObject())
-      @constructor.CURRENT_INFOWINDOW = infowindow
+  bind_infowindow: ->
+    @addListener 'click', @infowindow_binding
 
-  updateBounds: (bounds)->
-    bounds.extend(@getServiceObject().position)
+  infowindow_binding: =>
+    @constructor.CURRENT_INFOWINDOW.close() if @_should_close_infowindow()
+    @infowindow.open( @getServiceObject().getMap(), @getServiceObject())
+    @constructor.CURRENT_INFOWINDOW = @infowindow
 
   _get_picture: (picture_name)->
     @_create_or_retrieve_image @_picture_args(picture_name)

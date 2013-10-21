@@ -15,7 +15,7 @@ class @Gmaps.Google.Builders.Polygon extends Gmaps.Objects.BaseBuilder
   polygon_options: ->
     base_options =
       path:  @_build_path()
-    _.defaults @provider_options, base_options
+    _.defaults base_options, @provider_options
 
   _build_path: ->
     _.map @args, (arg)=>

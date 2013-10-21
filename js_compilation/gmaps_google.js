@@ -478,7 +478,7 @@
         center: new this.PRIMITIVES.latLng(this.args.lat, this.args.lng),
         radius: this.args.radius
       };
-      return _.defaults(this.provider_options, base_options);
+      return _.defaults(base_options, this.provider_options);
     };
 
     return Circle;
@@ -524,7 +524,7 @@
     Kml.prototype.kml_options = function() {
       var base_options;
       base_options = {};
-      return _.defaults(this.provider_options, base_options);
+      return _.defaults(base_options, this.provider_options);
     };
 
     return Kml;
@@ -580,9 +580,10 @@
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.internal_options = internal_options != null ? internal_options : {};
+      this.infowindow_binding = __bind(this.infowindow_binding, this);
       this.addInfowindowListener = __bind(this.addInfowindowListener, this);
-      this.serviceObject = this.create_marker();
-      this.infowindow = this.create_infowindow();
+      this.create_marker();
+      this.create_infowindow();
     }
 
     Marker.prototype.build = function() {
@@ -594,19 +595,17 @@
     };
 
     Marker.prototype.create_marker = function() {
-      return new this.PRIMITIVES.marker(this.marker_options());
+      return this.serviceObject = new this.PRIMITIVES.marker(this.marker_options());
     };
 
     Marker.prototype.create_infowindow = function() {
-      var infowindow;
       if (!_.isString(this.args.infowindow)) {
         return null;
       }
-      infowindow = new this.PRIMITIVES.infowindow({
+      this.infowindow = new this.PRIMITIVES.infowindow({
         content: this.args.infowindow
       });
-      this.bind_infowindow(infowindow);
-      return infowindow;
+      return this.bind_infowindow();
     };
 
     Marker.prototype.marker_options = function() {
@@ -618,22 +617,19 @@
         icon: this._get_picture('picture'),
         shadow: this._get_picture('shadow')
       };
-      return _.defaults(this.provider_options, base_options);
+      return _.defaults(base_options, this.provider_options);
     };
 
-    Marker.prototype.bind_infowindow = function(infowindow) {
-      var _this = this;
-      return this.addListener('click', function() {
-        if (_this._should_close_infowindow()) {
-          _this.constructor.CURRENT_INFOWINDOW.close();
-        }
-        infowindow.open(_this.getServiceObject().getMap(), _this.getServiceObject());
-        return _this.constructor.CURRENT_INFOWINDOW = infowindow;
-      });
+    Marker.prototype.bind_infowindow = function() {
+      return this.addListener('click', this.infowindow_binding);
     };
 
-    Marker.prototype.updateBounds = function(bounds) {
-      return bounds.extend(this.getServiceObject().position);
+    Marker.prototype.infowindow_binding = function() {
+      if (this._should_close_infowindow()) {
+        this.constructor.CURRENT_INFOWINDOW.close();
+      }
+      this.infowindow.open(this.getServiceObject().getMap(), this.getServiceObject());
+      return this.constructor.CURRENT_INFOWINDOW = this.infowindow;
     };
 
     Marker.prototype._get_picture = function(picture_name) {
@@ -721,7 +717,7 @@
       base_options = {
         path: this._build_path()
       };
-      return _.defaults(this.provider_options, base_options);
+      return _.defaults(base_options, this.provider_options);
     };
 
     Polygon.prototype._build_path = function() {
@@ -758,7 +754,7 @@
       base_options = {
         path: this._build_path()
       };
-      return _.defaults(this.provider_options, base_options);
+      return _.defaults(base_options, this.provider_options);
     };
 
     Polyline.prototype._build_path = function() {

@@ -16,4 +16,4 @@ class @Gmaps.Google.Builders.Circle extends Gmaps.Objects.BaseBuilder
     base_options =
       center:   new @PRIMITIVES.latLng(@args.lat, @args.lng)
       radius:   @args.radius
-    _.defaults @provider_options, base_options
+    _.defaults base_options, @provider_options

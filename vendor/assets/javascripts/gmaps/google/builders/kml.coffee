@@ -12,4 +12,4 @@ class @Gmaps.Google.Builders.Kml extends Gmaps.Objects.BaseBuilder
 
   kml_options: ->
     base_options = {}
-    _.defaults @provider_options, base_options
+    _.defaults base_options, @provider_options

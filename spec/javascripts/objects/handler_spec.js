@@ -6,13 +6,13 @@ describe("Gmaps.Objects.Handler", function() {
   var builders       = function(name){ return builders_path()[name]; };
   var stubbed_path   = function(name){ return Gmaps.Specs.spies.Builders; };
   var stubbed        = function(name){ return stubbed_path()[name]; };
-
+  var primitives     = spec_helpers.override_primitives()
   var build_subject = function() {
-    subject = new subjectClass('Specs', { primitives: Specs.override_primitives });
+    subject = new subjectClass('Specs', { primitives: primitives });
   };
 
   beforeEach(function() {
-    createSpies();
+    spec_helpers.createHandlersSpies();
   });
 
   it("function exists", function() {
@@ -27,7 +27,7 @@ describe("Gmaps.Objects.Handler", function() {
     describe("primitives setter", function() {
       it("uses expected primitives", function() {
         new subject.primitives.point();
-        expect(Specs.override_primitives.point).toHaveBeenCalled();
+        expect(primitives.point).toHaveBeenCalled();
       });
     });
 
@@ -40,25 +40,25 @@ describe("Gmaps.Objects.Handler", function() {
 
       it("redefines builders", function() {
         var MarkerBuilder = function(){};
-        subject = new subjectClass('Specs', {  primitives: Specs.override_primitives, builders: { Marker: MarkerBuilder } });
+        subject = new subjectClass('Specs', {  primitives: primitives, builders: { Marker: MarkerBuilder } });
         expect(subject.builders.Marker).toBe(MarkerBuilder);
       });
 
       it("redefines models", function() {
         var MarkerModel = function(){};
-        subject = new subjectClass('Specs', {  primitives: Specs.override_primitives, models: { Marker: MarkerModel } });
+        subject = new subjectClass('Specs', {  primitives: primitives, models: { Marker: MarkerModel } });
         expect(subject.models.Marker).toBe(MarkerModel);
       });
 
       it("redefines marker_options", function() {
         var marker_options = { foo: 1 };
-        subject = new subjectClass('Specs', {  primitives: Specs.override_primitives, markers: marker_options });
+        subject = new subjectClass('Specs', {  primitives: primitives, markers: marker_options });
         expect(subject.marker_options.foo).toBe(marker_options.foo);
       });
 
       it("Clusterer: default model if clusterer required", function() {
         subject = new subjectClass('Specs', {
-          primitives: Specs.override_primitives,
+          primitives: primitives,
           markers: { clusterer: {} }
         });
         expect(subject.models.Clusterer).not.toBe(Gmaps.Objects.NullClusterer);
@@ -66,7 +66,7 @@ describe("Gmaps.Objects.Handler", function() {
 
       it("Clusterer: null clusterer if no clusterer required", function() {
         subject = new subjectClass('Specs', {
-          primitives: Specs.override_primitives,
+          primitives: primitives,
           markers:   { clusterer: null }
         });
         expect(subject.models.Clusterer).toBe(Gmaps.Objects.NullClusterer);
@@ -102,9 +102,10 @@ describe("Gmaps.Objects.Handler", function() {
 
     describe("add collection", function() {
 
-      var object_data, objects_data, provider_options;
+      var object_data, objects_data, provider_options, built_object;
 
       beforeEach(function() {
+        built_object = jasmine.createSpy('built_object');
         object_data  = jasmine.createSpy('object_data');
         objects_data = [object_data];
         provider_options = jasmine.createSpy('provider_options');
@@ -114,41 +115,56 @@ describe("Gmaps.Objects.Handler", function() {
 
       describe("addMarkers", function() {
         it("loops and delegates to addMarker", function() {
-          spyOn(subject, 'addMarker');
-          subject.addMarkers(objects_data, provider_options);
+          spyOn(subject, 'addMarker').andReturn(built_object);
+
+          var result = subject.addMarkers(objects_data, provider_options);
+
           expect(subject.addMarker).toHaveBeenCalledWith(object_data, provider_options);
+          expect(result).toEqual([built_object]);
         });
       });
 
       describe("addCircles", function() {
         it("loops and delegates to addCircle", function() {
-          spyOn(subject, 'addCircle');
-          subject.addCircles(objects_data, provider_options);
+          spyOn(subject, 'addCircle').andReturn(built_object);
+
+          var result = subject.addCircles(objects_data, provider_options);
+
           expect(subject.addCircle).toHaveBeenCalledWith(object_data, provider_options);
+          expect(result).toEqual([built_object]);
         });
       });
 
       describe("addPolylines", function() {
         it("loops and delegates to addPolyline", function() {
-          spyOn(subject, 'addPolyline');
-          subject.addPolylines(objects_data, provider_options);
+          spyOn(subject, 'addPolyline').andReturn(built_object);
+
+          var result = subject.addPolylines(objects_data, provider_options);
+
           expect(subject.addPolyline).toHaveBeenCalledWith(object_data, provider_options);
+          expect(result).toEqual([built_object]);
         });
       });
 
       describe("addPolygons", function() {
         it("loops and delegates to addPolygon", function() {
-          spyOn(subject, 'addPolygon');
-          subject.addPolygons(objects_data, provider_options);
+          spyOn(subject, 'addPolygon').andReturn(built_object);
+
+          var result = subject.addPolygons(objects_data, provider_options);
+
           expect(subject.addPolygon).toHaveBeenCalledWith(object_data, provider_options);
+          expect(result).toEqual([built_object]);
         });
       });
 
       describe("addKmls", function() {
         it("loops and delegates to addKml", function() {
-          spyOn(subject, 'addKml');
-          subject.addKmls(objects_data, provider_options);
+          spyOn(subject, 'addKml').andReturn(built_object);
+
+          var result = subject.addKmls(objects_data, provider_options);
+
           expect(subject.addKml).toHaveBeenCalledWith(object_data, provider_options);
+          expect(result).toEqual([built_object]);
         });
       });
     });
