@@ -35,7 +35,7 @@ describe Gmaps4rails::MarkersBuilder do
         marker.infowindow infowindow
         marker.picture    picture
         marker.title      user.name
-        marker.json({ :some_id => user.id })
+        marker.json({ :some_id => user.some_id })
       end
     }
 
