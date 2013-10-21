@@ -98,7 +98,7 @@ describe("Gmaps.Objects.Handler", function() {
       spyOn(subject, 'getMap').andReturn(map);
     };
 
-    describe("collection methods", function() {
+    describe("add collection", function() {
 
       var object_data, objects_data, provider_options;
 
@@ -151,42 +151,153 @@ describe("Gmaps.Objects.Handler", function() {
       });
     });
 
+    describe("add single item", function() {
+      var object, object_data, provider_options, builder_spy;
 
-
-    describe("addMarker", function() {
-      var marker_data, provider_options, marker, clusterer, builder_spy;
-
-      beforeEach(function() {
-        object_data      = jasmine.createSpy('object_data');
-        provider_options = jasmine.createSpy('provider_options');
-        marker           = jasmine.createSpyObj('marker', ['associate_to_map']);
-        clusterer        = jasmine.createSpyObj('clusterer', ['addMarker']);
-        builders('Marker').isSpy = false;
-        builder_spy       = spyOn(builders_path(), 'Marker').andReturn(marker);
+      var create_context = function(name){
+        builders(name).isSpy = false;
+        builder_spy          = spyOn(builders_path(), name).andReturn(object);
 
         build_subject();
         assign_stubbed_map();
-        subject.clusterer = clusterer;
+      };
+
+      beforeEach(function() {
+        object           = jasmine.createSpyObj('object', ['associate_to_map']);
+        object_data      = jasmine.createSpy('object_data');
+        provider_options = jasmine.createSpy('provider_options');
       });
 
-      it("delegates marker creation to builder", function() {
-        subject.addMarker(marker_data, provider_options);
+      describe("addMarker", function() {
+        var marker, clusterer;
 
-        expect(builder_spy).toHaveBeenCalledWith(marker_data, provider_options, subject.marker_options);
+        beforeEach(function() {
+          clusterer = jasmine.createSpyObj('clusterer', ['addMarker']);
+          create_context('Marker');
+          subject.clusterer = clusterer;
+        });
+
+        it("delegates marker creation to builder", function() {
+          subject.addMarker(object_data, provider_options);
+
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options, subject.marker_options);
+        });
+
+        it("associate map to Marker", function() {
+          subject.addMarker(object_data, provider_options);
+
+          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+        });
+
+        it("clusterer receives marker", function() {
+          subject.addMarker(object_data, provider_options);
+
+          expect(clusterer.addMarker).toHaveBeenCalledWith(object);
+        });
+
+        it("returns marker", function() {
+          var result = subject.addMarker(object_data, provider_options);
+
+          expect(result).toBe(object);
+        });
       });
 
-      it("associate map to Marker", function() {
-        subject.addMarker(marker_data, provider_options);
+      describe("addCircle", function() {
+        beforeEach(function() {
+          create_context('Circle');
+        });
 
-        expect(marker.associate_to_map).toHaveBeenCalledWith(map);
+        it("delegates circle creation to builder", function() {
+          subject.addCircle(object_data, provider_options);
+
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+        });
+
+        it("associate map to circle", function() {
+          subject.addCircle(object_data, provider_options);
+
+          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+        });
+
+        it("returns circle", function() {
+          var result = subject.addCircle(object_data, provider_options);
+
+          expect(result).toBe(object);
+        });
       });
 
-      it("clusterer receives marker", function() {
-        subject.addMarker(marker_data, provider_options);
+      describe("addPolyline", function() {
+        beforeEach(function() {
+          create_context('Polyline');
+        });
 
-        expect(clusterer.addMarker).toHaveBeenCalledWith(marker);
+        it("delegates polyline creation to builder", function() {
+          subject.addPolyline(object_data, provider_options);
+
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+        });
+
+        it("associate map to polyline", function() {
+          subject.addPolyline(object_data, provider_options);
+
+          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+        });
+
+        it("returns polyline", function() {
+          var result = subject.addPolyline(object_data, provider_options);
+
+          expect(result).toBe(object);
+        });
+      });
+
+      describe("addPolygon", function() {
+        beforeEach(function() {
+          create_context('Polygon');
+        });
+
+        it("delegates polygon creation to builder", function() {
+          subject.addPolygon(object_data, provider_options);
+
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+        });
+
+        it("associate map to polygon", function() {
+          subject.addPolygon(object_data, provider_options);
+
+          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+        });
+
+        it("returns polygon", function() {
+          var result = subject.addPolygon(object_data, provider_options);
+
+          expect(result).toBe(object);
+        });
+      });
+
+      describe("addKml", function() {
+        beforeEach(function() {
+          create_context('Kml');
+        });
+
+        it("delegates kml creation to builder", function() {
+          subject.addKml(object_data, provider_options);
+
+          expect(builder_spy).toHaveBeenCalledWith(object_data, provider_options);
+        });
+
+        it("associate map to kml", function() {
+          subject.addKml(object_data, provider_options);
+
+          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+        });
+
+        it("returns kml", function() {
+          var result = subject.addKml(object_data, provider_options);
+
+          expect(result).toBe(object);
+        });
       });
     });
-
   });
+
 });

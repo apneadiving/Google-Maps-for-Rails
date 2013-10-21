@@ -5,8 +5,12 @@ window.createSpies = function(){
     spies: {
       Builders: {
         Bound:     jasmine.createSpy('bound build'),
+        Circle:    jasmine.createSpy('circle build'),
         Map:       jasmine.createSpy('map build'),
+        Kml:       jasmine.createSpy('kml build'),
         Marker:    jasmine.createSpy('marker build'),
+        Polyline:  jasmine.createSpy('polyline build'),
+        Polygon:   jasmine.createSpy('polygon build'),
         Clusterer: jasmine.createSpy('clusterer build')
       }
     }
@@ -14,8 +18,12 @@ window.createSpies = function(){
 
   Gmaps.Specs.Builders = {
     Bound:     function() { return { build: Gmaps.Specs.spies.Builders.Bound     }; },
+    Circle:    function() { return { build: Gmaps.Specs.spies.Builders.Circle    }; },
     Map:       function() { return { build: Gmaps.Specs.spies.Builders.Map       }; },
     Marker:    function() { return { build: Gmaps.Specs.spies.Builders.Marker    }; },
+    Polyline:  function() { return { build: Gmaps.Specs.spies.Builders.Polyline  }; },
+    Polygon:   function() { return { build: Gmaps.Specs.spies.Builders.Polygon   }; },
+    Kml:       function() { return { build: Gmaps.Specs.spies.Builders.Kml       }; },
     Clusterer: function() { return { build: Gmaps.Specs.spies.Builders.Clusterer }; }
   };
 
