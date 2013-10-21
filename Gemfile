@@ -7,5 +7,5 @@ source "http://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem 'mongoid', "~> 3", :platform => :ruby_20
+  gem 'jasmine', :platforms => [:ruby_19, :ruby_20]
 end

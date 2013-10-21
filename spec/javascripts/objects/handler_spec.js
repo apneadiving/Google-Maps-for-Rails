@@ -98,29 +98,66 @@ describe("Gmaps.Objects.Handler", function() {
       spyOn(subject, 'getMap').andReturn(map);
     };
 
-    describe("addMarkers", function() {
+    describe("collection methods", function() {
+
+      var object_data, objects_data, provider_options;
 
       beforeEach(function() {
-       build_subject();
-       assign_stubbed_map();
+        object_data  = jasmine.createSpy('object_data');
+        objects_data = [object_data];
+        provider_options = jasmine.createSpy('provider_options');
+        build_subject();
+        assign_stubbed_map();
       });
 
-      var marker_data  = jasmine.createSpy('marker_data');
-      var markers_data = [marker_data];
-      var provider_options = jasmine.createSpy('provider_options');
+      describe("addMarkers", function() {
+        it("loops and delegates to addMarker", function() {
+          spyOn(subject, 'addMarker');
+          subject.addMarkers(objects_data, provider_options);
+          expect(subject.addMarker).toHaveBeenCalledWith(object_data, provider_options);
+        });
+      });
 
-      it("loops and delegates to addMarker", function() {
-        spyOn(subject, 'addMarker');
-        subject.addMarkers(markers_data, provider_options);
-        expect(subject.addMarker).toHaveBeenCalledWith(marker_data, provider_options);
+      describe("addCircles", function() {
+        it("loops and delegates to addCircle", function() {
+          spyOn(subject, 'addCircle');
+          subject.addCircles(objects_data, provider_options);
+          expect(subject.addCircle).toHaveBeenCalledWith(object_data, provider_options);
+        });
+      });
+
+      describe("addPolylines", function() {
+        it("loops and delegates to addPolyline", function() {
+          spyOn(subject, 'addPolyline');
+          subject.addPolylines(objects_data, provider_options);
+          expect(subject.addPolyline).toHaveBeenCalledWith(object_data, provider_options);
+        });
+      });
+
+      describe("addPolygons", function() {
+        it("loops and delegates to addPolygon", function() {
+          spyOn(subject, 'addPolygon');
+          subject.addPolygons(objects_data, provider_options);
+          expect(subject.addPolygon).toHaveBeenCalledWith(object_data, provider_options);
+        });
+      });
+
+      describe("addKmls", function() {
+        it("loops and delegates to addKml", function() {
+          spyOn(subject, 'addKml');
+          subject.addKmls(objects_data, provider_options);
+          expect(subject.addKml).toHaveBeenCalledWith(object_data, provider_options);
+        });
       });
     });
+
+
 
     describe("addMarker", function() {
       var marker_data, provider_options, marker, clusterer, builder_spy;
 
       beforeEach(function() {
-        marker_data      = jasmine.createSpy('marker_data');
+        object_data      = jasmine.createSpy('object_data');
         provider_options = jasmine.createSpy('provider_options');
         marker           = jasmine.createSpyObj('marker', ['associate_to_map']);
         clusterer        = jasmine.createSpyObj('clusterer', ['addMarker']);
@@ -150,5 +187,6 @@ describe("Gmaps.Objects.Handler", function() {
         expect(clusterer.addMarker).toHaveBeenCalledWith(marker);
       });
     });
+
   });
 });
