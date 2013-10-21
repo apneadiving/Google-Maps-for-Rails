@@ -18,7 +18,7 @@ describe Gmaps4rails::MarkersBuilder do
       :lat          => lat,
       :lng          => lng,
       :marker_title => name,
-      :id           => id,
+      :some_id      => id,
       :infowindow   => infowindow,
       :picture      => picture
     }}
@@ -26,7 +26,7 @@ describe Gmaps4rails::MarkersBuilder do
       :latitude  => lat,
       :longitude => lng,
       :name      => name,
-      :id        => id
+      :some_id   => id
     )}
 
     let(:action) { Gmaps4rails::MarkersBuilder.new(object).call do |user, marker|
@@ -35,7 +35,7 @@ describe Gmaps4rails::MarkersBuilder do
         marker.infowindow infowindow
         marker.picture    picture
         marker.title      user.name
-        marker.json({ :id => user.id })
+        marker.json({ :some_id => user.id })
       end
     }
 
