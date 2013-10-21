@@ -4,8 +4,4 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0
-services:
-  - mongodb
-before_script: "sh -c 'cd spec/dummy/; bundle exec rake db:migrate RAILS_ENV=test; cd ../..' "
-script: 'bundle exec rspec spec'
-# after_script: 'bundle exec guard-jasmine -u http://localhost:8888/'
+script: 'bundle exec rspec spec && bundle exec rake jasmine_travis'

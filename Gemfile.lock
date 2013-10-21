@@ -31,6 +31,7 @@ GEM
       method_source (~> 0.7.1)
       slop (>= 2.4.4, < 3)
     rack (1.4.1)
+    rake (10.1.0)
     rspec (2.14.0)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -61,5 +62,6 @@ DEPENDENCIES
   gmaps4rails!
   jasmine
   pry
+  rake (= 10.1.0)
   rspec (= 2.14.0)
   sprockets
