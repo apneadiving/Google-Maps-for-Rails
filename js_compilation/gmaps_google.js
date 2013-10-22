@@ -5,7 +5,7 @@
       if (options == null) {
         options = {};
       }
-      model = _.isObject(options.handler) ? options.handler : Gmaps.Objects.Handler;
+      model = _.isFunction(options.handler) ? options.handler : Gmaps.Objects.Handler;
       return new model(type, options);
     },
     Builders: {},
@@ -60,94 +60,31 @@
 
 }).call(this);
 (function() {
-  this.Gmaps.Primitives = function(primitives) {
-    var delegator;
-    delegator = function(klass, args) {
-      var F;
-      F = function(args) {
-        return klass.apply(this, args);
-      };
-      F.prototype = klass.prototype;
-      return new F(args);
-    };
-    return {
-      point: function() {
-        return delegator(primitives.point, arguments);
-      },
-      polyline: function() {
-        return delegator(primitives.polyline, arguments);
-      },
-      polygon: function() {
-        return delegator(primitives.polygon, arguments);
-      },
-      size: function() {
-        return delegator(primitives.size, arguments);
-      },
-      latLng: function() {
-        return delegator(primitives.latLng, arguments);
-      },
-      latLngBounds: function() {
-        return delegator(primitives.latLngBounds, arguments);
-      },
-      map: function() {
-        return delegator(primitives.map, arguments);
-      },
-      circle: function() {
-        return delegator(primitives.circle, arguments);
-      },
-      mapTypes: function(type) {
-        return primitives.mapTypes[type];
-      },
-      addListener: function(object, event_name, fn) {
-        return primitives.addListener(object, event_name, fn);
-      },
-      addListenerOnce: function(object, event_name, fn) {
-        return primitives.addListenerOnce(object, event_name, fn);
-      },
-      marker: function() {
-        return delegator(primitives.marker, arguments);
-      },
-      markerImage: function() {
-        return delegator(primitives.markerImage, arguments);
-      },
-      infowindow: function() {
-        return delegator(primitives.infowindow, arguments);
-      },
-      clusterer: function() {
-        return delegator(primitives.clusterer, arguments);
-      },
-      kml: function() {
-        return delegator(primitives.kml, arguments);
-      },
-      latLngFromPosition: function(position) {
-        if (_.isArray(position)) {
-          return new primitives.latLng(position[0], position[1]);
-        } else {
-          if (_.isNumber(position.lat) && _.isNumber(position.lng)) {
-            return new primitives.latLng(position.lat, position.lng);
-          } else {
-            return position;
-          }
-        }
-      }
-    };
-  };
-
-}).call(this);
-(function() {
   this.Gmaps.Objects.BaseBuilder = (function() {
     function BaseBuilder() {}
 
     BaseBuilder.prototype.build = function() {
-      return new this.OBJECT(this.serviceObject);
+      return new (this.model_class())(this.serviceObject);
     };
 
+    BaseBuilder.prototype.before_init = function() {};
+
+    BaseBuilder.prototype.after_init = function() {};
+
     BaseBuilder.prototype.addListener = function(action, fn) {
-      return this.PRIMITIVES.addListener(this.getServiceObject(), action, fn);
+      return this.primitives().addListener(this.getServiceObject(), action, fn);
     };
 
     BaseBuilder.prototype.getServiceObject = function() {
       return this.serviceObject;
+    };
+
+    BaseBuilder.prototype.primitives = function() {
+      return this.constructor.PRIMITIVES;
+    };
+
+    BaseBuilder.prototype.model_class = function() {
+      return this.constructor.OBJECT;
     };
 
     return BaseBuilder;
@@ -156,56 +93,27 @@
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
   this.Gmaps.Objects.Builders = function(builderClass, objectClass, primitivesProvider) {
-    var Builder, _ref;
-    Builder = (function(_super) {
-      __extends(Builder, _super);
-
-      function Builder() {
-        _ref = Builder.__super__.constructor.apply(this, arguments);
-        return _ref;
-      }
-
-      Builder.prototype.OBJECT = objectClass;
-
-      Builder.prototype.PRIMITIVES = primitivesProvider;
-
-      return Builder;
-
-    })(builderClass);
+    objectClass.PRIMITIVES = primitivesProvider;
+    builderClass.OBJECT = objectClass;
+    builderClass.PRIMITIVES = primitivesProvider;
     return {
       build: function(args, provider_options, internal_options) {
-        return new Builder(args, provider_options, internal_options).build();
+        var builder;
+        builder = new builderClass(args, provider_options, internal_options);
+        return builder.build();
       }
     };
   };
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
   this.Gmaps.Objects.Handler = (function() {
     function Handler(type, options) {
       this.type = type;
       if (options == null) {
         options = {};
       }
-      this._createClusterer = __bind(this._createClusterer, this);
-      this.getMap = __bind(this.getMap, this);
-      this.addKml = __bind(this.addKml, this);
-      this.addKmls = __bind(this.addKmls, this);
-      this.addPolygon = __bind(this.addPolygon, this);
-      this.addPolygons = __bind(this.addPolygons, this);
-      this.addPolyline = __bind(this.addPolyline, this);
-      this.addPolylines = __bind(this.addPolylines, this);
-      this.addCircle = __bind(this.addCircle, this);
-      this.addCircles = __bind(this.addCircles, this);
-      this.addMarker = __bind(this.addMarker, this);
-      this.addMarkers = __bind(this.addMarkers, this);
-      this.buildMap = __bind(this.buildMap, this);
       this.setPrimitives(options);
       this.setOptions(options);
       this.resetBounds();
@@ -232,7 +140,7 @@
     Handler.prototype.addMarker = function(marker_data, provider_options) {
       var marker;
       marker = this._marker_builder().build(marker_data, provider_options, this.marker_options);
-      marker.associate_to_map(this.getMap());
+      marker.setMap(this.getMap());
       this.clusterer.addMarker(marker);
       return marker;
     };
@@ -300,15 +208,17 @@
     };
 
     Handler.prototype.setPrimitives = function(options) {
-      var source;
-      source = options.primitives === void 0 ? this._rootModule().Primitives() : _.isFunction(options.primitives) ? options.primitives() : options.primitives;
-      return this.primitives = Gmaps.Primitives(source);
+      return this.primitives = options.primitives === void 0 ? this._rootModule().Primitives() : _.isFunction(options.primitives) ? options.primitives() : options.primitives;
+    };
+
+    Handler.prototype.currentInfowindow = function() {
+      return this.builders.Marker.CURRENT_INFOWINDOW;
     };
 
     Handler.prototype._addResource = function(resource_name, resource_data, provider_options) {
       var resource;
       resource = this["_" + resource_name + "_builder"]().build(resource_data, provider_options);
-      resource.associate_to_map(this.getMap());
+      resource.setMap(this.getMap());
       return resource;
     };
 
@@ -420,7 +330,7 @@
     getServiceObject: function() {
       return this.serviceObject;
     },
-    associate_to_map: function(map) {
+    setMap: function(map) {
       return this.getServiceObject().setMap(map);
     },
     clear: function() {
@@ -435,6 +345,9 @@
     },
     isVisible: function() {
       return this.serviceObject.getVisible();
+    },
+    primitives: function() {
+      return this.constructor.PRIMITIVES;
     }
   };
 
@@ -447,7 +360,9 @@
     __extends(Bound, _super);
 
     function Bound(options) {
-      this.serviceObject = new this.PRIMITIVES.latLngBounds();
+      this.before_init();
+      this.serviceObject = new (this.primitives().latLngBounds);
+      this.after_init();
     }
 
     return Bound;
@@ -465,17 +380,19 @@
     function Circle(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
+      this.before_init();
       this.serviceObject = this.create_circle();
+      this.after_init();
     }
 
     Circle.prototype.create_circle = function() {
-      return new this.PRIMITIVES.circle(this.circle_options());
+      return new (this.primitives().circle)(this.circle_options());
     };
 
     Circle.prototype.circle_options = function() {
       var base_options;
       base_options = {
-        center: new this.PRIMITIVES.latLng(this.args.lat, this.args.lng),
+        center: new (this.primitives().latLng)(this.args.lat, this.args.lng),
         radius: this.args.radius
       };
       return _.defaults(base_options, this.provider_options);
@@ -496,7 +413,9 @@
     function Clusterer(args, options) {
       this.args = args;
       this.options = options;
-      this.serviceObject = new this.PRIMITIVES.clusterer(this.args.map, [], this.options);
+      this.before_init();
+      this.serviceObject = new (this.primitives().clusterer)(this.args.map, [], this.options);
+      this.after_init();
     }
 
     return Clusterer;
@@ -514,11 +433,13 @@
     function Kml(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
+      this.before_init();
       this.serviceObject = this.create_kml();
+      this.after_init();
     }
 
     Kml.prototype.create_kml = function() {
-      return new this.PRIMITIVES.kml(this.args.url, this.kml_options());
+      return new (this.primitives().kml)(this.args.url, this.kml_options());
     };
 
     Kml.prototype.kml_options = function() {
@@ -541,20 +462,26 @@
 
     function Map(options, onMapLoad) {
       var provider_options;
+      this.before_init();
       provider_options = _.extend(this.default_options(), options.provider);
       this.internal_options = options.internal;
-      this.serviceObject = new this.PRIMITIVES.map(document.getElementById(this.internal_options.id), provider_options);
+      this.serviceObject = new (this.primitives().map)(document.getElementById(this.internal_options.id), provider_options);
       this.on_map_load(onMapLoad);
+      this.after_init();
     }
 
+    Map.prototype.build = function() {
+      return new (this.model_class())(this.serviceObject, this.primitives());
+    };
+
     Map.prototype.on_map_load = function(onMapLoad) {
-      return this.PRIMITIVES.addListenerOnce(this.serviceObject, 'idle', onMapLoad);
+      return this.primitives().addListenerOnce(this.serviceObject, 'idle', onMapLoad);
     };
 
     Map.prototype.default_options = function() {
       return {
-        mapTypeId: this.PRIMITIVES.mapTypes('ROADMAP'),
-        center: this.PRIMITIVES.latLng(0, 0),
+        mapTypeId: this.primitives().mapTypes('ROADMAP'),
+        center: this.primitives().latLng(0, 0),
         zoom: 8
       };
     };
@@ -572,37 +499,34 @@
   this.Gmaps.Google.Builders.Marker = (function(_super) {
     __extends(Marker, _super);
 
-    Marker.CURRENT_INFOWINDOW = null;
+    Marker.CURRENT_INFOWINDOW = void 0;
 
-    Marker.prototype.CACHE_STORE = [];
+    Marker.CACHE_STORE = {};
 
     function Marker(args, provider_options, internal_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
       this.internal_options = internal_options != null ? internal_options : {};
       this.infowindow_binding = __bind(this.infowindow_binding, this);
-      this.addInfowindowListener = __bind(this.addInfowindowListener, this);
+      this.before_init();
       this.create_marker();
       this.create_infowindow();
+      this.after_init();
     }
 
     Marker.prototype.build = function() {
-      return new this.OBJECT(this.serviceObject, this.infowindow);
-    };
-
-    Marker.prototype.addInfowindowListener = function(action, fn) {
-      return this.PRIMITIVES.addListener(this.infowindow, action, fn);
+      return new (this.model_class())(this.serviceObject, this.infowindow);
     };
 
     Marker.prototype.create_marker = function() {
-      return this.serviceObject = new this.PRIMITIVES.marker(this.marker_options());
+      return this.serviceObject = new (this.primitives().marker)(this.marker_options());
     };
 
     Marker.prototype.create_infowindow = function() {
       if (!_.isString(this.args.infowindow)) {
         return null;
       }
-      this.infowindow = new this.PRIMITIVES.infowindow({
+      this.infowindow = new (this.primitives().infowindow)({
         content: this.args.infowindow
       });
       return this.bind_infowindow();
@@ -613,11 +537,11 @@
       coords = this._randomized_coordinates();
       base_options = {
         title: this.args.marker_title,
-        position: new this.PRIMITIVES.latLng(coords[0], coords[1]),
+        position: new (this.primitives().latLng)(coords[0], coords[1]),
         icon: this._get_picture('picture'),
         shadow: this._get_picture('shadow')
       };
-      return _.defaults(base_options, this.provider_options);
+      return _.extend(this.provider_options, base_options);
     };
 
     Marker.prototype.bind_infowindow = function() {
@@ -625,6 +549,7 @@
     };
 
     Marker.prototype.infowindow_binding = function() {
+      this.panTo();
       if (this._should_close_infowindow()) {
         this.constructor.CURRENT_INFOWINDOW.close();
       }
@@ -632,33 +557,29 @@
       return this.constructor.CURRENT_INFOWINDOW = this.infowindow;
     };
 
+    Marker.prototype.panTo = function() {
+      return this.getServiceObject().getMap().panTo(this.getServiceObject().getPosition());
+    };
+
     Marker.prototype._get_picture = function(picture_name) {
+      if (!_.isObject(this.args[picture_name]) || !_.isString(this.args[picture_name].url)) {
+        return null;
+      }
       return this._create_or_retrieve_image(this._picture_args(picture_name));
     };
 
     Marker.prototype._create_or_retrieve_image = function(picture_args) {
-      var existing_image;
-      if (!_.isString(picture_args.url)) {
-        return null;
+      if (this.constructor.CACHE_STORE[picture_args.url] === void 0) {
+        this.constructor.CACHE_STORE[picture_args.url] = new (this.primitives().markerImage)(picture_args.url, picture_args.size, picture_args.origin, picture_args.anchor, picture_args.scaledSize);
       }
-      existing_image = _.find(this.CACHE_STORE.markerImages, function(el) {
-        return el.url === picture_args.url;
-      });
-      if (existing_image === void 0) {
-        return new this.PRIMITIVES.markerImage(picture_args.url, picture_args.size, picture_args.origin, picture_args.anchor, picture_args.scaledSize);
-      } else {
-        return existing_image;
-      }
+      return this.constructor.CACHE_STORE[picture_args.url];
     };
 
     Marker.prototype._picture_args = function(picture_name) {
-      if (!_.isObject(this.args[picture_name])) {
-        return {};
-      }
       return {
         url: this.args[picture_name].url,
         anchor: this._createImageAnchorPosition(this.args[picture_name].anchor),
-        size: new this.PRIMITIVES.size(this.args[picture_name].width, this.args[picture_name].height),
+        size: new (this.primitives().size)(this.args[picture_name].width, this.args[picture_name].height),
         scaledSize: null,
         origin: null
       };
@@ -668,7 +589,7 @@
       if (!_.isArray(anchorLocation)) {
         return null;
       }
-      return new this.PRIMITIVES.point(anchorLocation[0], anchorLocation[1]);
+      return new (this.primitives().point)(anchorLocation[0], anchorLocation[1]);
     };
 
     Marker.prototype._should_close_infowindow = function() {
@@ -705,11 +626,13 @@
     function Polygon(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
+      this.before_init();
       this.serviceObject = this.create_polygon();
+      this.after_init();
     }
 
     Polygon.prototype.create_polygon = function() {
-      return new this.PRIMITIVES.polygon(this.polygon_options());
+      return new (this.primitives().polygon)(this.polygon_options());
     };
 
     Polygon.prototype.polygon_options = function() {
@@ -723,7 +646,7 @@
     Polygon.prototype._build_path = function() {
       var _this = this;
       return _.map(this.args, function(arg) {
-        return new _this.PRIMITIVES.latLng(arg.lat, arg.lng);
+        return new (_this.primitives().latLng)(arg.lat, arg.lng);
       });
     };
 
@@ -742,11 +665,13 @@
     function Polyline(args, provider_options) {
       this.args = args;
       this.provider_options = provider_options != null ? provider_options : {};
+      this.before_init();
       this.serviceObject = this.create_polyline();
+      this.after_init();
     }
 
     Polyline.prototype.create_polyline = function() {
-      return new this.PRIMITIVES.polyline(this.polyline_options());
+      return new (this.primitives().polyline)(this.polyline_options());
     };
 
     Polyline.prototype.polyline_options = function() {
@@ -760,7 +685,7 @@
     Polyline.prototype._build_path = function() {
       var _this = this;
       return _.map(this.args, function(arg) {
-        return new _this.PRIMITIVES.latLng(arg.lat, arg.lng);
+        return new (_this.primitives().latLng)(arg.lat, arg.lng);
       });
     };
 
@@ -888,13 +813,17 @@
     };
 
     Map.prototype.centerOn = function(position) {
-      return this.getServiceObject().setCenter(this.PRIMITIVES.latLngFromPosition(position));
+      return this.getServiceObject().setCenter(this.primitives().latLngFromPosition(position));
     };
 
     Map.prototype.fitToBounds = function(boundsObject) {
       if (!boundsObject.isEmpty()) {
         return this.getServiceObject().fitBounds(boundsObject);
       }
+    };
+
+    Map.prototype.primitives = function() {
+      return this.constructor.PRIMITIVES;
     };
 
     return Map;
@@ -918,6 +847,10 @@
 
     Marker.prototype.updateBounds = function(bounds) {
       return bounds.extend(this.getServiceObject().position);
+    };
+
+    Marker.prototype.panTo = function() {
+      return this.getServiceObject().getMap().panTo(this.getServiceObject().getPosition());
     };
 
     return Marker;
@@ -967,24 +900,46 @@
 }).call(this);
 (function() {
   this.Gmaps.Google.Primitives = function() {
-    return {
+    var factory;
+    factory = {
       point: google.maps.Point,
       size: google.maps.Size,
       circle: google.maps.Circle,
       latLng: google.maps.LatLng,
       latLngBounds: google.maps.LatLngBounds,
       map: google.maps.Map,
-      mapTypes: google.maps.MapTypeId,
+      mapTypez: google.maps.MapTypeId,
       markerImage: google.maps.MarkerImage,
       marker: google.maps.Marker,
       infowindow: google.maps.InfoWindow,
-      addListener: google.maps.event.addListener,
+      listener: google.maps.event.addListener,
       clusterer: MarkerClusterer,
-      addListenerOnce: google.maps.event.addListenerOnce,
+      listenerOnce: google.maps.event.addListenerOnce,
       polyline: google.maps.Polyline,
       polygon: google.maps.Polygon,
-      kml: google.maps.KmlLayer
+      kml: google.maps.KmlLayer,
+      addListener: function(object, event_name, fn) {
+        return factory.listener(object, event_name, fn);
+      },
+      addListenerOnce: function(object, event_name, fn) {
+        return factory.listenerOnce(object, event_name, fn);
+      },
+      mapTypes: function(type) {
+        return factory.mapTypez[type];
+      },
+      latLngFromPosition: function(position) {
+        if (_.isArray(position)) {
+          return new factory.latLng(position[0], position[1]);
+        } else {
+          if (_.isNumber(position.lat) && _.isNumber(position.lng)) {
+            return new factory.latLng(position.lat, position.lng);
+          } else {
+            return position;
+          }
+        }
+      }
     };
+    return factory;
   };
 
 }).call(this);

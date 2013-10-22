@@ -3,7 +3,7 @@
   getServiceObject: ->
     @serviceObject
 
-  associate_to_map: (map)->
+  setMap: (map)->
     @getServiceObject().setMap map
 
   clear: ->
@@ -18,3 +18,6 @@
 
   isVisible: ->
     @serviceObject.getVisible()
+
+  primitives: ->
+    @constructor.PRIMITIVES

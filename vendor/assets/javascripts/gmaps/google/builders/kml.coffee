@@ -5,10 +5,12 @@ class @Gmaps.Google.Builders.Kml extends Gmaps.Objects.BaseBuilder
   # provider options:
   #   https://developers.google.com/maps/documentation/javascript/reference?hl=fr#KmlLayerOptions
   constructor: (@args, @provider_options = {})->
+    @before_init()
     @serviceObject = @create_kml()
+    @after_init()
 
   create_kml: ->
-    new @PRIMITIVES.kml( @args.url, @kml_options())
+    new(@primitives().kml)(@args.url, @kml_options())
 
   kml_options: ->
     base_options = {}

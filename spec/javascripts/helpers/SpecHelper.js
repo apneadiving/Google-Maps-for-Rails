@@ -12,6 +12,8 @@ spec_helpers = {
     classes = ['Bound', 'Circle', 'Map', 'Marker', 'Polyline', 'Polygon', 'Kml', 'Clusterer' ];
 
     _.each(classes, function(klass_name){
+      Gmaps.Specs.Objects[klass_name] = function(){};
+
       Gmaps.Specs.spies.Builders[klass_name] = jasmine.createSpy(klass_name + ' build');
 
       Gmaps.Specs.Builders[klass_name] = function(){
@@ -26,24 +28,46 @@ spec_helpers = {
     })
   },
   override_primitives: function(){
-    return {
-      point:            jasmine.createSpy('point'),
-      size:             jasmine.createSpy('size'),
-      circle:           jasmine.createSpy('circle'),
-      latLng:           jasmine.createSpy('latLng'),
-      latLngBounds:     jasmine.createSpy('latLngBounds'),
-      map:              jasmine.createSpy('map'),
-      mapTypes:         jasmine.createSpy('mapTypes'),
-      markerImage:      jasmine.createSpy('markerImage'),
-      marker:           jasmine.createSpy('marker'),
-      infowindow:       jasmine.createSpy('infowindow'),
-      addListener:      jasmine.createSpy('addListener'),
-      clusterer:        jasmine.createSpy('clusterer'),
-      addListenerOnce:  jasmine.createSpy('addListenerOnce'),
-      polyline:         jasmine.createSpy('polyline'),
-      polygon:          jasmine.createSpy('polygon'),
-      kml:              jasmine.createSpy('kml')
+    factory = {
+      point:        jasmine.createSpy('point'),
+      size:         jasmine.createSpy('size'),
+      circle:       jasmine.createSpy('circle'),
+      latLng:       jasmine.createSpy('latLng'),
+      latLngBounds: jasmine.createSpy('latLngBounds'),
+      map:          jasmine.createSpy('map'),
+      mapTypez:     jasmine.createSpy('mapTypes'),
+      markerImage:  jasmine.createSpy('markerImage'),
+      marker:       jasmine.createSpy('marker'),
+      infowindow:   jasmine.createSpy('infowindow'),
+      listener:     jasmine.createSpy('addListener'),
+      clusterer:    jasmine.createSpy('clusterer'),
+      listenerOnce: jasmine.createSpy('addListenerOnce'),
+      polyline:     jasmine.createSpy('polyline'),
+      polygon:      jasmine.createSpy('polygon'),
+      kml:          jasmine.createSpy('kml'),
+
+      addListener: function(object, event_name, fn){
+        factory.listener(object, event_name, fn);
+      },
+      addListenerOnce: function(object, event_name, fn){
+        factory.listenerOnce(object, event_name, fn);
+      },
+      mapTypes: function(type){
+        factory.mapTypez[type];
+      },
+      latLngFromPosition: function(position){
+        if (_.isArray(position)){
+          return new factory.latLng(position[0], position[1])
+        } else {
+          if (_.isNumber(position.lat) && _.isNumber(position.lng)) {
+            return new factory.latLng(position.lat, position.lng)
+          } else {
+            return position;
+          }
+        }
+      }
     };
+    return factory;
   },
 
   google: {
@@ -62,9 +86,9 @@ spec_helpers = {
             return _ref;
           }
 
-          MarkerBuilder.prototype.OBJECT = Gmaps.Google.Objects.Marker;
+          MarkerBuilder.OBJECT = Gmaps.Google.Objects.Marker;
 
-          MarkerBuilder.prototype.PRIMITIVES = Gmaps.Primitives(primitives);
+          MarkerBuilder.PRIMITIVES = primitives;
 
           return MarkerBuilder;
 

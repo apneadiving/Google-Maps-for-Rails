@@ -7,10 +7,12 @@ class @Gmaps.Google.Builders.Polyline extends Gmaps.Objects.BaseBuilder
   # provider options:
   #   https://developers.google.com/maps/documentation/javascript/reference?hl=fr#PolylineOptions
   constructor: (@args, @provider_options = {})->
+    @before_init()
     @serviceObject = @create_polyline()
+    @after_init()
 
   create_polyline: ->
-    new @PRIMITIVES.polyline @polyline_options()
+    new(@primitives().polyline)(@polyline_options())
 
   polyline_options: ->
     base_options =
@@ -19,4 +21,4 @@ class @Gmaps.Google.Builders.Polyline extends Gmaps.Objects.BaseBuilder
 
   _build_path: ->
     _.map @args, (arg)=>
-      new @PRIMITIVES.latLng(arg.lat, arg.lng)
+      new(@primitives().latLng)(arg.lat, arg.lng)

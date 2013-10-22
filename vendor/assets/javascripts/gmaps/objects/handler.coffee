@@ -13,53 +13,53 @@ class @Gmaps.Objects.Handler
     @setOptions options
     @resetBounds()
 
-  buildMap: (options, onMapLoad = ->)=>
+  buildMap: (options, onMapLoad = ->)->
     @map = @_map_builder().build options, =>
       @_createClusterer()
       onMapLoad()
 
-  addMarkers: (markers_data, provider_options)=>
+  addMarkers: (markers_data, provider_options)->
     _.map markers_data, (marker_data)=>
       @addMarker marker_data, provider_options
 
-  addMarker: (marker_data, provider_options)=>
+  addMarker: (marker_data, provider_options)->
     marker = @_marker_builder().build(marker_data, provider_options, @marker_options)
-    marker.associate_to_map(@getMap())
+    marker.setMap(@getMap())
     @clusterer.addMarker marker
     marker
 
-  addCircles: (circles_data, provider_options)=>
+  addCircles: (circles_data, provider_options)->
     _.map circles_data, (circle_data)=>
       @addCircle circle_data, provider_options
 
-  addCircle: (circle_data, provider_options)=>
+  addCircle: (circle_data, provider_options)->
     @_addResource('circle', circle_data, provider_options)
 
-  addPolylines: (polylines_data, provider_options)=>
+  addPolylines: (polylines_data, provider_options)->
     _.map polylines_data, (polyline_data)=>
       @addPolyline polyline_data, provider_options
 
-  addPolyline: (polyline_data, provider_options)=>
+  addPolyline: (polyline_data, provider_options)->
     @_addResource('polyline', polyline_data, provider_options)
 
-  addPolygons: (polygons_data, provider_options)=>
+  addPolygons: (polygons_data, provider_options)->
     _.map polygons_data, (polygon_data)=>
       @addPolygon polygon_data, provider_options
 
-  addPolygon: (polygon_data, provider_options)=>
+  addPolygon: (polygon_data, provider_options)->
     @_addResource('polygon', polygon_data, provider_options)
 
-  addKmls: (kmls_data, provider_options)=>
+  addKmls: (kmls_data, provider_options)->
     _.map kmls_data, (kml_data)=>
       @addKml kml_data, provider_options
 
-  addKml: (kml_data, provider_options)=>
+  addKml: (kml_data, provider_options)->
     @_addResource('kml', kml_data, provider_options)
 
   fitMapToBounds: ->
     @map.fitToBounds @bounds.getServiceObject()
 
-  getMap: =>
+  getMap: ->
     @map.getServiceObject()
 
   setOptions: (options)->
@@ -71,23 +71,23 @@ class @Gmaps.Objects.Handler
     @bounds = @_bound_builder().build()
 
   setPrimitives: (options)->
-    source =  if options.primitives is undefined
-                @_rootModule().Primitives()
-              else
-                if _.isFunction(options.primitives) then options.primitives() else options.primitives
+    @primitives = if options.primitives is undefined
+                    @_rootModule().Primitives()
+                  else
+                    if _.isFunction(options.primitives) then options.primitives() else options.primitives
 
-    @primitives = Gmaps.Primitives source
-
+  currentInfowindow: ->
+    @builders.Marker.CURRENT_INFOWINDOW
 
   _addResource: (resource_name, resource_data, provider_options)->
     resource = @["_#{ resource_name }_builder"]().build(resource_data, provider_options)
-    resource.associate_to_map(@getMap())
+    resource.setMap(@getMap())
     resource
 
   _clusterize: ->
     _.isObject @marker_options.clusterer
 
-  _createClusterer: =>
+  _createClusterer: ->
     @clusterer = @_clusterer_builder().build({ map: @getMap() }, @marker_options.clusterer )
 
   _default_marker_options: ->

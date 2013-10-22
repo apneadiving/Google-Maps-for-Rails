@@ -7,13 +7,15 @@ class @Gmaps.Google.Builders.Circle extends Gmaps.Objects.BaseBuilder
   # provider options:
   #   https://developers.google.com/maps/documentation/javascript/reference?hl=fr#CircleOptions
   constructor: (@args, @provider_options = {})->
+    @before_init()
     @serviceObject = @create_circle()
+    @after_init()
 
   create_circle: ->
-    new @PRIMITIVES.circle @circle_options()
+    new(@primitives().circle)(@circle_options())
 
   circle_options: ->
     base_options =
-      center:   new @PRIMITIVES.latLng(@args.lat, @args.lng)
+      center:   new(@primitives().latLng)(@args.lat, @args.lng)
       radius:   @args.radius
     _.defaults base_options, @provider_options

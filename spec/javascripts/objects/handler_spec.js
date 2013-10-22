@@ -181,7 +181,7 @@ describe("Gmaps.Objects.Handler", function() {
       };
 
       beforeEach(function() {
-        object           = jasmine.createSpyObj('object', ['associate_to_map']);
+        object           = jasmine.createSpyObj('object', ['setMap']);
         object_data      = jasmine.createSpy('object_data');
         provider_options = jasmine.createSpy('provider_options');
       });
@@ -203,7 +203,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("associate map to Marker", function() {
           subject.addMarker(object_data, provider_options);
 
-          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+          expect(object.setMap).toHaveBeenCalledWith(map);
         });
 
         it("clusterer receives marker", function() {
@@ -233,7 +233,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("associate map to circle", function() {
           subject.addCircle(object_data, provider_options);
 
-          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+          expect(object.setMap).toHaveBeenCalledWith(map);
         });
 
         it("returns circle", function() {
@@ -257,7 +257,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("associate map to polyline", function() {
           subject.addPolyline(object_data, provider_options);
 
-          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+          expect(object.setMap).toHaveBeenCalledWith(map);
         });
 
         it("returns polyline", function() {
@@ -281,7 +281,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("associate map to polygon", function() {
           subject.addPolygon(object_data, provider_options);
 
-          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+          expect(object.setMap).toHaveBeenCalledWith(map);
         });
 
         it("returns polygon", function() {
@@ -305,7 +305,7 @@ describe("Gmaps.Objects.Handler", function() {
         it("associate map to kml", function() {
           subject.addKml(object_data, provider_options);
 
-          expect(object.associate_to_map).toHaveBeenCalledWith(map);
+          expect(object.setMap).toHaveBeenCalledWith(map);
         });
 
         it("returns kml", function() {

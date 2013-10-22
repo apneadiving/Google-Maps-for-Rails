@@ -5,7 +5,7 @@
 @Gmaps =
 
   build: (type, options = {})->
-    model = if _.isObject(options.handler) then options.handler else Gmaps.Objects.Handler
+    model = if _.isFunction(options.handler) then options.handler else Gmaps.Objects.Handler
     new model(type, options)
 
   Builders: {}

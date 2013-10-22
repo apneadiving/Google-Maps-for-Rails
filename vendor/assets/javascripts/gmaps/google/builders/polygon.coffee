@@ -7,10 +7,12 @@ class @Gmaps.Google.Builders.Polygon extends Gmaps.Objects.BaseBuilder
   # provider options:
   #   https://developers.google.com/maps/documentation/javascript/reference?hl=fr#PolygonOptions
   constructor: (@args, @provider_options = {})->
+    @before_init()
     @serviceObject = @create_polygon()
+    @after_init()
 
   create_polygon: ->
-    new @PRIMITIVES.polygon @polygon_options()
+    new(@primitives().polygon)(@polygon_options())
 
   polygon_options: ->
     base_options =
@@ -19,4 +21,4 @@ class @Gmaps.Google.Builders.Polygon extends Gmaps.Objects.BaseBuilder
 
   _build_path: ->
     _.map @args, (arg)=>
-      new @PRIMITIVES.latLng(arg.lat, arg.lng)
+      new(@primitives().latLng)(arg.lat, arg.lng)

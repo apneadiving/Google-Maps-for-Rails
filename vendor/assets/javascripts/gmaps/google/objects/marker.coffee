@@ -6,3 +6,6 @@ class @Gmaps.Google.Objects.Marker extends Gmaps.Base
 
   updateBounds: (bounds)->
     bounds.extend(@getServiceObject().position)
+
+  panTo: ->
+    @getServiceObject().getMap().panTo @getServiceObject().getPosition()
