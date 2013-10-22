@@ -4,3 +4,12 @@ class @Gmaps.Google.Objects.Kml extends Gmaps.Base
 
   updateBounds: (bounds)->
     #even not provided by google...
+
+  setMap: (map)->
+    @getServiceObject().setMap map
+
+  getServiceObject: ->
+    @serviceObject
+
+  primitives: ->
+    @constructor.PRIMITIVES

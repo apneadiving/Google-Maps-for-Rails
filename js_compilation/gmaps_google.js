@@ -792,6 +792,18 @@
 
     Kml.prototype.updateBounds = function(bounds) {};
 
+    Kml.prototype.setMap = function(map) {
+      return this.getServiceObject().setMap(map);
+    };
+
+    Kml.prototype.getServiceObject = function() {
+      return this.serviceObject;
+    };
+
+    Kml.prototype.primitives = function() {
+      return this.constructor.PRIMITIVES;
+    };
+
     return Kml;
 
   })(Gmaps.Base);
