@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = [%q{Benjamin Roth}, %q{David Ruyer}]
   s.email       = [%q{apnea.diving.deep@gmail.com}, %q{david.ruyer@gmail.com}]
   s.homepage    = %q{http://github.com/apneadiving/Google-Maps-for-Rails}
-  s.summary     = %q{Maps made easy for Rails 3}
-  s.description = %q{Enables easy display of items (taken from a Rails 3 model) on a Google Maps (JS API V3), OpenLayers, Mapquest, Bing and Yandex (API V2).}
+  s.summary     = %q{Maps made easy for Ruby apps}
+  s.description = %q{Enables easy Google map + overlays creation.}
   s.files       = `git ls-files`.split("\n")
   s.test_files  = `git ls-files -- spec/*`.split("\n")
 
