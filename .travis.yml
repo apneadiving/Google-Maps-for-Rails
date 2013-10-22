@@ -4,4 +4,7 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
 script: 'bundle exec rspec spec && bundle exec rake jasmine_travis'
