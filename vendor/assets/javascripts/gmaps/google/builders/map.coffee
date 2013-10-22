@@ -1,5 +1,10 @@
 class @Gmaps.Google.Builders.Map extends Gmaps.Objects.BaseBuilder
 
+  # options:
+  #   internal:
+  #     id: dom id of your map container
+  #   provider: are any options from google: https://developers.google.com/maps/documentation/javascript/reference?hl=fr#MapOptions
+  # onMapLoad is the callback triggered once map is loaded
   constructor: (options, onMapLoad)->
     @before_init()
     provider_options  = _.extend @default_options(), options.provider

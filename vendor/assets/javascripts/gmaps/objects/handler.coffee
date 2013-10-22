@@ -18,41 +18,51 @@ class @Gmaps.Objects.Handler
       @_createClusterer()
       onMapLoad()
 
+  # return array of marker objects
   addMarkers: (markers_data, provider_options)->
     _.map markers_data, (marker_data)=>
       @addMarker marker_data, provider_options
 
+  # return marker object
   addMarker: (marker_data, provider_options)->
     marker = @_marker_builder().build(marker_data, provider_options, @marker_options)
     marker.setMap(@getMap())
     @clusterer.addMarker marker
     marker
 
+  # return array of circle objects
   addCircles: (circles_data, provider_options)->
     _.map circles_data, (circle_data)=>
       @addCircle circle_data, provider_options
 
+  # return circle object
   addCircle: (circle_data, provider_options)->
     @_addResource('circle', circle_data, provider_options)
 
+  # return array of polyline objects
   addPolylines: (polylines_data, provider_options)->
     _.map polylines_data, (polyline_data)=>
       @addPolyline polyline_data, provider_options
 
+  # return polyline object
   addPolyline: (polyline_data, provider_options)->
     @_addResource('polyline', polyline_data, provider_options)
 
+  # return array of polygon objects
   addPolygons: (polygons_data, provider_options)->
     _.map polygons_data, (polygon_data)=>
       @addPolygon polygon_data, provider_options
 
+  # return polygon object
   addPolygon: (polygon_data, provider_options)->
     @_addResource('polygon', polygon_data, provider_options)
 
+  # return array of kml objects
   addKmls: (kmls_data, provider_options)->
     _.map kmls_data, (kml_data)=>
       @addKml kml_data, provider_options
 
+  # return kml object
   addKml: (kml_data, provider_options)->
     @_addResource('kml', kml_data, provider_options)
 
