@@ -35,7 +35,7 @@ If you have the asset pipeline, add this:
     //= require underscore
     //= require gmaps/google
 
-If you don't have aset pipeline, you'll need to import the js/coffee files:
+If you don't have aset pipeline, you'll need to import the js OR coffee files:
 
     rails g gmaps4rails:copy_js
 
