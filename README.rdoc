@@ -1,6 +1,7 @@
-== Google Maps for Rails (gmaps4rails) {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails] {<img src="https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails] {<img src="http://api.coderwall.com/apneadiving/endorsecount.png" alt="Endorse" />}[http://coderwall.com/apneadiving]
+== Google Maps for Rails {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails] {<img src="https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails] {<img src="http://api.coderwall.com/apneadiving/endorsecount.png" alt="Endorse" />}[http://coderwall.com/apneadiving]
 
 Gmaps4rails is developed to simply create a Google Map with overlays (markers, infowindows...).
+Yet it's backed on a very flexible codebase which could be prone to accept other map providers.
 
 Use it with any Ruby app (I guess you could simply take the js anywhere if you like).
 
