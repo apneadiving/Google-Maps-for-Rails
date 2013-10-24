@@ -9,5 +9,9 @@ class @Gmaps.Google.Objects.Bound extends Gmaps.Base
     _.each collection, (object)=>
       object.updateBounds(@)
 
+  # position can be:
+  # - [ lat, lng]
+  # - { lat: , lng: }
+  # - a google.maps.LatLng
   extend: (value)->
-    @getServiceObject().extend value
+    @getServiceObject().extend @primitives().latLngFromPosition(value)
