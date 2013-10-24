@@ -13,7 +13,7 @@ Use it with any Ruby app (I guess you could simply take the js anywhere if you l
 == A note for < 2.x users
 
 Google-Maps-for-Rails-2.0 is an important rewrite to keep the minimum code and features. If
-you're migrating from previous versions, you may want to read the [rational about it](https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Why-but-why%3F).
+you're migrating from previous versions, you may want to read the {rational about it}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Why-but-why%3F].
 
 == Requirements
 
