@@ -72,11 +72,17 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
     @constructor.CACHE_STORE[picture_args.url]
 
   _picture_args: (picture_name)->
+    size =  new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
+    if @args[picture_name].scale_width && @args[picture_name].scale_height
+      scaledSize = new(@primitives().size)(@args[picture_name].scale_width, @args[picture_name].scale_height)
+    else
+      scaledSize = size
+      
     {
       url:        @args[picture_name].url
       anchor:     @_createImageAnchorPosition @args[picture_name].anchor
-      size:       new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
-      scaledSize: new(@primitives().size)(@args[picture_name].scalewidth, @args[picture_name].scaleheight)
+      size:       size
+      scaledSize: scaledSize
       origin:     null
     }
 
