@@ -76,7 +76,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
       url:        @args[picture_name].url
       anchor:     @_createImageAnchorPosition @args[picture_name].anchor
       size:       new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
-      scaledSize: null
+      scaledSize: new(@primitives().size)(@args[picture_name].scalewidth, @args[picture_name].scaleheight)
       origin:     null
     }
 
