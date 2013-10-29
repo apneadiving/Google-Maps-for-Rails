@@ -55,7 +55,12 @@ If you don't have aset pipeline, you'll need to import the js OR coffee files:
 
 Create your map:
 
-    handler = Gmaps.build('Google');
+    handler = Gmaps.build('Google', {
+      markers: {
+        maxRandomDistance: 0
+      }
+    });
+
     handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
       markers = handler.addMarkers([
         {
