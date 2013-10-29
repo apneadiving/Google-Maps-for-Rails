@@ -96,17 +96,9 @@ You can change almost everything with a few lines of code. {See details here}[ht
 
 * Markers with Info window, Custom Picture, RichMarkers (make your own markers with custom html)
 
-* Circles, Polylines, Polygons
-
-* Geocode directly your address and retrieve coordinates.
-
-* Auto-adjust the map to your markers
+* Circles, Polylines, Polygons, Kml
 
 * Refresh your map on the fly with Javascript (and Ajax)
-
-* KML support
-
-* Easy multimap
 
 * {More details in the Wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki]
 
@@ -118,6 +110,6 @@ Feel free to contact us, you have your say.
 == Copyright
 MIT license.
 
-Authors: Benjamin Roth, David Ruyer
+Author: Benjamin Roth
 
 {Contributors}[https://github.com/apneadiving/Google-Maps-for-Rails/graphs/contributors]
