@@ -2,12 +2,19 @@ class @Gmaps.Google.Objects.Clusterer
 
   constructor: (@serviceObject)->
 
-  addMarkers: (markers)=>
+  addMarkers: (markers)->
     _.each markers, (marker)=>
       @addMarker(marker)
 
-  addMarker: (marker)=>
-    @serviceObject.addMarker(marker.serviceObject)
+  addMarker: (marker)->
+    @getServiceObject().addMarker(marker.getServiceObject())
 
-  clear: =>
-    @serviceObject.clearMarkers()
+  clear: ->
+    @getServiceObject().clearMarkers()
+
+  removeMarker: (marker)->
+    @getServiceObject().removeMarker marker.getServiceObject()
+
+  getServiceObject: ->
+    @serviceObject
+

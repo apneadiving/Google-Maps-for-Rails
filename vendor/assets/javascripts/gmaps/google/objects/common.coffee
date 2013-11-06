@@ -7,17 +7,16 @@
     @getServiceObject().setMap map
 
   clear: ->
-    @serviceObject.setMap(null)
-    @serviceObject = null
+    @getServiceObject().setMap(null)
 
   show: ->
-    @serviceObject.setVisible(true)
+    @getServiceObject().setVisible(true)
 
   hide: ->
-    @serviceObject.setVisible(false)
+    @getServiceObject().setVisible(false)
 
   isVisible: ->
-    @serviceObject.getVisible()
+    @getServiceObject().getVisible()
 
   primitives: ->
     @constructor.PRIMITIVES
