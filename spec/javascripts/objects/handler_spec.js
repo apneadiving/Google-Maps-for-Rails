@@ -315,6 +315,46 @@ describe("Gmaps.Objects.Handler", function() {
         });
       });
     });
+
+    describe("remove collection", function() {
+      beforeEach(function() {
+        build_subject()
+      });
+      describe("removeMarkers", function() {
+        it("loops and delegates to removeMarker", function() {
+          spyOn(subject, 'removeMarker');
+
+          marker_to_suppress = jasmine.createSpy('marker');
+
+          subject.removeMarkers([ marker_to_suppress ]);
+
+          expect(subject.removeMarker).toHaveBeenCalledWith(marker_to_suppress);
+        });
+      });
+    });
+
+    describe("remove single item", function() {
+      beforeEach(function() {
+        build_subject();
+      });
+      describe("removeMarker", function() {
+        beforeEach(function() {
+          subject.clusterer = { removeMarker: function(){} };
+          spyOn(subject.clusterer, 'removeMarker');
+        });
+
+        it("deletes marker", function() {
+          spy_clear_fn = jasmine.createSpy('marker_fn');
+          marker_to_suppress = { clear: spy_clear_fn };
+
+          subject.removeMarker(marker_to_suppress);
+
+          expect(spy_clear_fn).toHaveBeenCalled();
+          expect(subject.clusterer.removeMarker).toHaveBeenCalledWith(marker_to_suppress);
+        });
+      });
+    });
+
   });
 
 });

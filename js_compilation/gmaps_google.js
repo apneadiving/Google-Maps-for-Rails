@@ -124,7 +124,7 @@
       if (onMapLoad == null) {
         onMapLoad = function() {};
       }
-      return this.map = this._map_builder().build(options, function() {
+      return this.map = this._builder('Map').build(options, function() {
         _this._createClusterer();
         return onMapLoad();
       });
@@ -139,7 +139,7 @@
 
     Handler.prototype.addMarker = function(marker_data, provider_options) {
       var marker;
-      marker = this._marker_builder().build(marker_data, provider_options, this.marker_options);
+      marker = this._builder('Marker').build(marker_data, provider_options, this.marker_options);
       marker.setMap(this.getMap());
       this.clusterer.addMarker(marker);
       return marker;
@@ -189,6 +189,18 @@
       return this._addResource('kml', kml_data, provider_options);
     };
 
+    Handler.prototype.removeMarkers = function(gem_markers) {
+      var _this = this;
+      return _.map(gem_markers, function(gem_marker) {
+        return _this.removeMarker(gem_marker);
+      });
+    };
+
+    Handler.prototype.removeMarker = function(gem_marker) {
+      gem_marker.clear();
+      return this.clusterer.removeMarker(gem_marker);
+    };
+
     Handler.prototype.fitMapToBounds = function() {
       return this.map.fitToBounds(this.bounds.getServiceObject());
     };
@@ -204,7 +216,7 @@
     };
 
     Handler.prototype.resetBounds = function() {
-      return this.bounds = this._bound_builder().build();
+      return this.bounds = this._builder('Bound').build();
     };
 
     Handler.prototype.setPrimitives = function(options) {
@@ -217,7 +229,7 @@
 
     Handler.prototype._addResource = function(resource_name, resource_data, provider_options) {
       var resource;
-      resource = this["_" + resource_name + "_builder"]().build(resource_data, provider_options);
+      resource = this._builder(resource_name).build(resource_data, provider_options);
       resource.setMap(this.getMap());
       return resource;
     };
@@ -227,7 +239,7 @@
     };
 
     Handler.prototype._createClusterer = function() {
-      return this.clusterer = this._clusterer_builder().build({
+      return this.clusterer = this._builder('Clusterer').build({
         map: this.getMap()
       }, this.marker_options.clusterer);
     };
@@ -243,40 +255,9 @@
       };
     };
 
-    Handler.prototype._bound_builder = function() {
-      return this._builder('Bound');
-    };
-
-    Handler.prototype._clusterer_builder = function() {
-      return this._builder('Clusterer');
-    };
-
-    Handler.prototype._marker_builder = function() {
-      return this._builder('Marker');
-    };
-
-    Handler.prototype._map_builder = function() {
-      return this._builder('Map');
-    };
-
-    Handler.prototype._kml_builder = function() {
-      return this._builder('Kml');
-    };
-
-    Handler.prototype._circle_builder = function() {
-      return this._builder('Circle');
-    };
-
-    Handler.prototype._polyline_builder = function() {
-      return this._builder('Polyline');
-    };
-
-    Handler.prototype._polygon_builder = function() {
-      return this._builder('Polygon');
-    };
-
     Handler.prototype._builder = function(name) {
       var _name;
+      name = this._capitalize(name);
       if (this[_name = "__builder" + name] == null) {
         this[_name] = Gmaps.Objects.Builders(this.builders[name], this.models[name], this.primitives);
       }
@@ -292,6 +273,10 @@
         models.Clusterer = Gmaps.Objects.NullClusterer;
         return models;
       }
+    };
+
+    Handler.prototype._capitalize = function(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     Handler.prototype._default_builders = function() {
@@ -320,6 +305,8 @@
 
     NullClusterer.prototype.clear = function() {};
 
+    NullClusterer.prototype.removeMarker = function() {};
+
     return NullClusterer;
 
   })();
@@ -334,17 +321,16 @@
       return this.getServiceObject().setMap(map);
     },
     clear: function() {
-      this.serviceObject.setMap(null);
-      return this.serviceObject = null;
+      return this.getServiceObject().setMap(null);
     },
     show: function() {
-      return this.serviceObject.setVisible(true);
+      return this.getServiceObject().setVisible(true);
     },
     hide: function() {
-      return this.serviceObject.setVisible(false);
+      return this.getServiceObject().setVisible(false);
     },
     isVisible: function() {
-      return this.serviceObject.getVisible();
+      return this.getServiceObject().getVisible();
     },
     primitives: function() {
       return this.constructor.PRIMITIVES;
@@ -749,14 +735,9 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
   this.Gmaps.Google.Objects.Clusterer = (function() {
     function Clusterer(serviceObject) {
       this.serviceObject = serviceObject;
-      this.clear = __bind(this.clear, this);
-      this.addMarker = __bind(this.addMarker, this);
-      this.addMarkers = __bind(this.addMarkers, this);
     }
 
     Clusterer.prototype.addMarkers = function(markers) {
@@ -767,11 +748,19 @@
     };
 
     Clusterer.prototype.addMarker = function(marker) {
-      return this.serviceObject.addMarker(marker.serviceObject);
+      return this.getServiceObject().addMarker(marker.getServiceObject());
     };
 
     Clusterer.prototype.clear = function() {
-      return this.serviceObject.clearMarkers();
+      return this.getServiceObject().clearMarkers();
+    };
+
+    Clusterer.prototype.removeMarker = function(marker) {
+      return this.getServiceObject().removeMarker(marker.getServiceObject());
+    };
+
+    Clusterer.prototype.getServiceObject = function() {
+      return this.serviceObject;
     };
 
     return Clusterer;
