@@ -14,13 +14,19 @@ describe Gmaps4rails::MarkersBuilder do
       :width  => "32",
       :height => "32"
     }}
+    let(:shadow) { {
+      :url    => "shadow",
+      :width  => "30",
+      :height => "30"
+    } }
     let(:expected_hash) { {
       :lat          => lat,
       :lng          => lng,
       :marker_title => name,
       :some_id      => id,
       :infowindow   => infowindow,
-      :picture      => picture
+      :picture      => picture,
+      :shadow       => shadow
     }}
     let(:object) { OpenStruct.new(
       :latitude  => lat,
@@ -34,6 +40,7 @@ describe Gmaps4rails::MarkersBuilder do
         marker.lng        user.longitude
         marker.infowindow infowindow
         marker.picture    picture
+        marker.shadow     shadow
         marker.title      user.name
         marker.json({ :some_id => user.some_id })
       end

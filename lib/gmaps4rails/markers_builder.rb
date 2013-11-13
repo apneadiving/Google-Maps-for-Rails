@@ -62,12 +62,16 @@ module Gmaps4rails
         @hash[:marker_title] = string
       end
 
-      def json(json)
-        @hash.merge! json
+      def json(hash)
+        @hash.merge! hash
       end
 
       def picture(hash)
         @hash[:picture] = hash
+      end
+
+      def shadow(hash)
+        @hash[:shadow] = hash
       end
     end
   end
