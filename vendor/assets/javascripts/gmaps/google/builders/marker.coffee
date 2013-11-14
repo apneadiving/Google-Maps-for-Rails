@@ -30,7 +30,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
     @after_init()
 
   build: ->
-    @object = new(@model_class())(@serviceObject, @infowindow)
+    @object = new(@model_class())(@serviceObject)
 
   create_marker: ->
     @serviceObject = new(@primitives().marker)(@marker_options())
