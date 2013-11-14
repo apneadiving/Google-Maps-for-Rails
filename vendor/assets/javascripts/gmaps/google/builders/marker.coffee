@@ -30,7 +30,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
     @after_init()
 
   build: ->
-    @object = new(@model_class())(@serviceObject)
+    @marker = new(@model_class())(@serviceObject)
 
   create_marker: ->
     @serviceObject = new(@primitives().marker)(@marker_options())
@@ -53,17 +53,14 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
 
   infowindow_binding: =>
     @constructor.CURRENT_INFOWINDOW.close() if @_should_close_infowindow()
-    @panTo()
+    @marker.panTo()
     @infowindow ?= @create_infowindow()
 
     return unless @infowindow?
 
     @infowindow.open( @getServiceObject().getMap(), @getServiceObject())
-    @object.infowindow ?= @infowindow
+    @marker.infowindow ?= @infowindow
     @constructor.CURRENT_INFOWINDOW = @infowindow
-
-  panTo: ->
-    @getServiceObject().getMap().panTo @getServiceObject().getPosition()
 
   _get_picture: (picture_name)->
     return null if !_.isObject(@args[picture_name]) || !_.isString(@args[picture_name].url)
