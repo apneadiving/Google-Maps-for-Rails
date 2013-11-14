@@ -26,19 +26,18 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
   constructor: (@args, @provider_options = {}, @internal_options = {})->
     @before_init()
     @create_marker()
-    @create_infowindow()
+    @create_infowindow_on_click()
     @after_init()
 
   build: ->
-    new(@model_class())(@serviceObject, @infowindow)
+    @object = new(@model_class())(@serviceObject, @infowindow)
 
   create_marker: ->
     @serviceObject = new(@primitives().marker)(@marker_options())
 
   create_infowindow: ->
     return null unless _.isString @args.infowindow
-    @infowindow = new(@primitives().infowindow)({content: @args.infowindow })
-    @bind_infowindow()
+    new(@primitives().infowindow)({content: @args.infowindow })
 
   marker_options: ->
     coords = @_randomized_coordinates()
@@ -49,13 +48,18 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
       shadow:   @_get_picture('shadow')
     _.extend @provider_options, base_options
 
-  bind_infowindow: ->
+  create_infowindow_on_click: ->
     @addListener 'click', @infowindow_binding
 
   infowindow_binding: =>
-    @panTo()
     @constructor.CURRENT_INFOWINDOW.close() if @_should_close_infowindow()
+    @panTo()
+    @infowindow ?= @create_infowindow()
+
+    return unless @infowindow?
+
     @infowindow.open( @getServiceObject().getMap(), @getServiceObject())
+    @object.infowindow ?= @infowindow
     @constructor.CURRENT_INFOWINDOW = @infowindow
 
   panTo: ->
