@@ -5,4 +5,4 @@ class @Gmaps.Google.Objects.Polygon extends Gmaps.Base
   constructor: (@serviceObject)->
 
   updateBounds: (bounds)->
-    #even not provided by google...
+    bounds.extend ll for ll in @serviceObject.getPath().getArray()
