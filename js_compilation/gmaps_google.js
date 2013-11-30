@@ -496,12 +496,12 @@
       this.infowindow_binding = __bind(this.infowindow_binding, this);
       this.before_init();
       this.create_marker();
-      this.create_infowindow();
+      this.create_infowindow_on_click();
       this.after_init();
     }
 
     Marker.prototype.build = function() {
-      return new (this.model_class())(this.serviceObject, this.infowindow);
+      return this.marker = new (this.model_class())(this.serviceObject);
     };
 
     Marker.prototype.create_marker = function() {
@@ -512,10 +512,9 @@
       if (!_.isString(this.args.infowindow)) {
         return null;
       }
-      this.infowindow = new (this.primitives().infowindow)({
+      return new (this.primitives().infowindow)({
         content: this.args.infowindow
       });
-      return this.bind_infowindow();
     };
 
     Marker.prototype.marker_options = function() {
@@ -530,21 +529,27 @@
       return _.extend(this.provider_options, base_options);
     };
 
-    Marker.prototype.bind_infowindow = function() {
+    Marker.prototype.create_infowindow_on_click = function() {
       return this.addListener('click', this.infowindow_binding);
     };
 
     Marker.prototype.infowindow_binding = function() {
-      this.panTo();
+      var _base;
       if (this._should_close_infowindow()) {
         this.constructor.CURRENT_INFOWINDOW.close();
       }
+      this.marker.panTo();
+      if (this.infowindow == null) {
+        this.infowindow = this.create_infowindow();
+      }
+      if (this.infowindow == null) {
+        return;
+      }
       this.infowindow.open(this.getServiceObject().getMap(), this.getServiceObject());
+      if ((_base = this.marker).infowindow == null) {
+        _base.infowindow = this.infowindow;
+      }
       return this.constructor.CURRENT_INFOWINDOW = this.infowindow;
-    };
-
-    Marker.prototype.panTo = function() {
-      return this.getServiceObject().getMap().panTo(this.getServiceObject().getPosition());
     };
 
     Marker.prototype._get_picture = function(picture_name) {
@@ -841,9 +846,8 @@
 
     Marker.include(Gmaps.Google.Objects.Common);
 
-    function Marker(serviceObject, infowindow) {
+    function Marker(serviceObject) {
       this.serviceObject = serviceObject;
-      this.infowindow = infowindow;
     }
 
     Marker.prototype.updateBounds = function(bounds) {
@@ -872,7 +876,16 @@
       this.serviceObject = serviceObject;
     }
 
-    Polygon.prototype.updateBounds = function(bounds) {};
+    Polygon.prototype.updateBounds = function(bounds) {
+      var ll, _i, _len, _ref, _results;
+      _ref = this.serviceObject.getPath().getArray();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        ll = _ref[_i];
+        _results.push(bounds.extend(ll));
+      }
+      return _results;
+    };
 
     return Polygon;
 
@@ -892,7 +905,16 @@
       this.serviceObject = serviceObject;
     }
 
-    Polyline.prototype.updateBounds = function(bounds) {};
+    Polyline.prototype.updateBounds = function(bounds) {
+      var ll, _i, _len, _ref, _results;
+      _ref = this.serviceObject.getPath().getArray();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        ll = _ref[_i];
+        _results.push(bounds.extend(ll));
+      }
+      return _results;
+    };
 
     return Polyline;
 
