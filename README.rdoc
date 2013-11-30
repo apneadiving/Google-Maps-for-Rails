@@ -10,7 +10,9 @@ Yet it's backed on a very flexible codebase which could be prone to accept other
 
 Use it with any Ruby app (I guess you could simply take the js anywhere if you like).
 
-{Here is a quick tutorial on youtube}[http://www.youtube.com/watch?v=R0l-7en3dUw&feature=youtu.be].
+Check out the {Getting Started}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Getting-Started] page 
+on the wiki and the companion {quick tutorial}[http://www.youtube.com/watch?v=R0l-7en3dUw&feature=youtu.be] 
+video on youtube.
 
 == A note for < 2.x users
 
