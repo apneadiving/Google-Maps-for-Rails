@@ -11,13 +11,13 @@ describe("Gmaps.Google.Builders.Marker", function() {
     var serviceObject, infowindow;
     beforeEach(function() {
       spyOn(subject_klass.prototype, 'create_marker');
-      spyOn(subject_klass.prototype, 'create_infowindow');
+      spyOn(subject_klass.prototype, 'create_infowindow_on_click');
     });
 
     it("sets vars", function() {
       instance = new subject_klass();
       expect(subject_klass.prototype.create_marker).toHaveBeenCalled();
-      expect(subject_klass.prototype.create_infowindow).toHaveBeenCalled();
+      expect(subject_klass.prototype.create_infowindow_on_click).toHaveBeenCalled();
     });
 
     describe("marker_options", function() {
