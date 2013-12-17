@@ -1,4 +1,4 @@
-== Google Maps for Rails 
+== Google Maps for Rails  {<img src="http://www.pledgie.com/campaigns/23367.png" alt="Endorse" />}[https://pledgie.com/campaigns/23367]
 
 {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails]
 {<img src="https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails]
