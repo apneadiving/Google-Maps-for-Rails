@@ -113,7 +113,7 @@ class @Gmaps.Objects.Handler
   _default_marker_options: ->
     {
       singleInfowindow:  true
-      maxRandomDistance: 100
+      maxRandomDistance: 0
       clusterer:
         maxZoom:  5
         gridSize: 50

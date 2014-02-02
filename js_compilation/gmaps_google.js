@@ -247,7 +247,7 @@
     Handler.prototype._default_marker_options = function() {
       return {
         singleInfowindow: true,
-        maxRandomDistance: 100,
+        maxRandomDistance: 0,
         clusterer: {
           maxZoom: 5,
           gridSize: 50
