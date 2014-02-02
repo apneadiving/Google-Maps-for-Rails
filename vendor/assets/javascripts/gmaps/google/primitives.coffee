@@ -30,6 +30,7 @@
     # - [ lat, lng]
     # - { lat: , lng: }
     # - a google.maps.LatLng
+    # - a gmaps4rails object
     latLngFromPosition: (position)->
       if _.isArray(position)
         return new factory.latLng(position[0], position[1])
@@ -37,7 +38,10 @@
         if _.isNumber(position.lat) and _.isNumber(position.lng)
           return new factory.latLng(position.lat, position.lng)
         else
-          position
+          if _.isFunction position.getServiceObject
+            position.getServiceObject().getPosition()
+          else
+            position
   }
 
   factory

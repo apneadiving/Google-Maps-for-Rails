@@ -966,7 +966,11 @@
           if (_.isNumber(position.lat) && _.isNumber(position.lng)) {
             return new factory.latLng(position.lat, position.lng);
           } else {
-            return position;
+            if (_.isFunction(position.getServiceObject)) {
+              return position.getServiceObject().getPosition();
+            } else {
+              return position;
+            }
           }
         }
       }
