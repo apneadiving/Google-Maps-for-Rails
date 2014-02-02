@@ -13,6 +13,7 @@ Use it with any Ruby app (I guess you could simply take the js anywhere if you l
 
 Here is a {quick tutorial on youtube}[http://www.youtube.com/watch?v=R0l-7en3dUw&feature=youtu.be], 
 and my {presentation on speaker deck}[https://speakerdeck.com/apneadiving/gmaps4rails].
+
 For live examples, {see here}[http://apneadiving.github.io/].
 
 
