@@ -11,6 +11,7 @@ class @Gmaps.Objects.Handler
   constructor: (@type, options = {})->
     @setPrimitives options
     @setOptions options
+    @_cacheAllBuilders()
     @resetBounds()
 
   buildMap: (options, onMapLoad = ->)->
@@ -103,6 +104,10 @@ class @Gmaps.Objects.Handler
     resource = @_builder(resource_name).build(resource_data, provider_options)
     resource.setMap(@getMap())
     resource
+
+  _cacheAllBuilders: ->
+    that = @
+    _.each ['Bound', 'Circle',  'Clusterer', 'Kml', 'Map', 'Marker', 'Polygon', 'Polyline'], (kind)-> that._builder(kind)
 
   _clusterize: ->
     _.isObject @marker_options.clusterer

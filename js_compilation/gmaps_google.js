@@ -94,12 +94,12 @@
 }).call(this);
 (function() {
   this.Gmaps.Objects.Builders = function(builderClass, objectClass, primitivesProvider) {
-    objectClass.PRIMITIVES = primitivesProvider;
-    builderClass.OBJECT = objectClass;
-    builderClass.PRIMITIVES = primitivesProvider;
     return {
       build: function(args, provider_options, internal_options) {
         var builder;
+        objectClass.PRIMITIVES = primitivesProvider;
+        builderClass.OBJECT = objectClass;
+        builderClass.PRIMITIVES = primitivesProvider;
         builder = new builderClass(args, provider_options, internal_options);
         return builder.build();
       }
@@ -116,6 +116,7 @@
       }
       this.setPrimitives(options);
       this.setOptions(options);
+      this._cacheAllBuilders();
       this.resetBounds();
     }
 
@@ -232,6 +233,14 @@
       resource = this._builder(resource_name).build(resource_data, provider_options);
       resource.setMap(this.getMap());
       return resource;
+    };
+
+    Handler.prototype._cacheAllBuilders = function() {
+      var that;
+      that = this;
+      return _.each(['Bound', 'Circle', 'Clusterer', 'Kml', 'Map', 'Marker', 'Polygon', 'Polyline'], function(kind) {
+        return that._builder(kind);
+      });
     };
 
     Handler.prototype._clusterize = function() {
