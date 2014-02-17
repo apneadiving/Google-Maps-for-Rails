@@ -116,7 +116,7 @@ class @Gmaps.Objects.Handler
     @clusterer = @_builder('Clusterer').build({ map: @getMap() }, @marker_options.clusterer )
 
   _default_marker_options: ->
-    {
+    _.clone {
       singleInfowindow:  true
       maxRandomDistance: 0
       clusterer:
@@ -130,7 +130,7 @@ class @Gmaps.Objects.Handler
     @["__builder#{name}"]
 
   _default_models: ->
-    models = @_rootModule().Objects
+    models = _.clone(@_rootModule().Objects)
     if @_clusterize()
       models
     else
@@ -141,7 +141,7 @@ class @Gmaps.Objects.Handler
     string.charAt(0).toUpperCase() + string.slice(1)
 
   _default_builders: ->
-    @_rootModule().Builders
+    _.clone @_rootModule().Builders
 
   _rootModule: ->
     @__rootModule ?= Gmaps[@type]

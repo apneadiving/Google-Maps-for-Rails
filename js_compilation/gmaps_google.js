@@ -254,14 +254,14 @@
     };
 
     Handler.prototype._default_marker_options = function() {
-      return {
+      return _.clone({
         singleInfowindow: true,
         maxRandomDistance: 0,
         clusterer: {
           maxZoom: 5,
           gridSize: 50
         }
-      };
+      });
     };
 
     Handler.prototype._builder = function(name) {
@@ -275,7 +275,7 @@
 
     Handler.prototype._default_models = function() {
       var models;
-      models = this._rootModule().Objects;
+      models = _.clone(this._rootModule().Objects);
       if (this._clusterize()) {
         return models;
       } else {
@@ -289,7 +289,7 @@
     };
 
     Handler.prototype._default_builders = function() {
-      return this._rootModule().Builders;
+      return _.clone(this._rootModule().Builders);
     };
 
     Handler.prototype._rootModule = function() {

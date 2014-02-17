@@ -38,23 +38,59 @@ describe("Gmaps.Objects.Handler", function() {
         expect(_.isEqual(subject.marker_options, subject._default_marker_options())).toBeTruthy();
       });
 
-      it("redefines builders", function() {
-        var MarkerBuilder = function(){};
-        subject = new subjectClass('Specs', {  primitives: primitives, builders: { Marker: MarkerBuilder } });
-        expect(subject.builders.Marker).toBe(MarkerBuilder);
+      describe("redefines builders", function() {
+        var MarkerBuilder = jasmine.createSpy('MarkerBuilder');
+
+        beforeEach(function() {
+          subject = new subjectClass('Specs', {  primitives: primitives, builders: { Marker: MarkerBuilder } });
+        });
+
+        it("redefines builders", function() {
+          expect(subject.builders.Marker).toBe(MarkerBuilder);
+        });
+
+        it("doesnt leak for new instance", function() {
+          var instance = new subjectClass('Specs', {  primitives: primitives });
+          expect(instance.builders.Marker).not.toBe(MarkerBuilder);
+        });
       });
 
-      it("redefines models", function() {
-        var MarkerModel = function(){};
-        subject = new subjectClass('Specs', {  primitives: primitives, models: { Marker: MarkerModel } });
-        expect(subject.models.Marker).toBe(MarkerModel);
+      describe("redefine models", function() {
+        var MarkerModel = jasmine.createSpy('MarkerModel');
+
+        beforeEach(function() {
+          subject = new subjectClass('Specs', {  primitives: primitives, models: { Marker: MarkerModel } });
+        });
+
+        it("redefines models", function() {
+          expect(subject.models.Marker).toBe(MarkerModel);
+        });
+
+        it("doesnt leak for new instance", function() {
+          var instance = new subjectClass('Specs', {  primitives: primitives });
+          expect(instance.models.Marker).not.toBe(MarkerModel);
+        });
+
       });
 
-      it("redefines marker_options", function() {
+      describe("redefines marker_options", function() {
         var marker_options = { foo: 1 };
-        subject = new subjectClass('Specs', {  primitives: primitives, markers: marker_options });
-        expect(subject.marker_options.foo).toBe(marker_options.foo);
+
+        beforeEach(function() {
+          subject = new subjectClass('Specs', {  primitives: primitives, markers: marker_options });
+        });
+
+        it("redefines marker_options", function() {
+          expect(subject.marker_options.foo).toBe(marker_options.foo);
+        });
+
+        it("doesnt leak for new instance", function() {
+          var instance = new subjectClass('Specs', {  primitives: primitives });
+          expect(instance.marker_options.foo).not.toBe(marker_options.foo);
+        });
+
       });
+
 
       it("Clusterer: default model if clusterer required", function() {
         subject = new subjectClass('Specs', {
