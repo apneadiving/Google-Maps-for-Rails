@@ -81,6 +81,43 @@ Create your map:
       handler.fitMapToBounds();
     });
 
+5) Add options:
+
+You're likely going to want to customize your maps by passing an options object. Using the example above,
+let's say you'd like to disable the map controls. This and any other options you can find in the {Google
+Maps API reference}[https://developers.google.com/maps/documentation/javascript/reference]
+can be passed into the `provider` options hash like so:
+
+    handler = Gmaps.build('Google');
+    handler.buildMap({
+      provider: {
+        disableDefaultUI: true
+        // pass in other Google Maps API options here
+      },
+      internal: {
+        id: 'map'
+      },
+      function(){
+        markers = handler.addMarkers([
+          {
+            "lat": 0,
+            "lng": 0,
+            "picture": {
+              "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
+              "width":  36,
+              "height": 36
+            },
+            "infowindow": "hello!"
+          }
+        ]);
+        handler.bounds.extendWith(markers);
+        handler.fitMapToBounds();
+      }
+    });
+
+You can see other examples of adding `provider` options in the {live examples}[http://apneadiving.github.io/]. Also,
+check the {wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Js-Methods] for further documentation on
+the possible JavaScript methods.
 
 == Generating JSON
 
