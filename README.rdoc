@@ -4,7 +4,6 @@
 {<img src="https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails]
 {<img src="https://badge.fury.io/rb/gmaps4rails.png" alt="Gem Version" />}[http://badge.fury.io/rb/gmaps4rails]
 {<img src="http://api.coderwall.com/apneadiving/endorsecount.png" alt="Endorse" />}[http://coderwall.com/apneadiving]
-{<img src="https://d2weczhvl823v0.cloudfront.net/apneadiving/google-maps-for-rails/trend.png" alt="Bitdeli Badge" />}[https://bitdeli.com/free]
 
 Gmaps4rails is developed to simply create a Google Map with overlays (markers, infowindows...).
 Yet it's backed on a very flexible codebase which could be prone to accept other map providers.
