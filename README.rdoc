@@ -1,4 +1,5 @@
-== Google Maps for Rails  {<img src="http://www.pledgie.com/campaigns/23367.png" alt="Endorse" />}[https://pledgie.com/campaigns/23367]
+== Google Maps for Rails  {<img src="http://www.pledgie.com/campaigns/23367.png" alt="Endorse" />}[https://pledgie.com/campaigns/23367] {<img src="https://www.codementor.io/d/images/badge-dark.png" alt="codementor-button">}[https://www.codementor.io/apneadiving?utm_campaign=profile&utm_source=button-apneadiving&utm_medium=dark]
+
 
 {<img src="https://secure.travis-ci.org/apneadiving/Google-Maps-for-Rails.png?branch=master" alt="Build Status" />}[http://travis-ci.org/apneadiving/Google-Maps-for-Rails]
 {<img src="https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails.png" />}[https://codeclimate.com/github/apneadiving/Google-Maps-for-Rails]
@@ -15,7 +16,6 @@ and my {presentation on speaker deck}[https://speakerdeck.com/apneadiving/gmaps4
 
 For live examples, {see here}[http://apneadiving.github.io/].
 
-{<img src="https://www.codementor.io/d/images/badge-dark.png" alt="codementor-button">}[https://www.codementor.io/apneadiving?utm_campaign=profile&utm_source=button-apneadiving&utm_medium=dark]
 
 == A note for < 2.x users
 
