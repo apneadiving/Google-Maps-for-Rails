@@ -15,7 +15,7 @@ and my {presentation on speaker deck}[https://speakerdeck.com/apneadiving/gmaps4
 
 For live examples, {see here}[http://apneadiving.github.io/].
 
-
+{<img src="https://www.codementor.io/d/images/badge-dark.png" alt="codementor-button">}[https://www.codementor.io/apneadiving?utm_campaign=profile&utm_source=button-apneadiving&utm_medium=dark]
 
 == A note for < 2.x users
 
