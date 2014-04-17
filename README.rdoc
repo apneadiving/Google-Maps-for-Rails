@@ -89,12 +89,13 @@ can be passed into the `provider` options hash like so:
 
     handler = Gmaps.build('Google');
     handler.buildMap({
-      provider: {
-        disableDefaultUI: true
-        // pass in other Google Maps API options here
-      },
-      internal: {
-        id: 'map'
+        provider: {
+          disableDefaultUI: true
+          // pass in other Google Maps API options here
+        },
+        internal: {
+          id: 'map'
+        }
       },
       function(){
         markers = handler.addMarkers([
@@ -112,7 +113,7 @@ can be passed into the `provider` options hash like so:
         handler.bounds.extendWith(markers);
         handler.fitMapToBounds();
       }
-    });
+    );
 
 You can see other examples of adding `provider` options in the {live examples}[http://apneadiving.github.io/]. Also,
 check the {wiki}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Js-Methods] for further documentation on
