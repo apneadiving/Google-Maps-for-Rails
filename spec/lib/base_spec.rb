@@ -8,8 +8,8 @@ describe Gmaps4rails do
     let(:marker_builder) { double 'marker_builder' }
 
     it "delegates" do
-      ::Gmaps4rails::MarkersBuilder.should_receive(:new).with(collection).and_return marker_builder
-      marker_builder.should_receive(:call)
+      expect(::Gmaps4rails::MarkersBuilder).to receive(:new).with(collection).and_return marker_builder
+      expect(marker_builder).to receive(:call)
 
       Gmaps4rails.build_markers collection, &proc
     end
