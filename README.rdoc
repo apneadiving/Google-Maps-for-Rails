@@ -20,7 +20,7 @@ For live examples, {see here}[http://apneadiving.github.io/].
 == A note for < 2.x users
 
 Google-Maps-for-Rails-2.0 is an important rewrite to keep the minimum code and features. If
-you're migrating from previous versions, you may want to read the {rational about it}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Why-but-why%3F].
+you're migrating from previous versions, you may want to read the {rationale about it}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Why-but-why%3F].
 
 == Requirements
 
@@ -135,7 +135,7 @@ In your view:
 
 == Easily customizable
 
-You can change almost everything with a few lines of code. {See details here}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Change-handler-behavior]
+You can change almost everything with a few lines of code. {See details here}[https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Change-handler-behavior].
 
 == Options
 
