@@ -69,9 +69,9 @@ Create your map:
           "lat": 0,
           "lng": 0,
           "picture": {
-            "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
-            "width":  36,
-            "height": 36
+            "url": "http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-32.png",
+            "width":  32,
+            "height": 32
           },
           "infowindow": "hello!"
         }
@@ -103,9 +103,9 @@ can be passed into the `provider` options hash like so:
             "lat": 0,
             "lng": 0,
             "picture": {
-              "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
-              "width":  36,
-              "height": 36
+              "url": "http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-32.png",
+              "width":  32,
+              "height": 32
             },
             "infowindow": "hello!"
           }
