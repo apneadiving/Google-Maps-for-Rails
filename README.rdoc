@@ -131,8 +131,10 @@ In your controller:
     end
 
 In your view:
-
-  markers = handler.addMarkers(<%=raw @hash.to_json %>);
+    
+    <script>
+        markers = handler.addMarkers(<%=raw @hash.to_json %>);
+    </script>
 
 == Easily customizable
 
