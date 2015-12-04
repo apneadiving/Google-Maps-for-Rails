@@ -36,7 +36,7 @@ Add a div to bear your map, example:
       <div id="map" style='width: 800px; height: 400px;'></div>
     </div>
 
-2) Javascript Dependencies:
+3) Javascript Dependencies:
 
 Insert google scripts in your dom:
 
@@ -46,7 +46,7 @@ Insert google scripts in your dom:
 
 You'll require underscore.js too, see here: {http://underscorejs.org/}[http://underscorejs.org/] (`lo-dash` is compatible too, your choice!).
 
-3) Javascript source code
+4) Javascript source code
 
 If you have the asset pipeline, add this:
 
@@ -59,7 +59,7 @@ If you don't have asset pipeline, you'll need to import the js OR coffee files:
 
     rails g gmaps4rails:copy_coffee
 
-4) Javascript code:
+5) Javascript code:
 
 Create your map:
 
@@ -81,7 +81,7 @@ Create your map:
       handler.fitMapToBounds();
     });
 
-5) Add options:
+6) Add options:
 
 You're likely going to want to customize your maps by passing an options object. Using the example above,
 let's say you'd like to disable the map controls. This and any other options you can find in the {Google
