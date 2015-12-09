@@ -13,6 +13,8 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
   #     url
   #     width
   #     height
+  #     scaledWidth
+  #     scaledHeight
   #   shadow
   #     anchor: [x,y]
   #     url
@@ -72,14 +74,17 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
 
     @constructor.CACHE_STORE[picture_args.url]
 
-  _picture_args: (picture_name)->
-    {
-      url:        @args[picture_name].url
-      anchor:     @_createImageAnchorPosition @args[picture_name].anchor
-      size:       new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
+
+  _picture_args: (picture_name) ->
+    return_args =
+      url: @args[picture_name].url
+      anchor: @_createImageAnchorPosition @args[picture_name].anchor
+      size: new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
       scaledSize: null
-      origin:     null
-    }
+      origin: null
+    if @args[picture_name].scaledWidth and @args[picture_name].scaledHeight
+      _.extend return_args, scaledSize: new(@primitives().size)(@args[picture_name].scaledWidth, @args[picture_name].scaledHeight)
+    return_args
 
   _createImageAnchorPosition : (anchorLocation) ->
     return null unless _.isArray anchorLocation
