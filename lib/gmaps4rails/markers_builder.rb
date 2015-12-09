@@ -15,8 +15,10 @@ module Gmaps4rails
   #     marker.infowindow render_to_string(:partial => "/users/my_template", :locals => { :object => user}).gsub(/\n/, '').gsub(/"/, '\"')
   #     marker.picture({
   #                     :url    => "http://www.blankdots.com/img/github-32x32.png",
-  #                     :width  => "32",
-  #                     :height => "32"
+  #                     :width  => "64",
+  #                     :height => "64",
+  #                     :scaledWidth => "32", # Scaled width is half of the retina resolution; optional
+  #                     :scaledHeight => "32", # Scaled width is half of the retina resolution; optional
   #                    })
   #     marker.title   "i'm the title"
   #     marker.json({ :id => user.id })
