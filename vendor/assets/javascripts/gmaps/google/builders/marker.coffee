@@ -25,6 +25,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
   # internal_options
   #   singleInfowindow: true/false
   #   maxRandomDistance: null / int in meters
+  #   disableAutoPanTo: true/false
   constructor: (@args, @provider_options = {}, @internal_options = {})->
     @before_init()
     @create_marker()
@@ -55,7 +56,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
 
   infowindow_binding: =>
     @constructor.CURRENT_INFOWINDOW.close() if @_should_close_infowindow()
-    @marker.panTo()
+    @marker.panTo() unless @internal_options.disableAutoPanTo
     @infowindow ?= @create_infowindow()
 
     return unless @infowindow?
@@ -103,4 +104,3 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
     Lat = parseFloat(@args.lat) + (180/Math.PI)*(dy/6378137)
     Lng = parseFloat(@args.lng) + ( 90/Math.PI)*(dx/6378137)/Math.cos(@args.lat)
     return [Lat, Lng]
-

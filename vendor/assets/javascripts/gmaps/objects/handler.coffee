@@ -5,6 +5,7 @@ class @Gmaps.Objects.Handler
   #     maxRandomDistance: null / int in meters
   #     singleInfowindow:  true/false
   #     clusterer:         null or object with options if you want clusters
+  #     disableAutoPanTo:  true/false
   #   models:   object, custom models   if you have some
   #   builders: object, custom builders if you have some
   #
@@ -122,6 +123,7 @@ class @Gmaps.Objects.Handler
       clusterer:
         maxZoom:  5
         gridSize: 50
+      disableAutoPanTo: false
     }
 
   _builder: (name)->
