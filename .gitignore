@@ -10,3 +10,8 @@ pkg
 .idea
 .redcar
 .rvmrc
+.bundle/config
+
+.ruby-gemset
+
+.ruby-version
