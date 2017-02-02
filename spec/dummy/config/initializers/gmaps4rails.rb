@@ -1,1 +1,0 @@
-# Gmaps4rails.escape_js_url = false
