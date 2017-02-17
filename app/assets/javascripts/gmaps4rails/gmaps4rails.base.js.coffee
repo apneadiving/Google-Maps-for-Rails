@@ -394,6 +394,14 @@ class @Gmaps4Rails
     #.... and adjust map boundaries
     @adjustMapToBounds()
 
+  #add new polylines to on an existing map
+  addPolylines : (new_polylines, adjustBounds = true) ->
+    #update the list of polylines to take into account
+    @polylines = new_polylines
+    #put polylines on the map
+    @create_polylines()
+    @adjustMapToBounds() if adjustBounds
+
   destroy_polylines : ->
     for polyline in @polylines
       #delete polylines from map
