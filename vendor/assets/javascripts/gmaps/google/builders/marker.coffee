@@ -15,6 +15,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
   #     height
   #     scaledWidth
   #     scaledHeight
+  #     origin: [x,y] // used for sprites
   #   shadow
   #     anchor: [x,y]
   #     url
@@ -82,7 +83,7 @@ class @Gmaps.Google.Builders.Marker extends Gmaps.Objects.BaseBuilder
       anchor: @_createImageAnchorPosition @args[picture_name].anchor
       size: new(@primitives().size)(@args[picture_name].width, @args[picture_name].height)
       scaledSize: null
-      origin: null
+      origin: @_createImageAnchorPosition @args[picture_name].origin
     if @args[picture_name].scaledWidth and @args[picture_name].scaledHeight
       _.extend return_args, scaledSize: new(@primitives().size)(@args[picture_name].scaledWidth, @args[picture_name].scaledHeight)
     return_args
